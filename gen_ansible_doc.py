@@ -117,11 +117,11 @@ def main(
         collection: str = typer.Option(None, help="仅生成指定的 Ansible Collections 模块"),
 ):
     """
-    获取 Ansible 所有模块的文档
+    提取出 Ansible Collections 文档以便 Typed Ansible Plugin 使用
 
-    按照 collections 分组存储到指定的目录中
+    您也可以使用此脚本生成您内部使用的 Ansible Collections 文档
 
-    使用 Github Action ansible_doc.yml 运行
+    当前: 使用 Github Action 运行
     """
     process = subprocess.run(["ansible-doc", "-l", "-j"], capture_output=True)
     out = json.loads(process.stdout)
