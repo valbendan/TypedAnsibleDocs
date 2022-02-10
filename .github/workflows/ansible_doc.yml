@@ -26,11 +26,14 @@ jobs:
       - name: install ansible
         run: pip install ansible==5.3
 
-      - name: Generate Ansible Doc
+      - name: Generate Ansible 5.3 Doc
         run: |
-          mkdir docs
-          poetry run python gen_ansible_doc.py docs
+          mkdir -p docs/ansible/v5.3
+          python gen_ansible_doc.py docs/ansible/v5.3
 
-      - name: Gen zip files
-        run: |
-          zip -r ansible_doc.zip docs
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3.12.1
+        with:
+          add-paths: |
+            docs/ansible/v5.3
+
