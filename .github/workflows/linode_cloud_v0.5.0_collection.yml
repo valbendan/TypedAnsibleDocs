@@ -6,9 +6,7 @@ on:
       - '.github/workflows/linode_cloud_v0.5.0_collection.yml'
 
 env:
-  ANSIBLE_COLLECTION: linode.cloud
   ANSIBLE_VERSION: 5.3
-  DOC_PATH: docs/linode.cloud/v0.5.0/
   GALAXY_COLLECTION: linode.cloud
 
 jobs:
@@ -48,14 +46,14 @@ jobs:
 
       - name: Generate Doc
         run: |
-          mkdir -p ${{ env.DOC_PATH }}
-          python gen_ansible_doc.py ${{ env.DOC_PATH }} 
+          mkdir -p docs/${{ env.GALAXY_COLLECTION }}/${{ matrix.galaxy_version }}
+          python gen_ansible_doc.py docs/${{ env.GALAXY_COLLECTION }}/${{ matrix.galaxy_version }}  --collection ${{ env.GALAXY_COLLECTION }}
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3.12.1
         with:
-          title: Doc for Ansible v${{ env.ANSIBLE_VERSION }}
-          branch: doc/v${{ env.ANSIBLE_VERSION }}/full
+          title: Doc for ${{ env.GALAXY_COLLECTION }} ${{ matrix.galaxy_version }}
+          branch: doc/${{ env.GALAXY_COLLECTION }}/${{ matrix.galaxy_version }}
           add-paths: |
-            ${{ env.DOC_PATH }}
+            docs/${{ env.GALAXY_COLLECTION }}/${{ matrix.galaxy_version }}
 
