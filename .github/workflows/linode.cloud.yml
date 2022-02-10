@@ -3,7 +3,7 @@ name: linode.cloud
 on:
   push:
     paths:
-      - '.github/workflows/linode_cloud_collection.yml'
+      - '.github/workflows/linode.cloud.yml'
 
 env:
   ANSIBLE_VERSION: 5.3
