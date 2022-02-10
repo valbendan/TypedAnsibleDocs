@@ -10,11 +10,24 @@ env:
   ANSIBLE_VERSION: 5.3
   DOC_PATH: docs/linode.cloud/v0.5.0/
   GALAXY_COLLECTION: linode.cloud
-  GALAXY_VERSION: 0.5.0
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        galaxy_version:
+          #- 0.0.1
+          #- 0.0.2
+          #- 0.0.3
+          #- 0.1.0
+          #- 0.2.0
+          #- 0.3.0
+          - 0.3.1
+          - 0.3.2
+          - 0.4.0
+          - 0.5.0
 
     steps:
       - uses: actions/checkout@v2
@@ -30,8 +43,8 @@ jobs:
       - name: Install Ansible ${{ env.ANSIBLE_VERSION }}
         run: pip install ansible==${{ env.ANSIBLE_VERSION }}
 
-      - name: Galaxy Install Collection ${{ env.GALAXY_COLLECTION }} ${{ env.GALAXY_VERSION }}
-        run: ansible-galaxy collection install ${{ env.GALAXY_COLLECTION }}:==${{ env.GALAXY_VERSION }}
+      - name: Galaxy Install Collection ${{ env.GALAXY_COLLECTION }} ${{ matrix.galaxy_version }}
+        run: ansible-galaxy collection install ${{ env.GALAXY_COLLECTION }}:==${{ matrix.galaxy_version }}
 
       - name: Generate Doc
         run: |
