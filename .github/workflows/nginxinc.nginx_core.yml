@@ -3,7 +3,7 @@ name: nginxinc.nginx_core
 on:
   push:
     paths:
-      - '.github/workflows/nginxinc_nginx_core_collection.yml'
+      - '.github/workflows/nginxinc.nginx_core.yml'
 
 env:
   ANSIBLE_VERSION: 5.3
