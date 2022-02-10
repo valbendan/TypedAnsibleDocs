@@ -112,7 +112,10 @@ def group_to_collections(all_modules: List[str]) -> Dict[str, List[str]]:
     return group
 
 
-def main(out_dir: str = typer.Argument(..., help="输出目录")):
+def main(
+        out_dir: str = typer.Argument(..., help="输出目录"),
+        collection: str = typer.Option(None, help="仅生成指定的 Ansible Collections 模块"),
+):
     """
     获取 Ansible 所有模块的文档
 
@@ -125,12 +128,17 @@ def main(out_dir: str = typer.Argument(..., help="输出目录")):
 
     collection_modules = group_to_collections(out.keys())
 
-    for collection, modules in collection_modules.items():
+    for collection_name, ansible_modules in collection_modules.items():
         data = dict()
-        for module in modules:
+
+        # 仅需要生成指定的 Ansible Collections [如果存在的话]
+        if collection is not None and collection_name != collection:
+            continue
+
+        for module in ansible_modules:
             typer.secho(f"<<< get {module=} doc", fg="green")
             data |= gen_module_doc(module)
-        with open(os.path.join(out_dir, f"{collection}.json"), "w") as fp:
+        with open(os.path.join(out_dir, f"{collection_name}.json"), "w") as fp:
             json.dump(data, fp, ensure_ascii=False, indent=2)
 
 
