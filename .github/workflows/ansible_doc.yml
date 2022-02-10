@@ -24,7 +24,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: install ansible
-        run: pip install ansible=5.3
+        run: pip install ansible==5.3
 
       - name: Generate Ansible Doc
         run: |
