@@ -1,13 +1,13 @@
-name: linode.cloud
+name: nginxinc.nginx_core
 
 on:
   push:
     paths:
-      - '.github/workflows/linode_cloud_collection.yml'
+      - '.github/workflows/nginxinc_nginx_core_collection.yml'
 
 env:
   ANSIBLE_VERSION: 5.3
-  GALAXY_COLLECTION: linode.cloud
+  GALAXY_COLLECTION: nginxinc.nginx_core
 
 jobs:
   build:
@@ -16,16 +16,7 @@ jobs:
     strategy:
       matrix:
         galaxy_version:
-          #- 0.0.1
-          #- 0.0.2
-          #- 0.0.3
-          #- 0.1.0
-          #- 0.2.0
-          #- 0.3.0
-          - 0.3.1
-          - 0.3.2
           - 0.4.0
-          - 0.5.0
 
     steps:
       - uses: actions/checkout@v2
