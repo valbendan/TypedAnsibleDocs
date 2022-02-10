@@ -10,7 +10,7 @@ env:
   ANSIBLE_VERSION: 5.3
   DOC_PATH: docs/linode.cloud/v0.5.0/
   GALAXY_COLLECTION: linode.cloud
-  GALAXY_VERSION: v0.5.0
+  GALAXY_VERSION: 0.5.0
 
 jobs:
   build:
