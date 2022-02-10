@@ -35,7 +35,7 @@ jobs:
           mkdir -p ${{ env.DOC_PATH }}
           python gen_ansible_doc.py ${{ env.DOC_PATH }} --collection ${{ env.ANSIBLE_COLLECTION }}
 
-      - name: Doc for Ansible v${{ env.ANSIBLE_VERSION }} ${{ env.ANSIBLE_COLLECTION }}
+      - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3.12.1
         with:
           title: Doc for Ansible v${{ env.ANSIBLE_VERSION }} ${{ env.ANSIBLE_COLLECTION }}
