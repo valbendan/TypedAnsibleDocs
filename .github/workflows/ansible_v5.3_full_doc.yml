@@ -7,6 +7,9 @@ on:
     paths:
       - '.github/workflows/ansible_v5.3_full_doc.yml'
 
+env:
+  ANSIBLE_VERSION: 5.3
+  DOC_PATH: docs/ansible/v5.3/
 
 jobs:
   build:
@@ -23,17 +26,19 @@ jobs:
       - name: install dependency
         run: pip install -r requirements.txt
 
-      - name: install ansible
-        run: pip install ansible==5.3
+      - name: Install Ansible ${{ env.ANSIBLE_VERSION }}
+        run: pip install ansible==${{ env.ANSIBLE_VERSION }}
 
-      - name: Generate Ansible 5.3 Doc
+      - name: Generate Doc
         run: |
-          mkdir -p docs/ansible/v5.3
-          python gen_ansible_doc.py docs/ansible/v5.3
+          mkdir -p ${{ env.DOC_PATH }}
+          python gen_ansible_doc.py ${{ env.DOC_PATH }} 
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3.12.1
         with:
+          title: Doc for Ansible v${{ env.ANSIBLE_VERSION }}
+          branch: doc/v${{ env.ANSIBLE_VERSION }}/full
           add-paths: |
-            docs/ansible/v5.3
+            ${{ env.DOC_PATH }}
 
