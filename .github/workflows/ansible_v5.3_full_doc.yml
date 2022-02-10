@@ -1,6 +1,4 @@
-name: Generate Ansible Moudle Documentation
-
-# version: v18
+name: Ansible 5.3 Full Documentation
 
 on:
   push:

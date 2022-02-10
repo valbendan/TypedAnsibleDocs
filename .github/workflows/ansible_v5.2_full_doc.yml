@@ -1,4 +1,4 @@
-name: Generate Ansible Moudle Documentation
+name: Ansible 5.2 Full Documentation
 
 on:
   push:

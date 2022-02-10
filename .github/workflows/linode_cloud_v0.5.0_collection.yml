@@ -1,4 +1,4 @@
-name: Generate Ansible Moudle Documentation
+name: linode.cloud v0.5.0
 
 on:
   push:
