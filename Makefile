@@ -28,6 +28,9 @@ build:
 	make html
 	cp -r docs  build/html
 
+fast-build: gen-all-ansible-collections gen-all-ansible-full
+	make build
+
 gen-all-ansible-full:
 	poetry run python rst.py gen-ansible-full v5.1
 	poetry run python rst.py gen-ansible-full v5.3
