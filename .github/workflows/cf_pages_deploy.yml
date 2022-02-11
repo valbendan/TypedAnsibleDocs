@@ -18,7 +18,7 @@ jobs:
           python-version: 3.9
 
       - name: Build HTML
-        run: pip install poetry && poetry install && make fast-html
+        run: pip install poetry && poetry install && make fast-build
 
       - name: Publish HTML
         uses: peter-evans/create-pull-request@v3.12.1
