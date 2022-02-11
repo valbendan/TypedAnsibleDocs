@@ -1,0 +1,16 @@
+{# @formatter:off #}
+
+Ansible {{ version }} Docs
+========================================
+
+.. list-table:: Ansible {{ version }} Collections
+   :header-rows: 1
+
+   * - Collection Name
+     - Download
+     - Permalink
+{% for doc in doc_files %}
+   * - {{ doc[:-5] }}
+     - :download:`{{ doc }} <../../docs/ansible/{{ version }}/{{ doc }}>`
+     - `{{ doc }} <../docs/ansible/{{ version }}/{{ doc }}>`_
+{% endfor %}

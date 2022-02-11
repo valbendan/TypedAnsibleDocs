@@ -113,8 +113,8 @@ def group_to_collections(all_modules: List[str]) -> Dict[str, List[str]]:
 
 
 def main(
-        out_dir: str = typer.Argument(..., help="输出目录"),
-        collection: str = typer.Option(None, help="仅生成指定的 Ansible Collections 模块"),
+    out_dir: str = typer.Argument(..., help="输出目录"),
+    collection: str = typer.Option(None, help="仅生成指定的 Ansible Collections 模块"),
 ):
     """
     提取出 Ansible Collections 文档以便 Typed Ansible Plugin 使用
