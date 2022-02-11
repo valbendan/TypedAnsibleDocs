@@ -1,5 +1,8 @@
 import os
 import sys
+from functools import cmp_to_key
+
+from packaging.version import parse
 
 __all__ = ["do_gen_ansible_collection"]
 
@@ -8,17 +11,19 @@ from .j2_utils import render_jinja2_file
 p_dir = os.path.dirname(__file__)
 
 
+def _version_cmp(v1, v2):
+    return parse(v1) < parse(v2)
+
+
 def do_gen_ansible_collection(name: str):
     collection_dir = os.path.join(p_dir, "../docs/{name}".format(name=name))
     if not os.path.isdir(collection_dir):
-        sys.stderr.write(
-            "collection_dir={collection_dir} is not valid directory".format(
-                collection_dir=collection_dir
-            )
-        )
+        sys.stderr.write(f"{collection_dir=} is not valid directory")
         sys.exit(2)
 
-    version_list = reversed(sorted(os.listdir(collection_dir)))
+    version_list = sorted(
+        os.listdir(collection_dir), key=cmp_to_key(_version_cmp), reverse=True
+    )
 
     context = dict(name=name, version_list=version_list)
 
