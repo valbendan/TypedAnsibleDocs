@@ -1,6 +1,6 @@
 
 
-Ansible Collection linode.cloud Docs
+linode.cloud Collection Docs
 =========================================
 
 .. list-table:: linode.cloud Version
