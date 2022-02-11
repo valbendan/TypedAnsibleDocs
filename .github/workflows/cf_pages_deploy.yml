@@ -17,8 +17,14 @@ jobs:
         with:
           python-version: 3.9
 
-      - name: Build HTML
-        run: pip install poetry && poetry install && make fast-build
+      - name: 安装 Poetry
+        run: pip install poetry
+
+      - name: 安装 依赖
+        run: poetry install
+
+      - name: 构建 HTML
+        run: make fast-build
 
       - name: Show Files
         run: ls build/html
