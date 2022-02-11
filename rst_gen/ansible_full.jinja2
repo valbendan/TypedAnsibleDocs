@@ -7,8 +7,8 @@ Ansible {{ version }} Docs
    :header-rows: 1
 
    * - Collection Name
-     - Download URL
+     - Download
 {% for doc in doc_files %}
    * - {{ doc[:-5] }}
-     - :download:`{{ doc }} </docs/ansible/{{ version }}/{{ doc }}>`_
+     - :download:`{{ doc }} </docs/ansible/{{ version }}/{{ doc }}>`
 {% endfor %}
