@@ -1,0 +1,2067 @@
+{
+  "cisco.asa.asa_acl": {
+    "doc": {
+      "description": "This module allows you to work with access-lists on a Cisco ASA device.",
+      "has_action": true,
+      "notes": "For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`",
+      "options": {
+        "after": {
+          "aliases": [],
+          "description": "The ordered set of commands to append to the end of the command stack if a changed needs to be made.  Just like with I(before) this allows the playbook designer to append a set of commands to be executed after the command set.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "authorize": {
+          "aliases": [],
+          "description": "B(Deprecated)\nStarting with Ansible 2.5 we recommend using C(connection: network_cli) and C(become: yes).\nFor more information please see the L(Network Guide, ../network/getting_started/network_differences.html#multiple-communication-protocols).\nHORIZONTALLINE\nInstructs the module to enter privileged mode on the remote device before sending any commands.  If not specified, the device will attempt to execute all commands in non-privileged mode. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_AUTHORIZE) will be used instead.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "before": {
+          "aliases": [],
+          "description": "The ordered set of commands to push on to the command stack if a change needs to be made.  This allows the playbook designer the opportunity to perform configuration commands prior to pushing any changes without affecting how the set of commands are matched against the system.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "config": {
+          "aliases": [],
+          "description": "The module, by default, will connect to the remote device and retrieve the current running-config to use as a base for comparing against the contents of source.  There are times when it is not desirable to have the task get the current running-config for every task in a playbook.  The I(config) argument allows the implementer to pass in the configuration to use as the base config for comparison.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "context": {
+          "aliases": [],
+          "description": "Specifies which context to target if you are running in the ASA in multiple context mode. Defaults to the current context you login to.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "The force argument instructs the module to not consider the current devices running-config.  When set to true, this will cause the module to push the contents of I(src) into the device without first checking if already configured.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "lines": {
+          "aliases": [
+            "commands"
+          ],
+          "description": "The ordered set of commands that should be configured in the section.  The commands must be the exact same commands as found in the device running-config.  Be sure to note the configuration command syntax as some commands are automatically modified by the device config parser.",
+          "type": "list",
+          "required": true,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "match": {
+          "aliases": [],
+          "description": "Instructs the module on the way to perform the matching of the set of commands against the current device config.  If match is set to I(line), commands are matched line by line.  If match is set to I(strict), command lines are matched with respect to position.  Finally if match is set to I(exact), command lines must be an equal match.",
+          "default": "line",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "line",
+            "strict",
+            "exact"
+          ],
+          "suboptions": {}
+        },
+        "passwords": {
+          "aliases": [],
+          "description": "Saves running-config passwords in clear-text when set to True. Defaults to False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "provider": {
+          "aliases": [],
+          "description": "B(Deprecated)\nStarting with Ansible 2.5 we recommend using C(connection: network_cli).\nFor more information please see the L(Network Guide, ../network/getting_started/network_differences.html#multiple-communication-protocols).\nHORIZONTALLINE\nA dict object containing connection details.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "auth_pass": {
+              "aliases": [],
+              "description": "Specifies the password to use if required to enter privileged mode on the remote device.  If I(authorize) is false, then this argument does nothing. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_AUTH_PASS) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "authorize": {
+              "aliases": [],
+              "description": "Instructs the module to enter privileged mode on the remote device before sending any commands.  If not specified, the device will attempt to execute all commands in non-privileged mode. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_AUTHORIZE) will be used instead.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "host": {
+              "aliases": [],
+              "description": "Specifies the DNS host name or address for connecting to the remote device over the specified transport.  The value of host is used as the destination address for the transport.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "password": {
+              "aliases": [],
+              "description": "Specifies the password to use to authenticate the connection to the remote device.   This value is used to authenticate the SSH session. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_PASSWORD) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "port": {
+              "aliases": [],
+              "description": "Specifies the port to use when building the connection to the remote device.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "ssh_keyfile": {
+              "aliases": [],
+              "description": "Specifies the SSH key to use to authenticate the connection to the remote device.   This value is the path to the key used to authenticate the SSH session. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_SSH_KEYFILE) will be used instead.",
+              "type": "path",
+              "required": false,
+              "suboptions": {}
+            },
+            "timeout": {
+              "aliases": [],
+              "description": "Specifies idle timeout in seconds for the connection, in seconds. Useful if the console freezes before continuing. For example when saving configurations.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "username": {
+              "aliases": [],
+              "description": "Configures the username to use to authenticate the connection to the remote device.  This value is used to authenticate the SSH session. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_USERNAME) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "replace": {
+          "aliases": [],
+          "description": "Instructs the module on the way to perform the configuration on the device.  If the replace argument is set to I(line) then the modified lines are pushed to the device in configuration mode.  If the replace argument is set to I(block) then the entire command block is pushed to the device in configuration mode if any line is not correct.",
+          "default": "line",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "line",
+            "block"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "(deprecated, removed after 2022-06-01) Manage access-lists on a Cisco ASA",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- cisco.asa.asa_acl:\n    lines:\n    - access-list ACL-ANSIBLE extended permit tcp any any eq 82\n    - access-list ACL-ANSIBLE extended permit tcp any any eq www\n    - access-list ACL-ANSIBLE extended permit tcp any any eq 97\n    - access-list ACL-ANSIBLE extended permit tcp any any eq 98\n    - access-list ACL-ANSIBLE extended permit tcp any any eq 99\n    before: clear configure access-list ACL-ANSIBLE\n    match: strict\n    replace: block\n    provider: '{{ cli }}'\n\n- cisco.asa.asa_acl:\n    lines:\n    - access-list ACL-OUTSIDE extended permit tcp any any eq www\n    - access-list ACL-OUTSIDE extended permit tcp any any eq https\n    context: customer_a\n    provider: '{{ cli }}'\n"
+  },
+  "cisco.asa.asa_acls": {
+    "doc": {
+      "description": "This module configures and manages the named or numbered ACLs on ASA platforms.",
+      "has_action": true,
+      "notes": "Tested against Cisco ASA Version 9.10(1)11\nThis module works with connection C(network_cli). See L(ASA Platform Options,../network/user_guide/platform_asa.html).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "A dictionary of ACL options.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "acls": {
+              "aliases": [],
+              "description": "A list of Access Control Lists (ACL).",
+              "type": "list",
+              "required": false,
+              "elements": "dict",
+              "suboptions": {
+                "aces": {
+                  "aliases": [],
+                  "description": "The entries within the ACL.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "dict",
+                  "suboptions": {
+                    "destination": {
+                      "aliases": [],
+                      "description": "Specify the packet destination.",
+                      "type": "dict",
+                      "required": false,
+                      "suboptions": {
+                        "address": {
+                          "aliases": [],
+                          "description": "Host address to match, or any single host address.",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "any": {
+                          "aliases": [],
+                          "description": "Match any destination address.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "any4": {
+                          "aliases": [],
+                          "description": "Match any ipv4 destination address.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "any6": {
+                          "aliases": [],
+                          "description": "Match any ipv6 destination address.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "host": {
+                          "aliases": [],
+                          "description": "A single destination host",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "interface": {
+                          "aliases": [],
+                          "description": "Use interface address as destination address",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "netmask": {
+                          "aliases": [],
+                          "description": "Netmask for destination IP address, valid with IPV4 address.",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "object_group": {
+                          "aliases": [],
+                          "description": "Network object-group for destination address",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "port_protocol": {
+                          "aliases": [],
+                          "description": "Specify the destination port along with protocol.\nNote, Valid with TCP/UDP protocol_options",
+                          "type": "dict",
+                          "required": false,
+                          "suboptions": {
+                            "eq": {
+                              "aliases": [],
+                              "description": "Match only packets on a given port number.",
+                              "type": "str",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "gt": {
+                              "aliases": [],
+                              "description": "Match only packets with a greater port number.",
+                              "type": "str",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "lt": {
+                              "aliases": [],
+                              "description": "Match only packets with a lower port number.",
+                              "type": "str",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "neq": {
+                              "aliases": [],
+                              "description": "Match only packets not on a given port number.",
+                              "type": "str",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "range": {
+                              "aliases": [],
+                              "description": "Port range operator",
+                              "type": "dict",
+                              "required": false,
+                              "suboptions": {
+                                "end": {
+                                  "aliases": [],
+                                  "description": "Specify the end of the port range.",
+                                  "type": "int",
+                                  "required": false,
+                                  "suboptions": {}
+                                },
+                                "start": {
+                                  "aliases": [],
+                                  "description": "Specify the start of the port range.",
+                                  "type": "int",
+                                  "required": false,
+                                  "suboptions": {}
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "service_object_group": {
+                          "aliases": [],
+                          "description": "Service object-group for destination port",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        }
+                      }
+                    },
+                    "grant": {
+                      "aliases": [],
+                      "description": "Specify the action.",
+                      "type": "str",
+                      "required": false,
+                      "choices": [
+                        "permit",
+                        "deny"
+                      ],
+                      "suboptions": {}
+                    },
+                    "inactive": {
+                      "aliases": [],
+                      "description": "Keyword for disabling an ACL element.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "line": {
+                      "aliases": [],
+                      "description": "Use this to specify line number at which ACE should be entered.\nExisting ACE can be updated based on the input line number.\nIt's not a required param in case of configuring the acl, but in case of Delete operation it's required, else Delete operation won't work as expected.\nRefer to vendor documentation for valid values.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "log": {
+                      "aliases": [],
+                      "description": "Log matches against this entry.",
+                      "type": "str",
+                      "required": false,
+                      "choices": [
+                        "default",
+                        "alerts",
+                        "critical",
+                        "debugging",
+                        "disable",
+                        "emergencies",
+                        "errors",
+                        "informational",
+                        "interval",
+                        "notifications",
+                        "warnings"
+                      ],
+                      "suboptions": {}
+                    },
+                    "protocol": {
+                      "aliases": [],
+                      "description": "Specify the protocol to match.\nRefer to vendor documentation for valid values.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "protocol_options": {
+                      "aliases": [],
+                      "description": "protocol type.",
+                      "type": "dict",
+                      "required": false,
+                      "suboptions": {
+                        "ahp": {
+                          "aliases": [],
+                          "description": "Authentication Header Protocol.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "eigrp": {
+                          "aliases": [],
+                          "description": "Cisco's EIGRP routing protocol.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "esp": {
+                          "aliases": [],
+                          "description": "Encapsulation Security Payload.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "gre": {
+                          "aliases": [],
+                          "description": "Cisco's GRE tunneling.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "icmp": {
+                          "aliases": [],
+                          "description": "Internet Control Message Protocol.",
+                          "type": "dict",
+                          "required": false,
+                          "suboptions": {
+                            "alternate_address": {
+                              "aliases": [],
+                              "description": "Alternate address",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "conversion_error": {
+                              "aliases": [],
+                              "description": "Datagram conversion",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "echo": {
+                              "aliases": [],
+                              "description": "Echo (ping)",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "echo_reply": {
+                              "aliases": [],
+                              "description": "Echo reply",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "information_reply": {
+                              "aliases": [],
+                              "description": "Information replies",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "information_request": {
+                              "aliases": [],
+                              "description": "Information requests",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "mask_reply": {
+                              "aliases": [],
+                              "description": "Mask replies",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "mask_request": {
+                              "aliases": [],
+                              "description": "mask_request",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "mobile_redirect": {
+                              "aliases": [],
+                              "description": "Mobile host redirect",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "parameter_problem": {
+                              "aliases": [],
+                              "description": "All parameter problems",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "redirect": {
+                              "aliases": [],
+                              "description": "All redirects",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "router_advertisement": {
+                              "aliases": [],
+                              "description": "Router discovery advertisements",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "router_solicitation": {
+                              "aliases": [],
+                              "description": "Router discovery solicitations",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "source_quench": {
+                              "aliases": [],
+                              "description": "Source quenches",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "source_route_failed": {
+                              "aliases": [],
+                              "description": "Source route",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "time_exceeded": {
+                              "aliases": [],
+                              "description": "All time exceededs",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "timestamp_reply": {
+                              "aliases": [],
+                              "description": "Timestamp replies",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "timestamp_request": {
+                              "aliases": [],
+                              "description": "Timestamp requests",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "traceroute": {
+                              "aliases": [],
+                              "description": "Traceroute",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "unreachable": {
+                              "aliases": [],
+                              "description": "All unreachables",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            }
+                          }
+                        },
+                        "icmp6": {
+                          "aliases": [],
+                          "description": "Internet Control Message Protocol.",
+                          "type": "dict",
+                          "required": false,
+                          "suboptions": {
+                            "echo": {
+                              "aliases": [],
+                              "description": "Echo (ping)",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "echo_reply": {
+                              "aliases": [],
+                              "description": "Echo reply",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "membership_query": {
+                              "aliases": [],
+                              "description": "Membership query",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "membership_reduction": {
+                              "aliases": [],
+                              "description": "Membership reduction",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "membership_report": {
+                              "aliases": [],
+                              "description": "Membership report",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "neighbor_advertisement": {
+                              "aliases": [],
+                              "description": "Neighbor advertisement",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "neighbor_redirect": {
+                              "aliases": [],
+                              "description": "Neighbor redirect",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "neighbor_solicitation": {
+                              "aliases": [],
+                              "description": "Neighbor_solicitation",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "packet_too_big": {
+                              "aliases": [],
+                              "description": "Packet too big",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "parameter_problem": {
+                              "aliases": [],
+                              "description": "Parameter problem",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "router_advertisement": {
+                              "aliases": [],
+                              "description": "Router discovery advertisements",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "router_renumbering": {
+                              "aliases": [],
+                              "description": "Router renumbering",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "router_solicitation": {
+                              "aliases": [],
+                              "description": "Router solicitation",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "time_exceeded": {
+                              "aliases": [],
+                              "description": "Time exceeded",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "unreachable": {
+                              "aliases": [],
+                              "description": "All unreachables",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            }
+                          }
+                        },
+                        "igmp": {
+                          "aliases": [],
+                          "description": "Internet Gateway Message Protocol.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "igrp": {
+                          "aliases": [],
+                          "description": "Internet Gateway Routing Protocol.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "ip": {
+                          "aliases": [],
+                          "description": "Any Internet Protocol.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "ipinip": {
+                          "aliases": [],
+                          "description": "IP in IP tunneling.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "ipsec": {
+                          "aliases": [],
+                          "description": "IP Security.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "nos": {
+                          "aliases": [],
+                          "description": "KA9Q NOS compatible IP over IP tunneling.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "ospf": {
+                          "aliases": [],
+                          "description": "OSPF routing protocol.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "pcp": {
+                          "aliases": [],
+                          "description": "Payload Compression Protocol.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "pim": {
+                          "aliases": [],
+                          "description": "Protocol Independent Multicast.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "pptp": {
+                          "aliases": [],
+                          "description": "Point-to-Point Tunneling Protocol.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "protocol_number": {
+                          "aliases": [],
+                          "description": "An IP protocol number",
+                          "type": "int",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "sctp": {
+                          "aliases": [],
+                          "description": "Stream Control Transmission Protocol.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "snp": {
+                          "aliases": [],
+                          "description": "Simple Network Protocol.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "tcp": {
+                          "aliases": [],
+                          "description": "Match TCP packet flags",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "udp": {
+                          "aliases": [],
+                          "description": "User Datagram Protocol.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        }
+                      }
+                    },
+                    "remark": {
+                      "aliases": [],
+                      "description": "Specify a comment (remark) for the access-list after this keyword",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "source": {
+                      "aliases": [],
+                      "description": "Specify the packet source.",
+                      "type": "dict",
+                      "required": false,
+                      "suboptions": {
+                        "address": {
+                          "aliases": [],
+                          "description": "Source network address.",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "any": {
+                          "aliases": [],
+                          "description": "Match any source address.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "any4": {
+                          "aliases": [],
+                          "description": "Match any ipv4 source address.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "any6": {
+                          "aliases": [],
+                          "description": "Match any ipv6 source address.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "host": {
+                          "aliases": [],
+                          "description": "A single source host",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "interface": {
+                          "aliases": [],
+                          "description": "Use interface address as source address",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "netmask": {
+                          "aliases": [],
+                          "description": "Netmask for source IP address, valid with IPV4 address.",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "object_group": {
+                          "aliases": [],
+                          "description": "Network object-group for source address",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "port_protocol": {
+                          "aliases": [],
+                          "description": "Specify the destination port along with protocol.\nNote, Valid with TCP/UDP protocol_options",
+                          "type": "dict",
+                          "required": false,
+                          "suboptions": {
+                            "eq": {
+                              "aliases": [],
+                              "description": "Match only packets on a given port number.",
+                              "type": "str",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "gt": {
+                              "aliases": [],
+                              "description": "Match only packets with a greater port number.",
+                              "type": "str",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "lt": {
+                              "aliases": [],
+                              "description": "Match only packets with a lower port number.",
+                              "type": "str",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "neq": {
+                              "aliases": [],
+                              "description": "Match only packets not on a given port number.",
+                              "type": "str",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "range": {
+                              "aliases": [],
+                              "description": "Port range operator",
+                              "type": "dict",
+                              "required": false,
+                              "suboptions": {
+                                "end": {
+                                  "aliases": [],
+                                  "description": "Specify the end of the port range.",
+                                  "type": "int",
+                                  "required": false,
+                                  "suboptions": {}
+                                },
+                                "start": {
+                                  "aliases": [],
+                                  "description": "Specify the start of the port range.",
+                                  "type": "int",
+                                  "required": false,
+                                  "suboptions": {}
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "time_range": {
+                      "aliases": [],
+                      "description": "Specify a time-range.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "acl_type": {
+                  "aliases": [],
+                  "description": "ACL type",
+                  "type": "str",
+                  "required": false,
+                  "choices": [
+                    "extended",
+                    "standard"
+                  ],
+                  "suboptions": {}
+                },
+                "name": {
+                  "aliases": [],
+                  "description": "The name or the number of the ACL.",
+                  "type": "str",
+                  "required": true,
+                  "suboptions": {}
+                },
+                "rename": {
+                  "aliases": [],
+                  "description": "Rename an existing access-list.\nIf input to rename param is given, it'll take preference over other parameters and only rename config will be matched and computed against.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                }
+              }
+            }
+          }
+        },
+        "running_config": {
+          "aliases": [],
+          "description": "The module, by default, will connect to the remote device and retrieve the current running-config to use as a base for comparing against the contents of source. There are times when it is not desirable to have the task get the current running-config for every task in a playbook.  The I(running_config) argument allows the implementer to pass in the configuration to use as the base config for comparison.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The state of the configuration after module completion",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "replaced",
+            "overridden",
+            "deleted",
+            "gathered",
+            "rendered",
+            "parsed"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Access-Lists resource module",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Using merged\n# Before state:\n# -------------\n#\n# vasa#sh access-lists\n# access-list global_access; 2 elements; name hash: 0xbd6c87a7\n# access-list global_access line 1 extended permit icmp any any log disable (hitcnt=0) 0xf1efa630\n# access-list global_access line 2 extended deny tcp any any eq telnet (hitcnt=0) 0xae5833af\n# access-list R1_traffic; 1 elements; name hash: 0xaf40d3c2\n# access-list R1_traffic line 1\n#                        extended deny tcp 2001:db8:0:3::/64 eq telnet 2001:fc8:0:4::/64 eq www\n#                        log errors interval 300 (hitcnt=0) 0x4a4660f3\n\n- name: Merge provided configuration with device configuration\n  cisco.asa.asa_acls:\n    config:\n      acls:\n        - name: temp_access\n          acl_type: extended\n          aces:\n          - grant: deny\n            line: 1\n            protocol_options:\n              tcp: true\n            source:\n              address: 192.0.2.0\n              netmask: 255.255.255.0\n            destination:\n              address: 192.0.3.0\n              netmask: 255.255.255.0\n              port_protocol:\n                eq: www\n            log: default\n          - grant: deny\n            line: 2\n            protocol_options:\n              igrp: true\n            source:\n              address: 198.51.100.0\n              netmask: 255.255.255.0\n            destination:\n              address: 198.51.110.0\n              netmask: 255.255.255.0\n            time_range: temp\n          - grant: deny\n            line: 3\n            protocol_options:\n              tcp: true\n            source:\n              interface: management\n            destination:\n              interface: management\n              port_protocol:\n                eq: www\n            log: warnings\n          - grant: deny\n            line: 4\n            protocol_options:\n              tcp: true\n            source:\n              object_group: test_og_network\n            destination:\n              object_group: test_network_og\n              port_protocol:\n                eq: www\n            log: default\n        - name: global_access\n          acl_type: extended\n          aces:\n          - line: 3\n            remark: test global access\n          - grant: deny\n            line: 4\n            protocol_options:\n              tcp: true\n            source:\n              any: true\n            destination:\n              any: true\n              port_protocol:\n                eq: www\n            log: errors\n        - name: R1_traffic\n          aces:\n          - line: 1\n            remark: test_v6_acls\n          - grant: deny\n            line: 2\n            protocol_options:\n              tcp: true\n            source:\n              address: 2001:db8:0:3::/64\n              port_protocol:\n                eq: www\n            destination:\n              address: 2001:fc8:0:4::/64\n              port_protocol:\n                eq: telnet\n            inactive: true\n    state: merged\n\n# Commands fired:\n# ---------------\n# access-list global_access line 3 remark test global access\n# access-list global_access line 4 extended deny tcp any any eq www log errors interval 300\n# access-list R1_traffic line 1 remark test_v6_acls\n# access-list R1_traffic line 2 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive\n# access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default\n# access-list temp_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0\n#                         time-range temp inactive\n# access-list temp_access line 2 extended deny tcp interface management interface management\n#                         eq www log warnings\n# access-list test_access line 3 extended deny tcp object-group test_og_network object-group test_network_og\n#                         eq www log default\n\n# After state:\n# ------------\n#\n# vasa#sh access-lists\n# access-list global_access; 3 elements; name hash: 0xbd6c87a7\n# access-list global_access line 1 extended permit icmp any any log disable (hitcnt=0) 0xf1efa630\n# access-list global_access line 2 extended deny tcp any any eq telnet (hitcnt=0) 0xae5833af\n# access-list global_access line 3 remark test global access (hitcnt=0) 0xae78337e\n# access-list global_access line 4 extended deny tcp any any eq www log errors interval 300 (hitcnt=0) 0x605f2421\n# access-list R1_traffic; 2 elements; name hash: 0xaf40d3c2\n# access-list R1_traffic line 1 remark test_v6_acls\n# access-list R1_traffic line 2\n#                        extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet\n#                        inactive (hitcnt=0) (inactive) 0xe922b432\n# access-list temp_access; 2 elements; name hash: 0xaf1b712e\n# access-list temp_access line 1\n#                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www\n#                         log default (hitcnt=0) 0xb58abb0d\n# access-list temp_access line 2\n#                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0\n#                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae\n# access-list test_access line 3\n#                         extended deny tcp interface management interface management eq www log warnings\n#                         interval 300 (hitcnt=0) 0x78aa233d\n# access-list test_access line 2 extended deny tcp object-group test_og_network object-group test_network_og\n#                         eq www log default (hitcnt=0) 0x477aec1e\n#    access-list test_access line 2 extended deny tcp 192.0.2.0 255.255.255.0 host 192.0.3.1 eq www\n#                            log default (hitcnt=0) 0xdc7edff8\n#    access-list test_access line 2 extended deny tcp 192.0.2.0 255.255.255.0 host 192.0.3.2 eq www\n#                            log default (hitcnt=0) 0x7b0e9fde\n#    access-list test_access line 2 extended deny tcp 198.51.100.0 255.255.255.0 2001:db8:3::/64 eq www\n#                            log default (hitcnt=0) 0x97c75adc\n\n# Using Merged to Rename ACLs\n# Before state:\n# -------------\n#\n# vasa#sh access-lists\n# access-list global_access; 2 elements; name hash: 0xbd6c87a7\n# access-list global_access line 1 extended permit icmp any any log disable (hitcnt=0) 0xf1efa630\n# access-list global_access line 2 extended deny tcp any any eq telnet (hitcnt=0) 0xae5833af\n# access-list R1_traffic; 1 elements; name hash: 0xaf40d3c2\n# access-list R1_traffic line 1\n#                        extended deny tcp 2001:db8:0:3::/64 eq telnet 2001:fc8:0:4::/64 eq www\n#                        log errors interval 300 (hitcnt=0) 0x4a4660f3\n\n- name: Rename ACL with different name using Merged state\n  cisco.asa.asa_acls:\n    config:\n      acls:\n        - name: global_access\n          rename: global_access_renamed\n        - name: R1_traffic\n          rename: R1_traffic_renamed\n    state: merged\n\n# Commands fired:\n# ---------------\n# access-list global_access rename global_access_renamed\n# access-list R1_traffic rename R1_traffic_renamed\n\n# After state:\n# -------------\n#\n# vasa#sh access-lists\n# access-list global_access_renamed; 2 elements; name hash: 0xbd6c87a7\n# access-list global_access_renamed line 1 extended permit icmp any any log disable (hitcnt=0) 0xf1efa630\n# access-list global_access_renamed line 2 extended deny tcp any any eq telnet (hitcnt=0) 0xae5833af\n# access-list R1_traffic_renamed; 1 elements; name hash: 0xaf40d3c2\n# access-list R1_traffic_renamed line 1\n#                        extended deny tcp 2001:db8:0:3::/64 eq telnet 2001:fc8:0:4::/64 eq www\n#                        log errors interval 300 (hitcnt=0) 0x4a4660f3\n\n\n# Using replaced\n\n# Before state:\n# -------------\n#\n# vasa#sh access-lists\n# access-list global_access; 3 elements; name hash: 0xbd6c87a7\n# access-list global_access line 1 extended permit icmp any any log disable (hitcnt=0) 0xf1efa630\n# access-list global_access line 2 extended deny tcp any any eq telnet (hitcnt=0) 0xae5833af\n# access-list global_access line 3 extended deny tcp any any eq www log errors interval 300 (hitcnt=0) 0x605f2421\n# access-list R1_traffic; 2 elements; name hash: 0xaf40d3c2\n# access-list R1_traffic line 1\n#                        extended deny tcp 2001:db8:0:3::/64 eq telnet 2001:fc8:0:4::/64 eq www\n#                        log errors interval 300 (hitcnt=0) 0x4a4660f3\n# access-list R1_traffic line 2\n#                        extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet\n#                        inactive (hitcnt=0) (inactive) 0xe922b432\n# access-list temp_access; 2 elements; name hash: 0xaf1b712e\n# access-list temp_access line 1\n#                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www\n#                         log default (hitcnt=0) 0xb58abb0d\n# access-list temp_access line 2\n#                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0\n#                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae\n\n- name: Replaces device configuration of listed acl with provided configuration\n  cisco.asa.asa_acls:\n    config:\n      acls:\n        - name: global_access\n          acl_type: extended\n          aces:\n          - grant: deny\n            line: 1\n            protocol_options:\n              tcp: true\n            source:\n              address: 192.0.4.0\n              netmask: 255.255.255.0\n              port_protocol:\n                eq: telnet\n            destination:\n              address: 192.0.5.0\n              netmask: 255.255.255.0\n              port_protocol:\n                eq: www\n    state: replaced\n\n# Commands fired:\n# ---------------\n# no access-list global_access line 3 extended deny tcp any any eq www log errors interval 300\n# no access-list global_access line 2 extended deny tcp any any eq telnet\n# no access-list global_access line 1 extended permit icmp any any log disable\n# access-list global_access line 1 extended deny tcp 192.0.4.0 255.255.255.0 eq telnet 192.0.5.0 255.255.255.0 eq www\n\n# After state:\n# -------------\n#\n# vasa#sh access-lists\n# access-list global_access; 1 elements; name hash: 0xbd6c87a7\n# access-list global_access line 1 extended deny tcp 192.0.4.0 255.255.255.0 eq telnet\n#                           192.0.5.0 255.255.255.0 eq www (hitcnt=0) 0x3e5b2757\n# access-list R1_traffic; 2 elements; name hash: 0xaf40d3c2\n# access-list R1_traffic line 1\n#                        extended deny tcp 2001:db8:0:3::/64 eq telnet 2001:fc8:0:4::/64 eq www\n#                        log errors interval 300 (hitcnt=0) 0x4a4660f3\n# access-list R1_traffic line 2\n#                        extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet\n#                        inactive (hitcnt=0) (inactive) 0xe922b432\n# access-list temp_access; 2 elements; name hash: 0xaf1b712e\n# access-list temp_access line 1\n#                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www\n#                         log default (hitcnt=0) 0xb58abb0d\n# access-list temp_access line 2\n#                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0\n#                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae\n\n# Using overridden\n\n# Before state:\n# -------------\n#\n# vasa#sh access-lists\n# access-list global_access; 3 elements; name hash: 0xbd6c87a7\n# access-list global_access line 1 extended permit icmp any any log disable (hitcnt=0) 0xf1efa630\n# access-list global_access line 2 extended deny tcp any any eq telnet (hitcnt=0) 0xae5833af\n# access-list global_access line 3 extended deny tcp any any eq www log errors interval 300 (hitcnt=0) 0x605f2421\n# access-list R1_traffic; 2 elements; name hash: 0xaf40d3c2\n# access-list R1_traffic line 1\n#                        extended deny tcp 2001:db8:0:3::/64 eq telnet 2001:fc8:0:4::/64 eq www\n#                        log errors interval 300 (hitcnt=0) 0x4a4660f3\n# access-list R1_traffic line 2\n#                        extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet\n#                        inactive (hitcnt=0) (inactive) 0xe922b432\n# access-list temp_access; 2 elements; name hash: 0xaf1b712e\n# access-list temp_access line 1\n#                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www\n#                         log default (hitcnt=0) 0xb58abb0d\n# access-list temp_access line 2\n#                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0\n#                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae\n\n\n- name: Override device configuration of all acl with provided configuration\n  cisco.asa.asa_acls:\n    config:\n      acls:\n        - name: global_access\n          acl_type: extended\n          aces:\n          - grant: deny\n            line: 1\n            protocol_options:\n              tcp: true\n            source:\n              address: 192.0.4.0\n              netmask: 255.255.255.0\n              port_protocol:\n                eq: telnet\n            destination:\n              address: 192.0.5.0\n              netmask: 255.255.255.0\n              port_protocol:\n                eq: www\n    state: overridden\n\n# Commands fired:\n# ---------------\n# access-list temp_access line 2\n#                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 time-range temp\n# no access-list temp_access line 1\n#                            extended grant deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default\n# no access-list R1_traffic line 2\n#                           extended grant deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive\n# no access-list R1_traffic line 1\n#                           extended grant deny tcp 2001:db8:0:3::/64 eq telnet 2001:fc8:0:4::/64 eq www log errors\n# no access-list global_access line 3 extended grant deny tcp any any eq www log errors\n# no access-list global_access line 2 extended grant deny tcp any any eq telnet\n# no access-list global_access line 1 extended grant permit icmp any any log disable\n# access-list global_access line 4 extended deny tcp 192.0.4.0 255.255.255.0 eq telnet 192.0.5.0 255.255.255.0 eq www\n\n# After state:\n# -------------\n#\n# vasa#sh access-lists\n# access-list global_access; 1 elements; name hash: 0xbd6c87a7\n# access-list global_access line 1 extended permit icmp any any log disable (hitcnt=0) 0xf1efa630\n\n# Using Deleted\n\n# Before state:\n# -------------\n#\n# vasa#sh access-lists\n# access-list global_access; 3 elements; name hash: 0xbd6c87a7\n# access-list global_access line 1 extended permit icmp any any log disable (hitcnt=0) 0xf1efa630\n# access-list global_access line 2 extended deny tcp any any eq telnet (hitcnt=0) 0xae5833af\n# access-list global_access line 3 extended deny tcp any any eq www log errors interval 300 (hitcnt=0) 0x605f2421\n# access-list R1_traffic; 2 elements; name hash: 0xaf40d3c2\n# access-list R1_traffic line 1\n#                        extended deny tcp 2001:db8:0:3::/64 eq telnet 2001:fc8:0:4::/64 eq www\n#                        log errors interval 300 (hitcnt=0) 0x4a4660f3\n# access-list R1_traffic line 2\n#                        extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet\n#                        inactive (hitcnt=0) (inactive) 0xe922b432\n# access-list temp_access; 2 elements; name hash: 0xaf1b712e\n# access-list temp_access line 1\n#                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www\n#                         log default (hitcnt=0) 0xb58abb0d\n# access-list temp_access line 2\n#                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0\n#                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae\n\n- name: \"Delete module attributes of given acl (Note: This won't delete ALL of the ACLs configured)\"\n  cisco.asa.asa_acls:\n    config:\n      acls:\n        - name: temp_access\n        - name: global_access\n    state: deleted\n\n# Commands fired:\n# ---------------\n# no access-list temp_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0\n#                            time-range temp inactive\n# no access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www\n#                            log default\n# no access-list global_access line 3 extended deny tcp any any eq www log errors interval 300\n# no access-list global_access line 2 extended deny tcp any any eq telnet\n# no access-list global_access line 1 extended permit icmp any any log disable\n\n# After state:\n# -------------\n#\n# vasa#sh access-lists\n# access-list R1_traffic; 2 elements; name hash: 0xaf40d3c2\n# access-list R1_traffic line 1\n#                        extended deny tcp 2001:db8:0:3::/64 eq telnet 2001:fc8:0:4::/64 eq www\n#                        log errors interval 300 (hitcnt=0) 0x4a4660f3\n# access-list R1_traffic line 2\n#                        extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet\n#                        inactive (hitcnt=0) (inactive) 0xe922b432\n\n# Using Deleted without any config passed\n#\"(NOTE: This will delete all of configured resource module attributes)\"\n\n# Before state:\n# -------------\n#\n# vasa#sh access-lists\n# access-list global_access; 3 elements; name hash: 0xbd6c87a7\n# access-list global_access line 1 extended permit icmp any any log disable (hitcnt=0) 0xf1efa630\n# access-list global_access line 2 extended deny tcp any any eq telnet (hitcnt=0) 0xae5833af\n# access-list global_access line 3 extended deny tcp any any eq www log errors interval 300 (hitcnt=0) 0x605f2421\n# access-list R1_traffic; 2 elements; name hash: 0xaf40d3c2\n# access-list R1_traffic line 1\n#                        extended deny tcp 2001:db8:0:3::/64 eq telnet 2001:fc8:0:4::/64 eq www\n#                        log errors interval 300 (hitcnt=0) 0x4a4660f3\n# access-list R1_traffic line 2\n#                        extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet\n#                        inactive (hitcnt=0) (inactive) 0xe922b432\n# access-list temp_access; 2 elements; name hash: 0xaf1b712e\n# access-list temp_access line 1\n#                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www\n#                         log default (hitcnt=0) 0xb58abb0d\n# access-list temp_access line 2\n#                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0\n#                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae\n\n- name: 'Delete ALL ACLs in one go (Note: This WILL delete the ALL of configured ACLs)'\n  cisco.asa.asa_acls:\n    state: deleted\n\n# Commands fired:\n# ---------------\n# no access-list global_access line 1 extended permit icmp any any log disable\n# no access-list global_access line 2 extended deny tcp any any eq telnet\n# no access-list global_access line 3 extended deny tcp any any eq www log errors interval 300\n# no access-list R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq telnet 2001:fc8:0:4::/64 eq www\n#                           log errors interval 300\n# no access-list R1_traffic line 2 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive\n# no access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default\n# no access-list temp_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0\n#                            time-range temp inactive\n\n\n# After state:\n# -------------\n#\n# vasa#sh access-lists\n\n# Using Gathered\n\n# Before state:\n# -------------\n#\n# access-list global_access; 3 elements; name hash: 0xbd6c87a7\n# access-list global_access line 1 extended permit icmp any any log disable (hitcnt=0) 0xf1efa630\n# access-list global_access line 2 extended deny tcp any any eq telnet (hitcnt=0) 0xae5833af\n# access-list R1_traffic; 2 elements; name hash: 0xaf40d3c2\n# access-list R1_traffic line 1\n#                        extended deny tcp 2001:db8:0:3::/64 eq telnet 2001:fc8:0:4::/64 eq www\n#                        log errors interval 300 (hitcnt=0) 0x4a4660f3\n# access-list R1_traffic line 2\n#                        extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet\n#                        inactive (hitcnt=0) (inactive) 0xe922b432\n# access-list temp_access; 2 elements; name hash: 0xaf1b712e\n# access-list temp_access line 1\n#                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www\n#                         log default (hitcnt=0) 0xb58abb0d\n# access-list temp_access line 2\n#                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0\n#                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae\n\n\n- name: Gather listed ACLs with provided configurations\n  cisco.asa.asa_acls:\n    config:\n    state: gathered\n\n# Module Execution Result:\n# ------------------------\n#\n# \"gathered\": [\n#         {\n#             \"acls\": [\n#                 {\n#                     \"aces\": [\n#                         {\n#                             \"destination\": {\n#                                 \"any\": true\n#                             },\n#                             \"grant\": \"permit\",\n#                             \"line\": 1,\n#                             \"log\": \"disable\",\n#                             \"protocol\": \"icmp\",\n#                             \"source\": {\n#                                 \"any\": true\n#                             }\n#                         },\n#                         {\n#                             \"destination\": {\n#                                 \"any\": true,\n#                                 \"port_protocol\": {\n#                                     \"eq\": \"telnet\"\n#                                 }\n#                             },\n#                             \"grant\": \"deny\",\n#                             \"line\": 2,\n#                             \"protocol\": \"tcp\",\n#                             \"protocol_options\": {\n#                                 \"tcp\": true\n#                             },\n#                             \"source\": {\n#                                 \"any\": true\n#                             }\n#                         }\n#                     ],\n#                     \"acl_type\": \"extended\",\n#                     \"name\": \"global_access\"\n#                 },\n#                 {\n#                     \"aces\": [\n#                         {\n#                             \"destination\": {\n#                                 \"address\": \"2001:fc8:0:4::/64\",\n#                                 \"port_protocol\": {\n#                                     \"eq\": \"www\"\n#                                 }\n#                             },\n#                             \"grant\": \"deny\",\n#                             \"line\": 1,\n#                             \"log\": \"errors\",\n#                             \"protocol\": \"tcp\",\n#                             \"protocol_options\": {\n#                                 \"tcp\": true\n#                             },\n#                             \"source\": {\n#                                 \"address\": \"2001:db8:0:3::/64\",\n#                                 \"port_protocol\": {\n#                                     \"eq\": \"telnet\"\n#                                 }\n#                             }\n#                         },\n#                         {\n#                             \"destination\": {\n#                                 \"address\": \"2001:fc8:0:4::/64\",\n#                                 \"port_protocol\": {\n#                                     \"eq\": \"telnet\"\n#                                 }\n#                             },\n#                             \"grant\": \"deny\",\n#                             \"inactive\": true,\n#                             \"line\": 2,\n#                             \"protocol\": \"tcp\",\n#                             \"protocol_options\": {\n#                                 \"tcp\": true\n#                             },\n#                             \"source\": {\n#                                 \"address\": \"2001:db8:0:3::/64\",\n#                                 \"port_protocol\": {\n#                                     \"eq\": \"www\"\n#                                 }\n#                             }\n#                         }\n#                     ],\n#                     \"acl_type\": \"extended\",\n#                     \"name\": \"R1_traffic\"\n#                 },\n#                 {\n#                     \"aces\": [\n#                         {\n#                             \"destination\": {\n#                                 \"address\": \"192.0.3.0\",\n#                                 \"netmask\": \"255.255.255.0\",\n#                                 \"port_protocol\": {\n#                                     \"eq\": \"www\"\n#                                 }\n#                             },\n#                             \"grant\": \"deny\",\n#                             \"line\": 1,\n#                             \"log\": \"default\",\n#                             \"protocol\": \"tcp\",\n#                             \"protocol_options\": {\n#                                 \"tcp\": true\n#                             },\n#                             \"source\": {\n#                                 \"address\": \"192.0.2.0\",\n#                                 \"netmask\": \"255.255.255.0\"\n#                             }\n#                         },\n#                         {\n#                             \"destination\": {\n#                                 \"address\": \"198.51.110.0\",\n#                                 \"netmask\": \"255.255.255.0\"\n#                             },\n#                             \"grant\": \"deny\",\n#                             \"inactive\": true,\n#                             \"line\": 2,\n#                             \"protocol\": \"igrp\",\n#                             \"protocol_options\": {\n#                                 \"igrp\": true\n#                             },\n#                             \"source\": {\n#                                 \"address\": \"198.51.100.0\",\n#                                 \"netmask\": \"255.255.255.0\"\n#                             },\n#                             \"time_range\": \"temp\"\n#                         }\n#                     ],\n#                     \"acl_type\": \"extended\",\n#                     \"name\": \"temp_access\"\n#                 }\n#             ]\n#         }\n#     ]\n\n# Using Rendered\n\n- name: Rendered the provided configuration with the exisiting running configuration\n  cisco.asa.asa_acls:\n  config:\n    acls:\n      - name: temp_access\n        acl_type: extended\n        aces:\n        - grant: deny\n          line: 1\n          protocol_options:\n            tcp: true\n          source:\n            address: 192.0.2.0\n            netmask: 255.255.255.0\n          destination:\n            address: 192.0.3.0\n            netmask: 255.255.255.0\n            port_protocol:\n              eq: www\n          log: default\n        - grant: deny\n          line: 2\n          protocol_options:\n            igrp: true\n          source:\n            address: 198.51.100.0\n            netmask: 255.255.255.0\n          destination:\n            address: 198.51.110.0\n            netmask: 255.255.255.0\n          time_range: temp\n      - name: R1_traffic\n        aces:\n        - grant: deny\n          protocol_options:\n            tcp: true\n          source:\n            address: 2001:db8:0:3::/64\n            port_protocol:\n              eq: www\n          destination:\n            address: 2001:fc8:0:4::/64\n            port_protocol:\n              eq: telnet\n          inactive: true\n    state: rendered\n\n# Module Execution Result:\n# ------------------------\n#\n# \"rendered\": [\n#         \"access-list temp_access line 1\n#                                  extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0\n#                                  eq www log default\"\n#         \"access-list temp_access line 2\n#                                  extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0\n#                                  time-range temp\"\n#         \"access-list R1_traffic\n#                      deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive\"\n#     ]\n\n# Using Parsed\n\n# parsed.cfg\n#\n# access-list test_access; 2 elements; name hash: 0xaf1b712e\n# access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default\n# access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors\n# access-list test_R1_traffic; 1 elements; name hash: 0xaf40d3c2\n# access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive\n\n- name: Parse the commands for provided configuration\n  cisco.asa.asa_acls:\n    running_config: \"{{ lookup('file', 'parsed.cfg') }}\"\n    state: parsed\n\n# Module Execution Result:\n# ------------------------\n#\n# \"parsed\": [\n#         {\n#             \"acls\": [\n#                 {\n#                     \"aces\": [\n#                         {\n#                             \"destination\": {\n#                                 \"address\": \"192.0.3.0\",\n#                                 \"netmask\": \"255.255.255.0\",\n#                                 \"port_protocol\": {\n#                                     \"eq\": \"www\"\n#                                 }\n#                             },\n#                             \"grant\": \"deny\",\n#                             \"line\": 1,\n#                             \"log\": \"default\",\n#                             \"protocol\": \"tcp\",\n#                             \"protocol_options\": {\n#                                 \"tcp\": true\n#                             },\n#                             \"source\": {\n#                                 \"address\": \"192.0.2.0\",\n#                                 \"netmask\": \"255.255.255.0\"\n#                             }\n#                         },\n#                         {\n#                             \"destination\": {\n#                                 \"address\": \"198.51.110.0\",\n#                                 \"netmask\": \"255.255.255.0\"\n#                             },\n#                             \"grant\": \"deny\",\n#                             \"line\": 2,\n#                             \"log\": \"errors\",\n#                             \"protocol\": \"igrp\",\n#                             \"protocol_options\": {\n#                                 \"igrp\": true\n#                             },\n#                             \"source\": {\n#                                 \"address\": \"198.51.100.0\",\n#                                 \"netmask\": \"255.255.255.0\"\n#                             }\n#                         }\n#                     ],\n#                     \"acl_type\": \"extended\",\n#                     \"name\": \"test_access\"\n#                 },\n#                 {\n#                     \"aces\": [\n#                         {\n#                             \"destination\": {\n#                                 \"address\": \"2001:fc8:0:4::/64\",\n#                                 \"port_protocol\": {\n#                                     \"eq\": \"telnet\"\n#                                 }\n#                             },\n#                             \"grant\": \"deny\",\n#                             \"inactive\": true,\n#                             \"line\": 1,\n#                             \"protocol\": \"tcp\",\n#                             \"protocol_options\": {\n#                                 \"tcp\": true\n#                             },\n#                             \"source\": {\n#                                 \"address\": \"2001:db8:0:3::/64\",\n#                                 \"port_protocol\": {\n#                                     \"eq\": \"www\"\n#                                 }\n#                             }\n#                         }\n#                     ],\n#                     \"acl_type\": \"extended\",\n#                     \"name\": \"test_R1_TRAFFIC\"\n#                 }\n#             ]\n#         }\n#     ]\n\n"
+  },
+  "cisco.asa.asa_command": {
+    "doc": {
+      "description": "Sends arbitrary commands to an ASA node and returns the results read from the device. The C(asa_command) module includes an argument that will cause the module to wait for a specific condition before returning or timing out if the condition is not met.",
+      "has_action": true,
+      "notes": "When processing wait_for, each commands' output is stored as an element of the I(result) array.  The allowed operators for conditional evaluation are I(eq), I(==), I(neq), I(ne), I(!=), I(gt), I(>), I(ge), I(>=), I(lt), I(<), I(le), I(<=), I(contains), I(matches).  Operators can be prefaced by I(not) to negate their meaning.  The I(contains) operator searches for a substring match (like the Python I(in) operator).  The I(matches) operator searches using a regex search operation.\nFor more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`",
+      "options": {
+        "authorize": {
+          "aliases": [],
+          "description": "B(Deprecated)\nStarting with Ansible 2.5 we recommend using C(connection: network_cli) and C(become: yes).\nFor more information please see the L(Network Guide, ../network/getting_started/network_differences.html#multiple-communication-protocols).\nHORIZONTALLINE\nInstructs the module to enter privileged mode on the remote device before sending any commands.  If not specified, the device will attempt to execute all commands in non-privileged mode. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_AUTHORIZE) will be used instead.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "commands": {
+          "aliases": [],
+          "description": "List of commands to send to the remote device over the configured provider. The resulting output from the command is returned. If the I(wait_for) argument is provided, the module is not returned until the condition is satisfied or the number of retires as expired.",
+          "type": "list",
+          "required": true,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "context": {
+          "aliases": [],
+          "description": "Specifies which context to target if you are running in the ASA in multiple context mode. Defaults to the current context you login to.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "interval": {
+          "aliases": [],
+          "description": "Configures the interval in seconds to wait between retries of the command. If the command does not pass the specified conditions, the interval indicates how long to wait before trying the command again.",
+          "default": "1",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "match": {
+          "aliases": [],
+          "description": "The I(match) argument is used in conjunction with the I(wait_for) argument to specify the match policy.  Valid values are C(all) or C(any).  If the value is set to C(all) then all conditionals in the wait_for must be satisfied.  If the value is set to C(any) then only one of the values must be satisfied.",
+          "default": "all",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "any",
+            "all"
+          ],
+          "suboptions": {}
+        },
+        "passwords": {
+          "aliases": [],
+          "description": "Saves running-config passwords in clear-text when set to True. Defaults to False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "provider": {
+          "aliases": [],
+          "description": "B(Deprecated)\nStarting with Ansible 2.5 we recommend using C(connection: network_cli).\nFor more information please see the L(Network Guide, ../network/getting_started/network_differences.html#multiple-communication-protocols).\nHORIZONTALLINE\nA dict object containing connection details.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "auth_pass": {
+              "aliases": [],
+              "description": "Specifies the password to use if required to enter privileged mode on the remote device.  If I(authorize) is false, then this argument does nothing. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_AUTH_PASS) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "authorize": {
+              "aliases": [],
+              "description": "Instructs the module to enter privileged mode on the remote device before sending any commands.  If not specified, the device will attempt to execute all commands in non-privileged mode. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_AUTHORIZE) will be used instead.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "host": {
+              "aliases": [],
+              "description": "Specifies the DNS host name or address for connecting to the remote device over the specified transport.  The value of host is used as the destination address for the transport.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "password": {
+              "aliases": [],
+              "description": "Specifies the password to use to authenticate the connection to the remote device.   This value is used to authenticate the SSH session. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_PASSWORD) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "port": {
+              "aliases": [],
+              "description": "Specifies the port to use when building the connection to the remote device.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "ssh_keyfile": {
+              "aliases": [],
+              "description": "Specifies the SSH key to use to authenticate the connection to the remote device.   This value is the path to the key used to authenticate the SSH session. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_SSH_KEYFILE) will be used instead.",
+              "type": "path",
+              "required": false,
+              "suboptions": {}
+            },
+            "timeout": {
+              "aliases": [],
+              "description": "Specifies idle timeout in seconds for the connection, in seconds. Useful if the console freezes before continuing. For example when saving configurations.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "username": {
+              "aliases": [],
+              "description": "Configures the username to use to authenticate the connection to the remote device.  This value is used to authenticate the SSH session. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_USERNAME) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "retries": {
+          "aliases": [],
+          "description": "Specifies the number of retries a command should by tried before it is considered failed. The command is run on the target device every retry and evaluated against the I(wait_for) conditions.",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_for": {
+          "aliases": [
+            "waitfor"
+          ],
+          "description": "List of conditions to evaluate against the output of the command. The task will wait for each condition to be true before moving forward. If the conditional is not true within the configured number of retries, the task fails. See examples.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        }
+      },
+      "short_description": "Run arbitrary commands on Cisco ASA devices",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Show the ASA version\n  cisco.asa.asa_command:\n    commands:\n    - show version\n\n- name: Show ASA drops and memory\n  cisco.asa.asa_command:\n    commands:\n    - show asp drop\n    - show memory\n\n- name: Send repeat pings and wait for the result to pass 100%\n  cisco.asa.asa_command:\n    commands:\n    - ping 8.8.8.8 repeat 20 size 350\n    wait_for:\n    - result[0] contains 100\n    retries: 2\n"
+  },
+  "cisco.asa.asa_config": {
+    "doc": {
+      "description": "Cisco ASA configurations use a simple block indent file syntax for segmenting configuration into sections.  This module provides an implementation for working with ASA configuration sections in a deterministic way.",
+      "has_action": true,
+      "notes": "For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`",
+      "options": {
+        "after": {
+          "aliases": [],
+          "description": "The ordered set of commands to append to the end of the command stack if a change needs to be made.  Just like with I(before) this allows the playbook designer to append a set of commands to be executed after the command set.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "authorize": {
+          "aliases": [],
+          "description": "B(Deprecated)\nStarting with Ansible 2.5 we recommend using C(connection: network_cli) and C(become: yes).\nFor more information please see the L(Network Guide, ../network/getting_started/network_differences.html#multiple-communication-protocols).\nHORIZONTALLINE\nInstructs the module to enter privileged mode on the remote device before sending any commands.  If not specified, the device will attempt to execute all commands in non-privileged mode. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_AUTHORIZE) will be used instead.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "backup": {
+          "aliases": [],
+          "description": "This argument will cause the module to create a full backup of the current C(running-config) from the remote device before any changes are made. If the C(backup_options) value is not given, the backup file is written to the C(backup) folder in the playbook root directory. If the directory does not exist, it is created.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "backup_options": {
+          "aliases": [],
+          "description": "This is a dict object containing configurable options related to backup file path. The value of this option is read only when C(backup) is set to I(yes), if C(backup) is set to I(no) this option will be silently ignored.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "dir_path": {
+              "aliases": [],
+              "description": "This option provides the path ending with directory name in which the backup configuration file will be stored. If the directory does not exist it will be first created and the filename is either the value of C(filename) or default filename as described in C(filename) options description. If the path value is not given in that case a I(backup) directory will be created in the current working directory and backup configuration will be copied in C(filename) within I(backup) directory.",
+              "type": "path",
+              "required": false,
+              "suboptions": {}
+            },
+            "filename": {
+              "aliases": [],
+              "description": "The filename to be used to store the backup configuration. If the filename is not given it will be generated based on the hostname, current time and date in format defined by <hostname>_config.<current-date>@<current-time>",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "before": {
+          "aliases": [],
+          "description": "The ordered set of commands to push on to the command stack if a change needs to be made.  This allows the playbook designer the opportunity to perform configuration commands prior to pushing any changes without affecting how the set of commands are matched against the system.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "config": {
+          "aliases": [],
+          "description": "The C(config) argument allows the playbook designer to supply the base configuration to be used to validate configuration changes necessary.  If this argument is provided, the module will not download the running-config from the remote node.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "context": {
+          "aliases": [],
+          "description": "Specifies which context to target if you are running in the ASA in multiple context mode. Defaults to the current context you login to.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "defaults": {
+          "aliases": [],
+          "description": "This argument specifies whether or not to collect all defaults when getting the remote device running config.  When enabled, the module will get the current config by issuing the command C(show running-config all).",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "lines": {
+          "aliases": [
+            "commands"
+          ],
+          "description": "The ordered set of commands that should be configured in the section.  The commands must be the exact same commands as found in the device running-config.  Be sure to note the configuration command syntax as some commands are automatically modified by the device config parser.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "match": {
+          "aliases": [],
+          "description": "Instructs the module on the way to perform the matching of the set of commands against the current device config.  If match is set to I(line), commands are matched line by line.  If match is set to I(strict), command lines are matched with respect to position.  If match is set to I(exact), command lines must be an equal match.  Finally, if match is set to I(none), the module will not attempt to compare the source configuration with the running configuration on the remote device.",
+          "default": "line",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "line",
+            "strict",
+            "exact",
+            "none"
+          ],
+          "suboptions": {}
+        },
+        "parents": {
+          "aliases": [],
+          "description": "The ordered set of parents that uniquely identify the section or hierarchy the commands should be checked against.  If the parents argument is omitted, the commands are checked against the set of top level or global commands.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "passwords": {
+          "aliases": [],
+          "description": "This argument specifies to include passwords in the config when retrieving the running-config from the remote device.  This includes passwords related to VPN endpoints.  This argument is mutually exclusive with I(defaults).",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "provider": {
+          "aliases": [],
+          "description": "B(Deprecated)\nStarting with Ansible 2.5 we recommend using C(connection: network_cli).\nFor more information please see the L(Network Guide, ../network/getting_started/network_differences.html#multiple-communication-protocols).\nHORIZONTALLINE\nA dict object containing connection details.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "auth_pass": {
+              "aliases": [],
+              "description": "Specifies the password to use if required to enter privileged mode on the remote device.  If I(authorize) is false, then this argument does nothing. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_AUTH_PASS) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "authorize": {
+              "aliases": [],
+              "description": "Instructs the module to enter privileged mode on the remote device before sending any commands.  If not specified, the device will attempt to execute all commands in non-privileged mode. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_AUTHORIZE) will be used instead.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "host": {
+              "aliases": [],
+              "description": "Specifies the DNS host name or address for connecting to the remote device over the specified transport.  The value of host is used as the destination address for the transport.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "password": {
+              "aliases": [],
+              "description": "Specifies the password to use to authenticate the connection to the remote device.   This value is used to authenticate the SSH session. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_PASSWORD) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "port": {
+              "aliases": [],
+              "description": "Specifies the port to use when building the connection to the remote device.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "ssh_keyfile": {
+              "aliases": [],
+              "description": "Specifies the SSH key to use to authenticate the connection to the remote device.   This value is the path to the key used to authenticate the SSH session. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_SSH_KEYFILE) will be used instead.",
+              "type": "path",
+              "required": false,
+              "suboptions": {}
+            },
+            "timeout": {
+              "aliases": [],
+              "description": "Specifies idle timeout in seconds for the connection, in seconds. Useful if the console freezes before continuing. For example when saving configurations.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "username": {
+              "aliases": [],
+              "description": "Configures the username to use to authenticate the connection to the remote device.  This value is used to authenticate the SSH session. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_USERNAME) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "replace": {
+          "aliases": [],
+          "description": "Instructs the module on the way to perform the configuration on the device.  If the replace argument is set to I(line) then the modified lines are pushed to the device in configuration mode.  If the replace argument is set to I(block) then the entire command block is pushed to the device in configuration mode if any line is not correct",
+          "default": "line",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "line",
+            "block"
+          ],
+          "suboptions": {}
+        },
+        "save": {
+          "aliases": [],
+          "description": "The C(save) argument instructs the module to save the running- config to the startup-config at the conclusion of the module running.  If check mode is specified, this argument is ignored.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "save_when": {
+          "aliases": [],
+          "description": "When changes are made to the device running-configuration, the changes are not copied to non-volatile storage by default.  Using this argument will change that before.  If the argument is set to I(always), then the running-config will always be copied to the startup-config and the I(modified) flag will always be set to True.  If the argument is set to I(modified), then the running-config will only be copied to the startup-config if it has changed since the last save to startup-config.  If the argument is set to I(never), the running-config will never be copied to the startup-config.  If the argument is set to I(changed), then the running-config will only be copied to the startup-config if the task has made a change. I(changed) was added in Ansible 2.5.",
+          "default": "never",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "always",
+            "never",
+            "modified",
+            "changed"
+          ],
+          "version_added": "1.1.0",
+          "suboptions": {}
+        },
+        "src": {
+          "aliases": [],
+          "description": "Specifies the source path to the file that contains the configuration or configuration template to load.  The path to the source file can either be the full path on the Ansible control host or a relative path from the playbook or role root directory.  This argument is mutually exclusive with I(lines), I(parents).",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage configuration sections on Cisco ASA devices",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- cisco.asa.asa_config:\n    lines:\n    - network-object host 10.80.30.18\n    - network-object host 10.80.30.19\n    - network-object host 10.80.30.20\n    parents: [object-group network OG-MONITORED-SERVERS]\n    provider: '{{ cli }}'\n\n- cisco.asa.asa_config:\n    host: '{{ inventory_hostname }}'\n    lines:\n    - message-length maximum client auto\n    - message-length maximum 512\n    match: line\n    parents: [policy-map type inspect dns PM-DNS, parameters]\n    authorize: yes\n    auth_pass: cisco\n    username: admin\n    password: cisco\n    context: ansible\n\n- cisco.asa.asa_config:\n    lines:\n    - ikev1 pre-shared-key MyS3cretVPNK3y\n    parents: tunnel-group 1.1.1.1 ipsec-attributes\n    passwords: yes\n    provider: '{{ cli }}'\n\n- name: attach ASA acl on interface vlan13/nameif cloud13\n  cisco.asa.asa_config:\n    lines:\n    - access-group cloud-acl_access_in in interface cloud13\n    provider: '{{ cli }}'\n\n- name: configure ASA (>=9.2) default BGP\n  cisco.asa.asa_config:\n    lines:\n    - bgp log-neighbor-changes\n    - bgp bestpath compare-routerid\n    provider: '{{ cli }}'\n    parents:\n    - router bgp 65002\n  register: bgp\n  when: bgp_default_config is defined\n- name: configure ASA (>=9.2) BGP neighbor in default/single context mode\n  cisco.asa.asa_config:\n    lines:\n    - bgp router-id {{ bgp_router_id }}\n    - neighbor {{ bgp_neighbor_ip }} remote-as {{ bgp_neighbor_as }}\n    - neighbor {{ bgp_neighbor_ip }} description {{ bgp_neighbor_name }}\n    provider: '{{ cli }}'\n    parents:\n    - router bgp 65002\n    - address-family ipv4 unicast\n  register: bgp\n  when: bgp_neighbor_as is defined\n- name: configure ASA interface with standby\n  cisco.asa.asa_config:\n    lines:\n    - description my cloud interface\n    - nameif cloud13\n    - security-level 50\n    - ip address 192.168.13.1 255.255.255.0 standby 192.168.13.2\n    provider: '{{ cli }}'\n    parents: [interface Vlan13]\n  register: interface\n- name: Show changes to interface from task above\n  debug:\n    var: interface\n\n- name: configurable backup path\n  cisco.asa.asa_config:\n    lines:\n    - access-group cloud-acl_access_in in interface cloud13\n    provider: '{{ cli }}'\n    backup: yes\n    backup_options:\n      filename: backup.cfg\n      dir_path: /home/user\n\n- name: save running to startup when modified\n  cisco.asa.asa_config:\n    save_when: modified\n"
+  },
+  "cisco.asa.asa_facts": {
+    "doc": {
+      "description": "Collects a base set of device facts from a remote device that is running ASA.  This module prepends all of the base network fact keys with C(ansible_net_<fact>).  The facts module will always collect a base set of facts from the device and can enable or disable collection of additional facts.\nNote, to collects facts from ASA device properly user should elevate the privilege to become.",
+      "has_action": true,
+      "notes": "Tested against asa 9.10(1)11\nFor more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`",
+      "options": {
+        "authorize": {
+          "aliases": [],
+          "description": "B(Deprecated)\nStarting with Ansible 2.5 we recommend using C(connection: network_cli) and C(become: yes).\nFor more information please see the L(Network Guide, ../network/getting_started/network_differences.html#multiple-communication-protocols).\nHORIZONTALLINE\nInstructs the module to enter privileged mode on the remote device before sending any commands.  If not specified, the device will attempt to execute all commands in non-privileged mode. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_AUTHORIZE) will be used instead.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "context": {
+          "aliases": [],
+          "description": "Specifies which context to target if you are running in the ASA in multiple context mode. Defaults to the current context you login to.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "gather_network_resources": {
+          "aliases": [],
+          "description": "When supplied, this argument will restrict the facts collected to a given subset. Possible values for this argument include all and the resources like interfaces, vlans etc. Can specify a list of values to include a larger subset. Values can also be used with an initial C(M(!)) to specify that a specific subset should not be collected. Valid subsets are 'all', 'acls', 'ogs'.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "gather_subset": {
+          "aliases": [],
+          "description": "When supplied, this argument restricts the facts collected to a given subset.\nPossible values for this argument include C(all), C(min), C(hardware), C(config).\nSpecify a list of values to include a larger subset.\nUse a value with an initial C(!) to collect all facts except that subset.",
+          "default": "!config",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "passwords": {
+          "aliases": [],
+          "description": "Saves running-config passwords in clear-text when set to True. Defaults to False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "provider": {
+          "aliases": [],
+          "description": "B(Deprecated)\nStarting with Ansible 2.5 we recommend using C(connection: network_cli).\nFor more information please see the L(Network Guide, ../network/getting_started/network_differences.html#multiple-communication-protocols).\nHORIZONTALLINE\nA dict object containing connection details.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "auth_pass": {
+              "aliases": [],
+              "description": "Specifies the password to use if required to enter privileged mode on the remote device.  If I(authorize) is false, then this argument does nothing. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_AUTH_PASS) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "authorize": {
+              "aliases": [],
+              "description": "Instructs the module to enter privileged mode on the remote device before sending any commands.  If not specified, the device will attempt to execute all commands in non-privileged mode. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_AUTHORIZE) will be used instead.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "host": {
+              "aliases": [],
+              "description": "Specifies the DNS host name or address for connecting to the remote device over the specified transport.  The value of host is used as the destination address for the transport.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "password": {
+              "aliases": [],
+              "description": "Specifies the password to use to authenticate the connection to the remote device.   This value is used to authenticate the SSH session. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_PASSWORD) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "port": {
+              "aliases": [],
+              "description": "Specifies the port to use when building the connection to the remote device.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "ssh_keyfile": {
+              "aliases": [],
+              "description": "Specifies the SSH key to use to authenticate the connection to the remote device.   This value is the path to the key used to authenticate the SSH session. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_SSH_KEYFILE) will be used instead.",
+              "type": "path",
+              "required": false,
+              "suboptions": {}
+            },
+            "timeout": {
+              "aliases": [],
+              "description": "Specifies idle timeout in seconds for the connection, in seconds. Useful if the console freezes before continuing. For example when saving configurations.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "username": {
+              "aliases": [],
+              "description": "Configures the username to use to authenticate the connection to the remote device.  This value is used to authenticate the SSH session. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_USERNAME) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        }
+      },
+      "short_description": "Collect facts from remote devices running Cisco ASA",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Gather all legacy facts\n  cisco.asa.asa_facts:\n    gather_subset: all\n\n- name: Gather only the config and default facts\n  cisco.asa.asa_facts:\n    gather_subset:\n    - config\n\n- name: Do not gather hardware facts\n  cisco.asa.asa_facts:\n    gather_subset:\n    - '!hardware'\n\n- name: Gather legacy and resource facts\n  cisco.asa.asa_facts:\n    gather_subset: all\n"
+  },
+  "cisco.asa.asa_og": {
+    "doc": {
+      "description": "This module allows you to create and update object-group network/service on Cisco ASA device.",
+      "has_action": true,
+      "options": {
+        "description": {
+          "aliases": [],
+          "description": "The description for the object-group.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "group_object": {
+          "aliases": [],
+          "description": "The group-object for network object-group.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "group_type": {
+          "aliases": [],
+          "description": "The object group type.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "network-object",
+            "service-object",
+            "port-object"
+          ],
+          "suboptions": {}
+        },
+        "host_ip": {
+          "aliases": [],
+          "description": "The host IP address for object-group network.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "ip_mask": {
+          "aliases": [],
+          "description": "The IP address and mask for network object-group.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the object group.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port_eq": {
+          "aliases": [],
+          "description": "The single port for port-object.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "port_range": {
+          "aliases": [],
+          "description": "The port range for port-object.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "protocol": {
+          "aliases": [],
+          "description": "The protocol for object-group service with port-object.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "udp",
+            "tcp",
+            "tcp-udp"
+          ],
+          "suboptions": {}
+        },
+        "service_cfg": {
+          "aliases": [],
+          "description": "The service-object configuration protocol, direction, range or port.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Manage the state of the resource.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent",
+            "replace"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "(deprecated, removed after 2022-06-01) Manage object groups on a Cisco ASA",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: configure network object-group\n  cisco.asa.asa_og:\n    name: ansible_test_0\n    group_type: network-object\n    state: present\n    description: ansible_test object-group description\n    host_ip:\n    - 8.8.8.8\n    - 8.8.4.4\n    ip_mask:\n    - 10.0.0.0 255.255.255.0\n    - 192.168.0.0 255.255.0.0\n    group_object:\n    - awx_lon\n    - awx_ams\n\n- name: configure port-object object-group\n  cisco.asa.asa_og:\n    name: ansible_test_1\n    group_type: port-object\n    state: replace\n    description: ansible_test object-group description\n    protocol: tcp-udp\n    port_eq:\n    - 1025\n    - kerberos\n    port_range:\n    - 1025 5201\n    - 0 1024\n\n- name: configure service-object object-group\n  cisco.asa.asa_og:\n    name: ansible_test_2\n    group_type: service-object\n    state: absent\n    description: ansible_test object-group description\n    service_cfg:\n    - tcp destination eq 8080\n    - tcp destination eq www\n"
+  },
+  "cisco.asa.asa_ogs": {
+    "doc": {
+      "description": "This module configures and manages Objects and Groups on ASA platforms.",
+      "has_action": true,
+      "notes": "Tested against Cisco ASA Version 9.10(1)11\nThis module works with connection C(network_cli). See L(ASA Platform Options,../network/user_guide/platform_asa.html).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "A list of Object Group options.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "object_groups": {
+              "aliases": [],
+              "description": "The object groups.",
+              "type": "list",
+              "required": false,
+              "elements": "dict",
+              "suboptions": {
+                "description": {
+                  "aliases": [],
+                  "description": "The description for the object-group.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "group_object": {
+                  "aliases": [],
+                  "description": "Configure an object group as an object",
+                  "type": "list",
+                  "required": false,
+                  "elements": "str",
+                  "suboptions": {}
+                },
+                "icmp_type": {
+                  "aliases": [],
+                  "description": "Configure an ICMP-type object",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "icmp_object": {
+                      "aliases": [],
+                      "description": "Defines the ICMP types in the group.",
+                      "type": "list",
+                      "required": false,
+                      "choices": [
+                        "alternate-address",
+                        "conversion-error",
+                        "echo",
+                        "echo-reply",
+                        "information-reply",
+                        "information-request",
+                        "mask-reply",
+                        "mask-request",
+                        "mobile-redirect",
+                        "parameter-problem",
+                        "redirect",
+                        "router-advertisement",
+                        "router-solicitation",
+                        "source-quench",
+                        "time-exceeded",
+                        "timestamp-reply",
+                        "timestamp-request",
+                        "traceroute",
+                        "unreachable"
+                      ],
+                      "elements": "str",
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "name": {
+                  "aliases": [],
+                  "description": "Specifies object-group ID",
+                  "type": "str",
+                  "required": true,
+                  "suboptions": {}
+                },
+                "network_object": {
+                  "aliases": [],
+                  "description": "Configure a network object",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "address": {
+                      "aliases": [],
+                      "description": "Enter an IPv4 network address with space seperated netmask.",
+                      "type": "list",
+                      "required": false,
+                      "elements": "str",
+                      "suboptions": {}
+                    },
+                    "host": {
+                      "aliases": [],
+                      "description": "Set this to specify a single host object.",
+                      "type": "list",
+                      "required": false,
+                      "elements": "str",
+                      "suboptions": {}
+                    },
+                    "ipv6_address": {
+                      "aliases": [],
+                      "description": "Enter an IPv6 prefix.",
+                      "type": "list",
+                      "required": false,
+                      "elements": "str",
+                      "suboptions": {}
+                    },
+                    "object": {
+                      "aliases": [],
+                      "description": "Enter this keyword to specify a network object",
+                      "type": "list",
+                      "required": false,
+                      "elements": "str",
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "port_object": {
+                  "aliases": [],
+                  "description": "Configure a port object",
+                  "type": "list",
+                  "required": false,
+                  "elements": "dict",
+                  "suboptions": {
+                    "eq": {
+                      "aliases": [],
+                      "description": "Enter this keyword to specify a port",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "range": {
+                      "aliases": [],
+                      "description": "Enter this keyword to specify a range of ports",
+                      "type": "dict",
+                      "required": false,
+                      "suboptions": {
+                        "end": {
+                          "aliases": [],
+                          "description": "Specify the end of the port range.",
+                          "type": "int",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "start": {
+                          "aliases": [],
+                          "description": "Specify the start of the port range.",
+                          "type": "int",
+                          "required": false,
+                          "suboptions": {}
+                        }
+                      }
+                    }
+                  }
+                },
+                "protocol": {
+                  "aliases": [],
+                  "description": "Specifies that object-group is for only specified protocol only.\nRequired when port-object need to be configured",
+                  "type": "str",
+                  "required": false,
+                  "choices": [
+                    "tcp",
+                    "tcp-udp",
+                    "udp"
+                  ],
+                  "suboptions": {}
+                },
+                "protocol_object": {
+                  "aliases": [],
+                  "description": "Configure a protocol object",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "protocol": {
+                      "aliases": [],
+                      "description": "Defines the protocols in the group.\nUser can either specify protocols directly/protocol numbers(0-255)",
+                      "type": "list",
+                      "required": false,
+                      "elements": "str",
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "security_group": {
+                  "aliases": [],
+                  "description": "Configure a security-group",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "sec_name": {
+                      "aliases": [],
+                      "description": "Enter this keyword to specify a security-group name.",
+                      "type": "list",
+                      "required": false,
+                      "elements": "str",
+                      "suboptions": {}
+                    },
+                    "tag": {
+                      "aliases": [],
+                      "description": "Enter this keyword to specify a security-group tag.",
+                      "type": "list",
+                      "required": false,
+                      "elements": "str",
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "service_object": {
+                  "aliases": [],
+                  "description": "Configure a service object\nNEW 'services_object' param is introduced at object_group level, please use the newer 'services_object' param defined at object_group level instead of 'service_object' param at object_group level, as 'service_object' option will get deprecated and removed in a future release.",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "object": {
+                      "aliases": [],
+                      "description": "Enter this keyword to specify a service object",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "protocol": {
+                      "aliases": [],
+                      "description": "Defines the protocols in the group.",
+                      "type": "list",
+                      "required": false,
+                      "choices": [
+                        "ah",
+                        "eigrp",
+                        "esp",
+                        "gre",
+                        "icmp",
+                        "icmp6",
+                        "igmp",
+                        "igrp",
+                        "ip",
+                        "ipinip",
+                        "ipsec",
+                        "nos",
+                        "ospf",
+                        "pcp",
+                        "pim",
+                        "pptp",
+                        "sctp",
+                        "snp",
+                        "tcp",
+                        "tcp-udp",
+                        "udp"
+                      ],
+                      "elements": "str",
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "services_object": {
+                  "aliases": [],
+                  "description": "Configure list of service objects\nNewer OGs services_object param which will replace service_object param\nRelased with version 2.1.0",
+                  "type": "list",
+                  "required": false,
+                  "elements": "dict",
+                  "suboptions": {
+                    "destination_port": {
+                      "aliases": [],
+                      "description": "Keyword to specify destination port",
+                      "type": "dict",
+                      "required": false,
+                      "suboptions": {
+                        "eq": {
+                          "aliases": [],
+                          "description": "Match only packets on a given port number.",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "gt": {
+                          "aliases": [],
+                          "description": "Match only packets with a greater port number.",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "lt": {
+                          "aliases": [],
+                          "description": "Match only packets with a lower port number.",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "neq": {
+                          "aliases": [],
+                          "description": "Match only packets not on a given port number.",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "range": {
+                          "aliases": [],
+                          "description": "Port range operator",
+                          "type": "dict",
+                          "required": false,
+                          "suboptions": {
+                            "end": {
+                              "aliases": [],
+                              "description": "Specify the end of the port range.",
+                              "type": "int",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "start": {
+                              "aliases": [],
+                              "description": "Specify the start of the port range.",
+                              "type": "int",
+                              "required": false,
+                              "suboptions": {}
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "object": {
+                      "aliases": [],
+                      "description": "Enter this keyword to specify a service object",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "protocol": {
+                      "aliases": [],
+                      "description": "Defines the protocols in the group.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "source_port": {
+                      "aliases": [],
+                      "description": "Keyword to specify source port",
+                      "type": "dict",
+                      "required": false,
+                      "suboptions": {
+                        "eq": {
+                          "aliases": [],
+                          "description": "Match only packets on a given port number.",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "gt": {
+                          "aliases": [],
+                          "description": "Match only packets with a greater port number.",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "lt": {
+                          "aliases": [],
+                          "description": "Match only packets with a lower port number.",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "neq": {
+                          "aliases": [],
+                          "description": "Match only packets not on a given port number.",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "range": {
+                          "aliases": [],
+                          "description": "Port range operator",
+                          "type": "dict",
+                          "required": false,
+                          "suboptions": {
+                            "end": {
+                              "aliases": [],
+                              "description": "Specify the end of the port range.",
+                              "type": "int",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "start": {
+                              "aliases": [],
+                              "description": "Specify the start of the port range.",
+                              "type": "int",
+                              "required": false,
+                              "suboptions": {}
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "user_object": {
+                  "aliases": [],
+                  "description": "Configures single user, local or import user group",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "user": {
+                      "aliases": [],
+                      "description": "Configure a user objectUser name to configure a user object.",
+                      "type": "list",
+                      "required": false,
+                      "elements": "dict",
+                      "suboptions": {
+                        "domain": {
+                          "aliases": [],
+                          "description": "User domain",
+                          "type": "str",
+                          "required": true,
+                          "suboptions": {}
+                        },
+                        "name": {
+                          "aliases": [],
+                          "description": "Enter the name of the user",
+                          "type": "str",
+                          "required": true,
+                          "suboptions": {}
+                        }
+                      }
+                    },
+                    "user_group": {
+                      "aliases": [],
+                      "description": "Configure a user group object.",
+                      "type": "list",
+                      "required": false,
+                      "elements": "dict",
+                      "suboptions": {
+                        "domain": {
+                          "aliases": [],
+                          "description": "Group domain",
+                          "type": "str",
+                          "required": true,
+                          "suboptions": {}
+                        },
+                        "name": {
+                          "aliases": [],
+                          "description": "Enter the name of the group",
+                          "type": "str",
+                          "required": true,
+                          "suboptions": {}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "object_type": {
+              "aliases": [],
+              "description": "The object group type.",
+              "type": "str",
+              "required": true,
+              "choices": [
+                "icmp-type",
+                "network",
+                "protocol",
+                "security",
+                "service",
+                "user"
+              ],
+              "suboptions": {}
+            }
+          }
+        },
+        "running_config": {
+          "aliases": [],
+          "description": "The module, by default, will connect to the remote device and retrieve the current running-config to use as a base for comparing against the contents of source. There are times when it is not desirable to have the task get the current running-config for every task in a playbook.  The I(running_config) argument allows the implementer to pass in the configuration to use as the base config for comparison. This value of this option should be the output received from device by executing command.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The state the configuration should be left in",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "replaced",
+            "overridden",
+            "deleted",
+            "gathered",
+            "rendered",
+            "parsed"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Object Group resource module",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n# Using merged\n\n# Before state:\n# -------------\n#\n# ciscoasa# sh running-config object-group\n# object-group network test_og_network\n#  description test_network_og\n#  network-object host 192.0.3.1\n\n- name: \"Merge module attributes of given object-group\"\n  cisco.asa.asa_ogs:\n    config:\n    - object_type: network\n      object_groups:\n        - name: group_network_obj\n          group_object:\n            - test_og_network\n        - name: test_og_network\n          description: test_og_network\n          network_object:\n            host:\n              - 192.0.2.1\n              - 192.0.2.2\n            address:\n              - 192.0.2.0 255.255.255.0\n              - 198.51.100.0 255.255.255.0\n        - name: test_network_og\n          description: test_network_og\n          network_object:\n            host:\n              - 192.0.3.1\n              - 192.0.3.2\n            ipv6_address:\n              - 2001:db8:3::/64\n    - object_type: security\n      object_groups:\n        - name: test_og_security\n          description: test_security\n          security_group:\n            sec_name:\n              - test_1\n              - test_2\n            tag:\n              - 10\n              - 20\n    - object_type: service\n      object_groups:\n        - name: O-Worker\n          services_object:\n            - protocol: tcp\n              destination_port:\n                range:\n                  start: 100\n                  end: 200\n            - protocol: tcp-udp\n              source_port:\n                eq: 1234\n              destination_port:\n                gt: nfs\n        - name: O-UNIX-TCP\n          protocol: tcp\n          port_object:\n            - eq: https\n            - range:\n                start: 100\n                end: 400\n    - object_type: user\n      object_groups:\n        - name: test_og_user\n          description: test_user\n          user_object:\n            user:\n              - name: new_user_1\n                domain: LOCAL\n              - name: new_user_2\n                domain: LOCAL\n    state: merged\n\n# Commands fired:\n# ---------------\n#\n# object-group security test_og_security\n# description test_security\n# security-group name test_1\n# security-group name test_2\n# security-group tag 10\n# security-group tag 20\n# object-group network group_network_obj\n# group-object test_og_network\n# object-group network test_og_network\n# description test_og_network\n# network-object 192.0.2.0 255.255.255.0\n# network-object 198.51.100.0 255.255.255.0\n# network-object host 192.0.2.1\n# network-object host 192.0.2.2\n# object-group network test_network_og\n# network-object host 192.0.3.1\n# network-object host 192.0.3.2\n# network-object 2001:db8:3::/64\n# object-group service O-Worker\n# service-object tcp destination range 100 200\n# service-object tcp source eq 1234 destination gt nfs\n# object-group service O-UNIX-TCP tcp\n# port-object eq https\n# port-object range 100 400\n# object-group user test_og_user\n# description test_user\n# user LOCAL\\new_user_1\n# user LOCAL\\new_user_2\n\n# After state:\n# ------------\n#\n# ciscoasa# sh running-config object-group\n# object-group network group_network_obj\n#  group-object test_og_network\n# object-group network test_og_network\n#  description test_og_network\n#  network-object host 192.0.2.1\n#  network-object host 192.0.2.2\n#  network-object 192.0.2.0 255.255.255.0\n#  network-object 198.51.100.0 255.255.255.0\n#  network-object host 192.0.3.1\n# object-group network test_network_og\n#  description test_network_og\n#  network-object host 192.0.3.1\n#  network-object host 192.0.3.2\n#  network-object 2001:db8:0:3::/64\n#  group-object test_og_network\n# object-group security test_og_security\n#  security-group name test_1\n#  security-group name test_2\n#  security-group tag 10\n#  security-group tag 20\n# object-group service O-Worker\n#  service-object tcp destination range 100 200\n#  service-object tcp source eq 1234 destination gt nfs\n# object-group service O-UNIX-TCP tcp\n#  port-object eq https\n#  port-object range 100 400\n# object-group user test_og_user\n#  description test_user\n#  user LOCAL\\new_user_1\n#  user LOCAL\\new_user_2\n\n# Using Replaced\n\n# Before state:\n# -------------\n#\n# ciscoasa# sh running-config object-group\n# object-group network test_og_network\n#  description test_og_network\n#  network-object host 192.0.2.1\n#  network-object host 192.0.2.2\n#  network-object 192.0.2.0 255.255.255.0\n#  network-object 198.51.100.0 255.255.255.0\n# object-group network test_network_og\n#  description test_network_og\n#  network-object host 192.0.3.1\n#  network-object host 192.0.3.2\n#  network-object 2001:db8:0:3::/64\n#  group-object test_og_network\n# object-group security test_og_security\n#  security-group name test_1\n#  security-group name test_2\n#  security-group tag 10\n#  security-group tag 20\n# object-group service O-Worker\n#  service-object tcp destination range 100 200\n#  service-object tcp source eq 1234 destination gt nfs\n# object-group service O-UNIX-TCP tcp\n#  port-object eq https\n#  port-object range 100 400\n# object-group user test_og_user\n#  user LOCAL\\new_user_1\n#  user LOCAL\\new_user_2\n\n- name: \"Replace module attributes of given object-group\"\n  cisco.asa.asa_ogs:\n    config:\n      - object_type: network\n        object_groups:\n          - name: test_og_network\n            description: test_og_network_replace\n            network_object:\n              host:\n                - 192.0.3.1\n              address:\n                - 192.0.3.0 255.255.255.0\n      - object_type: protocol\n        object_groups:\n          - name: test_og_protocol\n            description: test_og_protocol\n            protocol_object:\n              protocol:\n                - tcp\n                - udp\n    state: replaced\n\n# Commands Fired:\n# ---------------\n#\n# object-group protocol test_og_protocol\n# description test_og_protocol\n# protocol tcp\n# protocol udp\n# object-group network test_og_network\n# description test_og_network_replace\n# no network-object 192.0.2.0 255.255.255.0\n# no network-object 198.51.100.0 255.255.255.0\n# network-object 192.0.3.0 255.255.255.0\n# no network-object host 192.0.2.1\n# no network-object host 192.0.2.2\n# network-object host 192.0.3.1\n\n# After state:\n# -------------\n#\n# ciscoasa# sh running-config object-group\n# object-group network test_og_network\n#  description test_og_network_replace\n#  network-object host 192.0.3.1\n#  network-object 192.0.3.0 255.255.255.0\n# object-group network test_network_og\n#  description test_network_og\n#  network-object host 192.0.3.1\n#  network-object host 192.0.3.2\n#  network-object 2001:db8:0:3::/64\n#  group-object test_og_network\n# object-group security test_og_security\n#  security-group name test_1\n#  security-group name test_2\n#  security-group tag 10\n#  security-group tag 20\n# object-group service O-Worker\n#  service-object tcp destination range 100 200\n#  service-object tcp source eq 1234 destination gt nfs\n# object-group service O-UNIX-TCP tcp\n#  port-object eq https\n#  port-object range 100 400\n# object-group user test_og_user\n#  user LOCAL\\new_user_1\n#  user LOCAL\\new_user_2\n# object-group protocol test_og_protocol\n#  protocol-object tcp\n#  protocol-object udp\n\n# Using Overridden\n\n# Before state:\n# -------------\n#\n# ciscoasa# sh running-config object-group\n# object-group network test_og_network\n#  description test_og_network\n#  network-object host 192.0.2.1\n#  network-object host 192.0.2.2\n#  network-object 192.0.2.0 255.255.255.0\n#  network-object 198.51.100.0 255.255.255.0\n# object-group network test_network_og\n#  description test_network_og\n#  network-object host 192.0.3.1\n#  network-object host 192.0.3.2\n#  network-object 2001:db8:0:3::/64\n#  group-object test_og_network\n# object-group security test_og_security\n#  security-group name test_1\n#  security-group name test_2\n#  security-group tag 10\n#  security-group tag 20\n# object-group service O-Worker\n#  service-object tcp destination range 100 200\n#  service-object tcp source eq 1234 destination gt nfs\n# object-group service O-UNIX-TCP tcp\n#  port-object eq https\n#  port-object range 100 400\n# object-group user test_og_user\n#  user LOCAL\\new_user_1\n#  user LOCAL\\new_user_2\n\n- name: \"Overridden module attributes of given object-group\"\n  cisco.asa.asa_ogs:\n    config:\n      - object_type: network\n        object_groups:\n          - name: test_og_network\n            description: test_og_network_override\n            network_object:\n              host:\n                - 192.0.3.1\n              address:\n                - 192.0.3.0 255.255.255.0\n          - name: ANSIBLE_TEST\n            network_object:\n              object:\n                - TEST1\n                - TEST2\n      - object_type: protocol\n        object_groups:\n          - name: test_og_protocol\n            description: test_og_protocol\n            protocol_object:\n              protocol:\n                - tcp\n                - udp\n    state: overridden\n\n# Commands Fired:\n# ---------------\n#\n# no object-group security test_og_security\n# no object-group service O-Worker\n# no object-group service O-UNIX-TCP\n# no object-group user test_og_user\n# object-group protocol test_og_protocol\n# description test_og_protocol\n# protocol tcp\n# protocol udp\n# object-group network test_og_network\n# description test_og_network_override\n# no network-object 192.0.2.0 255.255.255.0\n# no network-object 198.51.100.0 255.255.255.0\n# network-object 192.0.3.0 255.255.255.0\n# no network-object host 192.0.2.1\n# no network-object host 192.0.2.2\n# network-object host 192.0.3.1\n# no object-group network test_network_og\n# object-group network ANSIBLE_TEST\n# network-object object TEST1\n# network-object object TEST2\n\n# After state:\n# -------------\n#\n# ciscoasa# sh running-config object-group\n# object-group network test_og_network\n#  description test_og_network_override\n#  network-object host 192.0.3.1\n#  network-object 192.0.3.0 255.255.255.0\n# object-group network ANSIBLE_TEST\n#  network-object object TEST1\n#  network-object object TEST2\n# object-group protocol test_og_protocol\n#  protocol-object tcp\n#  protocol-object udp\n\n# Using Deleted\n\n# Before state:\n# -------------\n#\n# ciscoasa# sh running-config object-group\n# object-group network test_og_network\n#  description test_og_network\n#  network-object host 192.0.2.1\n#  network-object host 192.0.2.2\n#  network-object 192.0.2.0 255.255.255.0\n#  network-object 198.51.100.0 255.255.255.0\n# object-group network test_network_og\n#  description test_network_og\n#  network-object host 192.0.3.1\n#  network-object host 192.0.3.2\n#  network-object 2001:db8:0:3::/64\n#  group-object test_og_network\n# object-group security test_og_security\n#  security-group name test_1\n#  security-group name test_2\n#  security-group tag 10\n#  security-group tag 20\n# object-group service O-Worker\n#  service-object tcp destination range 100 200\n#  service-object tcp source eq 1234 destination gt nfs\n# object-group service O-UNIX-TCP tcp\n#  port-object eq https\n#  port-object range 100 400\n# object-group user test_og_user\n#  user LOCAL\\new_user_1\n#  user LOCAL\\new_user_2\n\n- name: \"Delete given module attributes\"\n  cisco.asa.asa_ogs:\n    config:\n      - object_type: network\n        object_groups:\n          - name: test_og_network\n          - name: test_network_og\n      - object_type: security\n        object_groups:\n          - name: test_og_security\n      - object_type: service\n        object_groups:\n          - name: O-UNIX-TCP\n    state: deleted\n\n# Commands Fired:\n# ---------------\n#\n# no object-group network test_og_network\n# no object-group network test_network_og\n# no object-group security test_og_security\n# no object-group service O-UNIX-TCP\n\n# After state:\n# -------------\n#\n# ciscoasa# sh running-config object-group\n# object-group user test_og_user\n#  user LOCAL\\new_user_1\n#  user LOCAL\\new_user_2\n# object-group service O-Worker\n#  service-object tcp destination range 100 200\n#  service-object tcp source eq 1234 destination gt nfs\n\n# Using DELETED without any config passed\n#\"(NOTE: This will delete all of configured resource module attributes)\"\n\n# Before state:\n# -------------\n#\n# ciscoasa# sh running-config object-group\n# object-group network test_og_network\n#  description test_og_network\n#  network-object host 192.0.2.1\n#  network-object host 192.0.2.2\n#  network-object 192.0.2.0 255.255.255.0\n#  network-object 198.51.100.0 255.255.255.0\n# object-group network test_network_og\n#  description test_network_og\n#  network-object host 192.0.3.1\n#  network-object host 192.0.3.2\n#  network-object 2001:db8:0:3::/64\n#  group-object test_og_network\n# object-group security test_og_security\n#  security-group name test_1\n#  security-group name test_2\n#  security-group tag 10\n#  security-group tag 20\n# object-group user test_og_user\n#  user LOCAL\\new_user_1\n#  user LOCAL\\new_user_2\n\n- name: Delete ALL configured module attributes\n  cisco.asa.asa_ogs:\n    config:\n    state: deleted\n\n# Commands Fired:\n# ---------------\n#\n# no object-group network test_og_network\n# no object-group network test_network_og\n# no object-group security test_og_security\n# no object-group user test_og_user\n\n# After state:\n# -------------\n#\n# ciscoasa# sh running-config object-group\n\n# Using Gathered\n\n# Before state:\n# -------------\n#\n# ciscoasa# sh running-config object-group\n# object-group network test_og_network\n#  description test_og_network\n#  network-object host 192.0.2.1\n#  network-object host 192.0.2.2\n#  network-object 192.0.2.0 255.255.255.0\n#  network-object 198.51.100.0 255.255.255.0\n# object-group network test_network_og\n#  description test_network_og\n#  network-object host 192.0.3.1\n#  network-object host 192.0.3.2\n#  network-object 2001:db8:0:3::/64\n#  group-object test_og_network\n# object-group security test_og_security\n#  security-group name test_1\n#  security-group name test_2\n#  security-group tag 10\n#  security-group tag 20\n# object-group user test_og_user\n#  user LOCAL\\new_user_1\n#  user LOCAL\\new_user_2\n\n- name: Gather listed OGs with provided configurations\n  cisco.asa.asa_ogs:\n    config:\n    state: gathered\n\n# Module Execution Result:\n# ------------------------\n#\n# \"gathered\": [\n#         {\n#             \"object_groups\": [\n#                 {\n#                     \"description\": \"test_security\",\n#                     \"name\": \"test_og_security\",\n#                     \"security_group\": {\n#                         \"sec_name\": [\n#                             \"test_2\",\n#                             \"test_1\"\n#                         ],\n#                         \"tag\": [\n#                             10,\n#                             20\n#                         ]\n#                     }\n#                 }\n#             ],\n#             \"object_type\": \"security\"\n#         },\n#         {\n#             \"object_groups\": [\n#                 {\n#                     \"description\": \"test_network_og\",\n#                     \"name\": \"test_network_og\",\n#                     \"network_object\": {\n#                         \"host\": [\n#                             \"192.0.3.1\",\n#                             \"192.0.3.2\"\n#                         ],\n#                         \"ipv6_address\": [\n#                             \"2001:db8:3::/64\"\n#                         ]\n#                     }\n#                 },\n#                 {\n#                     \"description\": \"test_og_network\",\n#                     \"name\": \"test_og_network\",\n#                     \"network_object\": {\n#                         \"address\": [\n#                             \"192.0.2.0 255.255.255.0\",\n#                             \"198.51.100.0 255.255.255.0\"\n#                         ],\n#                         \"host\": [\n#                             \"192.0.2.1\",\n#                             \"192.0.2.2\"\n#                         ]\n#                     }\n#                 }\n#             ],\n#             \"object_type\": \"network\"\n#         },\n#         {\n#             \"object_groups\": [\n#                 {\n#                     \"description\": \"test_user\",\n#                     \"name\": \"test_og_user\",\n#                     \"user_object\": {\n#                         \"user\": [\n#                             {\n#                                 \"domain\": \"LOCAL\",\n#                                 \"name\": \"new_user_1\"\n#                             },\n#                             {\n#                                 \"domain\": \"LOCAL\",\n#                                 \"name\": \"new_user_2\"\n#                             }\n#                         ]\n#                     }\n#                 }\n#             ],\n#             \"object_type\": \"user\"\n#         }\n#     ]\n\n# After state:\n# ------------\n#\n# ciscoasa# sh running-config object-group\n# object-group network test_og_network\n#  description test_og_network\n#  network-object host 192.0.2.1\n#  network-object host 192.0.2.2\n#  network-object 192.0.2.0 255.255.255.0\n#  network-object 198.51.100.0 255.255.255.0\n# object-group network test_network_og\n#  description test_network_og\n#  network-object host 192.0.3.1\n#  network-object host 192.0.3.2\n#  network-object 2001:db8:0:3::/64\n#  group-object test_og_network\n# object-group security test_og_security\n#  security-group name test_1\n#  security-group name test_2\n#  security-group tag 10\n#  security-group tag 20\n# object-group user test_og_user\n#  user LOCAL\\new_user_1\n#  user LOCAL\\new_user_2\n\n# Using Rendered\n\n- name: Render the commands for provided  configuration\n  cisco.asa.asa_ogs:\n    config:\n      - object_type: network\n        object_groups:\n          - name: test_og_network\n            description: test_og_network\n            network_object:\n              host:\n                - 192.0.2.1\n                - 192.0.2.2\n              address:\n                - 192.0.2.0 255.255.255.0\n                - 198.51.100.0 255.255.255.0\n          - name: test_network_og\n            description: test_network_og\n            network_object:\n              host:\n                - 192.0.3.1\n                - 192.0.3.2\n              ipv6_address:\n                - 2001:db8:3::/64\n      - object_type: security\n        object_groups:\n          - name: test_og_security\n            description: test_security\n            security_group:\n              sec_name:\n                - test_1\n                - test_2\n              tag:\n                - 10\n                - 20\n      - object_type: user\n        object_groups:\n          - name: test_og_user\n            description: test_user\n            user_object:\n              user:\n                - name: new_user_1\n                  domain: LOCAL\n                - name: new_user_2\n                  domain: LOCAL\n    state: rendered\n\n# Module Execution Result:\n# ------------------------\n#\n# \"rendered\": [\n#         \"object-group security test_og_security\",\n#         \"description test_security\",\n#         \"security-group name test_1\",\n#         \"security-group name test_2\",\n#         \"security-group tag 10\",\n#         \"security-group tag 20\",\n#         \"object-group network test_og_network\",\n#         \"description test_og_network\",\n#         \"network-object 192.0.2.0 255.255.255.0\",\n#         \"network-object 198.51.100.0 255.255.255.0\",\n#         \"network-object host 192.0.2.1\",\n#         \"network-object host 192.0.2.2\",\n#         \"object-group network test_network_og\",\n#         \"description test_network_og\",\n#         \"network-object host 192.0.3.1\",\n#         \"network-object host 192.0.3.2\",\n#         \"network-object 2001:db8:3::/64\",\n#         \"object-group user test_og_user\",\n#         \"description test_user\",\n#         \"user LOCAL\\new_user_1\",\n#         \"user LOCAL\\new_user_2\"\n#     ]\n\n# Using Parsed\n\n# parsed.cfg\n#\n# object-group network test_og_network\n#   description test_og_network\n#   network-object host 192.0.2.1\n#   network-object 192.0.2.0 255.255.255.0\n# object-group network test_network_og\n#   network-object 2001:db8:3::/64\n# object-group service test_og_service\n#   service-object tcp-udp\n\n- name: Parse the commands for provided configuration\n  cisco.asa.asa_ogs:\n    running_config: \"{{ lookup('file', 'parsed.cfg') }}\"\n    state: parsed\n\n# Module Execution Result:\n# ------------------------\n#\n# \"parsed\": [\n#         {\n#             \"object_groups\": [\n#                 {\n#                     \"name\": \"test_network_og\"\n#                 },\n#                 {\n#                     \"description\": \"test_og_network\",\n#                     \"name\": \"test_og_network\",\n#                     \"network_object\": {\n#                         \"host\": [\n#                             \"192.0.2.2\"\n#                         ]\n#                     }\n#                 }\n#             ],\n#             \"object_type\": \"network\"\n#         },\n#         {\n#             \"object_groups\": [\n#                 {\n#                     \"name\": \"test_og_service\",\n#                     \"service_object\": {\n#                         \"protocol\": [\n#                             \"tcp-udp\",\n#                             \"ipinip\"\n#                         ]\n#                     }\n#                 }\n#             ],\n#             \"object_type\": \"service\"\n#         }\n#     ]\n\n"
+  }
+}

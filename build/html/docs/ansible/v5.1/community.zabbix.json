@@ -1,0 +1,4275 @@
+{
+  "community.zabbix.zabbix_action": {
+    "doc": {
+      "description": "This module allows you to create, modify and delete Zabbix actions.",
+      "has_action": false,
+      "notes": "Only Zabbix >= 3.0 is supported.\nIf you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "acknowledge_default_message": {
+          "aliases": [],
+          "description": "Update operation (known as \"Acknowledge operation\" before Zabbix 4.0) message text.\nWith >= Zabbix 5.0 this field is removed from the API and is dropped silently by module.\nWorks only with >= Zabbix 3.4 and < Zabbix 5.0",
+          "required": false,
+          "suboptions": {}
+        },
+        "acknowledge_default_subject": {
+          "aliases": [],
+          "description": "Update operation (known as \"Acknowledge operation\" before Zabbix 4.0) message subject.\nWith >= Zabbix 5.0 this field is removed from the API and is dropped silently by module.\nWorks only with >= Zabbix 3.4 and < Zabbix 5.0",
+          "required": false,
+          "suboptions": {}
+        },
+        "acknowledge_operations": {
+          "aliases": [
+            "update_operations"
+          ],
+          "description": "List of acknowledge operations.\nAction acknowledge operations are known as update operations since Zabbix 4.0.\nC(Suboptions) are the same as for I(operations).\nWorks only with >= Zabbix 3.4",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "conditions": {
+          "aliases": [],
+          "description": "List of conditions to use for filtering results.\nFor more information about suboptions of this option please check out Zabbix API documentation U(https://www.zabbix.com/documentation/5.0/manual/api/reference/action/object#action_filter_condition)",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "formulaid": {
+              "aliases": [],
+              "description": "Arbitrary unique ID that is used to reference the condition from a custom expression.\nCan only contain upper-case letters.\nRequired for custom expression filters and ignored otherwise.",
+              "required": false,
+              "suboptions": {}
+            },
+            "operator": {
+              "aliases": [],
+              "description": "Condition operator.\nWhen I(type) is set to C(time_period), the choices are C(in), C(not in).\nC(matches), C(does not match), C(Yes) and C(No) condition operators work only with >= Zabbix 4.0",
+              "required": false,
+              "choices": [
+                "=",
+                "<>",
+                "like",
+                "not like",
+                "in",
+                ">=",
+                "<=",
+                "not in",
+                "matches",
+                "does not match",
+                "Yes",
+                "No"
+              ],
+              "suboptions": {}
+            },
+            "type": {
+              "aliases": [],
+              "description": "Type (label) of the condition.\nPossible values when I(event_source=trigger):\n - C(host_group)\n - C(host)\n - C(trigger)\n - C(trigger_name)\n - C(trigger_severity)\n - C(time_period)\n - C(host_template)\n - C(application)\n - C(maintenance_status) known in Zabbix 4.0 and above as \"Problem is suppressed\"\n - C(event_tag)\n - C(event_tag_value)\nPossible values when I(event_source=discovery):\n - C(host_IP)\n - C(discovered_service_type)\n - C(discovered_service_port)\n - C(discovery_status)\n - C(uptime_or_downtime_duration)\n - C(received_value)\n - C(discovery_rule)\n - C(discovery_check)\n - C(proxy)\n - C(discovery_object)\nPossible values when I(event_source=auto_registration):\n - C(proxy)\n - C(host_name)\n - C(host_metadata)\nPossible values when I(event_source=internal):\n - C(host_group)\n - C(host)\n - C(host_template)\n - C(application)\n - C(event_type)",
+              "required": false,
+              "suboptions": {}
+            },
+            "value": {
+              "aliases": [],
+              "description": "Value to compare with.\nWhen I(type=discovery_status), the choices are:\n - C(up)\n - C(down)\n - C(discovered)\n - C(lost)\nWhen I(type=discovery_object), the choices are:\n - C(host)\n - C(service)\nWhen I(type=event_type), the choices are:\n - C(item in not supported state)\n - C(item in normal state)\n - C(LLD rule in not supported state)\n - C(LLD rule in normal state)\n - C(trigger in unknown state)\n - C(trigger in normal state)\nWhen I(type=trigger_severity), the choices are (case-insensitive):\n - C(not classified)\n - C(information)\n - C(warning)\n - C(average)\n - C(high)\n - C(disaster)\nIrrespective of user-visible names being changed in Zabbix. Defaults to C(not classified) if omitted.\nBesides the above options, this is usually either the name of the object or a string to compare with.",
+              "required": false,
+              "suboptions": {}
+            },
+            "value2": {
+              "aliases": [],
+              "description": "Secondary value to compare with.\nRequired for trigger actions when condition I(type=event_tag_value).",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "default_message": {
+          "aliases": [],
+          "description": "Problem message default text.\nWith >= Zabbix 5.0 this field is removed from the API and is dropped silently by module.\nWorks only with < Zabbix 5.0",
+          "required": false,
+          "suboptions": {}
+        },
+        "default_subject": {
+          "aliases": [],
+          "description": "Problem message default subject.\nWith >= Zabbix 5.0 this field is removed from the API and is dropped silently by module.\nWorks only with < Zabbix 5.0",
+          "required": false,
+          "suboptions": {}
+        },
+        "esc_period": {
+          "aliases": [],
+          "description": "Default operation step duration. Must be greater than 60 seconds.\nAccepts only seconds in int for <= Zabbix 3.2\nAccepts seconds, time unit with suffix and user macro since => Zabbix 3.4\nRequired when C(state=present).",
+          "required": false,
+          "suboptions": {}
+        },
+        "eval_type": {
+          "aliases": [],
+          "description": "Filter condition evaluation method.\nDefaults to C(andor) if conditions are less then 2 or if I(formula) is not specified.\nDefaults to C(custom_expression) when formula is specified.",
+          "required": false,
+          "choices": [
+            "andor",
+            "and",
+            "or",
+            "custom_expression"
+          ],
+          "suboptions": {}
+        },
+        "event_source": {
+          "aliases": [],
+          "description": "Type of events that the action will handle.\nRequired when C(state=present).",
+          "required": false,
+          "choices": [
+            "trigger",
+            "discovery",
+            "auto_registration",
+            "internal"
+          ],
+          "suboptions": {}
+        },
+        "formula": {
+          "aliases": [],
+          "description": "User-defined expression to be used for evaluating conditions with a custom expression.\nThe expression must contain IDs that reference each condition by its formulaid.\nThe IDs used in the expression must exactly match the ones defined in the I(conditions). No condition can remain unused or omitted.\nRequired when I(eval_type=custom_expression).\nUse sequential IDs that start at \"A\". If non-sequential IDs are used, Zabbix re-indexes them. This makes each module run notice the difference in IDs and update the action.",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the action",
+          "required": true,
+          "suboptions": {}
+        },
+        "operations": {
+          "aliases": [],
+          "description": "List of action operations",
+          "type": "list",
+          "required": false,
+          "suboptions": {
+            "command": {
+              "aliases": [],
+              "description": "Command to run.\nRequired when I(type=remote_command) and I(command_type!=global_script).",
+              "required": false,
+              "suboptions": {}
+            },
+            "command_type": {
+              "aliases": [],
+              "description": "Type of operation command.\nRequired when I(type=remote_command).",
+              "required": false,
+              "choices": [
+                "custom_script",
+                "ipmi",
+                "ssh",
+                "telnet",
+                "global_script"
+              ],
+              "suboptions": {}
+            },
+            "esc_period": {
+              "aliases": [],
+              "description": "Duration of an escalation step in seconds.\nMust be greater than 60 seconds.\nAccepts only seconds in int for <= Zabbix 3.2\nAccepts seconds, time unit with suffix and user macro since => Zabbix 3.4\nIf set to 0 or 0s, the default action escalation period will be used.",
+              "default": "0s",
+              "required": false,
+              "suboptions": {}
+            },
+            "esc_step_from": {
+              "aliases": [],
+              "description": "Step to start escalation from.",
+              "default": "1",
+              "required": false,
+              "suboptions": {}
+            },
+            "esc_step_to": {
+              "aliases": [],
+              "description": "Step to end escalation at.\nSpecify 0 for infinitely.",
+              "default": "1",
+              "required": false,
+              "suboptions": {}
+            },
+            "execute_on": {
+              "aliases": [],
+              "description": "Target on which the custom script operation command will be executed.\nRequired when I(type=remote_command) and I(command_type=custom_script).",
+              "required": false,
+              "choices": [
+                "agent",
+                "server",
+                "proxy"
+              ],
+              "suboptions": {}
+            },
+            "host_groups": {
+              "aliases": [],
+              "description": "List of host groups host should be added to.\nRequired when I(type=add_to_host_group) or I(type=remove_from_host_group).",
+              "type": "list",
+              "required": false,
+              "suboptions": {}
+            },
+            "inventory": {
+              "aliases": [],
+              "description": "Host inventory mode.\nRequired when I(type=set_host_inventory_mode).",
+              "required": false,
+              "choices": [
+                "manual",
+                "automatic"
+              ],
+              "suboptions": {}
+            },
+            "media_type": {
+              "aliases": [],
+              "description": "Media type that will be used to send the message.\nCan be used with I(type=send_message) or I(type=notify_all_involved) inside I(acknowledge_operations).\nSet to C(all) for all media types",
+              "default": "all",
+              "required": false,
+              "suboptions": {}
+            },
+            "message": {
+              "aliases": [],
+              "description": "Operation message text.\nWill check the 'default message' and use the text from I(default_message) if this and I(default_subject) are not specified",
+              "required": false,
+              "suboptions": {}
+            },
+            "operation_condition": {
+              "aliases": [],
+              "description": "The action operation condition object defines a condition that must be met to perform the current operation.",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "acknowledged",
+                "not_acknowledged"
+              ],
+              "suboptions": {}
+            },
+            "password": {
+              "aliases": [],
+              "description": "Password used for authentication.\nRequired when I(ssh_auth_type=password) or I(command_type=telnet).\nCan be used when I(type=remote_command).",
+              "required": false,
+              "suboptions": {}
+            },
+            "port": {
+              "aliases": [],
+              "description": "Port number used for authentication.\nCan be used when I(command_type in [ssh, telnet]) and I(type=remote_command).",
+              "required": false,
+              "suboptions": {}
+            },
+            "run_on_groups": {
+              "aliases": [],
+              "description": "Host groups to run remote commands on.\nRequired when I(type=remote_command) and I(run_on_hosts) is not set.",
+              "required": false,
+              "suboptions": {}
+            },
+            "run_on_hosts": {
+              "aliases": [],
+              "description": "Hosts to run remote commands on.\nRequired when I(type=remote_command) and I(run_on_groups) is not set.\nIf set to 0 the command will be run on the current host.",
+              "required": false,
+              "suboptions": {}
+            },
+            "script_name": {
+              "aliases": [],
+              "description": "The name of script used for global script commands.\nRequired when I(command_type=global_script).\nCan be used when I(type=remote_command).",
+              "required": false,
+              "suboptions": {}
+            },
+            "send_to_groups": {
+              "aliases": [],
+              "description": "User groups to send messages to.",
+              "type": "list",
+              "required": false,
+              "suboptions": {}
+            },
+            "send_to_users": {
+              "aliases": [],
+              "description": "Users (usernames or aliases) to send messages to.",
+              "type": "list",
+              "required": false,
+              "suboptions": {}
+            },
+            "ssh_auth_type": {
+              "aliases": [],
+              "description": "Authentication method used for SSH commands.\nRequired when I(type=remote_command) and I(command_type=ssh).",
+              "required": false,
+              "choices": [
+                "password",
+                "public_key"
+              ],
+              "suboptions": {}
+            },
+            "ssh_privatekey_file": {
+              "aliases": [],
+              "description": "Name of the private key file used for SSH commands with public key authentication.\nRequired when I(ssh_auth_type=public_key).\nCan be used when I(type=remote_command).",
+              "required": false,
+              "suboptions": {}
+            },
+            "ssh_publickey_file": {
+              "aliases": [],
+              "description": "Name of the public key file used for SSH commands with public key authentication.\nRequired when I(ssh_auth_type=public_key).\nCan be used when I(type=remote_command).",
+              "required": false,
+              "suboptions": {}
+            },
+            "subject": {
+              "aliases": [],
+              "description": "Operation message subject.\nWill check the 'default message' and use the text from I(default_subject) if this and I(default_subject) are not specified",
+              "required": false,
+              "suboptions": {}
+            },
+            "templates": {
+              "aliases": [],
+              "description": "List of templates host should be linked to.\nRequired when I(type=link_to_template) or I(type=unlink_from_template).",
+              "type": "list",
+              "required": false,
+              "suboptions": {}
+            },
+            "type": {
+              "aliases": [],
+              "description": "Type of operation.\nValid choices when setting type for I(recovery_operations) and I(acknowledge_operations):\n - C(send_message)\n - C(remote_command)\n - C(notify_all_involved)\nChoice C(notify_all_involved) only supported in I(recovery_operations) and I(acknowledge_operations).",
+              "required": false,
+              "choices": [
+                "send_message",
+                "remote_command",
+                "add_host",
+                "remove_host",
+                "add_to_host_group",
+                "remove_from_host_group",
+                "link_to_template",
+                "unlink_from_template",
+                "enable_host",
+                "disable_host",
+                "set_host_inventory_mode",
+                "notify_all_involved"
+              ],
+              "suboptions": {}
+            },
+            "username": {
+              "aliases": [],
+              "description": "User name used for authentication.\nRequired when I(ssh_auth_type in [public_key, password]) or I(command_type=telnet).\nCan be used when I(type=remote_command).",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "pause_in_maintenance": {
+          "aliases": [],
+          "description": "Whether to pause escalation during maintenance periods or not.\nCan be used when I(event_source=trigger).",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "recovery_default_message": {
+          "aliases": [],
+          "description": "Recovery message text.\nWith >= Zabbix 5.0 this field is removed from the API and is dropped silently by module.\nWorks only with >= Zabbix 3.2 and < Zabbix 5.0",
+          "required": false,
+          "suboptions": {}
+        },
+        "recovery_default_subject": {
+          "aliases": [],
+          "description": "Recovery message subject.\nWith >= Zabbix 5.0 this field is removed from the API and is dropped silently by module.\nWorks only with >= Zabbix 3.2 and < Zabbix 5.0",
+          "required": false,
+          "suboptions": {}
+        },
+        "recovery_operations": {
+          "aliases": [],
+          "description": "List of recovery operations.\nC(Suboptions) are the same as for I(operations).\nWorks only with >= Zabbix 3.2",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the action.\nOn C(present), it will create an action if it does not exist or update the action if the associated data is different.\nOn C(absent), it will remove the action if it exists.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "status": {
+          "aliases": [],
+          "description": "Status of the action.",
+          "default": "enabled",
+          "required": false,
+          "choices": [
+            "enabled",
+            "disabled"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Create/Delete/Update Zabbix actions"
+    },
+    "examples": "\n# Trigger action with only one condition\n- name: Deploy trigger action\n  community.zabbix.zabbix_action:\n    server_url: \"http://zabbix.example.com/zabbix/\"\n    login_user: Admin\n    login_password: secret\n    name: \"Send alerts to Admin\"\n    event_source: 'trigger'\n    state: present\n    status: enabled\n    esc_period: 60\n    conditions:\n      - type: 'trigger_severity'\n        operator: '>='\n        value: 'Information'\n    operations:\n      - type: send_message\n        subject: \"Something bad is happening\"\n        message: \"Come on, guys do something\"\n        media_type: 'Email'\n        send_to_users:\n          - 'Admin'\n\n# Trigger action with multiple conditions and operations\n- name: Deploy trigger action\n  community.zabbix.zabbix_action:\n    server_url: \"http://zabbix.example.com/zabbix/\"\n    login_user: Admin\n    login_password: secret\n    name: \"Send alerts to Admin\"\n    event_source: 'trigger'\n    state: present\n    status: enabled\n    esc_period: 1m\n    conditions:\n      - type: 'trigger_name'\n        operator: 'like'\n        value: 'Zabbix agent is unreachable'\n        formulaid: A\n      - type: 'trigger_severity'\n        operator: '>='\n        value: 'disaster'\n        formulaid: B\n    formula: A or B\n    operations:\n      - type: send_message\n        media_type: 'Email'\n        send_to_users:\n          - 'Admin'\n      - type: remote_command\n        command: 'systemctl restart zabbix-agent'\n        command_type: custom_script\n        execute_on: server\n        run_on_hosts:\n          - 0\n\n# Trigger action with recovery and acknowledge operations\n- name: Deploy trigger action\n  community.zabbix.zabbix_action:\n    server_url: \"http://zabbix.example.com/zabbix/\"\n    login_user: Admin\n    login_password: secret\n    name: \"Send alerts to Admin\"\n    event_source: 'trigger'\n    state: present\n    status: enabled\n    esc_period: 1h\n    conditions:\n      - type: 'trigger_severity'\n        operator: '>='\n        value: 'Information'\n    operations:\n      - type: send_message\n        subject: \"Something bad is happening\"\n        message: \"Come on, guys do something\"\n        media_type: 'Email'\n        send_to_users:\n          - 'Admin'\n    recovery_operations:\n      - type: send_message\n        subject: \"Host is down\"\n        message: \"Come on, guys do something\"\n        media_type: 'Email'\n        send_to_users:\n          - 'Admin'\n    acknowledge_operations:\n      - type: send_message\n        media_type: 'Email'\n        send_to_users:\n          - 'Admin'\n"
+  },
+  "community.zabbix.zabbix_discovery_rule": {
+    "doc": {
+      "description": "Create discovery rule.\nDelete existing discovery rule.\nUpdate existing discovery rule with new options.",
+      "has_action": false,
+      "notes": "Only Zabbix >= 4.0 is supported.\nIf you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "dchecks": {
+          "aliases": [
+            "dcheck"
+          ],
+          "description": "List of dictionaries of discovery check objects.\nFor more information, review discovery check object documentation at U(https://www.zabbix.com/documentation/current/manual/api/reference/dcheck/object)",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "host_source": {
+              "aliases": [],
+              "description": "Source for host name.\nPossible values:\nDNS (default)\nIP\ndiscovery - discovery value of this check\nOptions is available since Zabbix 4.4",
+              "default": "DNS",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "DNS",
+                "IP",
+                "discovery"
+              ],
+              "suboptions": {}
+            },
+            "key": {
+              "aliases": [],
+              "description": "The value of this property differs depending on the type of the check:\n- key to query for Zabbix agent checks\n- SNMP OID for SNMPv1, SNMPv2 and SNMPv3 checks",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "name_source": {
+              "aliases": [],
+              "description": "Source for visible name.\nPossible values:\nnone - (default) not specified\nDNS\nIP\ndiscovery - discovery value of this check\nOptions is available since Zabbix 4.4",
+              "default": "None",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "None",
+                "DNS",
+                "IP",
+                "discovery"
+              ],
+              "suboptions": {}
+            },
+            "ports": {
+              "aliases": [],
+              "description": "One or several port ranges to check separated by commas. Used for all checks except for ICMP.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "snmp_community": {
+              "aliases": [],
+              "description": "SNMP community.\nRequired for SNMPv1 and SNMPv2 agent checks.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "snmpv3_authpassphrase": {
+              "aliases": [],
+              "description": "Authentication passphrase used for SNMPv3 agent checks with security level set to authNoPriv or authPriv.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "snmpv3_authprotocol": {
+              "aliases": [],
+              "description": "Authentication protocol used for SNMPv3 agent checks with security level set to authNoPriv or authPriv.\nPossible values:\nMD5\nSHA",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "MD5",
+                "SHA"
+              ],
+              "suboptions": {}
+            },
+            "snmpv3_contextname": {
+              "aliases": [],
+              "description": "SNMPv3 context name. Used only by SNMPv3 checks.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "snmpv3_privpassphrase": {
+              "aliases": [],
+              "description": "Privacy passphrase used for SNMPv3 agent checks with security level set to authPriv.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "snmpv3_privprotocol": {
+              "aliases": [],
+              "description": "Privacy protocol used for SNMPv3 agent checks with security level set to authPriv.\nPossible values:\nDES\nAES",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "DES",
+                "AES"
+              ],
+              "suboptions": {}
+            },
+            "snmpv3_securitylevel": {
+              "aliases": [],
+              "description": "Security level used for SNMPv3 agent checks.\nPossible values:\nnoAuthNoPriv\nauthNoPriv\nauthPriv",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "noAuthNoPriv",
+                "authNoPriv",
+                "authPriv"
+              ],
+              "suboptions": {}
+            },
+            "snmpv3_securityname": {
+              "aliases": [],
+              "description": "Security name used for SNMPv3 agent checks.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "type": {
+              "aliases": [],
+              "description": "Type of check.",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "SSH",
+                "LDAP",
+                "SMTP",
+                "FTP",
+                "HTTP",
+                "POP",
+                "NNTP",
+                "IMAP",
+                "TCP",
+                "Zabbix",
+                "SNMPv1",
+                "SNMPv2",
+                "ICMP",
+                "SNMPv3",
+                "HTTPS",
+                "Telnet"
+              ],
+              "suboptions": {}
+            },
+            "uniq": {
+              "aliases": [],
+              "description": "Whether to use this check as a device uniqueness criteria.\nOnly a single unique check can be configured for a discovery rule.\nUsed for Zabbix agent, SNMPv1, SNMPv2 and SNMPv3 agent checks.\nPossible values:\nno - (default) do not use this check as a uniqueness criteria\nyes - use this check as a uniqueness criteria",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "delay": {
+          "aliases": [],
+          "description": "Execution interval of the discovery rule.\nAccepts seconds, time unit with suffix and user macro.",
+          "default": "1h",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "iprange": {
+          "aliases": [],
+          "description": "One or several IP ranges to check separated by commas.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the discovery rule.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "Name of the proxy used for discovery.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create or delete discovery rules.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "status": {
+          "aliases": [],
+          "description": "Whether the discovery rule is enabled.\nPossible values:\nenabled (default)\ndisabled",
+          "default": "enabled",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "enabled",
+            "disabled"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Create/delete/update Zabbix discovery rules"
+    },
+    "examples": "\n# Base create discovery rule example\n- name: Create discovery rule with ICMP and zabbix agent checks\n  community.zabbix.zabbix_discovery_rule:\n    server_url: \"http://zabbix.example.com/zabbix/\"\n    login_user: admin\n    login_password: secret\n    name: ACME\n    state: present\n    iprange: 192.168.1.1-255\n    dchecks:\n        - type: ICMP\n        - type: Zabbix\n          key: \"system.hostname\"\n          ports: 10050\n          uniq: yes\n          host_source: \"discovery\"\n\n# Base update (add new dcheck) discovery rule example\n- name: Create discovery rule with ICMP and zabbix agent checks\n  community.zabbix.zabbix_discovery_rule:\n    server_url: \"http://zabbix.example.com/zabbix/\"\n    login_user: admin\n    login_password: secret\n    name: ACME\n    state: present\n    iprange: 192.168.1.1-255\n    dchecks:\n        - type: SNMPv3\n          snmp_community: CUSTOMER@snmp3-readonly\n          ports: \"161\"\n          key: iso.3.6.1.2.1.1.1.0\n          snmpv3_contextname: \"ContextName\"\n          snmpv3_securityname: \"SecurityName\"\n          snmpv3_securitylevel: \"authPriv\"\n          snmpv3_authprotocol: \"SHA\"\n          snmpv3_authpassphrase: \"SeCrEt\"\n          snmpv3_privprotocol: \"AES\"\n          snmpv3_privpassphrase: \"TopSecret\"\n          uniq: no\n          host_source: \"DNS\"\n          name_source: \"None\"\n\n# Base delete discovery rule example\n- name: Delete discovery rule\n  community.zabbix.zabbix_discovery_rule:\n    server_url: \"http://zabbix.example.com/zabbix/\"\n    login_user: admin\n    login_password: secret\n    name: ACME\n    state: absent\n"
+  },
+  "community.zabbix.zabbix_globalmacro": {
+    "doc": {
+      "description": "manages Zabbix Global macros, it can create, update or delete them.\nFor macro_type Secret the value field cannot be validated and will always be overwritten due to the secret nature of the Text.",
+      "has_action": false,
+      "notes": "If you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "force": {
+          "aliases": [],
+          "description": "Only updates an existing macro if set to C(yes).",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "macro_description": {
+          "aliases": [],
+          "description": "Text Description of the global macro.\nWorks only with Zabbix >= 4.4 and is silently ignored in lower versions",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "macro_name": {
+          "aliases": [],
+          "description": "Name of the global macro in zabbix native format C({$MACRO}) or simple format C(MACRO).",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "macro_type": {
+          "aliases": [],
+          "description": "Type of the global macro Text or Secret Text.\nRequired if I(state=present).\ntext\nsecret - Secret Text Works only with Zabbix >= 5.0 and will default to Text in lower versions\nvault - Vault Secret Works only with Zabbix >= 5.2 and will default to Text in lower versions",
+          "default": "text",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "text",
+            "secret",
+            "vault"
+          ],
+          "suboptions": {}
+        },
+        "macro_value": {
+          "aliases": [],
+          "description": "Value of the global macro.\nRequired if I(state=present).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the macro.\nOn C(present), it will create if macro does not exist or update the macro if the associated data is different.\nOn C(absent) will remove a macro if it exists.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Create/update/delete Zabbix Global macros",
+      "version_added": "1.4.0"
+    },
+    "examples": "\n- name: Create new global macro or update an existing macro's value\n  local_action:\n    module: community.zabbix.zabbix_globalmacro\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    macro_name: EXAMPLE.MACRO\n    macro_value: Example value\n    macro_type: 0\n    macro_description: Example description\n    state: present\n# Values with curly brackets need to be quoted otherwise they will be interpreted as a dictionary\n- name: Create new global macro in Zabbix native format with Secret Type\n  local_action:\n    module: community.zabbix.zabbix_globalmacro\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    macro_name: \"{$EXAMPLE.MACRO}\"\n    macro_value: Example value\n    macro_type: 1\n    macro_description: Example description\n    state: present\n- name: Delete existing global macro\n  local_action:\n    module: community.zabbix.zabbix_globalmacro\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    macro_name: \"{$EXAMPLE.MACRO}\"\n    state: absent\n"
+  },
+  "community.zabbix.zabbix_group": {
+    "doc": {
+      "description": "Create host groups if they do not exist.\nDelete existing host groups if they exist.",
+      "has_action": false,
+      "notes": "Too many concurrent updates to the same group may cause Zabbix to return errors, see examples for a workaround if needed.\nIf you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "host_groups": {
+          "aliases": [
+            "host_group"
+          ],
+          "description": "List of host groups to create or delete.",
+          "type": "list",
+          "required": true,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create or delete host group.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Create/delete Zabbix host groups"
+    },
+    "examples": "\n# Base create host groups example\n- name: Create host groups\n  local_action:\n    module: community.zabbix.zabbix_group\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    state: present\n    host_groups:\n      - Example group1\n      - Example group2\n\n# Limit the Zabbix group creations to one host since Zabbix can return an error when doing concurrent updates\n- name: Create host groups\n  local_action:\n    module: community.zabbix.zabbix_group\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    state: present\n    host_groups:\n      - Example group1\n      - Example group2\n  when: inventory_hostname==groups['group_name'][0]\n"
+  },
+  "community.zabbix.zabbix_group_facts": {
+    "doc": {
+      "description": "This module allows you to search for Zabbix hostgroup entries.\nThis module was called C(zabbix_group_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "notes": "If you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "hostgroup_name": {
+          "aliases": [],
+          "description": "Name of the hostgroup in Zabbix.\nhostgroup is the unique identifier used and cannot be updated using this module.",
+          "type": "list",
+          "required": true,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Gather information about Zabbix hostgroup"
+    },
+    "examples": "\n- name: Get hostgroup info\n  local_action:\n    module: community.zabbix.zabbix_group_info\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    hostgroup_name:\n      - ExampleHostgroup\n    timeout: 10\n"
+  },
+  "community.zabbix.zabbix_group_info": {
+    "doc": {
+      "description": "This module allows you to search for Zabbix hostgroup entries.\nThis module was called C(zabbix_group_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "notes": "If you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "hostgroup_name": {
+          "aliases": [],
+          "description": "Name of the hostgroup in Zabbix.\nhostgroup is the unique identifier used and cannot be updated using this module.",
+          "type": "list",
+          "required": true,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Gather information about Zabbix hostgroup"
+    },
+    "examples": "\n- name: Get hostgroup info\n  local_action:\n    module: community.zabbix.zabbix_group_info\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    hostgroup_name:\n      - ExampleHostgroup\n    timeout: 10\n"
+  },
+  "community.zabbix.zabbix_host": {
+    "doc": {
+      "description": "This module allows you to create, modify and delete Zabbix host entries and associated group and template data.",
+      "has_action": false,
+      "notes": "If you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "ca_cert": {
+          "aliases": [
+            "tls_issuer"
+          ],
+          "description": "Required certificate issuer.\nWorks only with >= Zabbix 3.0",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "Description of the host in Zabbix.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Overwrite the host configuration, even if already present.",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "host_groups": {
+          "aliases": [],
+          "description": "List of host groups the host is part of.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "host_name": {
+          "aliases": [],
+          "description": "Name of the host in Zabbix.\nI(host_name) is the unique identifier used and cannot be updated using this module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "interfaces": {
+          "aliases": [],
+          "description": "List of interfaces to be created for the host (see example below).\nFor more information, review host interface documentation at\nU(https://www.zabbix.com/documentation/4.0/manual/api/reference/hostinterface/object)",
+          "default": "[]",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "bulk": {
+              "aliases": [],
+              "description": "Whether to use bulk SNMP requests.\nOnly valid when interface I(type='snmp').\n0 (don't use bulk requests), 1 (use bulk requests)\nWorks only with Zabbix <= 4.4 and is silently ignored in higher versions.\nUse I(details) with Zabbix >= 5.0.",
+              "default": "1",
+              "type": "int",
+              "required": false,
+              "choices": [
+                "0",
+                "1"
+              ],
+              "suboptions": {}
+            },
+            "details": {
+              "aliases": [],
+              "description": "Additional details for SNMP host interfaces.\nRequired when I(type='snmp').\nWorks only with Zabbix >= 5.0.",
+              "default": "{}",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "authpassphrase": {
+                  "aliases": [],
+                  "description": "SNMPv3 authentication passphrase.\nUsed when I(securitylevel=1)(authNoPriv) or I(securitylevel=2)(AuthPriv).",
+                  "default": "",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "authprotocol": {
+                  "aliases": [],
+                  "description": "SNMPv3 authentication protocol.\nUsed when I(securitylevel=1)(authNoPriv) or I(securitylevel=2)(AuthPriv).\n0 (MD5), 1 (SHA)",
+                  "default": "0",
+                  "type": "int",
+                  "required": false,
+                  "choices": [
+                    "0",
+                    "1"
+                  ],
+                  "suboptions": {}
+                },
+                "bulk": {
+                  "aliases": [],
+                  "description": "Whether to use bulk SNMP requests.\n0 (don't use bulk requests), 1 (use bulk requests)",
+                  "default": "1",
+                  "type": "int",
+                  "required": false,
+                  "choices": [
+                    "0",
+                    "1"
+                  ],
+                  "suboptions": {}
+                },
+                "community": {
+                  "aliases": [],
+                  "description": "SNMPv1 and SNMPv2 community string.\nRequired when I(version=1) or I(version=2).",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "contextname": {
+                  "aliases": [],
+                  "description": "SNMPv3 context name.",
+                  "default": "",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "privpassphrase": {
+                  "aliases": [],
+                  "description": "SNMPv3 privacy passphrase.\nUsed when I(securitylevel=2)(AuthPriv).",
+                  "default": "",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "privprotocol": {
+                  "aliases": [],
+                  "description": "SNMPv3 privacy protocol.\nUsed when I(securitylevel=2)(authPriv).\n0 (DES), 1 (AES)",
+                  "default": "0",
+                  "type": "int",
+                  "required": false,
+                  "choices": [
+                    "0",
+                    "1"
+                  ],
+                  "suboptions": {}
+                },
+                "securitylevel": {
+                  "aliases": [],
+                  "description": "SNMPv3 security level.\n0 (noAuthNoPriv), 1 (authNoPriv), 2 (authPriv).",
+                  "default": "0",
+                  "type": "int",
+                  "required": false,
+                  "choices": [
+                    "0",
+                    "1",
+                    "2"
+                  ],
+                  "suboptions": {}
+                },
+                "securityname": {
+                  "aliases": [],
+                  "description": "SNMPv3 security name.",
+                  "default": "",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "version": {
+                  "aliases": [],
+                  "description": "SNMP version.\n1 (SNMPv1), 2 (SNMPv2c), 3 (SNMPv3)",
+                  "default": "2",
+                  "type": "int",
+                  "required": false,
+                  "choices": [
+                    "1",
+                    "2",
+                    "3"
+                  ],
+                  "suboptions": {}
+                }
+              }
+            },
+            "dns": {
+              "aliases": [],
+              "description": "DNS name of the host interface.\nRequired if I(useip=0).",
+              "default": "",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "ip": {
+              "aliases": [],
+              "description": "IP address used by host interface.\nRequired if I(useip=1).",
+              "default": "",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "main": {
+              "aliases": [],
+              "description": "Whether the interface is used as default.\nIf multiple interfaces with the same type are provided, only one can be default.\n0 (not default), 1 (default)",
+              "default": "0",
+              "type": "int",
+              "required": false,
+              "choices": [
+                "0",
+                "1"
+              ],
+              "suboptions": {}
+            },
+            "port": {
+              "aliases": [],
+              "description": "Port used by host interface.\nIf not specified, default port for each type of interface is used\n10050 if I(type='agent')\n161 if I(type='snmp')\n623 if I(type='ipmi')\n12345 if I(type='jmx')",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "type": {
+              "aliases": [],
+              "description": "Interface type to add\nNumerical values are also accepted for interface type\n1 = agent\n2 = snmp\n3 = ipmi\n4 = jmx",
+              "type": "str",
+              "required": true,
+              "choices": [
+                "agent",
+                "1",
+                "snmp",
+                "2",
+                "ipmi",
+                "3",
+                "jmx",
+                "4"
+              ],
+              "suboptions": {}
+            },
+            "useip": {
+              "aliases": [],
+              "description": "Connect to host interface with IP address instead of DNS name.\n0 (don't use ip), 1 (use ip)",
+              "default": "0",
+              "type": "int",
+              "required": false,
+              "choices": [
+                "0",
+                "1"
+              ],
+              "suboptions": {}
+            }
+          }
+        },
+        "inventory_mode": {
+          "aliases": [],
+          "description": "Configure the inventory mode.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "automatic",
+            "manual",
+            "disabled"
+          ],
+          "suboptions": {}
+        },
+        "inventory_zabbix": {
+          "aliases": [],
+          "description": "Add Facts for a zabbix inventory (e.g. Tag) (see example below).\nPlease review the interface documentation for more information on the supported properties\nU(https://www.zabbix.com/documentation/3.2/manual/api/reference/host/object#host_inventory)",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipmi_authtype": {
+          "aliases": [],
+          "description": "IPMI authentication algorithm.\nPlease review the Host object documentation for more information on the supported properties\nhttps://www.zabbix.com/documentation/3.4/manual/api/reference/host/object\nPossible values are, C(0) (none), C(1) (MD2), C(2) (MD5), C(4) (straight), C(5) (OEM), C(6) (RMCP+), with -1 being the API default.\nPlease note that the Zabbix API will treat absent settings as default when updating any of the I(ipmi_)-options; this means that if you attempt to set any of the four options individually, the rest will be reset to default values.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipmi_password": {
+          "aliases": [],
+          "description": "IPMI password.\nalso see the last note in the I(ipmi_authtype) documentation",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipmi_privilege": {
+          "aliases": [],
+          "description": "IPMI privilege level.\nPlease review the Host object documentation for more information on the supported properties\nhttps://www.zabbix.com/documentation/3.4/manual/api/reference/host/object\nPossible values are C(1) (callback), C(2) (user), C(3) (operator), C(4) (admin), C(5) (OEM), with C(2) being the API default.\nalso see the last note in the I(ipmi_authtype) documentation",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipmi_username": {
+          "aliases": [],
+          "description": "IPMI username.\nalso see the last note in the I(ipmi_authtype) documentation",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "link_templates": {
+          "aliases": [],
+          "description": "List of templates linked to the host.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "macros": {
+          "aliases": [
+            "user_macros"
+          ],
+          "description": "List of user macros to assign to the zabbix host.\nProviding I(macros=[]) with I(force=yes) will clean all of the existing user macros from the host.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "description": {
+              "aliases": [],
+              "description": "Description of the user macro.\nWorks only with >= Zabbix 4.4.",
+              "default": "",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "macro": {
+              "aliases": [],
+              "description": "Name of the user macro.\nCan be in zabbix native format \"{$MACRO}\" or short format \"MACRO\".",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "type": {
+              "aliases": [],
+              "description": "Type of the macro.\nWorks only with >= Zabbix 5.0.\nSince value is not returned by API for secret macros, there is no reliable way to detect changes in the content of secret macro value.\nTo update secret macro value, please update description alongside it so it passes the check.",
+              "default": "text",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "text",
+                "secret"
+              ],
+              "suboptions": {}
+            },
+            "value": {
+              "aliases": [],
+              "description": "Value of the user macro.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "The name of the Zabbix proxy to be used.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the host.\nOn C(present), it will create if host does not exist or update the host if the associated data is different.\nOn C(absent) will remove a host if it exists.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "status": {
+          "aliases": [],
+          "description": "Monitoring status of the host.",
+          "default": "enabled",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "enabled",
+            "disabled"
+          ],
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [
+            "host_tags"
+          ],
+          "description": "List of host tags to assign to the zabbix host.\nWorks only with >= Zabbix 4.2.\nProviding I(tags=[]) with I(force=yes) will clean all of the tags from the host.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "tag": {
+              "aliases": [],
+              "description": "Name of the host tag.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "value": {
+              "aliases": [],
+              "description": "Value of the host tag.",
+              "default": "",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "tls_accept": {
+          "aliases": [],
+          "description": "Specifies what types of connections are allowed for incoming connections.\nThe tls_accept parameter accepts values of 1 to 7\nPossible values, 1 (no encryption), 2 (PSK), 4 (certificate).\nValues can be combined.\nWorks only with >= Zabbix 3.0",
+          "default": "1",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "tls_connect": {
+          "aliases": [],
+          "description": "Specifies what encryption to use for outgoing connections.\nPossible values, 1 (no encryption), 2 (PSK), 4 (certificate).\nWorks only with >= Zabbix 3.0",
+          "default": "1",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "tls_psk": {
+          "aliases": [],
+          "description": "PSK value is a hard to guess string of hexadecimal digits.\nThe preshared key, at least 32 hex digits. Required if either I(tls_connect) or I(tls_accept) has PSK enabled.\nWorks only with >= Zabbix 3.0",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tls_psk_identity": {
+          "aliases": [],
+          "description": "It is a unique name by which this specific PSK is referred to by Zabbix components\nDo not put sensitive information in the PSK identity string, it is transmitted over the network unencrypted.\nWorks only with >= Zabbix 3.0",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tls_subject": {
+          "aliases": [],
+          "description": "Required certificate subject.\nWorks only with >= Zabbix 3.0",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "visible_name": {
+          "aliases": [],
+          "description": "Visible name of the host in Zabbix.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Create/update/delete Zabbix hosts"
+    },
+    "examples": "\n- name: Create a new host or update an existing host's info\n  local_action:\n    module: community.zabbix.zabbix_host\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    host_name: ExampleHost\n    visible_name: ExampleName\n    description: My ExampleHost Description\n    host_groups:\n      - Example group1\n      - Example group2\n    link_templates:\n      - Example template1\n      - Example template2\n    status: enabled\n    state: present\n    inventory_mode: manual\n    inventory_zabbix:\n      tag: \"{{ your_tag }}\"\n      alias: \"{{ your_alias }}\"\n      notes: \"Special Informations: {{ your_informations | default('None') }}\"\n      location: \"{{ your_location }}\"\n      site_rack: \"{{ your_site_rack }}\"\n      os: \"{{ your_os }}\"\n      hardware: \"{{ your_hardware }}\"\n    ipmi_authtype: 2\n    ipmi_privilege: 4\n    ipmi_username: username\n    ipmi_password: password\n    interfaces:\n      - type: 1\n        main: 1\n        useip: 1\n        ip: 10.xx.xx.xx\n        dns: \"\"\n        port: \"10050\"\n      - type: 4\n        main: 1\n        useip: 1\n        ip: 10.xx.xx.xx\n        dns: \"\"\n        port: \"12345\"\n    proxy: a.zabbix.proxy\n    macros:\n      - macro: '{$EXAMPLEMACRO}'\n        value: ExampleMacroValue\n      - macro: EXAMPLEMACRO2\n        value: ExampleMacroValue2\n        description: Example desc that work only with Zabbix 4.4 and higher\n    tags:\n      - tag: ExampleHostsTag\n      - tag: ExampleHostsTag2\n        value: ExampleTagValue\n\n- name: Update an existing host's TLS settings\n  local_action:\n    module: community.zabbix.zabbix_host\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    host_name: ExampleHost\n    visible_name: ExampleName\n    host_groups:\n      - Example group1\n    tls_psk_identity: test\n    tls_connect: 2\n    tls_psk: 123456789abcdef123456789abcdef12\n"
+  },
+  "community.zabbix.zabbix_host_events_info": {
+    "doc": {
+      "description": "This module allows you to see if a Zabbix host have no active alert to make actions on it. For this case use module Ansible 'fail' to exclude host in trouble.\nLength of \"triggers_ok\" allow if template's triggers exist for Zabbix Host",
+      "has_action": false,
+      "notes": "If you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "host_id_type": {
+          "aliases": [],
+          "description": "Type of host_identifier",
+          "default": "hostname",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "hostname",
+            "visible_name",
+            "hostid"
+          ],
+          "suboptions": {}
+        },
+        "host_identifier": {
+          "aliases": [],
+          "description": "Identifier of Zabbix Host",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "trigger_severity": {
+          "aliases": [],
+          "description": "Zabbix severity for search filter",
+          "default": "average",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "not_classified",
+            "information",
+            "warning",
+            "average",
+            "high",
+            "disaster"
+          ],
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "zabbix-api >= 0.5.3"
+      ],
+      "short_description": "Get all triggers about a Zabbix host"
+    },
+    "examples": "\n- name: exclude machine if alert active on it\n  community.zabbix.zabbix_host_events_info:\n      server_url: \"{{ zabbix_api_server_url }}\"\n      login_user: \"{{ lookup('env','ZABBIX_USER') }}\"\n      login_password: \"{{ lookup('env','ZABBIX_PASSWORD') }}\"\n      host_identifier: \"{{inventory_hostname}}\"\n      host_id_type: \"hostname\"\n      timeout: 120\n  register: zbx_host\n  delegate_to: localhost\n- fail:\n    msg: \"machine alert in zabbix\"\n  when: zbx_host['triggers_problem']|length > 0\n"
+  },
+  "community.zabbix.zabbix_host_facts": {
+    "doc": {
+      "description": "This module allows you to search for Zabbix host entries.\nThis module was called C(zabbix_host_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "notes": "If you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "exact_match": {
+          "aliases": [],
+          "description": "Find the exact match",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "host_inventory": {
+          "aliases": [],
+          "description": "List of host inventory keys to display in result.\nWhole host inventory is retrieved if keys are not specified.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "host_ip": {
+          "aliases": [],
+          "description": "Host interface IP of the host in Zabbix.\nRequired when I(host_name) is not used.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "host_name": {
+          "aliases": [],
+          "description": "Name of the host in Zabbix.\nhost_name is the unique identifier used and cannot be updated using this module.\nRequired when I(host_ip) is not used.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "remove_duplicate": {
+          "aliases": [],
+          "description": "Remove duplicate host from host result",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Gather information about Zabbix host"
+    },
+    "examples": "\n- name: Get host info\n  local_action:\n    module: community.zabbix.zabbix_host_info\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    host_name: ExampleHost\n    host_ip: 127.0.0.1\n    timeout: 10\n    exact_match: no\n    remove_duplicate: yes\n\n- name: Reduce host inventory information to provided keys\n  local_action:\n    module: community.zabbix.zabbix_host_info\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    host_name: ExampleHost\n    host_inventory:\n      - os\n      - tag\n    host_ip: 127.0.0.1\n    timeout: 10\n    exact_match: no\n    remove_duplicate: yes\n"
+  },
+  "community.zabbix.zabbix_host_info": {
+    "doc": {
+      "description": "This module allows you to search for Zabbix host entries.\nThis module was called C(zabbix_host_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "notes": "If you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "exact_match": {
+          "aliases": [],
+          "description": "Find the exact match",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "host_inventory": {
+          "aliases": [],
+          "description": "List of host inventory keys to display in result.\nWhole host inventory is retrieved if keys are not specified.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "host_ip": {
+          "aliases": [],
+          "description": "Host interface IP of the host in Zabbix.\nRequired when I(host_name) is not used.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "host_name": {
+          "aliases": [],
+          "description": "Name of the host in Zabbix.\nhost_name is the unique identifier used and cannot be updated using this module.\nRequired when I(host_ip) is not used.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "remove_duplicate": {
+          "aliases": [],
+          "description": "Remove duplicate host from host result",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Gather information about Zabbix host"
+    },
+    "examples": "\n- name: Get host info\n  local_action:\n    module: community.zabbix.zabbix_host_info\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    host_name: ExampleHost\n    host_ip: 127.0.0.1\n    timeout: 10\n    exact_match: no\n    remove_duplicate: yes\n\n- name: Reduce host inventory information to provided keys\n  local_action:\n    module: community.zabbix.zabbix_host_info\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    host_name: ExampleHost\n    host_inventory:\n      - os\n      - tag\n    host_ip: 127.0.0.1\n    timeout: 10\n    exact_match: no\n    remove_duplicate: yes\n"
+  },
+  "community.zabbix.zabbix_hostmacro": {
+    "doc": {
+      "description": "manages Zabbix host macros, it can create, update or delete them.",
+      "has_action": false,
+      "notes": "If you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "force": {
+          "aliases": [],
+          "description": "Only updates an existing macro if set to C(yes).",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "host_name": {
+          "aliases": [],
+          "description": "Name of the host.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "macro_name": {
+          "aliases": [],
+          "description": "Name of the host macro in zabbix native format C({$MACRO}) or simple format C(MACRO).",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "macro_type": {
+          "aliases": [],
+          "description": "Type of the host macro.\ntext (default)\nsecret (Works only with Zabbix >= 5.0)\nvault (Works only with Zabbix >= 5.2)",
+          "default": "text",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "text",
+            "secret",
+            "vault"
+          ],
+          "suboptions": {}
+        },
+        "macro_value": {
+          "aliases": [],
+          "description": "Value of the host macro.\nRequired if I(state=present).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the macro.\nOn C(present), it will create if macro does not exist or update the macro if the associated data is different.\nOn C(absent) will remove a macro if it exists.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Create/update/delete Zabbix host macros"
+    },
+    "examples": "\n- name: Create new host macro or update an existing macro's value\n  local_action:\n    module: community.zabbix.zabbix_hostmacro\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    host_name: ExampleHost\n    macro_name: EXAMPLE.MACRO\n    macro_value: Example value\n    state: present\n\n# Values with curly brackets need to be quoted otherwise they will be interpreted as a dictionary\n- name: Create new host macro in Zabbix native format\n  local_action:\n    module: community.zabbix.zabbix_hostmacro\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    host_name: ExampleHost\n    macro_name: \"{$EXAMPLE.MACRO}\"\n    macro_value: Example value\n    state: present\n\n- name: Delete existing host macro\n  local_action:\n    module: community.zabbix.zabbix_hostmacro\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    host_name: ExampleHost\n    macro_name: \"{$EXAMPLE.MACRO}\"\n    state: absent\n"
+  },
+  "community.zabbix.zabbix_maintenance": {
+    "doc": {
+      "description": "This module will let you create Zabbix maintenance windows.",
+      "has_action": false,
+      "notes": "Useful for setting hosts in maintenance mode before big update, and removing maintenance window after update.\nModule creates maintenance window from now() to now() + minutes, so if Zabbix server's time and host's time are not synchronized, you will get strange results.\nInstall required module with 'pip install zabbix-api' command.\nIf you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "collect_data": {
+          "aliases": [],
+          "description": "Type of maintenance. With data collection, or without.",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "desc": {
+          "aliases": [],
+          "description": "Short description of maintenance window.",
+          "default": "Created by Ansible",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "host_groups": {
+          "aliases": [
+            "host_group"
+          ],
+          "description": "Host groups to manage maintenance window for.\nB(Required) option when I(state=present) and I(host_names) is not used.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "host_names": {
+          "aliases": [
+            "host_name"
+          ],
+          "description": "Hosts to manage maintenance window for.\nB(Required) option when I(state=present) and I(host_groups) is not used.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "minutes": {
+          "aliases": [],
+          "description": "Length of maintenance window in minutes.",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Unique name of maintenance window.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create or remove a maintenance window. Maintenance window to remove is identified by name.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "visible_name": {
+          "aliases": [],
+          "description": "Type of zabbix host name to use for identifying hosts to include in the maintenance.\nI(visible_name=yes) to search by visible name,  I(visible_name=no) to search by technical name.",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "version_added": "2.0.0",
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Create Zabbix maintenance windows"
+    },
+    "examples": "\n- name: Create a named maintenance window for host www1 for 90 minutes\n  community.zabbix.zabbix_maintenance:\n    name: Update of www1\n    host_name: www1.example.com\n    state: present\n    minutes: 90\n    server_url: https://monitoring.example.com\n    login_user: ansible\n    login_password: pAsSwOrD\n\n- name: Create a named maintenance window for host www1 and host groups Office and Dev\n  community.zabbix.zabbix_maintenance:\n    name: Update of www1\n    host_name: www1.example.com\n    host_groups:\n      - Office\n      - Dev\n    state: present\n    server_url: https://monitoring.example.com\n    login_user: ansible\n    login_password: pAsSwOrD\n\n- name: Create a named maintenance window for hosts www1 and db1, without data collection.\n  community.zabbix.zabbix_maintenance:\n    name: update\n    host_names:\n      - www1.example.com\n      - db1.example.com\n    state: present\n    collect_data: False\n    server_url: https://monitoring.example.com\n    login_user: ansible\n    login_password: pAsSwOrD\n\n- name: Remove maintenance window by name\n  community.zabbix.zabbix_maintenance:\n    name: Test1\n    state: absent\n    server_url: https://monitoring.example.com\n    login_user: ansible\n    login_password: pAsSwOrD\n"
+  },
+  "community.zabbix.zabbix_map": {
+    "doc": {
+      "description": "This module allows you to create, modify and delete Zabbix map entries, using Graphviz binaries and text description written in DOT language. Nodes of the graph will become map elements and edges will become links between map elements. See U(https://en.wikipedia.org/wiki/DOT_(graph_description_language)) and U(https://www.graphviz.org/) for details. Inspired by U(http://blog.zabbix.com/maps-for-the-lazy/).\nThe following extra node attributes are supported: C(zbx_host) contains name of the host in Zabbix. Use this if desired type of map element is C(host). C(zbx_group) contains name of the host group in Zabbix. Use this if desired type of map element is C(host group). C(zbx_sysmap) contains name of the map in Zabbix. Use this if desired type of map element is C(map). C(zbx_label) contains label of map element. C(zbx_image) contains name of the image used to display the element in default state. C(zbx_image_disabled) contains name of the image used to display disabled map element. C(zbx_image_maintenance) contains name of the image used to display map element in maintenance. C(zbx_image_problem) contains name of the image used to display map element with problems. C(zbx_url) contains map element URL in C(name:url) format. More than one URL could be specified by adding a postfix (e.g., C(zbx_url1), C(zbx_url2)).\nThe following extra link attributes are supported: C(zbx_draw_style) contains link line draw style. Possible values: C(line), C(bold), C(dotted), C(dashed). C(zbx_trigger) contains name of the trigger used as a link indicator in C(host_name:trigger_name) format. More than one trigger could be specified by adding a postfix (e.g., C(zbx_trigger1), C(zbx_trigger2)). C(zbx_trigger_color) contains indicator color specified either as CSS3 name or as a hexadecimal code starting with C(#). C(zbx_trigger_draw_style) contains indicator draw style. Possible values are the same as for C(zbx_draw_style).",
+      "has_action": false,
+      "notes": "If you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "data": {
+          "aliases": [
+            "dot_data"
+          ],
+          "description": "Graph written in DOT language.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "default_image": {
+          "aliases": [
+            "image"
+          ],
+          "description": "Name of the Zabbix image used to display the element if this element doesn't have the C(zbx_image) attribute defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "expand_problem": {
+          "aliases": [],
+          "description": "Whether the problem trigger will be displayed for elements with a single problem.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "height": {
+          "aliases": [],
+          "description": "Height of the map.",
+          "default": "600",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "highlight": {
+          "aliases": [],
+          "description": "Whether icon highlighting is enabled.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "label_type": {
+          "aliases": [],
+          "description": "Map element label type.",
+          "default": "name",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "label",
+            "ip",
+            "name",
+            "status",
+            "nothing",
+            "custom"
+          ],
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "margin": {
+          "aliases": [],
+          "description": "Size of white space between map's borders and its elements.",
+          "default": "40",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [
+            "map_name"
+          ],
+          "description": "Name of the map.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the map.\nOn C(present), it will create if map does not exist or update the map if the associated data is different.\nOn C(absent) will remove the map if it exists.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "width": {
+          "aliases": [],
+          "description": "Width of the map.",
+          "default": "800",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "zabbix-api >= 0.5.4",
+        "pydotplus",
+        "webcolors",
+        "Pillow",
+        "Graphviz"
+      ],
+      "short_description": "Create/update/delete Zabbix maps"
+    },
+    "examples": "\n###\n### Example inventory:\n# [web]\n# web[01:03].example.com ansible_host=127.0.0.1\n# [db]\n# db.example.com ansible_host=127.0.0.1\n# [backup]\n# backup.example.com ansible_host=127.0.0.1\n###\n### Each inventory host is present in Zabbix with a matching name.\n###\n### Contents of 'map.j2':\n# digraph G {\n#     graph [layout=dot splines=false overlap=scale]\n#     INTERNET [zbx_url=\"Google:https://google.com\" zbx_image=\"Cloud_(96)\"]\n# {% for web_host in groups.web %}\n#     {% set web_loop = loop %}\n#     web{{ '%03d' % web_loop.index }} [zbx_host=\"{{ web_host }}\"]\n#     INTERNET -> web{{ '%03d' % web_loop.index }} [zbx_trigger=\"{{ web_host }}:Zabbix agent on {HOST.NAME} is unreachable for 5 minutes\"]\n#     {% for db_host in groups.db %}\n#       {% set db_loop = loop %}\n#     web{{ '%03d' % web_loop.index }} -> db{{ '%03d' % db_loop.index }}\n#     {% endfor %}\n# {% endfor %}\n#     { rank=same\n# {% for db_host in groups.db %}\n#     {% set db_loop = loop %}\n#     db{{ '%03d' % db_loop.index }} [zbx_host=\"{{ db_host }}\"]\n#     {% for backup_host in groups.backup %}\n#         {% set backup_loop = loop %}\n#         db{{ '%03d' % db_loop.index }} -> backup{{ '%03d' % backup_loop.index }} [color=\"blue\"]\n#     {% endfor %}\n# {% endfor %}\n# {% for backup_host in groups.backup %}\n#     {% set backup_loop = loop %}\n#         backup{{ '%03d' % backup_loop.index }} [zbx_host=\"{{ backup_host }}\"]\n# {% endfor %}\n#     }\n# }\n###\n### Create Zabbix map \"Demo Map\" made of template 'map.j2'\n- name: Create Zabbix map\n  community.zabbix.zabbix_map:\n    server_url: http://zabbix.example.com\n    login_user: username\n    login_password: password\n    name: Demo map\n    state: present\n    data: \"{{ lookup('template', 'map.j2') }}\"\n    default_image: Server_(64)\n    expand_problem: no\n    highlight: no\n    label_type: label\n  delegate_to: localhost\n  run_once: yes\n"
+  },
+  "community.zabbix.zabbix_mediatype": {
+    "doc": {
+      "description": "This module allows you to create, modify and delete Zabbix media types.",
+      "has_action": false,
+      "notes": "If you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "attempt_interval": {
+          "aliases": [],
+          "description": "The interval between retry attempts.\nPossible range is 0-60.\nWorks only with Zabbix versions 3.4 or newer.",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "Description of the media type.\nWorks only with Zabbix versions 4.4 or newer.",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "event_menu": {
+          "aliases": [],
+          "description": "Can be used when I(type=webhook).\nIncludes entry in Event menu with link to created external ticket.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "event_menu_name": {
+          "aliases": [],
+          "description": "Requred when I(event_menu=True).\nEvent menu entry name.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "event_menu_url": {
+          "aliases": [],
+          "description": "Requred when I(event_menu=True).\nEvent menu entry underlying URL.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "gsm_modem": {
+          "aliases": [],
+          "description": "Serial device name of the gsm modem.\nRequired when I(type=sms).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "max_attempts": {
+          "aliases": [],
+          "description": "The maximum number of attempts to send an alert.\nPossible range is 0-10.\nWorks only with Zabbix versions 3.4 or newer.",
+          "default": "3",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "max_sessions": {
+          "aliases": [],
+          "description": "The maximum number of alerts that can be processed in parallel.\nPossible value is 1 when I(type=sms) and 0-100 otherwise.\nWorks only with Zabbix versions 3.4 or newer.",
+          "default": "1",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "message_templates": {
+          "aliases": [],
+          "description": "Default notification messages for the event types.\nWorks only with Zabbix versions 5.0 or newer.",
+          "default": "[]",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "body": {
+              "aliases": [],
+              "description": "Body of the default message.\nMay contain macros.",
+              "default": "",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "eventsource": {
+              "aliases": [],
+              "description": "Event source.\nRequired when I(recovery) is used.",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "triggers",
+                "discovery",
+                "autoregistration",
+                "internal"
+              ],
+              "suboptions": {}
+            },
+            "recovery": {
+              "aliases": [],
+              "description": "Operation mode.\nRequired when I(eventsource) is used.",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "operations",
+                "recovery_operations",
+                "update_operations"
+              ],
+              "suboptions": {}
+            },
+            "subject": {
+              "aliases": [],
+              "description": "Subject of the default message.\nMay contain macros and is limited to 255 characters.",
+              "default": "",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "message_text_limit": {
+          "aliases": [],
+          "description": "The message text limit.\nRequired when I(type=ez_texting).\n160 characters for USA and 136 characters for Canada.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "USA",
+            "Canada"
+          ],
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the media type.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Authentication password.\nRequired when I(type=jabber) or I(type=ez_texting).\nRequired when I(type=email) and I(smtp_authentication=true).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "process_tags": {
+          "aliases": [],
+          "description": "Can be used when I(type=webhook).\nProcess returned JSON property values as tags.\nThese tags are added to the already existing (if any) problem event tags in Zabbix.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "script_name": {
+          "aliases": [],
+          "description": "The name of the executed script.\nRequired when I(type=script).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "script_params": {
+          "aliases": [],
+          "description": "List of script parameters.\nRequired when I(type=script).",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "smtp_authentication": {
+          "aliases": [],
+          "description": "Whether SMTP authentication with username and password should be enabled or not.\nIf set to C(true), C(username) and C(password) should be specified.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "smtp_email": {
+          "aliases": [],
+          "description": "Email address from which notifications will be sent.\nRequired when I(type=email).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "smtp_helo": {
+          "aliases": [],
+          "description": "SMTP HELO.\nRequired when I(type=email).",
+          "default": "localhost",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "smtp_security": {
+          "aliases": [],
+          "description": "SMTP connection security level to use.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "None",
+            "STARTTLS",
+            "SSL/TLS"
+          ],
+          "suboptions": {}
+        },
+        "smtp_server": {
+          "aliases": [],
+          "description": "SMTP server host.\nRequired when I(type=email).",
+          "default": "localhost",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "smtp_server_port": {
+          "aliases": [],
+          "description": "SMTP server port.\nRequired when I(type=email).",
+          "default": "25",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "smtp_verify_host": {
+          "aliases": [],
+          "description": "SSL verify host for SMTP.\nCan be specified when I(smtp_security=STARTTLS) or I(smtp_security=SSL/TLS)",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "smtp_verify_peer": {
+          "aliases": [],
+          "description": "SSL verify peer for SMTP.\nCan be specified when I(smtp_security=STARTTLS) or I(smtp_security=SSL/TLS)",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Desired state of the mediatype.\nOn C(present), it will create a mediatype if it does not exist or update the mediatype if the associated data is different.\nOn C(absent), it will remove the mediatype if it exists.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "status": {
+          "aliases": [],
+          "description": "Whether the media type is enabled or no.",
+          "default": "enabled",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "enabled",
+            "disabled"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "Type of the media type.\nMedia types I(jabber) and I(ez_texting) works only with Zabbix versions 4.2 or older.\nMedia type I(webhook) works only with Zabbix versions 4.4 or newer.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "email",
+            "script",
+            "sms",
+            "webhook",
+            "jabber",
+            "ez_texting"
+          ],
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username or Jabber identifier.\nRequired when I(type=jabber) or I(type=ez_texting).\nRequired when I(type=email) and I(smtp_authentication=true).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "webhook_params": {
+          "aliases": [],
+          "description": "Can be used when I(type=webhook).\nWebhook variables that are passed to webhook script when executed.",
+          "default": "[]",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "name": {
+              "aliases": [],
+              "description": "Name of the parameter.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "value": {
+              "aliases": [],
+              "description": "Value of the parameter.\nAll macros that are supported in problem notifications are supported in the parameters.\nValues are URL-encoded automatically. Values from macros are resolved and then URL-encoded automatically.",
+              "default": "",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "webhook_script": {
+          "aliases": [],
+          "description": "Required when I(type=webhook).\nJavaScript code that will perform webhook operation.\nThis code has access to all parameters in I(webhook_params).\nIt may perform HTTP GET, POST, PUT and DELETE requests and has control over HTTP headers and request body.\nIt may return OK status along with an optional list of tags and tag values or an error string.\nWorks only with Zabbix versions 4.4 or newer.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "webhook_timeout": {
+          "aliases": [],
+          "description": "Can be used when I(type=webhook).\nExecution timeout for JavaScript code in I(webhook_script).\nPossible values are 1-60s.",
+          "default": "30s",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Create/Update/Delete Zabbix media types"
+    },
+    "examples": "\n- name: 'Create an email mediatype with SMTP authentication'\n  community.zabbix.zabbix_mediatype:\n    name: \"Ops email\"\n    server_url: \"http://example.com/zabbix/\"\n    login_user: Admin\n    login_password: \"zabbix\"\n    type: 'email'\n    smtp_server: 'example.com'\n    smtp_server_port: 2000\n    smtp_email: 'ops@example.com'\n    smtp_authentication: true\n    username: 'smtp_user'\n    password: 'smtp_pass'\n\n- name: 'Create a script mediatype'\n  community.zabbix.zabbix_mediatype:\n    name: \"my script\"\n    server_url: \"http://example.com/zabbix/\"\n    login_user: Admin\n    login_password: \"zabbix\"\n    type: 'script'\n    script_name: 'my_script.py'\n    script_params:\n      - 'arg1'\n      - 'arg2'\n\n- name: 'Create a jabber mediatype'\n  community.zabbix.zabbix_mediatype:\n    name: \"My jabber\"\n    server_url: \"http://example.com/zabbix/\"\n    login_user: Admin\n    login_password: \"zabbix\"\n    type: 'jabber'\n    username: 'jabber_id'\n    password: 'jabber_pass'\n\n- name: 'Create a SMS mediatype'\n  community.zabbix.zabbix_mediatype:\n    name: \"My SMS Mediatype\"\n    server_url: \"http://example.com/zabbix/\"\n    login_user: Admin\n    login_password: \"zabbix\"\n    type: 'sms'\n    gsm_modem: '/dev/ttyS0'\n\n# Supported since Zabbix 4.4\n- name: 'Create a webhook mediatype'\n  community.zabbix.zabbix_mediatype:\n    name: \"My webhook Mediatype\"\n    server_url: \"http://example.com/zabbix/\"\n    login_user: Admin\n    login_password: \"zabbix\"\n    type: 'webhook'\n    webhook_script: \"{{ lookup('file', 'slack.js') }}\"\n    webhook_params:\n      - name: alert_message\n        value: '{ALERT.MESSAGE}'\n      - name: zabbix_url\n        value: '{$ZABBIX.URL}'\n    process_tags: True\n    event_menu: true\n    event_menu_name: \"Open in Slack: '{EVENT.TAGS.__channel_name}'\"\n    event_menu_url: '{EVENT.TAGS.__message_link}'\n\n# Supported since Zabbix 5.0\n- name: 'Create an email mediatype with message templates'\n  community.zabbix.zabbix_mediatype:\n    name: \"Ops email\"\n    server_url: \"http://example.com/zabbix/\"\n    login_user: Admin\n    login_password: \"zabbix\"\n    type: 'email'\n    smtp_email: 'ops@example.com'\n    message_templates:\n      - eventsource: triggers\n        recovery: operations\n        subject: \"Problem: {EVENT.NAME}\"\n        body: \"Problem started at {EVENT.TIME} on {EVENT.DATE}\\r\\nProblem name: {EVENT.NAME}\\r\\n\"\n      - eventsource: triggers\n        recovery: recovery_operations\n        subject: \"Resolved: {EVENT.NAME}\"\n        body: \"Problem resolved at {EVENT.TIME} on {EVENT.DATE}\\r\\nProblem name: {EVENT.NAME}\\r\\n\"\n      - eventsource: triggers\n        recovery: update_operations\n        subject: \"Updated problem: {EVENT.NAME}\"\n        body: \"{USER.FULLNAME} {EVENT.UPDATE.ACTION} problem at {EVENT.UPDATE.DATE} {EVENT.UPDATE.TIME}.\\r\\n\"\n      - eventsource: discovery\n        recovery: operations\n        subject: \"Discovery: {DISCOVERY.DEVICE.STATUS} {DISCOVERY.DEVICE.IPADDRESS}\"\n        body: \"Discovery rule: {DISCOVERY.RULE.NAME}\\r\\n\\r\\nDevice IP: {DISCOVERY.DEVICE.IPADDRESS}\"\n      - eventsource: autoregistration\n        recovery: operations\n        subject: \"Autoregistration: {HOST.HOST}\"\n        body: \"Host name: {HOST.HOST}\\r\\nHost IP: {HOST.IP}\\r\\nAgent port: {HOST.PORT}\"\n"
+  },
+  "community.zabbix.zabbix_proxy": {
+    "doc": {
+      "description": "This module allows you to create, modify, get and delete Zabbix proxy entries.",
+      "has_action": false,
+      "notes": "If you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "ca_cert": {
+          "aliases": [
+            "tls_issuer"
+          ],
+          "description": "Certificate issuer.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "Description of the proxy.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "interface": {
+          "aliases": [],
+          "description": "Dictionary with params for the interface when proxy is in passive mode.\nFor more information, review proxy interface documentation at\nU(https://www.zabbix.com/documentation/4.0/manual/api/reference/proxy/object#proxy_interface).",
+          "default": "{}",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "dns": {
+              "aliases": [],
+              "description": "DNS name of the proxy interface.\nRequired if I(useip=0).",
+              "default": "",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "ip": {
+              "aliases": [],
+              "description": "IP address used by proxy interface.\nRequired if I(useip=1).",
+              "default": "",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "main": {
+              "aliases": [],
+              "description": "Whether the interface is used as default.\nThis suboption is currently ignored for Zabbix proxy.\nThis suboption is deprecated since Ansible 2.10 and will eventually be removed in 2.14.",
+              "default": "0",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "port": {
+              "aliases": [],
+              "description": "Port used by proxy interface.",
+              "default": "10051",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "type": {
+              "aliases": [],
+              "description": "Interface type to add.\nThis suboption is currently ignored for Zabbix proxy.\nThis suboption is deprecated since Ansible 2.10 and will eventually be removed in 2.14.",
+              "default": "0",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "useip": {
+              "aliases": [],
+              "description": "Connect to proxy interface with IP address instead of DNS name.\n0 (don't use ip), 1 (use ip).",
+              "default": "0",
+              "type": "int",
+              "required": false,
+              "choices": [
+                "0",
+                "1"
+              ],
+              "suboptions": {}
+            }
+          }
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "proxy_address": {
+          "aliases": [],
+          "description": "Comma-delimited list of IP/CIDR addresses or DNS names to accept active proxy requests from.\nRequires I(status=active).\nWorks only with >= Zabbix 4.0. ( remove option for <= 4.0 )",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy_name": {
+          "aliases": [],
+          "description": "Name of the proxy in Zabbix.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the proxy.\nOn C(present), it will create if proxy does not exist or update the proxy if the associated data is different.\nOn C(absent) will remove a proxy if it exists.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "status": {
+          "aliases": [],
+          "description": "Type of proxy. (4 - active, 5 - passive)",
+          "default": "active",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "active",
+            "passive"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "tls_accept": {
+          "aliases": [],
+          "description": "Connections from proxy.",
+          "default": "no_encryption",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "no_encryption",
+            "PSK",
+            "certificate"
+          ],
+          "suboptions": {}
+        },
+        "tls_connect": {
+          "aliases": [],
+          "description": "Connections to proxy.",
+          "default": "no_encryption",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "no_encryption",
+            "PSK",
+            "certificate"
+          ],
+          "suboptions": {}
+        },
+        "tls_psk": {
+          "aliases": [],
+          "description": "The preshared key, at least 32 hex digits. Required if either I(tls_connect) or I(tls_accept) has PSK enabled.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tls_psk_identity": {
+          "aliases": [],
+          "description": "PSK identity. Required if either I(tls_connect) or I(tls_accept) has PSK enabled.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tls_subject": {
+          "aliases": [],
+          "description": "Certificate subject.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Create/delete/get/update Zabbix proxies"
+    },
+    "examples": "\n- name: Create or update a proxy with proxy type active\n  local_action:\n    module: community.zabbix.zabbix_proxy\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    proxy_name: ExampleProxy\n    description: ExampleProxy\n    status: active\n    state: present\n    proxy_address: ExampleProxy.local\n\n- name: Create a new passive proxy using only it's IP\n  local_action:\n    module: community.zabbix.zabbix_proxy\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    proxy_name: ExampleProxy\n    description: ExampleProxy\n    status: passive\n    state: present\n    interface:\n      useip: 1\n      ip: 10.1.1.2\n      port: 10051\n\n- name: Create a new passive proxy using only it's DNS\n  local_action:\n    module: community.zabbix.zabbix_proxy\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    proxy_name: ExampleProxy\n    description: ExampleProxy\n    status: passive\n    state: present\n    interface:\n      dns: proxy.example.com\n      port: 10051\n"
+  },
+  "community.zabbix.zabbix_proxy_info": {
+    "doc": {
+      "description": "This module allows you to obtain detailed information about configured zabbix proxies.",
+      "has_action": false,
+      "notes": "If you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "proxy_hosts": {
+          "aliases": [],
+          "description": "Also return list of hosts monitored by the proxy.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy_name": {
+          "aliases": [],
+          "description": "Name of the Zabbix proxy.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Gather information about Zabbix proxy",
+      "version_added": "1.5.0"
+    },
+    "examples": "\n- name: Get zabbix proxy info alongside the list of hosts monitored by the proxy\n  community.zabbix.zabbix_proxy_info:\n    server_url: \"http://zabbix.example.com/zabbix/\"\n    login_user: admin\n    login_password: secret\n    proxy_name: zbx01.example.com\n    proxy_hosts: True\n"
+  },
+  "community.zabbix.zabbix_screen": {
+    "doc": {
+      "description": "This module allows you to create, modify and delete Zabbix screens and associated graph data.",
+      "has_action": false,
+      "notes": "Too many concurrent updates to the same screen may cause Zabbix to return errors, see examples for a workaround if needed.\nIf you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "screens": {
+          "aliases": [],
+          "description": "List of screens to be created/updated/deleted (see example).",
+          "type": "list",
+          "required": true,
+          "elements": "dict",
+          "suboptions": {
+            "graph_height": {
+              "aliases": [],
+              "description": "Graph height will be set in graph settings.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "graph_names": {
+              "aliases": [],
+              "description": "Graph names will be added to a screen. Case insensitive.\nRequired if I(state=present).",
+              "type": "list",
+              "required": false,
+              "elements": "str",
+              "suboptions": {}
+            },
+            "graph_width": {
+              "aliases": [],
+              "description": "Graph width will be set in graph settings.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "graphs_in_row": {
+              "aliases": [],
+              "description": "Limit columns of a screen and make multiple rows.",
+              "default": "3",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "host_group": {
+              "aliases": [
+                "host_groups"
+              ],
+              "description": "Host group(s) will be used for searching hosts.\nRequired if I(state=present).",
+              "type": "list",
+              "required": false,
+              "elements": "str",
+              "suboptions": {}
+            },
+            "screen_name": {
+              "aliases": [],
+              "description": "Screen name will be used.\nIf a screen has already been added, the screen name won't be updated.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "sort": {
+              "aliases": [],
+              "description": "Sort hosts alphabetically.\nIf there are numbers in hostnames, leading zero should be used.",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "state": {
+              "aliases": [],
+              "description": "I(present) - Create a screen if it doesn't exist. If the screen already exists, the screen will be updated as needed.\nI(absent) - If a screen exists, the screen will be deleted.",
+              "default": "present",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "absent",
+                "present"
+              ],
+              "suboptions": {}
+            }
+          }
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Create/update/delete Zabbix screens"
+    },
+    "examples": "\n# Create/update a screen.\n- name: Create a new screen or update an existing screen's items 5 in a row\n  local_action:\n    module: community.zabbix.zabbix_screen\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    screens:\n      - screen_name: ExampleScreen1\n        host_group: Example group1\n        state: present\n        graph_names:\n          - Example graph1\n          - Example graph2\n        graph_width: 200\n        graph_height: 100\n        graphs_in_row: 5\n\n# Create/update multi-screen\n- name: Create two of new screens or update the existing screens' items\n  local_action:\n    module: community.zabbix.zabbix_screen\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    screens:\n      - screen_name: ExampleScreen1\n        host_group: Example group1\n        state: present\n        graph_names:\n          - Example graph1\n          - Example graph2\n        graph_width: 200\n        graph_height: 100\n      - screen_name: ExampleScreen2\n        host_group: Example group2\n        state: present\n        graph_names:\n          - Example graph1\n          - Example graph2\n        graph_width: 200\n        graph_height: 100\n\n# Limit the Zabbix screen creations to one host since Zabbix can return an error when doing concurrent updates\n- name: Create a new screen or update an existing screen's items\n  local_action:\n    module: community.zabbix.zabbix_screen\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    state: present\n    screens:\n      - screen_name: ExampleScreen\n        host_group: Example group\n        state: present\n        graph_names:\n          - Example graph1\n          - Example graph2\n        graph_width: 200\n        graph_height: 100\n  when: inventory_hostname==groups['group_name'][0]\n\n# Create/update using multiple hosts_groups. Hosts NOT present in all listed host_groups will be skipped.\n- name: Create new screen or update the existing screen's items for hosts in both given groups\n  local_action:\n    module: community.zabbix.zabbix_screen\n    server_url: http://monitor.example.com\n    login_user: username\n    login_password: password\n    screens:\n      - screen_name: ExampleScreen1\n        host_group:\n          - Example group1\n          - Example group2\n        state: present\n        graph_names:\n          - Example graph1\n          - Example graph2\n        graph_width: 200\n        graph_height: 100\n"
+  },
+  "community.zabbix.zabbix_service": {
+    "doc": {
+      "description": "Create/update/delete Zabbix service.",
+      "has_action": false,
+      "notes": "If you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "algorithm": {
+          "aliases": [],
+          "description": "Algorithm used to calculate the sla\nC(no), sla is not calculated\nC(one_child), problem if at least one child has a problem\nC(all_children), problem if all children have problems",
+          "default": "one_child",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "no",
+            "one_child",
+            "all_children"
+          ],
+          "suboptions": {}
+        },
+        "calculate_sla": {
+          "aliases": [],
+          "description": "If yes, calculate the SLA value for this service, showsla in Zabbix API",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of Zabbix service",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "parent": {
+          "aliases": [],
+          "description": "Name of Zabbix service parent",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "sla": {
+          "aliases": [],
+          "description": "Sla value (i.e 99.99), goodsla in Zabbix API",
+          "type": "float",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State: present - create/update service; absent - delete service",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "trigger_host": {
+          "aliases": [],
+          "description": "Name of host linked to the service",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "trigger_name": {
+          "aliases": [],
+          "description": "Name of trigger linked to the service",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Create/update/delete Zabbix service"
+    },
+    "examples": "\n---\n# Creates a new Zabbix service\n- name: Manage services\n  local_action:\n        module: community.zabbix.zabbix_service\n        server_url: \"https://192.168.1.1\"\n        login_user: username\n        login_password: password\n        name: apache2 service\n        sla: 99.99\n        calculate_sla: yes\n        algorithm: one_child\n        trigger_name: apache2 service status\n        trigger_host: webserver01\n        state: present\n"
+  },
+  "community.zabbix.zabbix_template": {
+    "doc": {
+      "description": "This module allows you to create, modify, delete and dump Zabbix templates.\nMultiple templates can be created or modified at once if passing JSON or XML to module.",
+      "has_action": false,
+      "notes": "If you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "clear_templates": {
+          "aliases": [],
+          "description": "List of template names to be unlinked and cleared from the template.\nThis option is ignored if template is being created for the first time.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "dump_format": {
+          "aliases": [],
+          "description": "Format to use when dumping template with C(state=dump).\nThis option is deprecated and will eventually be removed in 2.14.",
+          "default": "json",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "json",
+            "xml"
+          ],
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "link_templates": {
+          "aliases": [],
+          "description": "List of template names to be linked to the template.\nTemplates that are not specified and are linked to the existing template will be only unlinked and not cleared from the template.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "macros": {
+          "aliases": [],
+          "description": "List of user macros to create for the template.\nMacros that are not specified and are present on the existing template will be replaced.\nSee examples on how to pass macros.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "macro": {
+              "aliases": [],
+              "description": "Name of the macro.\nMust be specified in {$NAME} format.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "value": {
+              "aliases": [],
+              "description": "Value of the macro.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        },
+        "omit_date": {
+          "aliases": [],
+          "description": "Removes the date field for the exported/dumped template\nRequires C(state=dump)",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Required state of the template.\nOn C(state=present) template will be created/imported or updated depending if it is already present.\nOn C(state=dump) template content will get dumped into required format specified in I(dump_format).\nOn C(state=absent) template will be deleted.\nThe C(state=dump) is deprecated and will be removed in 2.14. The M(community.zabbix.zabbix_template_info) module should be used instead.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent",
+            "dump"
+          ],
+          "suboptions": {}
+        },
+        "template_groups": {
+          "aliases": [],
+          "description": "List of host groups to add template to when template is created.\nReplaces the current host groups the template belongs to if the template is already present.\nRequired when creating a new template with C(state=present) and I(template_name) is used. Not required when updating an existing template.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "template_json": {
+          "aliases": [],
+          "description": "JSON dump of templates to import.\nMultiple templates can be imported this way.\nMutually exclusive with I(template_name) and I(template_xml).",
+          "type": "json",
+          "required": false,
+          "suboptions": {}
+        },
+        "template_name": {
+          "aliases": [],
+          "description": "Name of Zabbix template.\nRequired when I(template_json) or I(template_xml) are not used.\nMutually exclusive with I(template_json) and I(template_xml).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "template_xml": {
+          "aliases": [],
+          "description": "XML dump of templates to import.\nMultiple templates can be imported this way.\nYou are advised to pass XML structure matching the structure used by your version of Zabbix server.\nCustom XML structure can be imported as long as it is valid, but may not yield consistent idempotent results on subsequent runs.\nMutually exclusive with I(template_name) and I(template_json).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Create/update/delete/dump Zabbix template"
+    },
+    "examples": "\n---\n- name: Create a new Zabbix template linked to groups, macros and templates\n  local_action:\n    module: community.zabbix.zabbix_template\n    server_url: http://127.0.0.1\n    login_user: username\n    login_password: password\n    template_name: ExampleHost\n    template_groups:\n      - Role\n      - Role2\n    link_templates:\n      - Example template1\n      - Example template2\n    macros:\n      - macro: '{$EXAMPLE_MACRO1}'\n        value: 30000\n      - macro: '{$EXAMPLE_MACRO2}'\n        value: 3\n      - macro: '{$EXAMPLE_MACRO3}'\n        value: 'Example'\n    state: present\n\n- name: Unlink and clear templates from the existing Zabbix template\n  local_action:\n    module: community.zabbix.zabbix_template\n    server_url: http://127.0.0.1\n    login_user: username\n    login_password: password\n    template_name: ExampleHost\n    clear_templates:\n      - Example template3\n      - Example template4\n    state: present\n\n- name: Import Zabbix templates from JSON\n  local_action:\n    module: community.zabbix.zabbix_template\n    server_url: http://127.0.0.1\n    login_user: username\n    login_password: password\n    template_json: \"{{ lookup('file', 'zabbix_apache2.json') }}\"\n    state: present\n\n- name: Import Zabbix templates from XML\n  local_action:\n    module: community.zabbix.zabbix_template\n    server_url: http://127.0.0.1\n    login_user: username\n    login_password: password\n    template_xml: \"{{ lookup('file', 'zabbix_apache2.xml') }}\"\n    state: present\n\n- name: Import Zabbix template from Ansible dict variable\n  community.zabbix.zabbix_template:\n    login_user: username\n    login_password: password\n    server_url: http://127.0.0.1\n    template_json:\n      zabbix_export:\n        version: '3.2'\n        templates:\n          - name: Template for Testing\n            description: 'Testing template import'\n            template: Test Template\n            groups:\n              - name: Templates\n            applications:\n              - name: Test Application\n    state: present\n\n- name: Configure macros on the existing Zabbix template\n  local_action:\n    module: community.zabbix.zabbix_template\n    server_url: http://127.0.0.1\n    login_user: username\n    login_password: password\n    template_name: Template\n    macros:\n      - macro: '{$TEST_MACRO}'\n        value: 'Example'\n    state: present\n\n- name: Delete Zabbix template\n  local_action:\n    module: community.zabbix.zabbix_template\n    server_url: http://127.0.0.1\n    login_user: username\n    login_password: password\n    template_name: Template\n    state: absent\n\n- name: Dump Zabbix template as JSON\n  local_action:\n    module: community.zabbix.zabbix_template\n    server_url: http://127.0.0.1\n    login_user: username\n    login_password: password\n    template_name: Template\n    omit_date: yes\n    state: dump\n  register: template_dump\n\n- name: Dump Zabbix template as XML\n  local_action:\n    module: community.zabbix.zabbix_template\n    server_url: http://127.0.0.1\n    login_user: username\n    login_password: password\n    template_name: Template\n    dump_format: xml\n    omit_date: false\n    state: dump\n  register: template_dump\n"
+  },
+  "community.zabbix.zabbix_template_info": {
+    "doc": {
+      "description": "This module allows you to search for Zabbix template.",
+      "has_action": false,
+      "notes": "If you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "format": {
+          "aliases": [],
+          "description": "Format to use when dumping template.",
+          "default": "json",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "json",
+            "xml"
+          ],
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "omit_date": {
+          "aliases": [],
+          "description": "Removes the date field for the dumped template",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "template_name": {
+          "aliases": [],
+          "description": "Name of the template in Zabbix.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Gather information about Zabbix template"
+    },
+    "examples": "\n- name: Get Zabbix template as JSON\n  community.zabbix.zabbix_template_info:\n    server_url: \"http://zabbix.example.com/zabbix/\"\n    login_user: admin\n    login_password: secret\n    template_name: Template\n    format: json\n    omit_date: yes\n  register: template_json\n\n- name: Get Zabbix template as XML\n  community.zabbix.zabbix_template_info:\n    server_url: \"http://zabbix.example.com/zabbix/\"\n    login_user: admin\n    login_password: secret\n    template_name: Template\n    format: xml\n    omit_date: no\n  register: template_json\n"
+  },
+  "community.zabbix.zabbix_user": {
+    "doc": {
+      "description": "This module allows you to create, modify and delete Zabbix users.",
+      "has_action": false,
+      "notes": "If you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "after_login_url": {
+          "aliases": [],
+          "description": "URL of the page to redirect the user to after logging in.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "alias": {
+          "aliases": [
+            "username"
+          ],
+          "description": "Name of the user alias in Zabbix.\nalias is the unique identifier used and cannot be updated using this module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "autologin": {
+          "aliases": [],
+          "description": "Whether to enable auto-login.\nIf enable autologin, cannot enable autologout.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "autologout": {
+          "aliases": [],
+          "description": "User session life time in seconds. If set to 0, the session will never expire.\nIf enable autologout, cannot enable autologin.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "lang": {
+          "aliases": [],
+          "description": "Language code of the user's language.\nC(default) can be used with Zabbix version 5.2 or higher.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "en_GB",
+            "en_US",
+            "zh_CN",
+            "cs_CZ",
+            "fr_FR",
+            "he_IL",
+            "it_IT",
+            "ko_KR",
+            "ja_JP",
+            "nb_NO",
+            "pl_PL",
+            "pt_BR",
+            "pt_PT",
+            "ru_RU",
+            "sk_SK",
+            "tr_TR",
+            "uk_UA",
+            "default"
+          ],
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "override_passwd": {
+          "aliases": [],
+          "description": "Override password for the user.\nPassword will not be updated on subsequent runs without setting this value to yes.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "passwd": {
+          "aliases": [],
+          "description": "User's password.\nRequired unless all of the I(usrgrps) are set to use LDAP as frontend access.\nAlways required for Zabbix versions lower than 4.0.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "refresh": {
+          "aliases": [],
+          "description": "Automatic refresh period in seconds.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "role_name": {
+          "aliases": [],
+          "description": "User's role.\nI(role_name) can be used when Zabbix version is 5.2 or higher.\nDefault is C(User role) when creating a new user.\nThe default value will be removed at the version 2.0.0.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.2.0",
+          "suboptions": {}
+        },
+        "rows_per_page": {
+          "aliases": [],
+          "description": "Amount of object rows to show per page.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the user.\nOn C(present), it will create if user does not exist or update the user if the associated data is different.\nOn C(absent) will remove a user if it exists.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "surname": {
+          "aliases": [],
+          "description": "Surname of the user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "theme": {
+          "aliases": [],
+          "description": "User's theme.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "default",
+            "blue-theme",
+            "dark-theme"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "timezone": {
+          "aliases": [],
+          "description": "User's time zone.\nI(timezone) can be used with Zabbix version 5.2 or higher.\nFor the full list of supported time zones please refer to U(https://www.php.net/manual/en/timezones.php)",
+          "type": "str",
+          "required": false,
+          "version_added": "1.2.0",
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "Type of the user.\nI(type) can be used when Zabbix version is 5.0 or lower.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "Zabbix user",
+            "Zabbix admin",
+            "Zabbix super admin"
+          ],
+          "suboptions": {}
+        },
+        "user_medias": {
+          "aliases": [],
+          "description": "Set the user's media.\nIf not set, makes no changes to media.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "active": {
+              "aliases": [],
+              "description": "Whether the media is enabled.",
+              "default": "True",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "mediatype": {
+              "aliases": [],
+              "description": "Media type name to set.",
+              "default": "Email",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "period": {
+              "aliases": [],
+              "description": "Time when the notifications can be sent as a time period or user macros separated by a semicolon.\nPlease review the documentation for more information on the supported time period.\nhttps://www.zabbix.com/documentation/4.0/manual/appendix/time_period",
+              "default": "1-7,00:00-24:00",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "sendto": {
+              "aliases": [],
+              "description": "Address, user name or other identifier of the recipient.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "severity": {
+              "aliases": [],
+              "description": "Trigger severities to send notifications about.",
+              "default": "{'average': True, 'disaster': True, 'high': True, 'information': True, 'not_classified': True, 'warning': True}",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "average": {
+                  "aliases": [],
+                  "description": "severity average enable/disable.",
+                  "default": "True",
+                  "type": "bool",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "disaster": {
+                  "aliases": [],
+                  "description": "severity disaster enable/disable.",
+                  "default": "True",
+                  "type": "bool",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "high": {
+                  "aliases": [],
+                  "description": "severity high enable/disable.",
+                  "default": "True",
+                  "type": "bool",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "information": {
+                  "aliases": [],
+                  "description": "severity information enable/disable.",
+                  "default": "True",
+                  "type": "bool",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "not_classified": {
+                  "aliases": [],
+                  "description": "severity not_classified enable/disable.",
+                  "default": "True",
+                  "type": "bool",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "warning": {
+                  "aliases": [],
+                  "description": "severity warning enable/disable.",
+                  "default": "True",
+                  "type": "bool",
+                  "required": false,
+                  "suboptions": {}
+                }
+              }
+            }
+          }
+        },
+        "usrgrps": {
+          "aliases": [],
+          "description": "User groups to add the user to.\nRequired when I(state=present).",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Create/update/delete Zabbix users"
+    },
+    "examples": "\n- name: create a new zabbix user.\n  community.zabbix.zabbix_user:\n    server_url: \"http://zabbix.example.com/zabbix/\"\n    login_user: Admin\n    login_password: secret\n    alias: example\n    name: user name\n    surname: user surname\n    usrgrps:\n      - Guests\n      - Disabled\n    passwd: password\n    lang: en_GB\n    theme: blue-theme\n    autologin: no\n    autologout: '0'\n    refresh: '30'\n    rows_per_page: '200'\n    after_login_url: ''\n    user_medias:\n      - mediatype: Email\n        sendto: example@example.com\n        period: 1-7,00:00-24:00\n        severity:\n          not_classified: no\n          information: yes\n          warning: yes\n          average: yes\n          high: yes\n          disaster: yes\n        active: no\n    type: Zabbix super admin\n    state: present\n\n- name: delete existing zabbix user.\n  community.zabbix.zabbix_user:\n    server_url: \"http://zabbix.example.com/zabbix/\"\n    login_user: admin\n    login_password: secret\n    alias: example\n    usrgrps:\n      - Guests\n    passwd: password\n    user_medias:\n      - sendto: example@example.com\n    state: absent\n"
+  },
+  "community.zabbix.zabbix_user_info": {
+    "doc": {
+      "description": "This module allows you to search for Zabbix user entries.",
+      "has_action": false,
+      "notes": "If you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "alias": {
+          "aliases": [],
+          "description": "Name of the user alias in Zabbix.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Gather information about Zabbix user"
+    },
+    "examples": "\n- name: Get zabbix user info\n  community.zabbix.zabbix_user_info:\n    server_url: \"http://zabbix.example.com/zabbix/\"\n    login_user: admin\n    login_password: secret\n    alias: example\n"
+  },
+  "community.zabbix.zabbix_usergroup": {
+    "doc": {
+      "description": "Create user groups if they do not exist.\nDelete existing user groups if they exist and are empty.\nUpdate existing user groups.",
+      "has_action": false,
+      "notes": "Only Zabbix >= 4.0 is supported.\nIf you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "debug_mode": {
+          "aliases": [],
+          "description": "Whether debug mode is enabled or disabled.",
+          "default": "disabled",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "disabled",
+            "enabled"
+          ],
+          "suboptions": {}
+        },
+        "gui_access": {
+          "aliases": [],
+          "description": "Frontend authentication method of the users in the group.\nPossible values:\ndefault -  use the system default authentication method;\ninternal - use internal authentication;\nLDAP - use LDAP authentication;\ndisable - disable access to the frontend.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "default",
+            "internal",
+            "LDAP",
+            "disable"
+          ],
+          "suboptions": {}
+        },
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [
+            "user_group"
+          ],
+          "description": "Name of the user group to create, update or delete.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "rights": {
+          "aliases": [],
+          "description": "Permissions to assign to the group",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "host_group": {
+              "aliases": [],
+              "description": "Name of the host group to add permission to.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "permission": {
+              "aliases": [],
+              "description": "Access level to the host group.",
+              "type": "str",
+              "required": true,
+              "choices": [
+                "denied",
+                "read-only",
+                "read-write"
+              ],
+              "suboptions": {}
+            }
+          }
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the user group.\nOn C(present), it will create if user group does not exist or update the user group if the associated data is different.\nOn C(absent) will remove a user group if it exists.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "status": {
+          "aliases": [],
+          "description": "Whether the user group is enabled or disabled.",
+          "default": "enabled",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "enabled",
+            "disabled"
+          ],
+          "suboptions": {}
+        },
+        "tag_filters": {
+          "aliases": [],
+          "description": "Tag based permissions to assign to the group",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "host_group": {
+              "aliases": [],
+              "description": "Name of the host group to add permission to.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "tag": {
+              "aliases": [],
+              "description": "Tag name.",
+              "default": "",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "value": {
+              "aliases": [],
+              "description": "Tag value.",
+              "default": "",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Create/delete/update Zabbix user groups"
+    },
+    "examples": "\n# Base create user group example\n- name: Create user group\n  community.zabbix.zabbix_usergroup:\n    server_url: \"http://zabbix.example.com/zabbix/\"\n    login_user: admin\n    login_password: secret\n    name: ACME\n    state: present\n\n# Base create user group with disabled gui access\n- name: Create user group with disabled gui access\n  community.zabbix.zabbix_usergroup:\n    server_url: \"http://zabbix.example.com/zabbix/\"\n    login_user: admin\n    login_password: secret\n    name: ACME\n    gui_access: disable\n\n# Base create user group with permissions\n- name: Create user group with permissions\n  community.zabbix.zabbix_usergroup:\n    server_url: \"http://zabbix.example.com/zabbix/\"\n    login_user: admin\n    login_password: secret\n    name: ACME\n    rights:\n        - host_group: Webserver\n          permission: read-write\n        - host_group: Databaseserver\n          permission: read-only\n    state: present\n\n# Base create user group with tag permissions\n- name: Create user group with tag permissions\n  community.zabbix.zabbix_usergroup:\n    server_url: \"http://zabbix.example.com/zabbix/\"\n    login_user: admin\n    login_password: secret\n    name: ACME\n    tag_filters:\n        - host_group: Webserver\n          tag: Application\n          value: Java\n        - host_group: Discovered hosts\n          tag: Service\n          value: JIRA\n    state: present\n\n# Base delete user groups example\n- name: Delete user groups\n  community.zabbix.zabbix_usergroup:\n    server_url: \"http://zabbix.example.com/zabbix/\"\n    login_user: admin\n    login_password: secret\n    name: ACME\n    state: absent\n"
+  },
+  "community.zabbix.zabbix_valuemap": {
+    "doc": {
+      "description": "This module allows you to create, modify and delete Zabbix value maps.",
+      "has_action": false,
+      "notes": "If you use I(login_password=zabbix), the word \"zabbix\" is replaced by \"********\" in all module output, because I(login_password) uses C(no_log). See L(this FAQ,https://docs.ansible.com/ansible/latest/network/user_guide/faq.html#why-is-my-output-sometimes-replaced-with) for more information.",
+      "options": {
+        "http_login_password": {
+          "aliases": [],
+          "description": "Basic Auth password",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_login_user": {
+          "aliases": [],
+          "description": "Basic Auth login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "Zabbix user password.\nIf not set the environment variable C(ZABBIX_PASSWORD) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "Zabbix user name.\nIf not set the environment variable C(ZABBIX_USERNAME) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "mappings": {
+          "aliases": [],
+          "description": "List of value mappings for the value map.\nRequired when I(state=present).",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "map_to": {
+              "aliases": [],
+              "description": "Value to which the original value is mapped to.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "value": {
+              "aliases": [],
+              "description": "Original value.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the value map.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "server_url": {
+          "aliases": [
+            "url"
+          ],
+          "description": "URL of Zabbix server, with protocol (http or https). C(url) is an alias for C(server_url).\nIf not set the environment variable C(ZABBIX_SERVER) will be used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the value map.\nOn C(present), it will create a value map if it does not exist or update the value map if the associated data is different.\nOn C(absent), it will remove the value map if it exists.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout of API request (seconds).",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to False, SSL certificates will not be validated. This should only be used on personally controlled sites using self-signed certificates.\nIf not set the environment variable C(ZABBIX_VALIDATE_CERTS) will be used.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "zabbix-api >= 0.5.4"
+      ],
+      "short_description": "Create/update/delete Zabbix value maps"
+    },
+    "examples": "\n- name: Create a value map\n  local_action:\n    module: community.zabbix.zabbix_valuemap\n    server_url: http://zabbix.example.com\n    login_user: username\n    login_password: password\n    name: Numbers\n    mappings:\n      - value: 1\n        map_to: one\n      - value: 2\n        map_to: two\n    state: present\n"
+  }
+}

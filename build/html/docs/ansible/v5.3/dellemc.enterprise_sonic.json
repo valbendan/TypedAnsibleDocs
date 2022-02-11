@@ -1,0 +1,2707 @@
+{
+  "dellemc.enterprise_sonic.sonic_aaa": {
+    "doc": {
+      "description": "This module is used for configuration management of aaa parameters on devices running Enterprise SONiC.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "Specifies the aaa related configurations",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "authentication": {
+              "aliases": [],
+              "description": "Specifies the configurations required for aaa authentication",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "data": {
+                  "aliases": [],
+                  "description": "Specifies the data required for aaa authentication",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "fail_through": {
+                      "aliases": [],
+                      "description": "Specifies the state of failthrough",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "group": {
+                      "aliases": [],
+                      "description": "Specifies the method of aaa authentication",
+                      "type": "str",
+                      "required": false,
+                      "choices": [
+                        "ldap",
+                        "radius",
+                        "tacacs+"
+                      ],
+                      "suboptions": {}
+                    },
+                    "local": {
+                      "aliases": [],
+                      "description": "Enable or Disable local authentication",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "Specifies the operation to be performed on the aaa parameters configured on the device.\nIn case of merged, the input configuration will be merged with the existing aaa configuration on the device.\nIn case of deleted the existing aaa configuration will be removed from the device.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage AAA and its parameters",
+      "version_added": "1.1.0"
+    },
+    "examples": "\n# Using deleted\n#\n# Before state:\n# -------------\n#\n# do show aaa\n# AAA Authentication Information\n# ---------------------------------------------------------\n# failthrough  : True\n# login-method : local\n\n- name: Delete aaa configurations\n  dellemc.enterprise_sonic.sonic_aaa:\n    config:\n      authentication:\n        data:\n          local: True\n    state: deleted\n\n# After state:\n# ------------\n#\n# do show aaa\n# AAA Authentication Information\n# ---------------------------------------------------------\n# failthrough  : True\n# login-method :\n\n\n# Using deleted\n#\n# Before state:\n# -------------\n#\n# do show aaa\n# AAA Authentication Information\n# ---------------------------------------------------------\n# failthrough  : True\n# login-method : local\n\n- name: Delete aaa configurations\n  dellemc.enterprise_sonic.sonic_aaa:\n    config:\n    state: deleted\n\n# After state:\n# ------------\n#\n# do show aaa\n# AAA Authentication Information\n# ---------------------------------------------------------\n# failthrough  :\n# login-method :\n\n\n# Using merged\n#\n# Before state:\n# -------------\n#\n# do show aaa\n# AAA Authentication Information\n# ---------------------------------------------------------\n# failthrough  : False\n# login-method :\n\n- name: Merge aaa configurations\n  dellemc.enterprise_sonic.sonic_aaa:\n    config:\n      authentication:\n        data:\n          local: true\n          fail_through: true\n    state: merged\n\n# After state:\n# ------------\n#\n# do show aaa\n# AAA Authentication Information\n# ---------------------------------------------------------\n# failthrough  : True\n# login-method : local\n\n\n"
+  },
+  "dellemc.enterprise_sonic.sonic_api": {
+    "doc": {
+      "description": "Manages REST operations on devices running Enterprise SONiC Distribution by Dell Technologies. This module provides an implementation for working with SONiC REST operations in a deterministic way.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "body": {
+          "aliases": [],
+          "description": "The body of the HTTP request/response to the web service which contains the payload.",
+          "type": "raw",
+          "required": false,
+          "suboptions": {}
+        },
+        "method": {
+          "aliases": [],
+          "description": "The HTTP method of the request or response. Must be a valid method accepted by the service that handles the request.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "GET",
+            "PUT",
+            "POST",
+            "PATCH",
+            "DELETE"
+          ],
+          "suboptions": {}
+        },
+        "status_code": {
+          "aliases": [],
+          "description": "A list of valid, numeric, HTTP status codes that signifies the success of a request.",
+          "type": "list",
+          "required": true,
+          "elements": "int",
+          "suboptions": {}
+        },
+        "url": {
+          "aliases": [],
+          "description": "The HTTP path of the request after 'restconf/'.",
+          "type": "path",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manages REST operations on devices running Enterprise SONiC",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Checks that you can connect (GET) to a page and it returns a status 200\n  dellemc.enterprise_sonic.sonic_api:\n    url: data/openconfig-interfaces:interfaces/interface=Ethernet60\n    method: \"GET\"\n    status_code: 200\n\n- name: Appends data to an existing interface using PATCH and verifies if it returns status 204\n  dellemc.enterprise_sonic.sonic_api:\n    url: data/openconfig-interfaces:interfaces/interface=Ethernet60/config/description\n    method: \"PATCH\"\n    body: {\"openconfig-interfaces:description\": \"Eth-60\"}\n    status_code: 204\n\n- name: Deletes an associated IP address using DELETE and verifies if it returns status 204\n  dellemc.enterprise_sonic.sonic_api:\n    url: >\n      data/openconfig-interfaces:interfaces/interface=Ethernet64/subinterfaces/subinterface=0/\n      openconfig-if-ip:ipv4/addresses/address=1.1.1.1/config/prefix-length\n    method: \"DELETE\"\n    status_code: 204\n\n- name: Adds a VLAN network instance using PUT and verifies if it returns status 204\n  dellemc.enterprise_sonic.sonic_api:\n    url: data/openconfig-network-instance:network-instances/network-instance=Vlan100/\n    method: \"PUT\"\n    body: {\"openconfig-network-instance:network-instance\": [{\"name\": \"Vlan100\",\"config\": {\"name\": \"Vlan100\"}}]}\n    status_code: 204\n\n- name: Adds a prefix-set to a routing policy using POST and verifies if it returns 201\n  dellemc.enterprise_sonic.sonic_api:\n        url: data/openconfig-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set=p1\n        method: \"POST\"\n        body: {\"openconfig-routing-policy:config\": {\"name\": \"p1\",\"mode\": \"IPV4\" }}\n        status_code: 201\n\n"
+  },
+  "dellemc.enterprise_sonic.sonic_bgp": {
+    "doc": {
+      "description": "This module provides configuration management of global BGP parameters on devices running Enterprise SONiC Distribution by Dell Technologies.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "Specifies the BGP-related configuration.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "bestpath": {
+              "aliases": [],
+              "description": "Configures the BGP best-path.",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "as_path": {
+                  "aliases": [],
+                  "description": "Configures the as-path values.",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "confed": {
+                      "aliases": [],
+                      "description": "Configures the confed values of as-path.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "ignore": {
+                      "aliases": [],
+                      "description": "Configures the ignore values of as-path.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "multipath_relax": {
+                      "aliases": [],
+                      "description": "Configures the multipath_relax values of as-path.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "multipath_relax_as_set": {
+                      "aliases": [],
+                      "description": "Configures the multipath_relax_as_set values of as-path.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "compare_routerid": {
+                  "aliases": [],
+                  "description": "Configures the compare_routerid.",
+                  "type": "bool",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "med": {
+                  "aliases": [],
+                  "description": "Configures the med values.",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "always_compare_med": {
+                      "aliases": [],
+                      "description": "Allows comparing meds from different neighbors if set to true",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "confed": {
+                      "aliases": [],
+                      "description": "Configures the confed values of med.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "missing_as_worst": {
+                      "aliases": [],
+                      "description": "Configures the missing_as_worst values of as-path.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                }
+              }
+            },
+            "bgp_as": {
+              "aliases": [],
+              "description": "Specifies the BGP autonomous system (AS) number to configure on the device.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "log_neighbor_changes": {
+              "aliases": [],
+              "description": "Enables/disables logging neighbor up/down and reset reason.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "max_med": {
+              "aliases": [],
+              "description": "Configure max med and its parameters",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "on_startup": {
+                  "aliases": [],
+                  "description": "On startup time and max-med value",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "med_val": {
+                      "aliases": [],
+                      "description": "on startup med value",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "timer": {
+                      "aliases": [],
+                      "description": "Configures on startup time",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                }
+              }
+            },
+            "router_id": {
+              "aliases": [],
+              "description": "Configures the BGP routing process router-id value.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "timers": {
+              "aliases": [],
+              "description": "Adjust routing timers",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "holdtime": {
+                  "aliases": [],
+                  "description": "Configures hold-time",
+                  "type": "int",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "keepalive_interval": {
+                  "aliases": [],
+                  "description": "Configures keepalive-interval",
+                  "type": "int",
+                  "required": false,
+                  "suboptions": {}
+                }
+              }
+            },
+            "vrf_name": {
+              "aliases": [],
+              "description": "Specifies the VRF name.",
+              "default": "default",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "Specifies the operation to be performed on the BGP process that is configured on the device.\nIn case of merged, the input configuration is merged with the existing BGP configuration on the device.\nIn case of deleted, the existing BGP configuration is removed from the device.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage global BGP and its parameters",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Using deleted\n#\n# Before state:\n# -------------\n#\n#!\n#router bgp 10 vrf VrfCheck1\n# router-id 10.2.2.32\n# log-neighbor-changes\n#!\n#router bgp 11 vrf VrfCheck2\n# log-neighbor-changes\n# bestpath as-path ignore\n# bestpath med missing-as-worst confed\n# bestpath compare-routerid\n#!\n#router bgp 4\n# router-id 10.2.2.4\n# bestpath as-path ignore\n# bestpath as-path confed\n# bestpath med missing-as-worst confed\n# bestpath compare-routerid\n#!\n#\n- name: Delete BGP Global attributes\n  dellemc.enterprise_sonic.sonic_bgp:\n    config:\n       - bgp_as: 4\n         router_id: 10.2.2.4\n         log_neighbor_changes: False\n         bestpath:\n           as_path:\n             confed: True\n             ignore: True\n             multipath_relax: False\n             multipath_relax_as_set: True\n           compare_routerid: True\n           med:\n             confed: True\n             missing_as_worst: True\n       - bgp_as: 10\n         router_id: 10.2.2.32\n         log_neighbor_changes: True\n         vrf_name: 'VrfCheck1'\n       - bgp_as: 11\n         log_neighbor_changes: True\n         vrf_name: 'VrfCheck2'\n         bestpath:\n           as_path:\n             confed: False\n             ignore: True\n             multipath_relax_as_set: True\n           compare_routerid: True\n           med:\n             confed: True\n             missing_as_worst: True\n    state: deleted\n\n\n# After state:\n# ------------\n#\n#!\n#router bgp 10 vrf VrfCheck1\n# log-neighbor-changes\n#!\n#router bgp 11 vrf VrfCheck2\n# log-neighbor-changes\n# bestpath compare-routerid\n#!\n#router bgp 4\n# log-neighbor-changes\n# bestpath compare-routerid\n#!\n\n\n# Using deleted\n#\n# Before state:\n# -------------\n#\n#!\n#router bgp 10 vrf VrfCheck1\n# router-id 10.2.2.32\n# log-neighbor-changes\n#!\n#router bgp 11 vrf VrfCheck2\n# log-neighbor-changes\n# bestpath as-path ignore\n# bestpath med missing-as-worst confed\n# bestpath compare-routerid\n#!\n#router bgp 4\n# router-id 10.2.2.4\n# bestpath as-path ignore\n# bestpath as-path confed\n# bestpath med missing-as-worst confed\n# bestpath compare-routerid\n#!\n\n- name: Deletes all the bgp global configurations\n  dellemc.enterprise_sonic.sonic_bgp:\n     config:\n     state: deleted\n\n# After state:\n# ------------\n#\n#!\n#!\n\n\n# Using merged\n#\n# Before state:\n# -------------\n#\n#!\n#router bgp 4\n# router-id 10.1.1.4\n#!\n#\n- name: Merges provided configuration with device configuration\n  dellemc.enterprise_sonic.sonic_bgp:\n     config:\n       - bgp_as: 4\n         router_id: 10.2.2.4\n         log_neighbor_changes: False\n         timers:\n           holdtime: 20\n           keepalive_interval: 30\n         bestpath:\n           as_path:\n             confed: True\n             ignore: True\n             multipath_relax: False\n             multipath_relax_as_set: True\n           compare_routerid: True\n           med:\n             confed: True\n             missing_as_worst: True\n             always_compare_med: True\n         max_med:\n           on_startup:\n             timer: 667\n             med_val: 7878\n       - bgp_as: 10\n         router_id: 10.2.2.32\n         log_neighbor_changes: True\n         vrf_name: 'VrfCheck1'\n       - bgp_as: 11\n         log_neighbor_changes: True\n         vrf_name: 'VrfCheck2'\n         bestpath:\n           as_path:\n             confed: False\n             ignore: True\n             multipath_relax_as_set: True\n           compare_routerid: True\n           med:\n             confed: True\n             missing_as_worst: True\n     state: merged\n#\n# After state:\n# ------------\n#\n#!\n#router bgp 10 vrf VrfCheck1\n# router-id 10.2.2.32\n# log-neighbor-changes\n#!\n#router bgp 11 vrf VrfCheck2\n# log-neighbor-changes\n# bestpath as-path ignore\n# bestpath med missing-as-worst confed\n# bestpath compare-routerid\n#!\n#router bgp 4\n# router-id 10.2.2.4\n# bestpath as-path ignore\n# bestpath as-path confed\n# bestpath med missing-as-worst confed\n# bestpath compare-routerid\n# always-compare-med\n# max-med on-startup 667 7878\n# timers 20 30\n#\n#!\n\n\n"
+  },
+  "dellemc.enterprise_sonic.sonic_bgp_af": {
+    "doc": {
+      "description": "This module provides configuration management of global BGP_AF parameters on devices running Enterprise SONiC.\nbgp_as and vrf_name must be created in advance on the device.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "Specifies the BGP_AF related configuration.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "address_family": {
+              "aliases": [],
+              "description": "Specifies BGP address family related configurations.",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "afis": {
+                  "aliases": [],
+                  "description": "List of address families, such as ipv4, ipv6, and l2vpn.\nafi and safi are required together.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "dict",
+                  "suboptions": {
+                    "advertise_all_vni": {
+                      "aliases": [],
+                      "description": "Specifies the advertise all vni flag.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "advertise_default_gw": {
+                      "aliases": [],
+                      "description": "Specifies the advertise default gateway flag.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "advertise_prefix": {
+                      "aliases": [],
+                      "description": "Specifies the prefix of the advertise.\nafi and safi are required together.",
+                      "type": "list",
+                      "required": false,
+                      "elements": "dict",
+                      "suboptions": {
+                        "afi": {
+                          "aliases": [],
+                          "description": "Specifies afi of the advertise.",
+                          "type": "str",
+                          "required": false,
+                          "choices": [
+                            "ipv4",
+                            "ipv6",
+                            "l2vpn"
+                          ],
+                          "suboptions": {}
+                        },
+                        "safi": {
+                          "aliases": [],
+                          "description": "Specifies safi of the advertise.",
+                          "default": "unicast",
+                          "type": "str",
+                          "required": false,
+                          "choices": [
+                            "unicast",
+                            "evpn"
+                          ],
+                          "suboptions": {}
+                        }
+                      }
+                    },
+                    "afi": {
+                      "aliases": [],
+                      "description": "Type of address family to configure.",
+                      "type": "str",
+                      "required": true,
+                      "choices": [
+                        "ipv4",
+                        "ipv6",
+                        "l2vpn"
+                      ],
+                      "suboptions": {}
+                    },
+                    "dampening": {
+                      "aliases": [],
+                      "description": "Enable route flap dampening if set to true",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "max_path": {
+                      "aliases": [],
+                      "description": "Specifies the maximum paths of ibgp and ebgp count.",
+                      "type": "dict",
+                      "required": false,
+                      "suboptions": {
+                        "ebgp": {
+                          "aliases": [],
+                          "description": "Specifies the count of the ebgp multipaths count.",
+                          "type": "int",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "ibgp": {
+                          "aliases": [],
+                          "description": "Specifies the count of the ibgp multipaths count.",
+                          "type": "int",
+                          "required": false,
+                          "suboptions": {}
+                        }
+                      }
+                    },
+                    "network": {
+                      "aliases": [],
+                      "description": "Enable routing on an IP network for each prefix provided in the network",
+                      "type": "list",
+                      "required": false,
+                      "elements": "str",
+                      "suboptions": {}
+                    },
+                    "redistribute": {
+                      "aliases": [],
+                      "description": "Specifies the redistribute information from another routing protocol.",
+                      "type": "list",
+                      "required": false,
+                      "elements": "dict",
+                      "suboptions": {
+                        "metric": {
+                          "aliases": [],
+                          "description": "Specifies the metric for redistributed routes.",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "protocol": {
+                          "aliases": [],
+                          "description": "Specifies the protocol for configuring redistribute information.",
+                          "type": "str",
+                          "required": true,
+                          "choices": [
+                            "ospf",
+                            "static",
+                            "connected"
+                          ],
+                          "suboptions": {}
+                        },
+                        "route_map": {
+                          "aliases": [],
+                          "description": "Specifies the route map reference.",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        }
+                      }
+                    },
+                    "safi": {
+                      "aliases": [],
+                      "description": "Specifies the type of communication for the address family.",
+                      "default": "unicast",
+                      "type": "str",
+                      "required": false,
+                      "choices": [
+                        "unicast",
+                        "evpn"
+                      ],
+                      "suboptions": {}
+                    }
+                  }
+                }
+              }
+            },
+            "bgp_as": {
+              "aliases": [],
+              "description": "Specifies the BGP autonomous system (AS) number which is already configured on the device.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "vrf_name": {
+              "aliases": [],
+              "description": "Specifies the VRF name which is already configured on the device.",
+              "default": "default",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "Specifies the operation to be performed on the BGP_AF process configured on the device.\nIn case of merged, the input configuration is merged with the existing BGP_AF configuration on the device.\nIn case of deleted, the existing BGP_AF configuration is removed from the device.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage global BGP address-family and its parameters",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Using deleted\n#\n# Before state:\n# -------------\n#\n#do show running-configuration bgp\n#!\n#router bgp 51\n# router-id 111.2.2.41\n# timers 60 180\n# !\n# address-family ipv4 unicast\n#  maximum-paths 1\n#  maximum-paths ibgp 1\n#  dampening\n# !\n# address-family ipv6 unicast\n#  redistribute connected route-map bb metric 21\n#  redistribute ospf route-map aa metric 27\n#  redistribute static route-map bb metric 26\n#  maximum-paths 4\n#  maximum-paths ibgp 5\n# !\n# address-family l2vpn evpn\n#!\n#\n- name: Delete BGP Address family configuration from the device\n  dellemc.enterprise_sonic.sonic_bgp_af:\n     config:\n       - bgp_as: 51\n         address_family:\n           afis:\n             - afi: l2vpn\n               safi: evpn\n               advertise_all_vni: False\n               advertise_default_gw: False\n               advertise_prefix:\n             - afi: ipv4\n               safi: unicast\n             - afi: ipv6\n               safi: unicast\n               max_path:\n                 ebgp: 2\n                 ibgp: 5\n               redistribute:\n                 - metric: \"21\"\n                   protocol: connected\n                   route_map: bb\n                 - metric: \"27\"\n                   protocol: ospf\n                   route_map: aa\n                 - metric: \"26\"\n                   protocol: static\n                   route_map: bb\n     state: deleted\n\n# After state:\n# ------------\n#\n#do show running-configuration bgp\n#!\n#router bgp 51\n# router-id 111.2.2.41\n# timers 60 180\n# !\n# address-family ipv6 unicast\n# !\n# address-family l2vpn evpn\n#\n# Using deleted\n#\n# Before state:\n# -------------\n#\n#do show running-configuration bgp\n#!\n#router bgp 51\n# router-id 111.2.2.41\n# timers 60 180\n# !\n# address-family ipv6 unicast\n# !\n# address-family l2vpn evpn\n#\n- name: Delete All BGP address family configurations\n  dellemc.enterprise_sonic.sonic_bgp_af:\n     config:\n     state: deleted\n\n\n# After state:\n# ------------\n#\n#do show running-configuration bgp\n#!\n#router bgp 51\n# router-id 111.2.2.41\n# timers 60 180\n#\n# Using merged\n#\n# Before state:\n# -------------\n#\n#do show running-configuration bgp\n#!\n#router bgp 51\n# router-id 111.2.2.41\n# timers 60 180\n# !\n# address-family l2vpn evpn\n#\n- name: Merge provided BGP address family configuration on the device.\n  dellemc.enterprise_sonic.sonic_bgp_af:\n     config:\n       - bgp_as: 51\n         address_family:\n           afis:\n             - afi: l2vpn\n               safi: evpn\n               advertise_all_vni: False\n               advertise_default_gw: False\n               advertise_prefix:\n             - afi: ipv4\n               safi: unicast\n               network:\n                 - 2.2.2.2/16\n                 - 192.168.10.1/32\n               dampening: True\n             - afi: ipv6\n               safi: unicast\n               max_path:\n                 ebgp: 4\n                 ibgp: 5\n               redistribute:\n                 - metric: \"21\"\n                   protocol: connected\n                   route_map: bb\n                 - metric: \"27\"\n                   protocol: ospf\n                   route_map: aa\n                 - metric: \"26\"\n                   protocol: static\n                   route_map: bb\n     state: merged\n# After state:\n# ------------\n#\n#do show running-configuration bgp\n#!\n#router bgp 51\n# router-id 111.2.2.41\n# timers 60 180\n# !\n# address-family ipv4 unicast\n#  network 2.2.2.2/16\n#  network 192.168.10.1/32\n#  dampening\n# !\n# address-family ipv6 unicast\n#  redistribute connected route-map bb metric 21\n#  redistribute ospf route-map aa metric 27\n#  redistribute static route-map bb metric 26\n#  maximum-paths 4\n#  maximum-paths ibgp 5\n# !\n# address-family l2vpn evpn\n#\n"
+  },
+  "dellemc.enterprise_sonic.sonic_bgp_as_paths": {
+    "doc": {
+      "description": "This module provides configuration management of BGP bgp_as_paths for devices running Enterprise SONiC Distribution by Dell Technologies.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "A list of 'bgp_as_paths' configurations.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "members": {
+              "aliases": [],
+              "description": "Members of this BGP as-path; regular expression string can be provided.",
+              "type": "list",
+              "required": false,
+              "elements": "str",
+              "suboptions": {}
+            },
+            "name": {
+              "aliases": [],
+              "description": "Name of as-path-list.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "The state of the configuration after module completion.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage BGP autonomous system path (or as-path-list) and its parameters",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Using deleted\n\n# Before state:\n# -------------\n#\n# show bgp as-path-access-list\n# AS path list test:\n#   members: 808.*,909.*\n\n- name: Delete BGP as path list\n  dellemc.enterprise_sonic.sonic_bgp_as_paths:\n    config:\n      - name: test\n        members:\n        - 909.*\n    state: deleted\n\n# After state:\n# ------------\n#\n# show bgp as-path-access-list\n# AS path list test:\n#   members: 808.*\n\n\n# Using deleted\n\n# Before state:\n# -------------\n#\n# show bgp as-path-access-list\n# AS path list test:\n#   members: 808.*,909.*\n# AS path list test1:\n#   members: 608.*,709.*\n\n- name: Deletes BGP as-path list\n  dellemc.enterprise_sonic.sonic_bgp_as_paths:\n    config:\n      - name: test\n        members:\n    state: deleted\n\n# After state:\n# ------------\n#\n# show bgp as-path-access-list\n# AS path list test1:\n#   members: 608.*,709.*\n\n\n# Using deleted\n\n# Before state:\n# -------------\n#\n# show bgp as-path-access-list\n# AS path list test:\n#   members: 808.*,909.*\n\n- name: Deletes BGP as-path list\n  dellemc.enterprise_sonic.sonic_bgp_as_paths:\n    config:\n    state: deleted\n\n# After state:\n# ------------\n#\n# show bgp as-path-access-list\n#\n\n\n# Using merged\n\n# Before state:\n# -------------\n#\n# show bgp as-path-access-list\n# AS path list test:\n\n- name: Adds 909.* to test as-path list\n  dellemc.enterprise_sonic.sonic_bgp_as_paths:\n    config:\n      - name: test\n        members:\n        - 909.*\n    state: merged\n\n# After state:\n# ------------\n#\n# show bgp as-path-access-list\n# AS path list test:\n#   members: 909.*\n\n\n"
+  },
+  "dellemc.enterprise_sonic.sonic_bgp_communities": {
+    "doc": {
+      "description": "This module provides configuration management of BGP bgp_communities for device running Enterprise SONiC Distribution by Dell Technologies.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "A list of 'bgp_communities' configurations.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "aann": {
+              "aliases": [],
+              "description": "Community number aa:nn format 0..65535:0..65535; applicable for standard BGP community type.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "local_as": {
+              "aliases": [],
+              "description": "Do not send outside local AS (well-known community); applicable for standard BGP community type.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "match": {
+              "aliases": [],
+              "description": "Matches any/all of the members.",
+              "default": "ANY",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "ALL",
+                "ANY"
+              ],
+              "suboptions": {}
+            },
+            "members": {
+              "aliases": [],
+              "description": "Members of this BGP community list.",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "regex": {
+                  "aliases": [],
+                  "description": "Members of this BGP community list. Regular expression string can be given here. Applicable for expanded BGP community type.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "str",
+                  "suboptions": {}
+                }
+              }
+            },
+            "name": {
+              "aliases": [],
+              "description": "Name of the BGP communitylist.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "no_advertise": {
+              "aliases": [],
+              "description": "Do not advertise to any peer (well-known community); applicable for standard BGP community type.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "no_export": {
+              "aliases": [],
+              "description": "Do not export to next AS (well-known community); applicable for standard BGP community type.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "no_peer": {
+              "aliases": [],
+              "description": "Do not export to next AS (well-known community); applicable for standard BGP community type.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "permit": {
+              "aliases": [],
+              "description": "Permits or denies this community.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "type": {
+              "aliases": [],
+              "description": "Whether it is a standard or expanded community-list entry.",
+              "default": "standard",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "standard",
+                "expanded"
+              ],
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "The state of the configuration after module completion.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage BGP community and its parameters",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Using deleted\n\n# Before state:\n# -------------\n#\n# show bgp community-list\n# Standard community list test:  match: ANY\n#     101\n#     201\n# Standard community list test1:  match: ANY\n#     301\n\n- name: Deletes BGP community member\n  dellemc.enterprise_sonic.sonic_bgp_communities:\n    config:\n      - name: test\n        members:\n          regex:\n          - 201\n    state: deleted\n\n# After state:\n# ------------\n#\n# show bgp community-list\n# Standard community list test:  match: ANY\n#     101\n# Standard community list test1:  match: ANY\n#     301\n\n\n# Using deleted\n\n# Before state:\n# -------------\n#\n# show bgp community-list\n# Standard community list test:  match: ANY\n#     101\n# Expanded community list test1:   match: ANY\n#     201\n\n- name: Deletes a single BGP community\n  dellemc.enterprise_sonic.sonic_bgp_communities:\n    config:\n      - name: test\n        members:\n    state: deleted\n\n# After state:\n# ------------\n#\n# show bgp community-list\n# Expanded community list test1:   match: ANY\n#     201\n\n\n# Using deleted\n\n# Before state:\n# -------------\n#\n# show bgp community-list\n# Standard community list test:  match: ANY\n#     101\n# Expanded community list test1:   match: ANY\n#     201\n\n- name: Delete All BGP communities\n  dellemc.enterprise_sonic.sonic_bgp_communities:\n    config:\n    state: deleted\n\n# After state:\n# ------------\n#\n# show bgp community-list\n#\n\n\n# Using deleted\n\n# Before state:\n# -------------\n#\n# show bgp community-list\n# Standard community list test:  match: ANY\n#     101\n# Expanded community list test1:   match: ANY\n#     201\n\n- name: Deletes all members in a single BGP community\n  dellemc.enterprise_sonic.sonic_bgp_communities:\n    config:\n      - name: test\n        members:\n          regex:\n    state: deleted\n\n# After state:\n# ------------\n#\n# show bgp community-list\n# Expanded community list test:   match: ANY\n# Expanded community list test1:   match: ANY\n#     201\n\n\n# Using merged\n\n# Before state:\n# -------------\n#\n# show bgp as-path-access-list\n# AS path list test:\n\n- name: Adds 909.* to test as-path list\n  dellemc.enterprise_sonic.sonic_bgp_as_paths:\n    config:\n      - name: test\n        members:\n        - 909.*\n    state: merged\n\n# After state:\n# ------------\n#\n# show bgp as-path-access-list\n# AS path list test:\n#   members: 909.*\n\n\n"
+  },
+  "dellemc.enterprise_sonic.sonic_bgp_ext_communities": {
+    "doc": {
+      "description": "This module provides configuration management of BGP extcommunity-list for devices running Enterprise SONiC Distribution by Dell Technologies.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "A list of 'bgp_extcommunity_list' configurations.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "match": {
+              "aliases": [],
+              "description": "Matches any/all of the the members.",
+              "default": "any",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "all",
+                "any"
+              ],
+              "suboptions": {}
+            },
+            "members": {
+              "aliases": [],
+              "description": "Members of this BGP ext community list.",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "regex": {
+                  "aliases": [],
+                  "description": "Members of this BGP ext community list. Regular expression string can be given here. Applicable for expanded ext BGP community type.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "str",
+                  "suboptions": {}
+                },
+                "route_origin": {
+                  "aliases": [],
+                  "description": "Members of this BGP ext community list. The format of route_origin is in either 0..65535:0..65535 or A.B.C.D:[1..65535] format.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "str",
+                  "suboptions": {}
+                },
+                "route_target": {
+                  "aliases": [],
+                  "description": "Members of this BGP ext community list. The format of route_target is in either 0..65535:0..65535 or A.B.C.D:[1..65535] format.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "str",
+                  "suboptions": {}
+                }
+              }
+            },
+            "name": {
+              "aliases": [],
+              "description": "Name of the BGP ext communitylist.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "permit": {
+              "aliases": [],
+              "description": "Permits or denies this community.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "type": {
+              "aliases": [],
+              "description": "Whether it is a standard or expanded ext community_list entry.",
+              "default": "standard",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "standard",
+                "expanded"
+              ],
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "The state of the configuration after module completion.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage BGP extended community-list and its parameters",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Using deleted\n\n# Before state:\n# -------------\n#\n# show bgp ext-community-list\n# Standard extended community list test:  match: ANY\n#     rt:101:101\n#     rt:201:201\n\n- name: Deletes a BGP ext community member\n  dellemc.enterprise_sonic.sonic_bgp_ext_communities:\n    config:\n      - name: test\n        members:\n          regex:\n          - 201:201\n    state: deleted\n\n# After state:\n# ------------\n#\n# show bgp ext-community-list\n# Standard extended community list test:  match: ANY\n#     rt:101:101\n#\n\n\n# Using deleted\n\n# Before state:\n# -------------\n#\n# show bgp ext-community-list\n# Standard extended community list test:  match: ANY\n#     101\n# Expanded extended community list test1:   match: ANY\n#     201\n\n- name: Deletes a single BGP extended community\n  dellemc.enterprise_sonic.sonic_bgp_ext_communities:\n    config:\n      - name: test1\n        members:\n    state: deleted\n\n# After state:\n# ------------\n#\n# show bgp ext-community-list\n# Standard extended community list test:  match: ANY\n#     101\n#\n\n\n# Using deleted\n\n# Before state:\n# -------------\n#\n# show bgp ext-community-list\n# Standard extended community list test:  match: ANY\n#     101\n# Expanded extended community list test1:   match: ANY\n#     201\n\n- name: Deletes all BGP extended communities\n  dellemc.enterprise_sonic.sonic_bgp_ext_communities:\n    config:\n    state: deleted\n\n# After state:\n# ------------\n#\n# show bgp ext-community-list\n#\n\n\n# Using deleted\n\n# Before state:\n# -------------\n#\n# show bgp ext-community-list\n# Standard extended community list test:  match: ANY\n#     101\n# Expanded extended community list test1:   match: ANY\n#     201\n\n- name: Deletes all members in a single BGP extended community\n  dellemc.enterprise_sonic.sonic_bgp_ext_communities:\n    config:\n      - name: test1\n        members:\n          regex:\n    state: deleted\n\n# After state:\n# ------------\n#\n# show bgp ext-community-list\n# Standard extended community list test:  match: ANY\n#     101\n# Expanded extended community list test1:   match: ANY\n#\n\n\n# Using merged\n\n# Before state:\n# -------------\n#\n# show bgp as-path-access-list\n# AS path list test:\n\n- name: Adds 909.* to test as-path list\n  dellemc.enterprise_sonic.sonic_bgp_as_paths:\n    config:\n      - name: test\n        members:\n        - 909.*\n    state: merged\n\n# After state:\n# ------------\n#\n# show bgp as-path-access-list\n# AS path list test:\n#   members: 909.*\n\n\n"
+  },
+  "dellemc.enterprise_sonic.sonic_bgp_neighbors": {
+    "doc": {
+      "description": "This module provides configuration management of global BGP_NEIGHBORS parameters on devices running Enterprise SONiC.\nbgp_as and vrf_name must be created on the device in advance.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "Specifies the BGP neighbors related configuration.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "bgp_as": {
+              "aliases": [],
+              "description": "Specifies the BGP autonomous system (AS) number which is already configured on the device.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "neighbors": {
+              "aliases": [],
+              "description": "Specifies BGP neighbor-related configurations.",
+              "type": "list",
+              "required": false,
+              "elements": "dict",
+              "suboptions": {
+                "advertisement_interval": {
+                  "aliases": [],
+                  "description": "Specifies the minimum interval between sending BGP routing updates.\nThe range is from 0 to 600.",
+                  "type": "int",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "bfd": {
+                  "aliases": [],
+                  "description": "Enables or disables BFD.",
+                  "type": "bool",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "capability": {
+                  "aliases": [],
+                  "description": "Specifies capability attributes to this neighbor.",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "dynamic": {
+                      "aliases": [],
+                      "description": "Enables or disables dynamic capability to this neighbor.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "extended_nexthop": {
+                      "aliases": [],
+                      "description": "Enables or disables advertise extended next-hop capability to the peer.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "neighbor": {
+                  "aliases": [],
+                  "description": "Neighbor router address.",
+                  "type": "str",
+                  "required": true,
+                  "suboptions": {}
+                },
+                "peer_group": {
+                  "aliases": [],
+                  "description": "The name of the peer group that the neighbor is a member of.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "remote_as": {
+                  "aliases": [],
+                  "description": "Remote AS of the BGP neighbor to configure.\npeer_as and peer_type are mutually exclusive.",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "peer_as": {
+                      "aliases": [],
+                      "description": "Specifies remote AS number.\nThe range is from 1 to 4294967295.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "peer_type": {
+                      "aliases": [],
+                      "description": "Specifies the type of BGP peer.",
+                      "type": "str",
+                      "required": false,
+                      "choices": [
+                        "internal",
+                        "external"
+                      ],
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "timers": {
+                  "aliases": [],
+                  "description": "Specifies BGP neighbor timer-related configurations.",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "holdtime": {
+                      "aliases": [],
+                      "description": "Interval after not receiving a keepalive message that SONiC declares a peer dead, in seconds.\nThe range is from 0 to 65535.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "keepalive": {
+                      "aliases": [],
+                      "description": "Frequency with which the device sends keepalive messages to its peer, in seconds.\nThe range is from 0 to 65535.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                }
+              }
+            },
+            "peer_group": {
+              "aliases": [],
+              "description": "Specifies the list of peer groups.",
+              "type": "list",
+              "required": false,
+              "elements": "dict",
+              "suboptions": {
+                "address_family": {
+                  "aliases": [],
+                  "description": "Holds of list of address families associated to the peergroup.",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "afis": {
+                      "aliases": [],
+                      "description": "List of address families with afi, safi, activate and allowas-in parameters.\nafi and safi are required together.",
+                      "type": "list",
+                      "required": false,
+                      "elements": "dict",
+                      "suboptions": {
+                        "activate": {
+                          "aliases": [],
+                          "description": "Enable or disable activate.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "afi": {
+                          "aliases": [],
+                          "description": "Holds afi mode.",
+                          "type": "str",
+                          "required": false,
+                          "choices": [
+                            "ipv4",
+                            "ipv6",
+                            "l2vpn"
+                          ],
+                          "suboptions": {}
+                        },
+                        "allowas_in": {
+                          "aliases": [],
+                          "description": "Holds AS value.\nThe origin and value are mutually exclusive.",
+                          "type": "dict",
+                          "required": false,
+                          "suboptions": {
+                            "origin": {
+                              "aliases": [],
+                              "description": "Set AS as the origin.",
+                              "type": "bool",
+                              "required": false,
+                              "suboptions": {}
+                            },
+                            "value": {
+                              "aliases": [],
+                              "description": "Holds AS number in the range 1-10.",
+                              "type": "int",
+                              "required": false,
+                              "suboptions": {}
+                            }
+                          }
+                        },
+                        "safi": {
+                          "aliases": [],
+                          "description": "Holds safi mode.",
+                          "type": "str",
+                          "required": false,
+                          "choices": [
+                            "unicast",
+                            "evpn"
+                          ],
+                          "suboptions": {}
+                        }
+                      }
+                    }
+                  }
+                },
+                "advertisement_interval": {
+                  "aliases": [],
+                  "description": "Specifies the minimum interval between sending BGP routing updates.\nThe range is from 0 to 600.",
+                  "type": "int",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "bfd": {
+                  "aliases": [],
+                  "description": "Enables or disables BFD.",
+                  "type": "bool",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "capability": {
+                  "aliases": [],
+                  "description": "Specifies capability attributes to this peer group.",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "dynamic": {
+                      "aliases": [],
+                      "description": "Enables or disables dynamic capability to this peer group.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "extended_nexthop": {
+                      "aliases": [],
+                      "description": "Enables or disables advertise extended next-hop capability to the peer.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "name": {
+                  "aliases": [],
+                  "description": "Name of the peer group.",
+                  "type": "str",
+                  "required": true,
+                  "suboptions": {}
+                },
+                "remote_as": {
+                  "aliases": [],
+                  "description": "Remote AS of the BGP peer group to configure.\npeer_as and peer_type are mutually exclusive.",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "peer_as": {
+                      "aliases": [],
+                      "description": "Specifies remote AS number.\nThe range is from 1 to 4294967295.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "peer_type": {
+                      "aliases": [],
+                      "description": "Specifies the type of BGP peer.",
+                      "type": "str",
+                      "required": false,
+                      "choices": [
+                        "internal",
+                        "external"
+                      ],
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "timers": {
+                  "aliases": [],
+                  "description": "Specifies BGP peer group timer related configurations.",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "holdtime": {
+                      "aliases": [],
+                      "description": "Interval after not receiving a keepalive message that Enterprise SONiC declares a peer dead, in seconds.\nThe range is from 0 to 65535.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "keepalive": {
+                      "aliases": [],
+                      "description": "Frequency with which the device sends keepalive messages to its peer, in seconds.\nThe range is from 0 to 65535.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                }
+              }
+            },
+            "vrf_name": {
+              "aliases": [],
+              "description": "Specifies the VRF name which is already configured on the device.",
+              "default": "default",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "Specifies the operation to be performed on the BGP process that is configured on the device.\nIn case of merged, the input configuration is merged with the existing BGP configuration on the device.\nIn case of deleted, the existing BGP configuration is removed from the device.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage a BGP neighbor and its parameters",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Using deleted\n#\n# Before state:\n# -------------\n#router bgp 11 vrf VrfCheck2\n# network import-check\n# timers 60 180\n#!\n#router bgp 51 vrf VrfReg1\n# network import-check\n# timers 60 180\n# !\n# neighbor interface Eth1/3\n#!\n#router bgp 11\n# network import-check\n# timers 60 180\n# !\n# neighbor 192.168.1.4\n# !\n# peer-group SP1\n#  bfd\n#  capability dynamic\n# !\n# peer-group SP2\n# !\n#\n- name: Deletes all BGP neighbors\n  dellemc.enterprise_sonic.sonic_bgp_neighbors:\n    config:\n    state: deleted\n\n#\n# After state:\n# -------------\n#router bgp 11 vrf VrfCheck2\n# network import-check\n# timers 60 180\n#!\n#router bgp 51 vrf VrfReg1\n# network import-check\n# timers 60 180\n#!\n#router bgp 11\n# network import-check\n# timers 60 180\n# !\n#\n# Using merged\n#\n# Before state:\n# ------------\n#router bgp 11 vrf VrfCheck2\n# network import-check\n# timers 60 180\n#!\n#router bgp 51 vrf VrfReg1\n# network import-check\n# timers 60 180\n#!\n#router bgp 11\n# network import-check\n# timers 60 180\n# !\n\n- name: \"Adds sonic_bgp_neighbors\"\n  dellemc.enterprise_sonic.sonic_bgp_neighbors:\n    config:\n     - bgp_as: 51\n       vrf_name: VrfReg1\n       peer_group:\n         - name: SPINE\n           bfd: true\n           capability:\n             dynamic: true\n             extended_nexthop: true\n           remote_as:\n             peer_as: 4\n           address_family:\n             afis:\n               - afi: ipv4\n                 safi: unicast\n                 activate: true\n                 allowas_in:\n                   origin: true\n               - afi: ipv6\n                 safi: unicast\n                 activate: true\n                 allowas_in:\n                   value: 5\n       neighbors:\n         - neighbor: Eth1/3\n           remote_as:\n             peer_as: 10\n           peer_group: SPINE\n           advertisement_interval: 15\n           timers:\n             keepalive: 30\n             holdtime: 15\n           bfd: true\n           capability:\n             dynamic: true\n             extended_nexthop: true\n         - neighbor: 192.168.1.4\n    state: merged\n#\n# After state:\n# ------------\n#!\n#router bgp 11 vrf VrfCheck2\n# network import-check\n# timers 60 180\n#!\n#router bgp 51 vrf VrfReg1\n# network import-check\n# timers 60 180\n# !\n# peer-group SPINE\n#  remote-as 4\n#  bfd\n#  capability dynamic\n#  capability extended-nexthop\n#  address-family ipv4 unicast\n#   activate\n#   allowas-in origin\n#   send-community both\n# !\n#  address-family ipv6 unicast\n#   activate\n#   allowas-in 5\n#   send-community both\n# !\n# neighbor interface Eth1/3\n#  peer-group SPINE\n#  remote-as 10\n#  timers 15 30\n#  advertisement-interval 15\n#  bfd\n#  capability extended-nexthop\n#  capability dynamic\n# !\n# neighbor 192.168.1.4\n#!\n#router bgp 11\n# network import-check\n# timers 60 180\n#\n# Using deleted\n#\n# Before state:\n# ------------\n#!\n#router bgp 11 vrf VrfCheck2\n# network import-check\n# timers 60 180\n#!\n#router bgp 51 vrf VrfReg1\n# network import-check\n# timers 60 180\n# !\n# peer-group SPINE\n#  bfd\n#  remote-as 4\n# !\n# neighbor interface Eth1/3\n#  peer-group SPINE\n#  remote-as 10\n#  timers 15 30\n#  advertisement-interval 15\n#  bfd\n#  capability extended-nexthop\n#  capability dynamic\n# !\n# neighbor 192.168.1.4\n#!\n#router bgp 11\n# network import-check\n# timers 60 18\n# !\n# peer-group SP\n# !\n# neighbor interface Eth1/3\n#\n- name: \"Deletes sonic_bgp_neighbors and peer-groups specific to vrfname\"\n  dellemc.enterprise_sonic.sonic_bgp_neighbors:\n    config:\n     - bgp_as: 51\n       vrf_name: VrfReg1\n    state: deleted\n\n# After state:\n# ------------\n#!\n#router bgp 11 vrf VrfCheck2\n# network import-check\n# timers 60 180\n#!\n#router bgp 51 vrf VrfReg1\n# network import-check\n# timers 60 180\n# !\n#router bgp 11\n# network import-check\n# timers 60 18\n# !\n# peer-group SP\n# !\n# neighbor interface Eth1/3\n#\n# Using deleted\n#\n# Before state:\n# -------------\n#\n#router bgp 51 vrf VrfReg1\n# network import-check\n# timers 60 180\n# !\n# peer-group SPINE\n#  bfd\n#  remote-as 4\n# !\n# neighbor interface Eth1/3\n#  peer-group SPINE\n#  remote-as 10\n#  timers 15 30\n#  advertisement-interval 15\n#  bfd\n#  capability extended-nexthop\n#  capability dynamic\n# !\n# neighbor 192.168.1.4\n# !\n\n- name: \"Deletes specific sonic_bgp_neighbors\"\n  dellemc.enterprise_sonic.sonic_bgp_neighbors:\n    config:\n     - bgp_as: 51\n       vrf_name: VrfReg1\n       peer_group:\n         - name: SPINE\n           bfd: true\n           remote_as:\n             peer_as: 4\n       neighbors:\n         - neighbor: Eth1/3\n           remote_as:\n             peer_as: 10\n           peer_group: SPINE\n           advertisement_interval: 15\n           timers:\n             keepalive: 30\n             holdtime: 15\n           bfd: true\n           capability:\n             dynamic: true\n             extended_nexthop: true\n         - neighbor: 192.168.1.4\n    state: deleted\n#\n# After state:\n# -------------\n#\n#router bgp 51 vrf VrfReg1\n# network import-check\n# timers 60 180\n# !\n# peer-group SPINE\n# !\n# neighbor interface Eth1/3\n# !\n\n"
+  },
+  "dellemc.enterprise_sonic.sonic_bgp_neighbors_af": {
+    "doc": {
+      "description": "This module provides configuration management of BGP neighbors address-family parameters on devices running Enterprise SONiC.\nbgp_as, vrf_name and neighbors need be created in advance on the device.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "Specifies the BGP neighbors address-family related configuration.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "bgp_as": {
+              "aliases": [],
+              "description": "Specifies the BGP autonomous system (AS) number which is already configured on the device.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "neighbors": {
+              "aliases": [],
+              "description": "Specifies BGP neighbor related configurations in address-family configuration mode.",
+              "type": "list",
+              "required": false,
+              "elements": "dict",
+              "suboptions": {
+                "address_family": {
+                  "aliases": [],
+                  "description": "Specifies BGP address-family related configurations.\nafi and safi are required together.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "dict",
+                  "suboptions": {
+                    "activate": {
+                      "aliases": [],
+                      "description": "Enables the address-family for this neighbor.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "afi": {
+                      "aliases": [],
+                      "description": "Type of address-family to configure.",
+                      "type": "str",
+                      "required": true,
+                      "choices": [
+                        "ipv4",
+                        "ipv6",
+                        "l2vpn"
+                      ],
+                      "suboptions": {}
+                    },
+                    "allowas_in": {
+                      "aliases": [],
+                      "description": "Specifies the allowas in values.",
+                      "type": "dict",
+                      "required": false,
+                      "suboptions": {
+                        "origin": {
+                          "aliases": [],
+                          "description": "Specifies the origin value.",
+                          "type": "bool",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "value": {
+                          "aliases": [],
+                          "description": "Specifies the value of the allowas in.",
+                          "type": "int",
+                          "required": false,
+                          "suboptions": {}
+                        }
+                      }
+                    },
+                    "route_map": {
+                      "aliases": [],
+                      "description": "Specifies the route-map.",
+                      "type": "list",
+                      "required": false,
+                      "elements": "dict",
+                      "suboptions": {
+                        "direction": {
+                          "aliases": [],
+                          "description": "Specifies the direction of the route-map.",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        },
+                        "name": {
+                          "aliases": [],
+                          "description": "Specifies the name of the route-map.",
+                          "type": "str",
+                          "required": false,
+                          "suboptions": {}
+                        }
+                      }
+                    },
+                    "route_reflector_client": {
+                      "aliases": [],
+                      "description": "Specifies a neighbor as a route-reflector client.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "route_server_client": {
+                      "aliases": [],
+                      "description": "Specifies a neighbor as a route-server client.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "safi": {
+                      "aliases": [],
+                      "description": "Specifies the type of cast for the address-family.",
+                      "default": "unicast",
+                      "type": "str",
+                      "required": false,
+                      "choices": [
+                        "unicast",
+                        "evpn"
+                      ],
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "neighbor": {
+                  "aliases": [],
+                  "description": "Neighbor router address which is already configured on the device.",
+                  "type": "str",
+                  "required": true,
+                  "suboptions": {}
+                }
+              }
+            },
+            "vrf_name": {
+              "aliases": [],
+              "description": "Specifies the VRF name which is already configured on the device.",
+              "default": "default",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "Specifies the operation to be performed on the BGP process that is configured on the device.\nIn case of merged, the input configuration is merged with the existing BGP configuration on the device.\nIn case of deleted, the existing BGP configuration is removed from the device.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage the BGP neighbor address-family and its parameters",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Using deleted\n#\n# Before state:\n# -------------\n#\n#!\n#router bgp 4\n# !\n# neighbor interface Eth1/3\n#  !\n#  address-family ipv4 unicast\n#   activate\n#   allowas-in 4\n#   route-map aa in\n#   route-map aa out\n#   route-reflector-client\n#   route-server-client\n#   send-community both\n#!\n#\n- name: Deletes neighbors address-family with specific values\n  dellemc.enterprise_sonic.sonic_bgp_neighbors_af:\n     config:\n       - bgp_as: 4\n         neighbors:\n           - neighbor: Eth1/3\n             address_family:\n               - afi: ipv4\n                 safi: unicast\n                 allowas_in:\n                   value: 4\n                 route_map:\n                   - name: aa\n                     direction: in\n                   - name: aa\n                     direction: out\n                 route_reflector_client: true\n                 route_server_client: true\n     state: deleted\n\n# After state:\n# ------------\n#!\n#router bgp 4\n# !\n# neighbor interface Eth1/3\n#  !\n#  address-family ipv4 unicast\n#   send-community both\n#!\n\n\n# Using deleted\n#\n# Before state:\n# -------------\n#\n#!\n#router bgp 4\n# !\n# neighbor interface Eth1/3\n#  !\n#  address-family ipv4 unicast\n#   activate\n#   allowas-in 4\n#   route-map aa in\n#   route-map aa out\n#   route-reflector-client\n#   route-server-client\n#   send-community both\n#!\n# neighbor interface Eth1/5\n#  !\n#  address-family ipv4 unicast\n#   activate\n#   allowas-in origin\n#   send-community both\n#!\n#\n- name: Deletes neighbors address-family with specific values\n  dellemc.enterprise_sonic.sonic_bgp_neighbors_af:\n     config:\n     state: deleted\n\n# After state:\n# ------------\n#!\n#router bgp 4\n#!\n\n\n# Using deleted\n#\n# Before state:\n# -------------\n#\n#!\n#router bgp 4\n# !\n# neighbor interface Eth1/3\n#!\n#\n- name: Merges neighbors address-family with specific values\n  dellemc.enterprise_sonic.sonic_bgp_neighbors_af:\n     config:\n       - bgp_as: 4\n         neighbors:\n           - neighbor: Eth1/3\n             address_family:\n               - afi: ipv4\n                 safi: unicast\n                 allowas_in:\n                   value: 4\n                 route_map:\n                   - name: aa\n                     direction: in\n                   - name: aa\n                     direction: out\n                 route_reflector_client: true\n                 route_server_client: true\n     state: merged\n\n# After state:\n# ------------\n#!\n#router bgp 4\n# !\n# neighbor interface Eth1/3\n#  !\n#  address-family ipv4 unicast\n#   activate\n#   allowas-in 4\n#   route-map aa in\n#   route-map aa out\n#   route-reflector-client\n#   route-server-client\n#   send-community both\n#!\n\n\n"
+  },
+  "dellemc.enterprise_sonic.sonic_command": {
+    "doc": {
+      "description": "Runs commands on remote devices running Enterprise SONiC Distribution by Dell Technologies. Sends arbitrary commands to an Enterprise SONiC node and returns the results that are read from the device. This module includes an argument that causes the module to wait for a specific condition before returning or time out if the condition is not met.\nThis module does not support running commands in configuration mode. To configure SONiC devices, use M(sonic_config).",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "commands": {
+          "aliases": [],
+          "description": "List of commands to send to the remote Enterprise SONiC devices over the configured provider. The resulting output from the command is returned. If the I(wait_for) argument is provided, the module is not returned until the condition is satisfied or the number of retries has expired. If a command sent to the device requires answering a prompt, it is possible to pass a dict containing I(command), I(answer) and I(prompt). Common answers are 'yes' or \"\\r\" (carriage return, must be double quotes). See examples.",
+          "type": "list",
+          "required": true,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "interval": {
+          "aliases": [],
+          "description": "Configures the interval in seconds to wait between retries of the command. If the command does not pass the specified conditions, the interval indicates how long to wait before trying the command again.",
+          "default": "1",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "match": {
+          "aliases": [],
+          "description": "The I(match) argument is used in conjunction with the I(wait_for) argument to specify the match policy.  Valid values are C(all) or C(any). If the value is set to C(all) then all conditionals in the wait_for must be satisfied. If the value is set to C(any) then only one of the values must be satisfied.",
+          "default": "all",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "all",
+            "any"
+          ],
+          "suboptions": {}
+        },
+        "retries": {
+          "aliases": [],
+          "description": "Specifies the number of retries a command should be run before it is considered failed. The command is run on the target device every retry and evaluated against the I(wait_for) conditions.",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_for": {
+          "aliases": [],
+          "description": "List of conditions to evaluate against the output of the command. The task waits for each condition to be true before moving forward. If the conditional is not true within the configured number of retries, the task fails. See examples.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        }
+      },
+      "short_description": "Runs commands on devices running Enterprise SONiC",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n  - name: Runs show version on remote devices\n    dellemc.enterprise_sonic.sonic_command:\n      commands: show version\n\n  - name: Runs show version and checks to see if output contains 'Dell'\n    dellemc.enterprise_sonic.sonic_command:\n      commands: show version\n      wait_for: result[0] contains Dell\n\n  - name: Runs multiple commands on remote nodes\n    dellemc.enterprise_sonic.sonic_command:\n      commands:\n        - show version\n        - show interface\n\n  - name: Runs multiple commands and evaluate the output\n    dellemc.enterprise_sonic.sonic_command:\n      commands:\n        - 'show version'\n        - 'show system'\n      wait_for:\n        - result[0] contains Dell\n        - result[1] contains Hostname\n\n  - name: Runs commands that require answering a prompt\n    dellemc.enterprise_sonic.sonic_command:\n      commands:\n        - command: 'reload'\n          prompt: '[confirm yes/no]: ?$'\n          answer: 'no'\n"
+  },
+  "dellemc.enterprise_sonic.sonic_config": {
+    "doc": {
+      "description": "Manages configuration sections of Enterprise SONiC Distribution by Dell Technologies. SONiC configurations use a simple block indent file syntax for segmenting configuration into sections. This module provides an implementation for working with SONiC configuration sections in a deterministic way.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "after": {
+          "aliases": [],
+          "description": "The ordered set of commands to append to the end of the command stack if a change needs to be made. Just like with I(before), this allows the playbook designer to append a set of commands to be executed after the command set.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "backup": {
+          "aliases": [],
+          "description": "This argument causes the module to create a full backup of the current C(running-configuration) from the remote device before any changes are made. If the C(backup_options) value is not given, the backup file is written to the C(backup) folder in the playbook root directory. If the directory does not exist, it is created.",
+          "default": "no",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "backup_options": {
+          "aliases": [],
+          "description": "This is a dictionary object containing configurable options related to backup file path. The value of this option is read only when C(backup) is set to I(yes), if C(backup) is set to I(no) this option is ignored.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "dir_path": {
+              "aliases": [],
+              "description": "This option provides the path ending with directory name in which the backup configuration file is stored. If the directory does not exist it is first created, and the filename is either the value of C(filename) or default filename as described in C(filename) options description. If the path value is not given, an I(backup) directory is created in the current working directory and backup configuration is copied in C(filename) within the I(backup) directory.",
+              "type": "path",
+              "required": false,
+              "suboptions": {}
+            },
+            "filename": {
+              "aliases": [],
+              "description": "The filename to be used to store the backup configuration. If the filename is not given, it is generated based on the hostname, current time, and date in the format defined by <hostname>_config.<current-date>@<current-time>.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "before": {
+          "aliases": [],
+          "description": "The ordered set of commands to push on to the command stack if a change needs to be made. This allows the playbook designer the opportunity to perform configuration commands prior to pushing any changes without affecting how the set of commands are matched against the system.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "config": {
+          "aliases": [],
+          "description": "The module, by default, connects to the remote device and retrieves the current running-configuration to use as a base for comparing against the contents of source. There are times when it is not desirable to have the task get the current running-configuration for every task in a playbook. The I(config) argument allows the implementer to pass in the configuration to use as the base configuration for comparison.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "lines": {
+          "aliases": [
+            "commands"
+          ],
+          "description": "The ordered set of commands that should be configured in the section. The commands must be the exact same commands as found in the device running-configuration. Be sure to note the configuration command syntax as some commands are automatically modified by the device configuration parser. This argument is mutually exclusive with I(src).",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "match": {
+          "aliases": [],
+          "description": "Instructs the module on the way to perform the matching of the set of commands against the current device configuration. If match is set to I(line), commands are matched line by line. If match is set to I(strict), command lines are matched with respect to position. If match is set to I(exact), command lines must be an equal match. If match is set to I(none), the module does not attempt to compare the source configuration with the running-configuration on the remote device.",
+          "default": "line",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "line",
+            "strict",
+            "exact",
+            "none"
+          ],
+          "suboptions": {}
+        },
+        "parents": {
+          "aliases": [],
+          "description": "The ordered set of parents that uniquely identify the section or hierarchy the commands should be checked against. If the parents argument is omitted, the commands are checked against the set of top level or global commands.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "replace": {
+          "aliases": [],
+          "description": "Instructs the module how to perform a configuration on the device. If the replace argument is set to I(line), then the modified lines are pushed to the device in configuration mode. If the replace argument is set to I(block), then the entire command block is pushed to the device in configuration mode if any line is not correct.",
+          "default": "line",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "line",
+            "block"
+          ],
+          "suboptions": {}
+        },
+        "save": {
+          "aliases": [],
+          "description": "The C(save) argument instructs the module to save the running- configuration to the startup-configuration at the conclusion of the module running. If check mode is specified, this argument is ignored.",
+          "default": "no",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "src": {
+          "aliases": [],
+          "description": "Specifies the source path to the file that contains the configuration or configuration template to load. The path to the source file can either be the full path on the Ansible control host, or a relative path from the playbook or role root directory. This argument is mutually exclusive with I(lines).",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "update": {
+          "aliases": [],
+          "description": "The I(update) argument controls how the configuration statements are processed on the remote device. Valid choices for the I(update) argument are I(merge) and I(check). When you set this argument to I(merge), the configuration changes merge with the current device running-configuration. When you set this argument to I(check), the configuration updates are determined but not configured on the remote device.",
+          "default": "merge",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merge",
+            "check"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manages configuration sections on devices running Enterprise SONiC",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- dellemc.enterprise_sonic.sonic_config:\n    lines: ['username {{ user_name }} password {{ user_password }} role {{ user_role }}']\n\n- dellemc.enterprise_sonic.sonic_config:\n    lines:\n      - description 'SONiC'\n    parents: ['interface Eth1/10']\n\n- dellemc.enterprise_sonic.sonic_config:\n    lines:\n      - seq 2 permit udp any any\n      - seq 3 deny icmp any any\n    parents: ['ip access-list test']\n    before: ['no ip access-list test']\n\n"
+  },
+  "dellemc.enterprise_sonic.sonic_facts": {
+    "doc": {
+      "description": "Collects facts from devices running Enterprise SONiC Distribution by Dell Technologies. This module places the facts gathered in the fact tree keyed by the respective resource name. The facts module always collects a base set of facts from the device and can enable or disable collection of additional facts.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "gather_network_resources": {
+          "aliases": [],
+          "description": "When supplied, this argument restricts the facts collected to a given subset. Possible values for this argument include all and the resources like 'all', 'interfaces', 'vlans', 'lag_interfaces', 'l2_interfaces', 'l3_interfaces'. Can specify a list of values to include a larger subset. Values can also be used with an initial C(M(!)) to specify that a specific subset should not be collected.",
+          "type": "list",
+          "required": false,
+          "choices": [
+            "all",
+            "vlans",
+            "interfaces",
+            "l2_interfaces",
+            "l3_interfaces",
+            "lag_interfaces",
+            "bgp",
+            "bgp_af",
+            "bgp_neighbors",
+            "bgp_neighbors_af",
+            "bgp_as_paths",
+            "bgp_communities",
+            "bgp_ext_communities",
+            "mclag",
+            "vrfs",
+            "vxlans",
+            "users",
+            "system",
+            "port_breakout",
+            "aaa",
+            "tacacs_server",
+            "radius_server"
+          ],
+          "elements": "str",
+          "suboptions": {}
+        },
+        "gather_subset": {
+          "aliases": [],
+          "description": "When supplied, this argument restricts the facts collected to a given subset. Possible values for this argument include all, min, hardware, config, legacy, and interfaces. Can specify a list of values to include a larger subset. Values can also be used with an initial C(M(!)) to specify that a specific subset should not be collected.",
+          "default": "!config",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        }
+      },
+      "short_description": "Collects facts on devices running Enterprise SONiC",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Gather all facts\n  dellemc.enterprise_sonic.sonic_facts:\n    gather_subset: all\n    gather_network_resources: all\n\n- name: Collects VLAN and interfaces facts\n  dellemc.enterprise_sonic.sonic_facts:\n    gather_subset:\n      - min\n    gather_network_resources:\n      - vlans\n      - interfaces\n\n- name: Do not collects VLAN and interfaces facts\n  dellemc.enterprise_sonic.sonic_facts:\n    gather_network_resources:\n      - \"!vlans\"\n      - \"!interfaces\"\n\n- name: Collects VLAN and minimal default facts\n  dellemc.enterprise_sonic.sonic_facts:\n    gather_subset: min\n    gather_network_resources: vlans\n\n- name: Collect lag_interfaces and minimal default facts\n  dellemc.enterprise_sonic.sonic_facts:\n    gather_subset: min\n    gather_network_resources: lag_interfaces\n\n"
+  },
+  "dellemc.enterprise_sonic.sonic_interfaces": {
+    "doc": {
+      "description": "Configure Interface attributes such as, MTU, admin statu, and so on, on interfaces such as, Eth, LAG, VLAN, and loopback. (create a loopback interface if it does not exist.)",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "A list of interface configurations.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "description": {
+              "aliases": [],
+              "description": "Description about the interface.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "enabled": {
+              "aliases": [],
+              "description": "Administrative state of the interface.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "mtu": {
+              "aliases": [],
+              "description": "MTU of the interface.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "name": {
+              "aliases": [],
+              "description": "The name of the interface, for example, 'Eth1/15'.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "The state the configuration should be left in.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Configure Interface attributes on interfaces such as, Eth, LAG, VLAN, and loopback. (create a loopback interface if it does not exist.)",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Using deleted\n#\n# Before state:\n# -------------\n#\n# show interface status | no-more\n#------------------------------------------------------------------------------------------\n#Name                Description         Admin          Oper           Speed          MTU\n#------------------------------------------------------------------------------------------\n#Eth1/1           -                   up                            100000         9100\n#Eth1/2           -                   up                            100000         9100\n#Eth1/3           -                   down                          100000         9100\n#Eth1/3           -                   down                          1000           5000\n#Eth1/5           -                   down                          100000         9100\n#\n- name: Configures interfaces\n  dellemc.enterprise_sonic.sonic_interfaces:\n    config:\n      name: Eth1/3\n    state: deleted\n#\n# After state:\n# -------------\n#\n# show interface status | no-more\n#------------------------------------------------------------------------------------------\n#Name                Description         Admin          Oper           Speed          MTU\n#------------------------------------------------------------------------------------------\n#Eth1/1           -                   up                            100000         9100\n#Eth1/2           -                   up                            100000         9100\n#Eth1/3           -                   down                          100000         9100\n#Eth1/3           -                   up                            100000         9100\n#Eth1/5           -                   down                          100000         9100\n#\n#\n# Using deleted\n#\n# Before state:\n# -------------\n#\n# show interface status | no-more\n#------------------------------------------------------------------------------------------\n#Name                Description         Admin          Oper           Speed          MTU\n#------------------------------------------------------------------------------------------\n#Eth1/1           -                   up                            100000         9100\n#Eth1/2           -                   up                            100000         9100\n#Eth1/3           -                   down                          100000         9100\n#Eth1/3           -                   down                          1000           9100\n#Eth1/5           -                   down                          100000         9100\n#\n\n- name: Configures interfaces\n  dellemc.enterprise_sonic.sonic_interfaces:\n    config:\n    state: deleted\n\n#\n# After state:\n# -------------\n#\n# show interface status | no-more\n#------------------------------------------------------------------------------------------\n#Name                Description         Admin          Oper           Speed          MTU\n#------------------------------------------------------------------------------------------\n#Eth1/1           -                   up                            100000         9100\n#Eth1/2           -                   up                            100000         9100\n#Eth1/3           -                   up                            100000         9100\n#Eth1/3           -                   up                            100000         9100\n#Eth1/5           -                   up                            100000         9100\n#\n#\n# Using merged\n#\n# Before state:\n# -------------\n#\n# show interface status | no-more\n#------------------------------------------------------------------------------------------\n#Name                Description         Admin          Oper           Speed          MTU\n#------------------------------------------------------------------------------------------\n#Eth1/1           -                   up                            100000         9100\n#Eth1/2           -                   up                            100000         9100\n#Eth1/3           -                   down                          100000         9100\n#Eth1/3           -                   down                          1000           9100\n#\n- name: Configures interfaces\n  dellemc.enterprise_sonic.sonic_interfaces:\n    config:\n     - name: Eth1/3\n       description: 'Ethernet Twelve'\n     - name: Eth1/5\n       description: 'Ethernet Sixteen'\n       enable: True\n       mtu: 3500\n    state: merged\n#\n#\n# After state:\n# ------------\n#\n# show interface status | no-more\n#------------------------------------------------------------------------------------------\n#Name                Description         Admin          Oper           Speed          MTU\n#------------------------------------------------------------------------------------------\n#Eth1/1           -                   up                            100000         9100\n#Eth1/2           -                   up                            100000         9100\n#Eth1/3           -                   down                          100000         9100\n#Eth1/4           -                   down                          1000           9100\n#Eth1/5           -                   down                          100000         3500\n#\n#\n"
+  },
+  "dellemc.enterprise_sonic.sonic_l2_interfaces": {
+    "doc": {
+      "description": "Manages Layer 2 interface attributes of Enterprise SONiC Distribution by Dell Technologies.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "A list of Layer 2 interface configurations.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "access": {
+              "aliases": [],
+              "description": "Configures access mode characteristics of the interface.",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "vlan": {
+                  "aliases": [],
+                  "description": "Configures the specified VLAN in access mode.",
+                  "type": "int",
+                  "required": false,
+                  "suboptions": {}
+                }
+              }
+            },
+            "name": {
+              "aliases": [],
+              "description": "Full name of the interface, for example, 'Eth1/26'.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "trunk": {
+              "aliases": [],
+              "description": "Configures trunking parameters on an interface.",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "allowed_vlans": {
+                  "aliases": [],
+                  "description": "Specifies list of allowed VLANs of trunk mode on the interface.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "dict",
+                  "suboptions": {
+                    "vlan": {
+                      "aliases": [],
+                      "description": "Configures the specified VLAN in trunk mode.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "The state that the configuration should be left in.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Configure interface-to-VLAN association that is based on access or trunk mode",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Using deleted\n#\n# Before state:\n# -------------\n#\n#do show Vlan\n#Q: A - Access (Untagged), T - Tagged\n#NUM        Status      Q Ports\n#10         Inactive    A  Eth1/3\n#11         Inactive    T  Eth1/3\n#12         Inactive    A  Eth1/4\n#13         Inactive    T  Eth1/4\n#14         Inactive    A  Eth1/5\n#15         Inactive    T  Eth1/5\n#\n- name: Configures switch port of interfaces\n  dellemc.enterprise_sonic.sonic_l2_interfaces:\n   config:\n     - name: Eth1/3\n     - name: Eth1/4\n   state: deleted\n#\n# After state:\n# ------------\n#\n#do show Vlan\n#Q: A - Access (Untagged), T - Tagged\n#NUM        Status      Q Ports\n#10         Inactive\n#11         Inactive\n#12         Inactive\n#13         Inactive\n#14         Inactive    A  Eth1/5\n#15         Inactive    T  Eth1/5\n#\n#\n# Using deleted\n#\n# Before state:\n# -------------\n#\n#do show Vlan\n#Q: A - Access (Untagged), T - Tagged\n#NUM        Status      Q Ports\n#10         Inactive    A  Eth1/3\n#11         Inactive    T  Eth1/3\n#12         Inactive    A  Eth1/4\n#13         Inactive    T  Eth1/4\n#14         Inactive    A  Eth1/5\n#15         Inactive    T  Eth1/5\n#\n- name: Configures switch port of interfaces\n  dellemc.enterprise_sonic.sonic_l2_interfaces:\n    config:\n    state: deleted\n#\n# After state:\n#do show Vlan\n#Q: A - Access (Untagged), T - Tagged\n#NUM        Status      Q Ports\n#10         Inactive\n#11         Inactive\n#12         Inactive\n#13         Inactive\n#14         Inactive\n#15         Inactive\n#\n#\n# Using merged\n#\n# Before state:\n# -------------\n#\n#do show Vlan\n#Q: A - Access (Untagged), T - Tagged\n#NUM        Status      Q Ports\n#11         Inactive    T  Eth1/7\n#12         Inactive    T  Eth1/7\n#\n- name: Configures switch port of interfaces\n  dellemc.enterprise_sonic.sonic_l2_interfaces:\n    config:\n     - name: Eth1/3\n       access:\n         vlan: 10\n    state: merged\n#\n# After state:\n# ------------\n#\n#do show Vlan\n#Q: A - Access (Untagged), T - Tagged\n#NUM        Status      Q Ports\n#10         Inactive    A  Eth1/3\n#11         Inactive    T  Eth1/7\n#12         Inactive    T  Eth1/7\n#\n#\n# Using merged\n#\n# Before state:\n# -------------\n#\n#do show Vlan\n#Q: A - Access (Untagged), T - Tagged\n#NUM        Status      Q Ports\n#10         Inactive    A  Eth1/3\n#\n- name: Configures switch port of interfaces\n  dellemc.enterprise_sonic.sonic_l2_interfaces:\n    config:\n     - name: Eth1/3\n       trunk:\n         allowed_vlans:\n            - vlan: 11\n            - vlan: 12\n    state: merged\n#\n# After state:\n# ------------\n#\n#do show Vlan\n#Q: A - Access (Untagged), T - Tagged\n#NUM        Status      Q Ports\n#10         Inactive    A  Eth1/3\n#11         Inactive    T  Eth1/7\n#12         Inactive    T  Eth1/7\n#\n#\n# Using merged\n#\n# Before state:\n# -------------\n#\n#do show Vlan\n#Q: A - Access (Untagged), T - Tagged\n#NUM        Status      Q Ports\n#10         Inactive\n#11         Inactive\n#12         Inactive    A  Eth1/4\n#13         Inactive    T  Eth1/4\n#14         Inactive    A  Eth1/5\n#15         Inactive    T  Eth1/5\n#\n- name: Configures switch port of interfaces\n  dellemc.enterprise_sonic.sonic_l2_interfaces:\n    config:\n     - name: Eth1/3\n       access:\n         vlan: 12\n       trunk:\n         allowed_vlans:\n            - vlan: 13\n            - vlan: 14\n    state: merged\n#\n# After state:\n# ------------\n#\n#do show Vlan\n#Q: A - Access (Untagged), T - Tagged\n#NUM        Status      Q Ports\n#10         Inactive\n#11         Inactive\n#12         Inactive    A  Eth1/3\n#                       A  Eth1/4\n#13         Inactive    T  Eth1/3\n#                       T  Eth1/4\n#14         Inactive    A  Eth1/3\n#                       A  Eth1/5\n#15         Inactive    T  Eth1/5\n#\n#\n"
+  },
+  "dellemc.enterprise_sonic.sonic_l3_interfaces": {
+    "doc": {
+      "description": "Configures Layer 3 interface settings on devices running Enterprise SONiC Distribution by Dell Technologies. This module provides configuration management of IPv4 and IPv6 parameters on Ethernet interfaces of devices running Enterprise SONiC.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "A list of l3_interfaces configurations.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "ipv4": {
+              "aliases": [],
+              "description": "ipv4 configurations to be set for the Layer 3 interface mentioned in name option.",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "addresses": {
+                  "aliases": [],
+                  "description": "List of IPv4 addresses to be set.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "dict",
+                  "suboptions": {
+                    "address": {
+                      "aliases": [],
+                      "description": "IPv4 address to be set in the format <ipv4 address>/<mask> for example, 192.0.2.1/24.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "secondary": {
+                      "aliases": [],
+                      "description": "secondary flag of the ip address.",
+                      "default": "False",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "anycast_addresses": {
+                  "aliases": [],
+                  "description": "List of IPv4 addresses to be set for anycast.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "str",
+                  "suboptions": {}
+                }
+              }
+            },
+            "ipv6": {
+              "aliases": [],
+              "description": "ipv6 configurations to be set for the Layer 3 interface mentioned in name option.",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "addresses": {
+                  "aliases": [],
+                  "description": "List of IPv6 addresses to be set.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "dict",
+                  "suboptions": {
+                    "address": {
+                      "aliases": [],
+                      "description": "IPv6 address to be set in the address format is <ipv6 address>/<mask> for example, 2001:db8:2201:1::1/64.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "enabled": {
+                  "aliases": [],
+                  "description": "enabled flag of the ipv6.",
+                  "type": "bool",
+                  "required": false,
+                  "suboptions": {}
+                }
+              }
+            },
+            "name": {
+              "aliases": [],
+              "description": "Full name of the interface, for example, Eth1/3.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "The state that the configuration should be left in.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Configure the IPv4 and IPv6 parameters on Interfaces such as, Eth, LAG, VLAN, and loopback",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n# Using deleted\n#\n# Before state:\n# -------------\n#\n#rno-dctor-1ar01c01sw02# show running-configuration interface\n#!\n#interface Ethernet20\n# mtu 9100\n# speed 100000\n# shutdown\n# ip address 83.1.1.1/16\n# ip address 84.1.1.1/16 secondary\n# ipv6 address 83::1/16\n# ipv6 address 84::1/16\n# ipv6 enable\n#!\n#interface Ethernet24\n# mtu 9100\n# speed 100000\n# shutdown\n# ip address 91.1.1.1/16\n# ip address 92.1.1.1/16 secondary\n# ipv6 address 90::1/16\n# ipv6 address 91::1/16\n# ipv6 address 92::1/16\n# ipv6 address 93::1/16\n#!\n#interface Vlan501\n# ip anycast-address 11.12.13.14/12\n# ip anycast-address 1.2.3.4/22\n#!\n#\n#\n- name: delete one l3 interface.\n  dellemc.enterprise_sonic.sonic_l3_interfaces:\n    config:\n      - name: Ethernet20\n        ipv4:\n          addresses:\n            - address: 83.1.1.1/16\n            - address: 84.1.1.1/16\n      - name: Ethernet24\n        ipv6:\n          enabled: true\n          addresses:\n            - address: 91::1/16\n      - name: Vlan501\n        ipv4:\n          anycast_addresses:\n            - 11.12.13.14/12\n    state: deleted\n\n# After state:\n# ------------\n#\n#rno-dctor-1ar01c01sw02# show running-configuration interface\n#!\n#interface Ethernet20\n# mtu 9100\n# speed 100000\n# shutdown\n# ipv6 address 83::1/16\n# ipv6 address 84::1/16\n# ipv6 enable\n#!\n#interface Ethernet24\n# mtu 9100\n# speed 100000\n# shutdown\n# ip address 91.1.1.1/16\n# ip address 92.1.1.1/16 secondary\n# ipv6 address 90::1/16\n# ipv6 address 92::1/16\n# ipv6 address 93::1/16\n#!\n#interface Vlan501\n# ip anycast-address 1.2.3.4/22\n#!\n#\n# Using deleted\n#\n# Before state:\n# -------------\n#\n#rno-dctor-1ar01c01sw02# show running-configuration interface\n#!\n#interface Ethernet20\n# mtu 9100\n# speed 100000\n# shutdown\n# ip address 83.1.1.1/16\n# ip address 84.1.1.1/16 secondary\n# ipv6 address 83::1/16\n# ipv6 address 84::1/16\n# ipv6 enable\n#!\n#interface Ethernet24\n# mtu 9100\n# speed 100000\n# shutdown\n# ip address 91.1.1.1/16\n# ipv6 address 90::1/16\n# ipv6 address 91::1/16\n# ipv6 address 92::1/16\n# ipv6 address 93::1/16\n#!\n#interface Vlan501\n# ip anycast-address 11.12.13.14/12\n# ip anycast-address 1.2.3.4/22\n#!\n#\n#\n- name: delete all l3 interface\n  dellemc.enterprise_sonic.sonic_l3_interfaces:\n    config:\n    state: deleted\n#\n# After state:\n# ------------\n#\n#rno-dctor-1ar01c01sw02# show running-configuration interface\n#!\n#interface Ethernet20\n# mtu 9100\n# speed 100000\n# shutdown\n#!\n#interface Ethernet24\n# mtu 9100\n# speed 100000\n# shutdown\n#!\n#interface Vlan501\n#!\n#\n# Using merged\n#\n# Before state:\n# -------------\n#\n#rno-dctor-1ar01c01sw02# show running-configuration interface\n#!\n#interface Ethernet20\n# mtu 9100\n# speed 100000\n# shutdown\n#!\n#interface Ethernet24\n# mtu 9100\n# speed 100000\n# shutdown\n#!\n#interface Vlan501\n# ip anycast-address 1.2.3.4/22\n#!\n#\n- name: Add l3 interface configurations\n  dellemc.enterprise_sonic.sonic_l3_interfaces:\n    config:\n      - name: Ethernet20\n        ipv4:\n          addresses:\n            - address: 83.1.1.1/16\n            - address: 84.1.1.1/16\n              secondary: True\n        ipv6:\n          enabled: true\n          addresses:\n            - address: 83::1/16\n            - address: 84::1/16\n              secondary: True\n      - name: Ethernet24\n        ipv4:\n          addresses:\n            - address: 91.1.1.1/16\n        ipv6:\n          addresses:\n            - address: 90::1/16\n            - address: 91::1/16\n            - address: 92::1/16\n            - address: 93::1/16\n      - name: Vlan501\n        ipv4:\n          anycast_addresses:\n            - 11.12.13.14/12\n    state: merged\n#\n# After state:\n# ------------\n#\n#rno-dctor-1ar01c01sw02# show running-configuration interface\n#!\n#interface Ethernet20\n# mtu 9100\n# speed 100000\n# shutdown\n# ip address 83.1.1.1/16\n# ip address 84.1.1.1/16 secondary\n# ipv6 address 83::1/16\n# ipv6 address 84::1/16\n# ipv6 enable\n#!\n#interface Ethernet24\n# mtu 9100\n# speed 100000\n# shutdown\n# ip address 91.1.1.1/16\n# ipv6 address 90::1/16\n# ipv6 address 91::1/16\n# ipv6 address 92::1/16\n# ipv6 address 93::1/16\n#!\n#interface Vlan501\n# ip anycast-address 1.2.3.4/22\n# ip anycast-address 11.12.13.14/12\n#!\n#\n#\n"
+  },
+  "dellemc.enterprise_sonic.sonic_lag_interfaces": {
+    "doc": {
+      "description": "This module manages attributes of link aggregation group (LAG) interfaces of devices running Enterprise SONiC Distribution by Dell Technologies.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "A list of LAG configurations.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "members": {
+              "aliases": [],
+              "description": "The list of interfaces that are part of the group.",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "interfaces": {
+                  "aliases": [],
+                  "description": "The list of interfaces that are part of the group.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "dict",
+                  "suboptions": {
+                    "member": {
+                      "aliases": [],
+                      "description": "The interface name.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                }
+              }
+            },
+            "mode": {
+              "aliases": [],
+              "description": "Specifies mode of the port-channel while creation.",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "static",
+                "lacp"
+              ],
+              "suboptions": {}
+            },
+            "name": {
+              "aliases": [],
+              "description": "ID of the LAG.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "The state that the configuration should be left in.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage link aggregation group (LAG) interface parameters",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Using merged\n#\n# Before state:\n# -------------\n#\n# interface Eth1/10\n#  mtu 9100\n#  speed 100000\n#  no shutdown\n# !\n# interface Eth1/15\n#  channel-group 12\n#  mtu 9100\n#  speed 100000\n#  no shutdown\n#\n- name: Merges provided configuration with device configuration\n  dellemc.enterprise_sonic.sonic_lag_interfaces:\n    config:\n     - name: PortChannel10\n       members:\n         interfaces:\n           - member: Eth1/10\n    state: merged\n#\n# After state:\n# ------------\n#\n# interface Eth1/10\n#  channel-group 10\n#  mtu 9100\n#  speed 100000\n#  no shutdown\n# !\n# interface Eth1/15\n#  channel-group 12\n#  mtu 9100\n#  speed 100000\n#  no shutdown\n#\n# Using deleted\n#\n# Before state:\n# -------------\n# interface PortChannel10\n# !\n# interface Eth1/10\n#  channel-group 10\n#  mtu 9100\n#  speed 100000\n#  no shutdown\n#\n- name: Deletes LAG attributes of a given interface, This does not delete the port-channel itself\n  dellemc.enterprise_sonic.sonic_lag_interfaces:\n    config:\n     - name: PortChannel10\n       members:\n         interfaces:\n    state: deleted\n#\n# After state:\n# ------------\n# interface PortChannel10\n# !\n# interface Eth1/10\n#  mtu 9100\n#  speed 100000\n#  no shutdown\n#\n# Using deleted\n#\n# Before state:\n# -------------\n# interface PortChannel 10\n# !\n# interface PortChannel 12\n# !\n# interface Eth1/10\n#  channel-group 10\n#  mtu 9100\n#  speed 100000\n#  no shutdown\n# !\n# interface Eth1/15\n#  channel-group 12\n#  mtu 9100\n#  speed 100000\n#  no shutdown\n#\n- name: Deletes all LAGs and LAG attributes of all interfaces\n  dellemc.enterprise_sonic.sonic_lag_interfaces:\n    config:\n    state: deleted\n#\n# After state:\n# -------------\n#\n# interface Eth1/10\n#  mtu 9100\n#  speed 100000\n#  no shutdown\n# !\n# interface Eth1/15\n#  mtu 9100\n#  speed 100000\n#  no shutdown\n#\n#\n"
+  },
+  "dellemc.enterprise_sonic.sonic_mclag": {
+    "doc": {
+      "description": "Manage multi chassis link aggregation groups domain (MCLAG) and its parameters",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "Dict of mclag domain configurations.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "domain_id": {
+              "aliases": [],
+              "description": "ID of the mclag domain (MCLAG domain).",
+              "type": "int",
+              "required": true,
+              "suboptions": {}
+            },
+            "keepalive": {
+              "aliases": [],
+              "description": "MCLAG session keepalive-interval in secs.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "members": {
+              "aliases": [],
+              "description": "Holds portchannels dictionary for an MCLAG domain.",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "portchannels": {
+                  "aliases": [],
+                  "description": "Holds a list of portchannels for configuring as an MCLAG interface.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "dict",
+                  "suboptions": {
+                    "lag": {
+                      "aliases": [],
+                      "description": "Holds a PortChannel ID.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                }
+              }
+            },
+            "peer_address": {
+              "aliases": [],
+              "description": "The IPV4 peer-ip for corresponding MCLAG.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "peer_link": {
+              "aliases": [],
+              "description": "Peer-link for corresponding MCLAG.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "session_timeout": {
+              "aliases": [],
+              "description": "MCLAG session timeout value in secs.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "source_address": {
+              "aliases": [],
+              "description": "The IPV4 source-ip for corresponding MCLAG.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "system_mac": {
+              "aliases": [],
+              "description": "Mac address of MCLAG.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "unique_ip": {
+              "aliases": [],
+              "description": "Holds Vlan dictionary for mclag unique ip.",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "vlans": {
+                  "aliases": [],
+                  "description": "Holds list of VLANs for which a separate IP addresses is enabled for Layer 3 protocol support over MCLAG.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "dict",
+                  "suboptions": {
+                    "vlan": {
+                      "aliases": [],
+                      "description": "Holds a VLAN ID.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "The state that the configuration should be left in.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage multi chassis link aggregation groups domain (MCLAG) and its parameters",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Using merged\n#\n# Before state:\n# -------------\n#\n# sonic# show mclag brief\n# MCLAG Not Configured\n#\n- name: Merge provided configuration with device configuration\n  dellemc.enterprise_sonic.sonic_mclag:\n    config:\n      domain_id: 1\n      peer_address: 1.1.1.1\n      source_address: 2.2.2.2\n      peer_link: 'Portchannel1'\n      keepalive: 1\n      session_timeout: 3\n      unique_ip:\n          vlans:\n            - vlan: Vlan4\n      members:\n          portchannles:\n            - lag: PortChannel10\n    state: merged\n#\n# After state:\n# ------------\n#\n# sonic# show mclag brief\n#\n# Domain ID            : 1\n# Role                 : standby\n# Session Status       : down\n# Peer Link Status     : down\n# Source Address       : 2.2.2.2\n# Peer Address         : 1.1.1.1\n# Peer Link            : PortChannel1\n# Keepalive Interval   : 1 secs\n# Session Timeout      : 3 secs\n# System Mac           : 20:04:0f:37:bd:c9\n#\n#\n# Number of MLAG Interfaces:1\n#-----------------------------------------------------------\n# MLAG Interface       Local/Remote Status\n#-----------------------------------------------------------\n# PortChannel10            down/down\n#\n# admin@sonic:~$ show runningconfiguration all\n# {\n# ...\n# \"MCLAG_UNIQUE_IP\": {\n#        \"Vlan4\": {\n#            \"unique_ip\": \"enable\"\n#        }\n#    },\n# ...\n# }\n#\n#\n# Using merged\n#\n# Before state:\n# ------------\n#\n# sonic# show mclag brief\n#\n# Domain ID            : 1\n# Role                 : standby\n# Session Status       : down\n# Peer Link Status     : down\n# Source Address       : 2.2.2.2\n# Peer Address         : 1.1.1.1\n# Peer Link            : PortChannel1\n# Keepalive Interval   : 1 secs\n# Session Timeout      : 3 secs\n# System Mac           : 20:04:0f:37:bd:c9\n#\n#\n# Number of MLAG Interfaces:1\n#-----------------------------------------------------------\n# MLAG Interface       Local/Remote Status\n#-----------------------------------------------------------\n# PortChannel10            down/down\n#\n# admin@sonic:~$ show runningconfiguration all\n# {\n# ...\n# \"MCLAG_UNIQUE_IP\": {\n#        \"Vlan4\": {\n#            \"unique_ip\": \"enable\"\n#        }\n#    },\n# ...\n# }\n#\n#\n- name: Merge device configuration with the provided configuration\n  dellemc.enterprise_sonic.sonic_mclag:\n    config:\n      domain_id: 1\n      source_address: 3.3.3.3\n      keepalive: 10\n      session_timeout: 30\n      unique_ip:\n        vlans:\n          - vlan: Vlan5\n      members:\n        portchannels:\n          - lag: PortChannel12\n    state: merged\n#\n# After state:\n# ------------\n#\n# sonic# show mclag brief\n#\n# Domain ID            : 1\n# Role                 : standby\n# Session Status       : down\n# Peer Link Status     : down\n# Source Address       : 3.3.3.3\n# Peer Address         : 1.1.1.1\n# Peer Link            : PortChannel1\n# Keepalive Interval   : 10 secs\n# Session Timeout      : 30 secs\n# System Mac           : 20:04:0f:37:bd:c9\n#\n#\n# Number of MLAG Interfaces:2\n#-----------------------------------------------------------\n# MLAG Interface       Local/Remote Status\n#-----------------------------------------------------------\n# PortChannel10            down/down\n# PortChannel12            down/down\n#\n# admin@sonic:~$ show runningconfiguration all\n# {\n# ...\n# \"MCLAG_UNIQUE_IP\": {\n#        \"Vlan4\": {\n#            \"unique_ip\": \"enable\"\n#        },\n#         \"Vlan5\": {\n#            \"unique_ip\": \"enable\"\n#        }\n#    },\n# ...\n# }\n#\n#\n# Using deleted\n#\n# Before state:\n# ------------\n#\n# sonic# show mclag brief\n#\n# Domain ID            : 1\n# Role                 : standby\n# Session Status       : down\n# Peer Link Status     : down\n# Source Address       : 3.3.3.3\n# Peer Address         : 1.1.1.1\n# Peer Link            : PortChannel1\n# Keepalive Interval   : 10 secs\n# Session Timeout      : 30 secs\n# System Mac           : 20:04:0f:37:bd:c9\n#\n#\n# Number of MLAG Interfaces:1\n#-----------------------------------------------------------\n# MLAG Interface       Local/Remote Status\n#-----------------------------------------------------------\n# PortChannel10            down/down\n#\n# admin@sonic:~$ show runningconfiguration all\n# {\n# ...\n# \"MCLAG_UNIQUE_IP\": {\n#        \"Vlan4\": {\n#            \"unique_ip\": \"enable\"\n#        }\n#    },\n# ...\n# }\n#\n- name: Delete device configuration based on the provided configuration\n  dellemc.enterprise_sonic.sonic_mclag:\n   config:\n     domain_id: 1\n     source_address: 3.3.3.3\n     keepalive: 10\n     members:\n       portchannels:\n         - lag: PortChannel10\n   state: deleted\n#\n# After state:\n# ------------\n#\n# sonic# show mclag brief\n#\n# Domain ID            : 1\n# Role                 : standby\n# Session Status       : down\n# Peer Link Status     : down\n# Source Address       :\n# Peer Address         : 1.1.1.1\n# Peer Link            : PortChannel1\n# Keepalive Interval   : 1 secs\n# Session Timeout      : 15 secs\n# System Mac           : 20:04:0f:37:bd:c9\n#\n#\n# Number of MLAG Interfaces:0\n#\n# admin@sonic:~$ show runningconfiguration all\n# {\n# ...\n# \"MCLAG_UNIQUE_IP\": {\n#        \"Vlan4\": {\n#            \"unique_ip\": \"enable\"\n#        }\n#    },\n# ...\n# }\n#\n#\n#\n# Using deleted\n#\n# Before state:\n# ------------\n#\n# sonic# show mclag brief\n#\n# Domain ID            : 1\n# Role                 : standby\n# Session Status       : down\n# Peer Link Status     : down\n# Source Address       : 3.3.3.3\n# Peer Address         : 1.1.1.1\n# Peer Link            : PortChannel1\n# Keepalive Interval   : 10 secs\n# Session Timeout      : 30 secs\n# System Mac           : 20:04:0f:37:bd:c9\n#\n#\n# Number of MLAG Interfaces:1\n#-----------------------------------------------------------\n# MLAG Interface       Local/Remote Status\n#-----------------------------------------------------------\n# PortChannel10            down/down\n#\n# admin@sonic:~$ show runningconfiguration all\n# {\n# ...\n# \"MCLAG_UNIQUE_IP\": {\n#        \"Vlan4\": {\n#            \"unique_ip\": \"enable\"\n#        }\n#    },\n# ...\n# }\n#\n- name: Delete all device configuration\n  dellemc.enterprise_sonic.sonic_mclag:\n    config:\n    state: deleted\n#\n# After state:\n# ------------\n#\n# sonic# show mclag brief\n# MCLAG Not Configured\n#\n# admin@sonic:~$ show runningconfiguration all | grep MCLAG_UNIQUE_IP\n# admin@sonic:~$\n#\n#\n# Using deleted\n#\n# Before state:\n# ------------\n#\n# sonic# show mclag brief\n#\n# Domain ID            : 1\n# Role                 : standby\n# Session Status       : down\n# Peer Link Status     : down\n# Source Address       : 3.3.3.3\n# Peer Address         : 1.1.1.1\n# Peer Link            : PortChannel1\n# Keepalive Interval   : 10 secs\n# Session Timeout      : 30 secs\n# System Mac           : 20:04:0f:37:bd:c9\n#\n#\n# Number of MLAG Interfaces:2\n#-----------------------------------------------------------\n# MLAG Interface       Local/Remote Status\n#-----------------------------------------------------------\n# PortChannel10            down/down\n# PortChannel12            down/sown\n#\n# admin@sonic:~$ show runningconfiguration all\n# {\n# ...\n# \"MCLAG_UNIQUE_IP\": {\n#        \"Vlan4\": {\n#            \"unique_ip\": \"enable\"\n#        }\n#    },\n# ...\n# }\n- name: Delete device configuration based on the provided configuration\n  dellemc.enterprise_sonic.sonic_mclag:\n    config:\n      domain_id: 1\n      source_address: 3.3.3.3\n      keepalive: 10\n      members:\n        portchannels:\n          - lag: PortChannel10\n    state: deleted\n#\n# After state:\n# ------------\n#\n# sonic# show mclag brief\n#\n# Domain ID            : 1\n# Role                 : standby\n# Session Status       : down\n# Peer Link Status     : down\n# Source Address       :\n# Peer Address         : 1.1.1.1\n# Peer Link            : PortChannel1\n# Keepalive Interval   : 1 secs\n# Session Timeout      : 15 secs\n# System Mac           : 20:04:0f:37:bd:c9\n#\n#\n# Number of MLAG Interfaces:0\n#\n# admin@sonic:~$ show runningconfiguration all\n# {\n# ...\n# \"MCLAG_UNIQUE_IP\": {\n#        \"Vlan4\": {\n#            \"unique_ip\": \"enable\"\n#        }\n#    },\n# ...\n# }\n#\n#\n"
+  },
+  "dellemc.enterprise_sonic.sonic_port_breakout": {
+    "doc": {
+      "description": "This module provides configuration management of port breakout parameters on devices running Enterprise SONiC.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "Specifies the port breakout related configuration.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "mode": {
+              "aliases": [],
+              "description": "Specifies the mode of the port breakout.",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "1x100G",
+                "1x400G",
+                "1x40G",
+                "2x100G",
+                "2x200G",
+                "2x50G",
+                "4x100G",
+                "4x10G",
+                "4x25G",
+                "4x50G"
+              ],
+              "suboptions": {}
+            },
+            "name": {
+              "aliases": [],
+              "description": "Specifies the name of the port breakout.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "Specifies the operation to be performed on the port breakout configured on the device.\nIn case of merged, the input mode configuration will be merged with the existing port breakout configuration on the device.\nIn case of deleted the existing port breakout mode configuration will be removed from the device.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Configure port breakout settings on physical interfaces",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Using deleted\n#\n# Before state:\n# -------------\n#\n#do show interface breakout\n#-----------------------------------------------\n#Port  Breakout Mode  Status        Interfaces\n#-----------------------------------------------\n#1/1   4x10G          Completed     Eth1/1/1\n#                                   Eth1/1/2\n#                                   Eth1/1/3\n#                                   Eth1/1/4\n#1/11  1x100G         Completed     Eth1/11\n#\n\n- name: Merge users configurations\n  dellemc.enterprise_sonic.sonic_port_breakout:\n    config:\n      - name: 1/11\n        mode: 1x100G\n    state: deleted\n\n# After state:\n# ------------\n#\n#do show interface breakout\n#-----------------------------------------------\n#Port  Breakout Mode  Status        Interfaces\n#-----------------------------------------------\n#1/1   4x10G          Completed     Eth1/1/1\n#                                   Eth1/1/2\n#                                   Eth1/1/3\n#                                   Eth1/1/4\n#1/11  Default        Completed     Ethernet40\n\n\n# Using deleted\n#\n# Before state:\n# -------------\n#\n#do show interface breakout\n#-----------------------------------------------\n#Port  Breakout Mode  Status        Interfaces\n#-----------------------------------------------\n#1/1   4x10G          Completed     Eth1/1/1\n#                                   Eth1/1/2\n#                                   Eth1/1/3\n#                                   Eth1/1/4\n#1/11  1x100G         Completed     Eth1/11\n#\n- name: Merge users configurations\n  dellemc.enterprise_sonic.sonic_port_breakout:\n    config:\n    state: deleted\n\n\n# After state:\n# ------------\n#\n#do show interface breakout\n#-----------------------------------------------\n#Port  Breakout Mode  Status        Interfaces\n#-----------------------------------------------\n#1/1   Default        Completed     Ethernet0\n#1/11  Default        Completed     Ethernet40\n\n\n# Using merged\n#\n# Before state:\n# -------------\n#\n#do show interface breakout\n#-----------------------------------------------\n#Port  Breakout Mode  Status        Interfaces\n#-----------------------------------------------\n#1/1   4x10G          Completed     Eth1/1/1\n#                                   Eth1/1/2\n#                                   Eth1/1/3\n#                                   Eth1/1/4\n#\n- name: Merge users configurations\n  dellemc.enterprise_sonic.sonic_port_breakout:\n    config:\n      - name: 1/11\n        mode: 1x100G\n    state: merged\n\n\n# After state:\n# ------------\n#\n#do show interface breakout\n#-----------------------------------------------\n#Port  Breakout Mode  Status        Interfaces\n#-----------------------------------------------\n#1/1   4x10G          Completed     Eth1/1/1\n#                                   Eth1/1/2\n#                                   Eth1/1/3\n#                                   Eth1/1/4\n#1/11  1x100G         Completed     Eth1/11\n\n\n"
+  },
+  "dellemc.enterprise_sonic.sonic_radius_server": {
+    "doc": {
+      "description": "This module provides configuration management of radius server parameters on devices running Enterprise SONiC.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "Specifies the radius server related configuration.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "auth_type": {
+              "aliases": [],
+              "description": "Specifies the authentication type of the radius server.",
+              "default": "pap",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "pap",
+                "chap",
+                "mschapv2"
+              ],
+              "suboptions": {}
+            },
+            "key": {
+              "aliases": [],
+              "description": "Specifies the key of the radius server.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "nas_ip": {
+              "aliases": [],
+              "description": "Specifies the network access server of the radius server.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "retransmit": {
+              "aliases": [],
+              "description": "Specifies the re-transmit value of the radius server.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "servers": {
+              "aliases": [],
+              "description": "Specifies the servers list of the radius server.",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "host": {
+                  "aliases": [],
+                  "description": "Specifies the host details of the radius servers list.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "dict",
+                  "suboptions": {
+                    "auth_type": {
+                      "aliases": [],
+                      "description": "Specifies the authentication type of the radius server host.",
+                      "type": "str",
+                      "required": false,
+                      "choices": [
+                        "pap",
+                        "chap",
+                        "mschapv2"
+                      ],
+                      "suboptions": {}
+                    },
+                    "key": {
+                      "aliases": [],
+                      "description": "Specifies the key of the radius server host.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "name": {
+                      "aliases": [],
+                      "description": "Specifies the name of the radius server host.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "port": {
+                      "aliases": [],
+                      "description": "Specifies the port of the radius server host.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "priority": {
+                      "aliases": [],
+                      "description": "Specifies the priority of the radius server host.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "retransmit": {
+                      "aliases": [],
+                      "description": "Specifies the retransmit of the radius server host.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "source_interface": {
+                      "aliases": [],
+                      "description": "Specifies the source interface of the radius server host.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "timeout": {
+                      "aliases": [],
+                      "description": "Specifies the timeout of the radius server host.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "vrf": {
+                      "aliases": [],
+                      "description": "Specifies the vrf of the radius server host.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                }
+              }
+            },
+            "statistics": {
+              "aliases": [],
+              "description": "Specifies the statistics flag of the radius server.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "timeout": {
+              "aliases": [],
+              "description": "Specifies the timeout of the radius server.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "Specifies the operation to be performed on the radius server configured on the device.\nIn case of merged, the input mode configuration will be merged with the existing radius server configuration on the device.\nIn case of deleted the existing radius server mode configuration will be removed from the device.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage RADIUS server and its parameters",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Using deleted\n#\n# Before state:\n# -------------\n#\n#sonic(config)# do show radius-server\n#---------------------------------------------------------\n#RADIUS Global Configuration\n#---------------------------------------------------------\n#nas-ip-addr: 1.2.3.4\n#statistics : True\n#timeout    : 10\n#auth-type  : chap\n#key        : chap\n#retransmit : 3\n#--------------------------------------------------------------------------------\n#HOST            AUTH-TYPE KEY       AUTH-PORT PRIORITY TIMEOUT RTSMT VRF   SI\n#--------------------------------------------------------------------------------\n#localhost       mschapv2  local     52        2        20      2     mgmt  Ethernet12\n#myhost          chap      local     53        3        23      3     mgmt  Ethernet24\n#---------------------------------------------------------\n#RADIUS Statistics\n#---------------------------------------------------------\n#\n\n- name: Merge radius configurations\n  dellemc.enterprise_sonic.sonic_radius_server:\n    config:\n      auth_type: chap\n      nas_ip: 1.2.3.4\n      statistics: true\n      timeout: 10\n      servers:\n        host:\n          - name: localhost\n    state: deleted\n\n# After state:\n# ------------\n#sonic(config)# do show radius-server\n#---------------------------------------------------------\n#RADIUS Global Configuration\n#---------------------------------------------------------\n#timeout    : 5\n#auth-type  : pap\n#key        : chap\n#retransmit : 3\n#--------------------------------------------------------------------------------\n#HOST            AUTH-TYPE KEY       AUTH-PORT PRIORITY TIMEOUT RTSMT VRF   SI\n#--------------------------------------------------------------------------------\n#myhost          chap      local     53        3        23      3     mgmt  Ethernet24\n\n\n# Using deleted\n#\n# Before state:\n# -------------\n#\n#sonic(config)# do show radius-server\n#---------------------------------------------------------\n#RADIUS Global Configuration\n#---------------------------------------------------------\n#nas-ip-addr: 1.2.3.4\n#statistics : True\n#timeout    : 10\n#auth-type  : chap\n#key        : chap\n#retransmit : 3\n#--------------------------------------------------------------------------------\n#HOST            AUTH-TYPE KEY       AUTH-PORT PRIORITY TIMEOUT RTSMT VRF   SI\n#--------------------------------------------------------------------------------\n#localhost       mschapv2  local     52        2        20      2     mgmt  Ethernet12\n#myhost          chap      local     53        3        23      3     mgmt  Ethernet24\n#---------------------------------------------------------\n#RADIUS Statistics\n#---------------------------------------------------------\n#\n- name: Merge radius configurations\n  dellemc.enterprise_sonic.sonic_radius_server:\n    config:\n    state: deleted\n\n# After state:\n# ------------\n#sonic(config)# do show radius-server\n#---------------------------------------------------------\n#RADIUS Global Configuration\n#---------------------------------------------------------\n#timeout    : 5\n#auth-type  : pap\n\n\n# Using merged\n#\n# Before state:\n# -------------\n#\n#sonic(config)# do show radius-server\n#---------------------------------------------------------\n#RADIUS Global Configuration\n#---------------------------------------------------------\n#\n- name: Merge radius configurations\n  dellemc.enterprise_sonic.sonic_radius_server:\n    config:\n      auth_type: chap\n      key: chap\n      nas_ip: 1.2.3.4\n      statistics: true\n      timeout: 10\n      retransmit: 3\n      servers:\n        host:\n          - name: localhost\n            auth_type: mschapv2\n            key: local\n            priority: 2\n            port: 52\n            retransmit: 2\n            timeout: 20\n            source_interface: Eth 12\n            vrf: mgmt\n    state: merged\n\n# After state:\n# ------------\n#\n#sonic(config)# do show radius-server\n#---------------------------------------------------------\n#RADIUS Global Configuration\n#---------------------------------------------------------\n#nas-ip-addr: 1.2.3.4\n#statistics : True\n#timeout    : 10\n#auth-type  : chap\n#key        : chap\n#retransmit : 3\n#--------------------------------------------------------------------------------\n#HOST            AUTH-TYPE KEY       AUTH-PORT PRIORITY TIMEOUT RTSMT VRF   SI\n#--------------------------------------------------------------------------------\n#localhost       mschapv2  local     52        2        20      2     mgmt  Ethernet12\n#---------------------------------------------------------\n#RADIUS Statistics\n#---------------------------------------------------------\n\n\n"
+  },
+  "dellemc.enterprise_sonic.sonic_system": {
+    "doc": {
+      "description": "This module is used for configuration management of global system parameters on devices running Enterprise SONiC.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "Specifies the system related configurations",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "anycast_address": {
+              "aliases": [],
+              "description": "Specifies different types of anycast address that can be configured on the device",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "ipv4": {
+                  "aliases": [],
+                  "description": "Enable or disable ipv4 anycast-address",
+                  "type": "bool",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "ipv6": {
+                  "aliases": [],
+                  "description": "Enable or disable ipv6 anycast-address",
+                  "type": "bool",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "mac_address": {
+                  "aliases": [],
+                  "description": "Specifies the mac anycast-address",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                }
+              }
+            },
+            "hostname": {
+              "aliases": [],
+              "description": "Specifies the hostname of the SONiC device",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "interface_naming": {
+              "aliases": [],
+              "description": "Specifies the type of interface-naming in device",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "standard",
+                "native"
+              ],
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "Specifies the operation to be performed on the system parameters configured on the device.\nIn case of merged, the input configuration will be merged with the existing system configuration on the device.\nIn case of deleted the existing system configuration will be removed from the device.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Configure system parameters",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Using deleted\n#\n# Before state:\n# -------------\n#!\n#SONIC(config)#do show running-configuration\n#!\n#ip anycast-mac-address aa:bb:cc:dd:ee:ff\n#ip anycast-address enable\n#ipv6 anycast-address enable\n#interface-naming standard\n\n- name: Merge provided configuration with device configuration\n  dellemc.enterprise_sonic.sonic_system:\n    config:\n      hostname: SONIC\n      interface_naming: standard\n      anycast_address:\n        ipv6: true\n    state: deleted\n\n# After state:\n# ------------\n#!\n#sonic(config)#do show running-configuration\n#!\n#ip anycast-mac-address aa:bb:cc:dd:ee:ff\n#ip anycast-address enable\n\n\n# Using deleted\n#\n# Before state:\n# -------------\n#!\n#SONIC(config)#do show running-configuration\n#!\n#ip anycast-mac-address aa:bb:cc:dd:ee:ff\n#ip anycast-address enable\n#ipv6 anycast-address enable\n#interface-naming standard\n\n- name: Delete all system related configs in device configuration\n  dellemc.enterprise_sonic.sonic_system:\n    config:\n    state: deleted\n\n# After state:\n# ------------\n#!\n#sonic(config)#do show running-configuration\n#!\n\n\n# Using merged\n#\n# Before state:\n# -------------\n#!\n#sonic(config)#do show running-configuration\n#!\n\n- name: Merge provided configuration with device configuration\n  dellemc.enterprise_sonic.sonic_system:\n    config:\n      hostname: SONIC\n      interface_naming: standard\n      anycast_address:\n        ipv6: true\n        ipv4: true\n        mac_address: aa:bb:cc:dd:ee:ff\n    state: merged\n\n# After state:\n# ------------\n#!\n#SONIC(config)#do show running-configuration\n#!\n#ip anycast-mac-address aa:bb:cc:dd:ee:ff\n#ip anycast-address enable\n#ipv6 anycast-address enable\n#interface-naming standard\n\n\n"
+  },
+  "dellemc.enterprise_sonic.sonic_tacacs_server": {
+    "doc": {
+      "description": "This module provides configuration management of tacacs server parameters on devices running Enterprise SONiC.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "Specifies the tacacs server related configuration.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "auth_type": {
+              "aliases": [],
+              "description": "Specifies the authentication type of the tacacs server.",
+              "default": "pap",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "pap",
+                "chap",
+                "mschap",
+                "login"
+              ],
+              "suboptions": {}
+            },
+            "key": {
+              "aliases": [],
+              "description": "Specifies the key of the tacacs server.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "servers": {
+              "aliases": [],
+              "description": "Specifies the servers list of the tacacs server.",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "host": {
+                  "aliases": [],
+                  "description": "Specifies the host details of the tacacs servers list.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "dict",
+                  "suboptions": {
+                    "auth_type": {
+                      "aliases": [],
+                      "description": "Specifies the authentication type of the tacacs server host.",
+                      "default": "pap",
+                      "type": "str",
+                      "required": false,
+                      "choices": [
+                        "pap",
+                        "chap",
+                        "mschap",
+                        "login"
+                      ],
+                      "suboptions": {}
+                    },
+                    "key": {
+                      "aliases": [],
+                      "description": "Specifies the key of the tacacs server host.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "name": {
+                      "aliases": [],
+                      "description": "Specifies the name of the tacacs server host.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "port": {
+                      "aliases": [],
+                      "description": "Specifies the port of the tacacs server host.",
+                      "default": "49",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "priority": {
+                      "aliases": [],
+                      "description": "Specifies the priority of the tacacs server host.",
+                      "default": "1",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "timeout": {
+                      "aliases": [],
+                      "description": "Specifies the timeout of the tacacs server host.",
+                      "default": "5",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "vrf": {
+                      "aliases": [],
+                      "description": "Specifies the vrf of the tacacs server host.",
+                      "default": "default",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                }
+              }
+            },
+            "source_interface": {
+              "aliases": [],
+              "description": "Specifies the source interface of the tacacs server.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "timeout": {
+              "aliases": [],
+              "description": "Specifies the timeout of the tacacs server.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "Specifies the operation to be performed on the tacacs server configured on the device.\nIn case of merged, the input mode configuration will be merged with the existing tacacs server configuration on the device.\nIn case of deleted the existing tacacs server mode configuration will be removed from the device.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage TACACS server and its parameters",
+      "version_added": "1.1.0"
+    },
+    "examples": "\n# Using deleted\n#\n# Before state:\n# -------------\n#\n# do show tacacs-server\n#---------------------------------------------------------\n#TACACS Global Configuration\n#---------------------------------------------------------\n#source-interface  : Ethernet12\n#timeout    : 10\n#auth-type  : login\n#key        : login\n#------------------------------------------------------------------------------------------------\n#HOST                 AUTH-TYPE       KEY        PORT       PRIORITY   TIMEOUT    VRF\n#------------------------------------------------------------------------------------------------\n#1.2.3.4              pap             *****      50         2          10         mgmt\n#localhost            pap                        49         1          5          default\n#\n\n- name: Merge tacacs configurations\n  dellemc.enterprise_sonic.sonic_tacacs_server:\n    config:\n      auth_type: login\n      key: login\n      source_interface: Ethernet 12\n      timeout: 10\n      servers:\n        host:\n          - name: 1.2.3.4\n    state: deleted\n\n# After state:\n# ------------\n#\n#do show tacacs-server\n#---------------------------------------------------------\n#TACACS Global Configuration\n#---------------------------------------------------------\n#timeout    : 5\n#auth-type  : pap\n#------------------------------------------------------------------------------------------------\n#HOST                 AUTH-TYPE       KEY        PORT       PRIORITY   TIMEOUT    VRF\n#------------------------------------------------------------------------------------------------\n#localhost            pap                        49         1          5          default\n\n\n# Using deleted\n#\n# Before state:\n# -------------\n#\n# do show tacacs-server\n#---------------------------------------------------------\n#TACACS Global Configuration\n#---------------------------------------------------------\n#source-interface  : Ethernet12\n#timeout    : 10\n#auth-type  : login\n#key        : login\n#------------------------------------------------------------------------------------------------\n#HOST                 AUTH-TYPE       KEY        PORT       PRIORITY   TIMEOUT    VRF\n#------------------------------------------------------------------------------------------------\n#1.2.3.4              pap             *****      50         2          10         mgmt\n#localhost            pap                        49         1          5          default\n#\n\n- name: Merge tacacs configurations\n  dellemc.enterprise_sonic.sonic_tacacs_server:\n    config:\n    state: deleted\n\n# After state:\n# ------------\n#\n#do show tacacs-server\n#---------------------------------------------------------\n#TACACS Global Configuration\n#---------------------------------------------------------\n#timeout    : 5\n#auth-type  : pap\n\n\n# Using merged\n#\n# Before state:\n# -------------\n#\n#sonic(config)# do show tacacs-server\n#---------------------------------------------------------\n#TACACS Global Configuration\n#---------------------------------------------------------\n#\n- name: Merge tacacs configurations\n  dellemc.enterprise_sonic.sonic_tacacs_server:\n    config:\n      auth_type: pap\n      key: pap\n      source_interface: Ethernet 12\n      timeout: 10\n      servers:\n        host:\n          - name: 1.2.3.4\n            auth_type: pap\n            key: 1234\n    state: merged\n\n# After state:\n# ------------\n#\n#sonic(config)# do show tacacs-server\n#---------------------------------------------------------\n#TACACS Global Configuration\n#---------------------------------------------------------\n#source-interface  : Ethernet12\n#timeout    : 10\n#auth-type  : pap\n#key        : pap\n#------------------------------------------------------------------------------------------------\n#HOST                 AUTH-TYPE       KEY        PORT       PRIORITY   TIMEOUT    VRF\n#------------------------------------------------------------------------------------------------\n#1.2.3.4              pap             1234       49         1          5          default\n\n\n"
+  },
+  "dellemc.enterprise_sonic.sonic_users": {
+    "doc": {
+      "description": "This module provides configuration management of users parameters on devices running Enterprise SONiC.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "Specifies the users related configuration.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "name": {
+              "aliases": [],
+              "description": "Specifies the name of the user.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "password": {
+              "aliases": [],
+              "description": "Specifies the password of the user.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "role": {
+              "aliases": [],
+              "description": "Specifies the role of the user.",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "admin",
+                "operator"
+              ],
+              "suboptions": {}
+            },
+            "update_password": {
+              "aliases": [],
+              "description": "Specifies the update password flag.\nIn case of always, password will be updated every time.\nIn case of on_create, password will be updated only when user is created.",
+              "default": "always",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "always",
+                "on_create"
+              ],
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "Specifies the operation to be performed on the users configured on the device.\nIn case of merged, the input configuration will be merged with the existing users configuration on the device.\nIn case of deleted the existing users configuration will be removed from the device.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage users and its parameters",
+      "version_added": "1.1.0"
+    },
+    "examples": "\n# Using deleted\n#\n# Before state:\n# -------------\n#\n#do show running-configuration\n#!\n#username admin password $6$sdZt2C7F$3oPSRkkJyLZtsKlFNGWdwssblQWBj5dXM6qAJAQl7dgOfqLSpZJ/n6xf8zPRcqPUFCu5ZKpEtynJ9sZ/S8Mgj. role admin\n#username sysadmin password $6$3QNqJzpFAPL9JqHA$417xFKw6SRn.CiqMFJkDfQJXKJGjeYwi2A8BIyfuWjGimvunOOjTRunVluudey/W9l8jhzN1oewBW5iLxmq2Q1 role admin\n#username sysoperator password $6$s1eTVjcX4Udi69gY$zlYgqwoKRGC6hGL5iKDImN/4BL7LXKNsx9e5PoSsBLs6C80ShYj2LoJAUZ58ia2WNjcHXhTD1p8eU9wyRTCiE0 role operator\n#\n- name: Merge users configurations\n  dellemc.enterprise_sonic.sonic_users:\n    config:\n      - name: sysoperator\n    state: deleted\n# After state:\n# ------------\n#\n#do show running-configuration\n#!\n#username admin password $6$sdZt2C7F$3oPSRkkJyLZtsKlFNGWdwssblQWBj5dXM6qAJAQl7dgOfqLSpZJ/n6xf8zPRcqPUFCu5ZKpEtynJ9sZ/S8Mgj. role admin\n#username sysadmin password $6$3QNqJzpFAPL9JqHA$417xFKw6SRn.CiqMFJkDfQJXKJGjeYwi2A8BIyfuWjGimvunOOjTRunVluudey/W9l8jhzN1oewBW5iLxmq2Q1 role admin\n\n\n# Using deleted\n#\n# Before state:\n# -------------\n#\n#do show running-configuration\n#!\n#username admin password $6$sdZt2C7F$3oPSRkkJyLZtsKlFNGWdwssblQWBj5dXM6qAJAQl7dgOfqLSpZJ/n6xf8zPRcqPUFCu5ZKpEtynJ9sZ/S8Mgj. role admin\n#username sysadmin password $6$3QNqJzpFAPL9JqHA$417xFKw6SRn.CiqMFJkDfQJXKJGjeYwi2A8BIyfuWjGimvunOOjTRunVluudey/W9l8jhzN1oewBW5iLxmq2Q1 role admin\n#username sysoperator password $6$s1eTVjcX4Udi69gY$zlYgqwoKRGC6hGL5iKDImN/4BL7LXKNsx9e5PoSsBLs6C80ShYj2LoJAUZ58ia2WNjcHXhTD1p8eU9wyRTCiE0 role operator\n#\n- name: Merge users configurations\n  dellemc.enterprise_sonic.sonic_users:\n    config:\n    state: deleted\n\n# After state:\n# ------------\n#\n#do show running-configuration\n#!\n#username admin password $6$sdZt2C7F$3oPSRkkJyLZtsKlFNGWdwssblQWBj5dXM6qAJAQl7dgOfqLSpZJ/n6xf8zPRcqPUFCu5ZKpEtynJ9sZ/S8Mgj. role admin\n\n\n# Using merged\n#\n# Before state:\n# -------------\n#\n#do show running-configuration\n#!\n#username admin password $6$sdZt2C7F$3oPSRkkJyLZtsKlFNGWdwssblQWBj5dXM6qAJAQl7dgOfqLSpZJ/n6xf8zPRcqPUFCu5ZKpEtynJ9sZ/S8Mgj. role admin\n#\n- name: Merge users configurations\n  dellemc.enterprise_sonic.sonic_users:\n    config:\n      - name: sysadmin\n        role: admin\n        password: admin\n        update_password: always\n      - name: sysoperator\n        role: operator\n        password: operator\n        update_password: always\n    state: merged\n\n# After state:\n# ------------\n#!\n#do show running-configuration\n#!\n#username admin password $6$sdZt2C7F$3oPSRkkJyLZtsKlFNGWdwssblQWBj5dXM6qAJAQl7dgOfqLSpZJ/n6xf8zPRcqPUFCu5ZKpEtynJ9sZ/S8Mgj. role admin\n#username sysadmin password $6$3QNqJzpFAPL9JqHA$417xFKw6SRn.CiqMFJkDfQJXKJGjeYwi2A8BIyfuWjGimvunOOjTRunVluudey/W9l8jhzN1oewBW5iLxmq2Q1 role admin\n#username sysoperator password $6$s1eTVjcX4Udi69gY$zlYgqwoKRGC6hGL5iKDImN/4BL7LXKNsx9e5PoSsBLs6C80ShYj2LoJAUZ58ia2WNjcHXhTD1p8eU9wyRTCiE0 role operator\n\n\n"
+  },
+  "dellemc.enterprise_sonic.sonic_vlans": {
+    "doc": {
+      "description": "This module provides configuration management of VLANs parameters on devices running Enterprise SONiC Distribution by Dell Technologies.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "A dictionary of VLAN options.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "vlan_id": {
+              "aliases": [],
+              "description": "ID of the VLAN\nRange is 1 to 4094",
+              "type": "int",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "The state that the configuration should be left in.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage VLAN and its parameters",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Using merged\n\n# Before state:\n# -------------\n#\n#sonic# show Vlan\n#Q: A - Access (Untagged), T - Tagged\n#NUM        Status      Q Ports\n#10         Inactive\n#30         Inactive\n#\n#sonic#\n#\n\n\n- name: Merges given VLAN attributes with the device configuration\n  dellemc.enterprise_sonic.sonic_vlans:\n    config:\n      - vlan_id: 10\n    state: merged\n\n# After state:\n# ------------\n#\n#sonic# show Vlan\n#Q: A - Access (Untagged), T - Tagged\n#NUM        Status      Q Ports\n#10         Inactive\n#30         Inactive\n#\n#sonic#\n#\n#sonic# show interface Vlan 10\n#Vlan10 is up\n#Mode of IPV4 address assignment: not-set\n#Mode of IPV6 address assignment: not-set\n#IP MTU 6000 bytes\n#sonic#\n#\n\n\n# Using deleted\n\n# Before state:\n# -------------\n#\n#sonic# show Vlan\n#Q: A - Access (Untagged), T - Tagged\n#NUM        Status      Q Ports\n#10         Inactive\n#20         Inactive\n#\n#sonic#\n\n- name: Deletes attributes of the given VLANs\n  dellemc.enterprise_sonic.sonic_vlans:\n    config:\n      - vlan_id: 20\n    state: deleted\n\n# After state:\n# ------------\n#\n#sonic# show Vlan\n#Q: A - Access (Untagged), T - Tagged\n#NUM        Status      Q Ports\n#10         Inactive\n#\n#sonic#\n\n\n# Using deleted\n\n# Before state:\n# -------------\n#\n#sonic# show Vlan\n#Q: A - Access (Untagged), T - Tagged\n#NUM        Status      Q Ports\n#10         Inactive\n#20         Inactive\n#30         Inactive\n#\n#sonic#\n\n- name: Deletes all the VLANs on the switch\n  dellemc.enterprise_sonic.sonic_vlans:\n    config:\n    state: deleted\n\n# After state:\n# ------------\n#\n#sonic# show Vlan\n#Q: A - Access (Untagged), T - Tagged\n#NUM        Status      Q Ports\n#\n#sonic#\n\n\n"
+  },
+  "dellemc.enterprise_sonic.sonic_vrfs": {
+    "doc": {
+      "description": "Manages VRF and VRF interface attributes in Enterprise SONiC Distribution by Dell Technologies.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "A list of VRF configurations.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "members": {
+              "aliases": [],
+              "description": "Holds a dictionary mapping of list of interfaces linked to a VRF interface.",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "interfaces": {
+                  "aliases": [],
+                  "description": "List of interface names that are linked to a specific VRF interface.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "dict",
+                  "suboptions": {
+                    "name": {
+                      "aliases": [],
+                      "description": "The name of the physical interface.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                }
+              }
+            },
+            "name": {
+              "aliases": [],
+              "description": "The name of the VRF interface.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "The state of the configuration after module completion.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage VRFs and associate VRFs to interfaces such as, Eth, LAG, VLAN, and loopback",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Using deleted\n#\n# Before state:\n# -------------\n#\n#show ip vrf\n#VRF-NAME            INTERFACES\n#----------------------------------------------------------------\n#Vrfcheck1\n#Vrfcheck2\n#Vrfcheck3           Eth1/3\n#                    Eth1/14\n#                    Eth1/16\n#                    Eth1/17\n#Vrfcheck4           Eth1/5\n#                    Eth1/6\n#\n- name: Configuring vrf deleted state\n  dellemc.enterprise_sonic.sonic_vrfs:\n    config:\n     - name: Vrfcheck4\n       members:\n         interfaces:\n           - name: Eth1/6\n     - name: Vrfcheck3\n       members:\n         interfaces:\n           - name: Eth1/3\n           - name: Eth1/14\n    state: deleted\n#\n# After state:\n# ------------\n#\n#show ip vrf\n#VRF-NAME            INTERFACES\n#----------------------------------------------------------------\n#Vrfcheck1\n#Vrfcheck2\n#Vrfcheck3           Eth1/16\n#                    Eth1/17\n#Vrfcheck4           Eth1/5\n#\n#\n# Using merged\n#\n# Before state:\n# -------------\n#\n#show ip vrf\n#VRF-NAME            INTERFACES\n#----------------------------------------------------------------\n#Vrfcheck1\n#Vrfcheck2\n#Vrfcheck3           Eth1/16\n#                    Eth1/17\n#Vrfcheck4\n#\n- name: Configuring vrf merged state\n  dellemc.enterprise_sonic.sonic_vrfs:\n    config:\n     - name: Vrfcheck4\n       members:\n         interfaces:\n           - name: Eth1/5\n           - name: Eth1/6\n     - name: Vrfcheck3\n       members:\n         interfaces:\n           - name: Eth1/3\n           - name: Eth1/14\n    state: merged\n#\n# After state:\n# ------------\n#\n#show ip vrf\n#VRF-NAME            INTERFACES\n#----------------------------------------------------------------\n#Vrfcheck1\n#Vrfcheck2\n#Vrfcheck3           Eth1/3\n#                    Eth1/14\n#                    Eth1/16\n#                    Eth1/17\n#Vrfcheck4           Eth1/5\n#                    Eth1/6\n#\n"
+  },
+  "dellemc.enterprise_sonic.sonic_vxlans": {
+    "doc": {
+      "description": "Manages interface attributes of Enterprise SONiC interfaces.",
+      "has_action": true,
+      "notes": "Tested against Enterprise SONiC Distribution by Dell Technologies.\nSupports C(check_mode).",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "A list of VxLAN configurations.\nsource_ip and evpn_nvo are required together.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "evpn_nvo": {
+              "aliases": [],
+              "description": "EVPN nvo name",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "name": {
+              "aliases": [],
+              "description": "The name of the VxLAN.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "source_ip": {
+              "aliases": [],
+              "description": "The source IP address of the VTEP.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "vlan_map": {
+              "aliases": [],
+              "description": "The list of VNI map of VLAN.",
+              "type": "list",
+              "required": false,
+              "elements": "dict",
+              "suboptions": {
+                "vlan": {
+                  "aliases": [],
+                  "description": "VLAN ID for VNI VLAN map.",
+                  "type": "int",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "vni": {
+                  "aliases": [],
+                  "description": "Specifies the VNI ID.",
+                  "type": "int",
+                  "required": true,
+                  "suboptions": {}
+                }
+              }
+            },
+            "vrf_map": {
+              "aliases": [],
+              "description": "list of VNI map of VRF.",
+              "type": "list",
+              "required": false,
+              "elements": "dict",
+              "suboptions": {
+                "vni": {
+                  "aliases": [],
+                  "description": "Specifies the VNI ID.",
+                  "type": "int",
+                  "required": true,
+                  "suboptions": {}
+                },
+                "vrf": {
+                  "aliases": [],
+                  "description": "VRF name for VNI VRF map.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                }
+              }
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "The state of the configuration after module completion.",
+          "default": "merged",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merged",
+            "deleted"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage VxLAN EVPN and its parameters",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Using deleted\n#\n# Before state:\n# -------------\n#\n# do show running-configuration\n#\n#interface vxlan vteptest1\n# source-ip 1.1.1.1\n# map vni 101 vlan 11\n# map vni 102 vlan 12\n# map vni 101 vrf Vrfcheck1\n# map vni 102 vrf Vrfcheck2\n#!\n#\n- name: \"Test vxlans deleted state 01\"\n  dellemc.enterprise_sonic.sonic_vxlans:\n    config:\n      - name: vteptest1\n        source_ip: 1.1.1.1\n        vlan_map:\n          - vni: 101\n            vlan: 11\n        vrf_map:\n          - vni: 101\n            vrf: Vrfcheck1\n    state: deleted\n#\n# After state:\n# ------------\n#\n# do show running-configuration\n#\n#interface vxlan vteptest1\n# source-ip 1.1.1.1\n# map vni 102 vlan 12\n# map vni 102 vrf Vrfcheck2\n#!\n#\n# Using deleted\n#\n# Before state:\n# -------------\n#\n# do show running-configuration\n#\n#interface vxlan vteptest1\n# source-ip 1.1.1.1\n# map vni 102 vlan 12\n# map vni 102 vrf Vrfcheck2\n#!\n#\n- name: \"Test vxlans deleted state 02\"\n  dellemc.enterprise_sonic.sonic_vxlans:\n    config:\n    state: deleted\n#\n# After state:\n# ------------\n#\n# do show running-configuration\n#\n#!\n#\n# Using merged\n#\n# Before state:\n# -------------\n#\n# do show running-configuration\n#\n#!\n#\n- name: \"Test vxlans merged state 01\"\n  dellemc.enterprise_sonic.sonic_vxlans:\n    config:\n      - name: vteptest1\n        source_ip: 1.1.1.1\n        evpn_nvo_name: nvo1\n        vlan_map:\n          - vni: 101\n            vlan: 11\n          - vni: 102\n            vlan: 12\n        vrf_map:\n          - vni: 101\n            vrf: Vrfcheck1\n          - vni: 102\n            vrf: Vrfcheck2\n    state: merged\n#\n# After state:\n# ------------\n#\n# do show running-configuration\n#\n#interface vxlan vteptest1\n# source-ip 1.1.1.1\n# map vni 101 vlan 11\n# map vni 102 vlan 12\n# map vni 101 vrf Vrfcheck1\n# map vni 102 vrf Vrfcheck2\n#!\n# "
+  }
+}
