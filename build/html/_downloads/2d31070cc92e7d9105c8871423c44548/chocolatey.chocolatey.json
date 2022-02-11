@@ -1,0 +1,409 @@
+{
+  "chocolatey.chocolatey.win_chocolatey": {
+    "doc": {
+      "description": "Manage packages using Chocolatey.\nIf Chocolatey is missing from the system, the module will install it.",
+      "has_action": false,
+      "notes": "This module will install or upgrade Chocolatey when needed.\nWhen using verbosity 2 or less (C(-vv)) the C(stdout) output will be restricted. When using verbosity 4 (C(-vvvv)) the C(stdout) output will be more verbose. When using verbosity 5 (C(-vvvvv)) the C(stdout) output will include debug output.\nSome packages, like hotfixes or updates need an interactive user logon in order to install. You can use C(become) to achieve this, see :ref:`become_windows`. Even if you are connecting as local Administrator, using C(become) to become Administrator will give you an interactive user logon, see examples below.\nIf C(become) is unavailable, use M(win_hotfix) to install hotfixes instead of M(win_chocolatey) as M(win_hotfix) avoids using C(wusa.exe) which cannot be run without C(become).",
+      "options": {
+        "allow_empty_checksums": {
+          "aliases": [],
+          "description": "Allow empty checksums to be used for downloaded resource from non-secure locations.\nUse M(win_chocolatey_feature) with the name C(allowEmptyChecksums) to control this option globally.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.2.2",
+          "suboptions": {}
+        },
+        "allow_multiple": {
+          "aliases": [],
+          "description": "Allow the installation of multiple packages when I(version) is specified.\nHaving multiple packages at different versions can cause issues if the package doesn't support this. Use at your own risk.\nThe value of this parameter is ignored if I(state) is C(absent). Instead, this parameter is automatically configured to remove all versions if I(version) is not specified, and the specific version only if I(version) is specified.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.2.8",
+          "suboptions": {}
+        },
+        "allow_prerelease": {
+          "aliases": [],
+          "description": "Allow the installation of pre-release packages.\nIf I(state) is C(latest), the latest pre-release package will be installed.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.2.6",
+          "suboptions": {}
+        },
+        "architecture": {
+          "aliases": [],
+          "description": "Force Chocolatey to install the package of a specific process architecture.\nWhen setting C(x86), will ensure Chocolatey installs the x86 package even when on an x64 bit OS.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "default",
+            "x86"
+          ],
+          "version_added": "0.2.7",
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Forces the install of a package, even if it already is installed.\nUsing I(force) will cause Ansible to always report that a change was made.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "ignore_checksums": {
+          "aliases": [],
+          "description": "Ignore the checksums provided by the package.\nUse M(win_chocolatey_feature) with the name C(checksumFiles) to control this option globally.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.2.2",
+          "suboptions": {}
+        },
+        "ignore_dependencies": {
+          "aliases": [],
+          "description": "Ignore dependencies, only install/upgrade the package itself.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.2.1",
+          "suboptions": {}
+        },
+        "install_args": {
+          "aliases": [],
+          "description": "Arguments to pass to the native installer.\nThese are arguments that are passed directly to the installer the Chocolatey package runs, this is generally an advanced option.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.1",
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the package(s) to be installed.\nSet to C(all) to run the action on all the installed packages.",
+          "type": "list",
+          "required": true,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "override_args": {
+          "aliases": [],
+          "description": "Override arguments of native installer with arguments provided by user.\nShould install arguments be used exclusively without appending to current package passed arguments.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.2.10",
+          "suboptions": {}
+        },
+        "package_params": {
+          "aliases": [
+            "params"
+          ],
+          "description": "Parameters to pass to the package.\nThese are parameters specific to the Chocolatey package and are generally documented by the package itself.\nBefore Ansible 2.7, this option was just I(params).",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.1",
+          "suboptions": {}
+        },
+        "pinned": {
+          "aliases": [],
+          "description": "Whether to pin the Chocolatey package or not.\nIf omitted then no checks on package pins are done.\nWill pin/unpin the specific version if I(version) is set.\nWill pin the latest version of a package if C(yes), I(version) is not set and and no pin already exists.\nWill unpin all versions of a package if C(no) and I(version) is not set.\nThis is ignored when C(state=absent).",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.2.8",
+          "suboptions": {}
+        },
+        "proxy_password": {
+          "aliases": [],
+          "description": "Proxy password used to install Chocolatey and the package.\nThis value is exposed as a command argument and any privileged account can see this value when the module is running Chocolatey, define the password on the global config level with M(win_chocolatey_config) with name C(proxyPassword) to avoid this.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.4",
+          "suboptions": {}
+        },
+        "proxy_url": {
+          "aliases": [],
+          "description": "Proxy URL used to install chocolatey and the package.\nUse M(win_chocolatey_config) with the name C(proxy) to control this option globally.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.4",
+          "suboptions": {}
+        },
+        "proxy_username": {
+          "aliases": [],
+          "description": "Proxy username used to install Chocolatey and the package.\nBefore Ansible 2.7, users with double quote characters C(\") would need to be escaped with C(\\) beforehand. This is no longer necessary.\nUse M(win_chocolatey_config) with the name C(proxyUser) to control this option globally.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.4",
+          "suboptions": {}
+        },
+        "remove_dependencies": {
+          "aliases": [],
+          "description": "Remove a package's dependencies on uninstall.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.1.0",
+          "suboptions": {}
+        },
+        "skip_scripts": {
+          "aliases": [],
+          "description": "Do not run I(chocolateyInstall.ps1) or I(chocolateyUninstall.ps1) scripts when installing a package.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.2.4",
+          "suboptions": {}
+        },
+        "source": {
+          "aliases": [],
+          "description": "Specify the source to retrieve the package from.\nUse M(win_chocolatey_source) to manage global sources.\nThis value can either be the URL to a Chocolatey feed, a path to a folder containing C(.nupkg) packages or the name of a source defined by M(win_chocolatey_source).\nThis value is also used when Chocolatey is not installed as the location of the install.ps1 script and only supports URLs for this case.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "source_password": {
+          "aliases": [],
+          "description": "The password for I(source_username).\nThis value is exposed as a command argument and any privileged account can see this value when the module is running Chocolatey, define the credentials with a source with M(win_chocolatey_source) to avoid this.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.7",
+          "suboptions": {}
+        },
+        "source_username": {
+          "aliases": [],
+          "description": "A username to use with I(source) when accessing a feed that requires authentication.\nIt is recommended you define the credentials on a source with M(win_chocolatey_source) instead of passing it per task.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.7",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the package on the system.\nWhen C(absent), will ensure the package is not installed.\nWhen C(present), will ensure the package is installed.\nWhen C(downgrade), will allow Chocolatey to downgrade a package if I(version) is older than the installed version.\nWhen C(latest), will ensure the package is installed to the latest available version.\nWhen C(reinstalled), will uninstall and reinstall the package.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "downgrade",
+            "latest",
+            "present",
+            "reinstalled"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [
+            "execution_timeout"
+          ],
+          "description": "The time to allow chocolatey to finish before timing out.",
+          "default": "2700",
+          "type": "int",
+          "required": false,
+          "version_added": "0.2.3",
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Used when downloading the Chocolatey install script if Chocolatey is not already installed, this does not affect the Chocolatey package install process.\nWhen C(no), no SSL certificates will be validated.\nThis should only be used on personally controlled sites using self-signed certificate.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.2.7",
+          "suboptions": {}
+        },
+        "version": {
+          "aliases": [],
+          "description": "Specific version of the package to be installed.\nWhen I(state) is set to C(absent), will uninstall the specific version otherwise all versions of that package will be removed.\nIf a different version of package is installed, I(state) must be C(latest) or I(force) set to C(yes) to install the desired version.\nProvide as a string (e.g. C('6.1')), otherwise it is considered to be a floating-point number and depending on the locale could become C(6,1), which will cause a failure.\nIf I(name) is set to C(chocolatey) and Chocolatey is not installed on the host, this will be the version of Chocolatey that is installed. You can also set the C(chocolateyVersion) environment var.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "chocolatey >= 0.10.5 (will be upgraded if older)"
+      ],
+      "short_description": "Manage packages using chocolatey",
+      "version_added": "0.1.9"
+    },
+    "examples": "\n- name: Install git\n  win_chocolatey:\n    name: git\n    state: present\n\n- name: Upgrade installed packages\n  win_chocolatey:\n    name: all\n    state: latest\n\n- name: Install notepadplusplus version 6.6\n  win_chocolatey:\n    name: notepadplusplus\n    version: '6.6'\n\n- name: Install notepadplusplus 32 bit version\n  win_chocolatey:\n    name: notepadplusplus\n    architecture: x86\n\n- name: Install git from specified repository\n  win_chocolatey:\n    name: git\n    source: https://someserver/api/v2/\n\n- name: Install git from a pre configured source (win_chocolatey_source)\n  win_chocolatey:\n    name: git\n    source: internal_repo\n\n- name: Ensure Chocolatey itself is installed and use internal repo as source\n  win_chocolatey:\n    name: chocolatey\n    source: http://someserver/chocolatey\n\n- name: Uninstall git\n  win_chocolatey:\n    name: git\n    state: absent\n\n- name: Install multiple packages\n  win_chocolatey:\n    name:\n    - procexp\n    - putty\n    - windirstat\n    state: present\n\n- name: Install multiple packages sequentially\n  win_chocolatey:\n    name: '{{ item }}'\n    state: present\n  loop:\n  - procexp\n  - putty\n  - windirstat\n\n- name: Uninstall multiple packages\n  win_chocolatey:\n    name:\n    - procexp\n    - putty\n    - windirstat\n    state: absent\n\n- name: Uninstall a package and dependencies\n  win_chocolatey:\n    name: audacity-lame\n    remove_dependencies: yes\n    state: absent\n\n- name: Install curl using proxy\n  win_chocolatey:\n    name: curl\n    proxy_url: http://proxy-server:8080/\n    proxy_username: joe\n    proxy_password: p@ssw0rd\n\n- name: Install a package that requires 'become'\n  win_chocolatey:\n    name: officepro2013\n  become: yes\n  become_user: Administrator\n  become_method: runas\n\n- name: install and pin Notepad++ at 7.6.3\n  win_chocolatey:\n    name: notepadplusplus\n    version: 7.6.3\n    pinned: yes\n    state: present\n\n- name: remove all pins for Notepad++ on all versions\n  win_chocolatey:\n    name: notepadplusplus\n    pinned: no\n    state: present\n"
+  },
+  "chocolatey.chocolatey.win_chocolatey_config": {
+    "doc": {
+      "description": "Used to manage Chocolatey config settings as well as unset the values.",
+      "has_action": false,
+      "options": {
+        "name": {
+          "aliases": [],
+          "description": "The name of the config setting to manage.\nSee U(https://chocolatey.org/docs/chocolatey-configuration) for a list of valid configuration settings that can be changed.\nAny config values that contain encrypted values like a password are not idempotent as the plaintext value cannot be read.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "When C(absent), it will ensure the setting is unset or blank.\nWhen C(present), it will ensure the setting is set to the value of I(value).",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "value": {
+          "aliases": [],
+          "description": "Used when C(state=present) that contains the value to set for the config setting.\nCannot be null or an empty string, use C(state=absent) to unset a config value instead.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manages Chocolatey config settings",
+      "version_added": "0.2.7"
+    },
+    "examples": "\n- name: Set the cache location\n  win_chocolatey_config:\n    name: cacheLocation\n    state: present\n    value: D:\\chocolatey_temp\n\n- name: Unset the cache location\n  win_chocolatey_config:\n    name: cacheLocation\n    state: absent\n"
+  },
+  "chocolatey.chocolatey.win_chocolatey_facts": {
+    "doc": {
+      "description": "This module shows information from Chocolatey, such as installed packages, configuration, feature and sources.",
+      "has_action": false,
+      "notes": "Chocolatey must be installed beforehand, use M(win_chocolatey) to do this.",
+      "short_description": "Create a facts collection for Chocolatey",
+      "version_added": "0.2.8"
+    },
+    "examples": "\n- name: Gather facts from chocolatey\n  win_chocolatey_facts:\n\n- name: Displays the Configuration\n  debug:\n    var: ansible_chocolatey.config\n\n- name: Displays the Feature\n  debug:\n    var: ansible_chocolatey.feature\n\n- name: Displays the Sources\n  debug:\n    var: ansible_chocolatey.sources\n\n- name: Displays the Packages\n  debug:\n    var: ansible_chocolatey.packages\n"
+  },
+  "chocolatey.chocolatey.win_chocolatey_feature": {
+    "doc": {
+      "description": "Used to enable or disable features in Chocolatey.",
+      "has_action": false,
+      "options": {
+        "name": {
+          "aliases": [],
+          "description": "The name of the feature to manage.\nRun C(choco.exe feature list) to get a list of features that can be managed.\nFor a list of options see L(Chocolatey feature docs,https://chocolatey.org/docs/chocolatey-configuration#features)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "When C(disabled) then the feature will be disabled.\nWhen C(enabled) then the feature will be enabled.",
+          "default": "enabled",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "disabled",
+            "enabled"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manages Chocolatey features",
+      "version_added": "0.2.7"
+    },
+    "examples": "\n- name: Disable file checksum matching\n  win_chocolatey_feature:\n    name: checksumFiles\n    state: disabled\n\n- name: Stop Chocolatey on the first package failure\n  win_chocolatey_feature:\n    name: stopOnFirstPackageFailure\n    state: enabled\n"
+  },
+  "chocolatey.chocolatey.win_chocolatey_source": {
+    "doc": {
+      "description": "Used to managed Chocolatey sources configured on the client.\nRequires Chocolatey to be already installed on the remote host.",
+      "has_action": false,
+      "options": {
+        "admin_only": {
+          "aliases": [],
+          "description": "Makes the source visible to Administrators only.\nRequires Chocolatey >= 0.10.8.\nWhen creating a new source, this defaults to C(no).",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "allow_self_service": {
+          "aliases": [],
+          "description": "Allow the source to be used with self-service\nRequires Chocolatey >= 0.10.4.\nWhen creating a new source, this defaults to C(no).",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "bypass_proxy": {
+          "aliases": [],
+          "description": "Bypass the proxy when using this source.\nRequires Chocolatey >= 0.10.4.\nWhen creating a new source, this defaults to C(no).",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "certificate": {
+          "aliases": [],
+          "description": "The path to a .pfx file to use for X509 authenticated feeds.\nRequires Chocolatey >= 0.9.10.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "certificate_password": {
+          "aliases": [],
+          "description": "The password for I(certificate) if required.\nRequires Chocolatey >= 0.9.10.",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the source to configure.",
+          "required": true,
+          "suboptions": {}
+        },
+        "priority": {
+          "aliases": [],
+          "description": "The priority order of this source compared to other sources, lower is better.\nAll priorities above C(0) will be evaluated first, then zero-based values will be evaluated in config file order.\nRequires Chocolatey >= 0.9.9.9.\nWhen creating a new source, this defaults to C(0).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "source": {
+          "aliases": [],
+          "description": "The file/folder/url of the source.\nRequired when I(state) is C(present) or C(disabled) and the source does not already exist.",
+          "required": false,
+          "suboptions": {}
+        },
+        "source_password": {
+          "aliases": [],
+          "description": "The password for I(source_username).\nRequired if I(source_username) is set.",
+          "required": false,
+          "suboptions": {}
+        },
+        "source_username": {
+          "aliases": [],
+          "description": "The username used to access I(source).",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "When C(absent), will remove the source.\nWhen C(disabled), will ensure the source exists but is disabled.\nWhen C(present), will ensure the source exists and is enabled.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "absent",
+            "disabled",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "update_password": {
+          "aliases": [],
+          "description": "When C(always), the module will always set the password and report a change if I(certificate_password) or I(source_password) is set.\nWhen C(on_create), the module will only set the password if the source is being created.",
+          "default": "always",
+          "required": false,
+          "choices": [
+            "always",
+            "on_create"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manages Chocolatey sources",
+      "version_added": "0.2.7"
+    },
+    "examples": "\n- name: Remove the default public source\n  win_chocolatey_source:\n    name: chocolatey\n    state: absent\n\n- name: Add new internal source\n  win_chocolatey_source:\n    name: internal repo\n    state: present\n    source: http://chocolatey-server/chocolatey\n\n- name: Create HTTP source with credentials\n  win_chocolatey_source:\n    name: internal repo\n    state: present\n    source: https://chocolatey-server/chocolatey\n    source_username: username\n    source_password: password\n\n- name: Disable Chocolatey source\n  win_chocolatey_source:\n    name: chocolatey\n    state: disabled\n"
+  }
+}

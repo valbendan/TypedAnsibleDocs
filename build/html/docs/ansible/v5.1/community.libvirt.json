@@ -1,0 +1,265 @@
+{
+  "community.libvirt.virt": {
+    "doc": {
+      "description": "Manages virtual machines supported by I(libvirt).",
+      "has_action": false,
+      "options": {
+        "autostart": {
+          "aliases": [],
+          "description": "start VM at host startup.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "command": {
+          "aliases": [],
+          "description": "In addition to state management, various non-idempotent commands are available.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "create",
+            "define",
+            "destroy",
+            "freemem",
+            "get_xml",
+            "info",
+            "list_vms",
+            "nodeinfo",
+            "pause",
+            "shutdown",
+            "start",
+            "status",
+            "stop",
+            "undefine",
+            "unpause",
+            "virttype"
+          ],
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [
+            "guest"
+          ],
+          "description": "name of the guest VM being managed. Note that VM must be previously defined with xml.\nThis option is required unless I(command) is C(list_vms) or C(info).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Note that there may be some lag for state requests like C(shutdown) since these refer only to VM states. After starting a guest, it may not be immediately accessible. state and command are mutually exclusive except when command=list_vms. In this case all VMs in specified state will be listed.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "destroyed",
+            "paused",
+            "running",
+            "shutdown"
+          ],
+          "suboptions": {}
+        },
+        "uri": {
+          "aliases": [],
+          "description": "libvirt connection uri.",
+          "default": "qemu:///system",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "xml": {
+          "aliases": [],
+          "description": "XML document used with the define command.\nMust be raw XML content using C(lookup). XML cannot be reference to a file.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "libvirt-python"
+      ],
+      "short_description": "Manages virtual machines supported by libvirt"
+    },
+    "examples": "\n# a playbook task line:\n- community.libvirt.virt:\n    name: alpha\n    state: running\n\n# /usr/bin/ansible invocations\n# ansible host -m virt -a \"name=alpha command=status\"\n# ansible host -m virt -a \"name=alpha command=get_xml\"\n# ansible host -m virt -a \"name=alpha command=create uri=lxc:///\"\n\n# defining and launching an LXC guest\n- name: define vm\n  community.libvirt.virt:\n    command: define\n    xml: \"{{ lookup('template', 'container-template.xml.j2') }}\"\n    uri: 'lxc:///'\n- name: start vm\n  community.libvirt.virt:\n    name: foo\n    state: running\n    uri: 'lxc:///'\n\n# setting autostart on a qemu VM (default uri)\n- name: set autostart for a VM\n  community.libvirt.virt:\n    name: foo\n    autostart: yes\n\n# Defining a VM and making is autostart with host. VM will be off after this task\n- name: define vm from xml and set autostart\n  community.libvirt.virt:\n    command: define\n    xml: \"{{ lookup('template', 'vm_template.xml.j2') }}\"\n    autostart: yes\n\n# Listing VMs\n- name: list all VMs\n  community.libvirt.virt:\n    command: list_vms\n  register: all_vms\n\n- name: list only running VMs\n  community.libvirt.virt:\n    command: list_vms\n    state: running\n  register: running_vms\n"
+  },
+  "community.libvirt.virt_net": {
+    "doc": {
+      "description": "Manage I(libvirt) networks.",
+      "has_action": false,
+      "options": {
+        "autostart": {
+          "aliases": [],
+          "description": "Specify if a given network should be started automatically on system boot.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "command": {
+          "aliases": [],
+          "description": "in addition to state management, various non-idempotent commands are available. See examples. Modify was added in version 2.1",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "define",
+            "create",
+            "start",
+            "stop",
+            "destroy",
+            "undefine",
+            "get_xml",
+            "list_nets",
+            "facts",
+            "info",
+            "status",
+            "modify"
+          ],
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [
+            "network"
+          ],
+          "description": "name of the network being managed. Note that network must be previously defined with xml.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "specify which state you want a network to be in. If 'active', network will be started. If 'present', ensure that network is present but do not change its state; if it's missing, you need to specify xml argument. If 'inactive', network will be stopped. If 'undefined' or 'absent', network will be removed from I(libvirt) configuration.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "active",
+            "inactive",
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "uri": {
+          "aliases": [],
+          "description": "libvirt connection uri.",
+          "default": "qemu:///system",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "xml": {
+          "aliases": [],
+          "description": "XML document used with the define command.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "python-libvirt",
+        "python-lxml"
+      ],
+      "short_description": "Manage libvirt network configuration"
+    },
+    "examples": "\n# Define a new network\n- community.libvirt.virt_net:\n    command: define\n    name: br_nat\n    xml: '{{ lookup(\"template\", \"network/bridge.xml.j2\") }}'\n\n# Start a network\n- community.libvirt.virt_net:\n    command: create\n    name: br_nat\n\n# List available networks\n- community.libvirt.virt_net:\n    command: list_nets\n\n# Get XML data of a specified network\n- community.libvirt.virt_net:\n    command: get_xml\n    name: br_nat\n\n# Stop a network\n- community.libvirt.virt_net:\n    command: destroy\n    name: br_nat\n\n# Undefine a network\n- community.libvirt.virt_net:\n    command: undefine\n    name: br_nat\n\n# Gather facts about networks\n# Facts will be available as 'ansible_libvirt_networks'\n- community.libvirt.virt_net:\n    command: facts\n\n# Gather information about network managed by 'libvirt' remotely using uri\n- community.libvirt.virt_net:\n    command: info\n    uri: '{{ item }}'\n  with_items: '{{ libvirt_uris }}'\n  register: networks\n\n# Ensure that a network is active (needs to be defined and built first)\n- community.libvirt.virt_net:\n    state: active\n    name: br_nat\n\n# Ensure that a network is inactive\n- community.libvirt.virt_net:\n    state: inactive\n    name: br_nat\n\n# Ensure that a given network will be started at boot\n- community.libvirt.virt_net:\n    autostart: yes\n    name: br_nat\n\n# Disable autostart for a given network\n- community.libvirt.virt_net:\n    autostart: no\n    name: br_nat\n\n# Add a new host in the dhcp pool\n- community.libvirt.virt_net:\n    name: br_nat\n    command: modify\n    xml: \"<host mac='FC:C2:33:00:6c:3c' name='my_vm' ip='192.168.122.30'/>\"\n"
+  },
+  "community.libvirt.virt_pool": {
+    "doc": {
+      "description": "Manage I(libvirt) storage pools.",
+      "has_action": false,
+      "options": {
+        "autostart": {
+          "aliases": [],
+          "description": "Specify if a given storage pool should be started automatically on system boot.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "command": {
+          "aliases": [],
+          "description": "in addition to state management, various non-idempotent commands are available. See examples.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "define",
+            "build",
+            "create",
+            "start",
+            "stop",
+            "destroy",
+            "delete",
+            "undefine",
+            "get_xml",
+            "list_pools",
+            "facts",
+            "info",
+            "status",
+            "refresh"
+          ],
+          "suboptions": {}
+        },
+        "mode": {
+          "aliases": [],
+          "description": "Pass additional parameters to 'build' or 'delete' commands.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "new",
+            "repair",
+            "resize",
+            "no_overwrite",
+            "overwrite",
+            "normal",
+            "zeroed"
+          ],
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [
+            "pool"
+          ],
+          "description": "name of the storage pool being managed. Note that pool must be previously defined with xml.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "specify which state you want a storage pool to be in. If 'active', pool will be started. If 'present', ensure that pool is present but do not change its state; if it's missing, you need to specify xml argument. If 'inactive', pool will be stopped. If 'undefined' or 'absent', pool will be removed from I(libvirt) configuration. If 'deleted', pool contents will be deleted and then pool undefined.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "active",
+            "inactive",
+            "present",
+            "absent",
+            "undefined",
+            "deleted"
+          ],
+          "suboptions": {}
+        },
+        "uri": {
+          "aliases": [],
+          "description": "I(libvirt) connection uri.",
+          "default": "qemu:///system",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "xml": {
+          "aliases": [],
+          "description": "XML document used with the define command.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "python-libvirt",
+        "python-lxml"
+      ],
+      "short_description": "Manage libvirt storage pools"
+    },
+    "examples": "\n# Define a new storage pool\n- community.libvirt.virt_pool:\n    command: define\n    name: vms\n    xml: '{{ lookup(\"template\", \"pool/dir.xml.j2\") }}'\n\n# Build a storage pool if it does not exist\n- community.libvirt.virt_pool:\n    command: build\n    name: vms\n\n# Start a storage pool\n- community.libvirt.virt_pool:\n    command: create\n    name: vms\n\n# List available pools\n- community.libvirt.virt_pool:\n    command: list_pools\n\n# Get XML data of a specified pool\n- community.libvirt.virt_pool:\n    command: get_xml\n    name: vms\n\n# Stop a storage pool\n- community.libvirt.virt_pool:\n    command: destroy\n    name: vms\n\n# Delete a storage pool (destroys contents)\n- community.libvirt.virt_pool:\n    command: delete\n    name: vms\n\n# Undefine a storage pool\n- community.libvirt.virt_pool:\n    command: undefine\n    name: vms\n\n# Gather facts about storage pools\n# Facts will be available as 'ansible_libvirt_pools'\n- community.libvirt.virt_pool:\n    command: facts\n\n# Gather information about pools managed by 'libvirt' remotely using uri\n- community.libvirt.virt_pool:\n    command: info\n    uri: '{{ item }}'\n  with_items: '{{ libvirt_uris }}'\n  register: storage_pools\n\n# Ensure that a pool is active (needs to be defined and built first)\n- community.libvirt.virt_pool:\n    state: active\n    name: vms\n\n# Ensure that a pool is inactive\n- community.libvirt.virt_pool:\n    state: inactive\n    name: vms\n\n# Ensure that a given pool will be started at boot\n- community.libvirt.virt_pool:\n    autostart: yes\n    name: vms\n\n# Disable autostart for a given pool\n- community.libvirt.virt_pool:\n    autostart: no\n    name: vms\n"
+  }
+}

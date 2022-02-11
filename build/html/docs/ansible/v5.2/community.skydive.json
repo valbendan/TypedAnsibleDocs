@@ -1,0 +1,327 @@
+{
+  "community.skydive.skydive_capture": {
+    "doc": {
+      "description": "This module manages flow capture on interfaces. The Gremlin expression is continuously evaluated which means that it is possible to define a capture on nodes that do not exist yet.\nIt is useful when you want to start a capture on all OpenvSwitch whatever the number of Skydive agents you will start.\nWhile starting the capture, user can specify the capture name, capture description and capture type optionally.",
+      "has_action": false,
+      "notes": "This module must be run locally, which can be achieved by specifying C(connection: local).",
+      "options": {
+        "capture_name": {
+          "aliases": [],
+          "description": "To define flow capture name.",
+          "default": "",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "Configures a text string to be associated with the instance of this object.",
+          "default": "",
+          "required": false,
+          "suboptions": {}
+        },
+        "extra_tcp_metric": {
+          "aliases": [],
+          "description": "To define flow capture ExtraTCPMetric.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "interface_name": {
+          "aliases": [],
+          "description": "To define flow capture interface name.",
+          "required": false,
+          "suboptions": {}
+        },
+        "ip_defrag": {
+          "aliases": [],
+          "description": "To define flow capture IPDefrag.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "layer_key_mode": {
+          "aliases": [],
+          "description": "To define flow capture Layer KeyMode.",
+          "default": "L2",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "provider": {
+          "aliases": [],
+          "description": "A dict object containing connection details.",
+          "required": false,
+          "suboptions": {
+            "endpoint": {
+              "aliases": [],
+              "description": "Specifies the hostname/address along with the port as C(localhost:8082)for connecting to the remote instance of SKYDIVE client over the REST API.",
+              "required": true,
+              "suboptions": {}
+            },
+            "insecure": {
+              "aliases": [],
+              "description": "Ignore SSL certification verification.",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "password": {
+              "aliases": [],
+              "description": "Specifies the password to use to authenticate the connection to the remote instance of SKYDIVE client.",
+              "required": false,
+              "suboptions": {}
+            },
+            "ssl": {
+              "aliases": [],
+              "description": "Specifies the ssl parameter that decides if the connection type shall be http or https.",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "user": {
+              "aliases": [],
+              "description": "Configures the username to use to authenticate the connection to the remote instance of SKYDIVE client.",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "query": {
+          "aliases": [],
+          "description": "It's the complete gremlin query which the users can input, I(G.V().Has('Name', 'eth0', 'Type', 'device')), to create the capture. And, if the user directly inputs the gremlin query then user is not required to input any other module parameter as gremlin query takes care of creating the flow capture.",
+          "required": false,
+          "suboptions": {}
+        },
+        "reassemble_tcp": {
+          "aliases": [],
+          "description": "To define flow capture ReassembleTCP.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the flow capture. If value is I(present) flow capture will be created else if it is I(absent) it will be deleted.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "To define flow capture interface type.",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "skydive-client"
+      ],
+      "short_description": "Module which manages flow capture on interfaces"
+    },
+    "examples": "\n- name: start a new flow capture directly from gremlin query\n  community.skydive.skydive_capture:\n    query: G.V().Has('Name', 'eth0', 'Type', 'device')\n    state: present\n    provider:\n      endpoint: localhost:8082\n      username: admin\n      password: admin\n\n- name: stop the flow capture directly from gremlin query\n  community.skydive.skydive_capture:\n    query: G.V().Has('Name', 'eth0', 'Type', 'device')\n    state: absent\n    provider:\n      endpoint: localhost:8082\n      username: admin\n      password: admin\n\n- name: start a new flow capture from user's input\n  community.skydive.skydive_capture:\n    interface_name: Node1\n    type: myhost\n    capture_name: test_capture\n    description: test description\n    extra_tcp_metric: true\n    ip_defrag: true\n    reassemble_tcp: true\n    state: present\n    provider:\n      endpoint: localhost:8082\n      username: admin\n      password: admin\n\n- name: stop the flow capture\n  community.skydive.skydive_capture:\n    interface_name: Node1\n    type: myhost\n    capture_name: test_capture\n    description: test description\n    extra_tcp_metric: true\n    ip_defrag: true\n    reassemble_tcp: true\n    state: absent\n    provider:\n      endpoint: localhost:8082\n      username: admin\n      password: admin\n"
+  },
+  "community.skydive.skydive_edge": {
+    "doc": {
+      "description": "This module handles setting up edges between two nodes based on the relationship type to the Skydive topology.",
+      "has_action": false,
+      "notes": "This module must be run locally, which can be achieved by specifying C(connection: local).",
+      "options": {
+        "child_node": {
+          "aliases": [],
+          "description": "To defined the second node of the link, it can be either an ID or a gremlin expression",
+          "required": true,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "To define the host of the node.",
+          "default": "",
+          "required": false,
+          "suboptions": {}
+        },
+        "metadata": {
+          "aliases": [],
+          "description": "To define metadata for the edge.",
+          "required": false,
+          "suboptions": {}
+        },
+        "parent_node": {
+          "aliases": [],
+          "description": "To defined the first node of the link, it can be either an ID or a gremlin expression",
+          "required": true,
+          "suboptions": {}
+        },
+        "provider": {
+          "aliases": [],
+          "description": "A dict object containing connection details.",
+          "required": false,
+          "suboptions": {
+            "endpoint": {
+              "aliases": [],
+              "description": "Specifies the hostname/address along with the port as C(localhost:8082)for connecting to the remote instance of SKYDIVE client over the REST API.",
+              "required": true,
+              "suboptions": {}
+            },
+            "insecure": {
+              "aliases": [],
+              "description": "Ignore SSL certification verification.",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "password": {
+              "aliases": [],
+              "description": "Specifies the password to use to authenticate the connection to the remote instance of SKYDIVE client.",
+              "required": false,
+              "suboptions": {}
+            },
+            "ssl": {
+              "aliases": [],
+              "description": "Specifies the ssl parameter that decides if the connection type shall be http or https.",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "user": {
+              "aliases": [],
+              "description": "Configures the username to use to authenticate the connection to the remote instance of SKYDIVE client.",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "relation_type": {
+          "aliases": [],
+          "description": "To define relation type of the node I(ownership, layer2, layer3).",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the Skydive Edge. If value is I(present) new edge will be created else if it is I(absent) it will be deleted.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "skydive-client"
+      ],
+      "short_description": "Module to add edges to Skydive topology"
+    },
+    "examples": "\n- name: create tor\n  community.skydive.skydive_node:\n    name: 'TOR'\n    node_type: \"fabric\"\n    seed: TOR\n    metadata:\n      Model: Cisco xxxx\n    provider:\n      endpoint: localhost:8082\n      username: admin\n      password: admin\n  register: tor_result\n\n- name: create port 1\n  community.skydive.skydive_node:\n    name: 'PORT1'\n    node_type: 'fabric'\n    seed: PORT1\n    provider:\n      endpoint: localhost:8082\n      username: admin\n      password: admin\n  register: port1_result\n\n- name: create port 2\n  community.skydive.skydive_node:\n    name: 'PORT2'\n    node_type: 'fabric'\n    seed: PORT2\n    provider:\n      endpoint: localhost:8082\n      username: admin\n      password: admin\n  register: port2_result\n\n- name: link node tor and port 1\n  community.skydive.skydive_edge:\n    parent_node: \"{{ tor_result.UUID }}\"\n    child_node: \"{{ port1_result.UUID }}\"\n    relation_type: ownership\n    state: present\n    provider:\n      endpoint: localhost:8082\n      username: admin\n      password: admin\n\n- name: link node tor and port 2\n  community.skydive.skydive_edge:\n    parent_node: \"{{ tor_result.UUID }}\"\n    child_node: \"{{ port2_result.UUID }}\"\n    relation_type: ownership\n    state: present\n    provider:\n      endpoint: localhost:8082\n      username: admin\n      password: admin\n\n- name: update link node tor and port 1 relation\n  community.skydive.skydive_edge:\n    parent_node: \"{{ tor_result.UUID }}\"\n    child_node: \"{{ port2_result.UUID }}\"\n    relation_type: layer2\n    state: upadte\n    provider:\n      endpoint: localhost:8082\n      username: admin\n      password: admin\n\n- name: Unlink tor and port 2\n  community.skydive.skydive_edge:\n    parent_node: \"{{ tor_result.UUID }}\"\n    child_node: \"{{ port2_result.UUID }}\"\n    relation_type: ownership\n    state: absent\n    provider:\n      endpoint: localhost:8082\n      username: admin\n      password: admin\n\n- name: link tor and port 2 via Gremlin expression\n  community.skydive.skydive_edge:\n    parent_node: G.V().Has('Name', 'TOR')\n    child_node: G.V().Has('Name', 'PORT2')\n    relation_type: ownership\n    state: present\n    provider:\n      endpoint: localhost:8082\n      username: admin\n      password: admin\n\n- name: Unlink tor and port 2 via Gremlin expression\n  community.skydive.skydive_edge:\n    parent_node: G.V().Has('Name', 'TOR')\n    child_node: G.V().Has('Name', 'PORT2')\n    relation_type: ownership\n    state: absent\n    provider:\n      endpoint: localhost:8082\n      username: admin\n      password: admin\n"
+  },
+  "community.skydive.skydive_node": {
+    "doc": {
+      "description": "This module handles adding node to the Skydive topology.",
+      "has_action": false,
+      "notes": "This module must be run locally, which can be achieved by specifying C(connection: local).",
+      "options": {
+        "host": {
+          "aliases": [],
+          "description": "To define host for the node.",
+          "required": false,
+          "suboptions": {}
+        },
+        "metadata": {
+          "aliases": [],
+          "description": "To define metadata for the node.",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "To define name for the node.",
+          "required": true,
+          "suboptions": {}
+        },
+        "node_type": {
+          "aliases": [],
+          "description": "To define type for the node.",
+          "required": true,
+          "suboptions": {}
+        },
+        "provider": {
+          "aliases": [],
+          "description": "A dict object containing connection details.",
+          "required": false,
+          "suboptions": {
+            "endpoint": {
+              "aliases": [],
+              "description": "Specifies the hostname/address along with the port as C(localhost:8082)for connecting to the remote instance of SKYDIVE client over the REST API.",
+              "required": true,
+              "suboptions": {}
+            },
+            "insecure": {
+              "aliases": [],
+              "description": "Ignore SSL certification verification.",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "password": {
+              "aliases": [],
+              "description": "Specifies the password to use to authenticate the connection to the remote instance of SKYDIVE client.",
+              "required": false,
+              "suboptions": {}
+            },
+            "ssl": {
+              "aliases": [],
+              "description": "Specifies the ssl parameter that decides if the connection type shall be http or https.",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "user": {
+              "aliases": [],
+              "description": "Configures the username to use to authenticate the connection to the remote instance of SKYDIVE client.",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "seed": {
+          "aliases": [],
+          "description": "used to generate the UUID of the node",
+          "default": "",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the Skydive Node. If value is I(present) new node will be created else if it is I(absent) it will be deleted.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "update",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "skydive-client"
+      ],
+      "short_description": "Module which add nodes to Skydive topology"
+    },
+    "examples": "\n- name: create tor node\n  community.skydive.skydive_node:\n    name: TOR\n    node_type: fabric\n    seed: TOR1\n    metadata:\n      Model: Cisco 5300\n    state: present\n    provider:\n      endpoint: localhost:8082\n      username: admin\n      password: admin\n\n- name: update tor node\n  community.skydive.skydive_node:\n    name: TOR\n    node_type: host\n    seed: TOR1\n    metadata:\n      Model: Cisco 3400\n    state: update\n    provider:\n      endpoint: localhost:8082\n      username: admin\n      password: admin\n\n- name: Delete the tor node\n  community.skydive.skydive_node:\n    name: TOR\n    node_type: host\n    seed: TOR1\n    metadata:\n      Model: Cisco 3400\n    state: absent\n    provider:\n      endpoint: localhost:8082\n      username: admin\n      password: admin\n"
+  }
+}

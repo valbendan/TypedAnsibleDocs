@@ -1,0 +1,1579 @@
+{
+  "netapp.storagegrid.na_sg_grid_account": {
+    "doc": {
+      "description": "Create, Update, Delete Tenant Accounts on NetApp StorageGRID.",
+      "has_action": false,
+      "notes": "The modules prefixed with C(na_sg) are built to manage NetApp StorageGRID.",
+      "options": {
+        "account_id": {
+          "aliases": [],
+          "description": "Account Id of the tenant.\nMay be used for modify or delete operation.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "allow_platform_services": {
+          "aliases": [],
+          "description": "Allows tenant to use platform services features such as CloudMirror.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_url": {
+          "aliases": [],
+          "description": "The url to the StorageGRID Admin Node REST API.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "auth_token": {
+          "aliases": [],
+          "description": "The authorization token for the API request",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "management": {
+          "aliases": [],
+          "description": "Whether the tenant can login to the StorageGRID tenant portal.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the tenant.\nRequired for create or modify operation.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Root password for tenant account.\nRequires root privilege.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "protocol": {
+          "aliases": [],
+          "description": "Object Storage protocol used by the tenancy.\nRequired for create operation.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "s3",
+            "swift"
+          ],
+          "suboptions": {}
+        },
+        "quota_size": {
+          "aliases": [],
+          "description": "Quota to apply to the tenant specified in I(quota_size_unit).\nIf you intend to have no limits, assign C(0).",
+          "default": "0",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "quota_size_unit": {
+          "aliases": [],
+          "description": "The unit used to interpret the size parameter.",
+          "default": "gb",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "bytes",
+            "b",
+            "kb",
+            "mb",
+            "gb",
+            "tb",
+            "pb",
+            "eb",
+            "zb",
+            "yb"
+          ],
+          "suboptions": {}
+        },
+        "root_access_group": {
+          "aliases": [],
+          "description": "Existing federated group to have initial Root Access permissions for the tenant.\nMust begin with C(federated-group/)",
+          "type": "str",
+          "required": false,
+          "version_added": "20.11.0",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified account should exist or not.\nRequired for all operations.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "update_password": {
+          "aliases": [],
+          "description": "Choose when to update the password.\nWhen set to C(always), the password will always be updated.\nWhen set to C(on_create) the password will only be set upon a new user creation.",
+          "default": "on_create",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "on_create",
+            "always"
+          ],
+          "suboptions": {}
+        },
+        "use_own_identity_source": {
+          "aliases": [],
+          "description": "Whether the tenant account should configure its own identity source.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Should https certificates be validated?",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp StorageGRID manage accounts.",
+      "version_added": "20.6.0"
+    },
+    "examples": "\n  - name: create a tenant account\n    netapp.storagegrid.na_sg_grid_account:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      validate_certs: false\n      state: present\n      name: storagegrid-tenant-1\n      protocol: s3\n      management: true\n      use_own_identity_source: false\n      allow_platform_services: false\n      password: \"tenant-password\"\n      quota_size: 0\n\n  - name: update a tenant account\n    netapp.storagegrid.na_sg_grid_account:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      validate_certs: false\n      state: present\n      name: storagegrid-tenant-1\n      protocol: s3\n      management: true\n      use_own_identity_source: false\n      allow_platform_services: true\n      password: \"tenant-password\"\n      quota_size: 10240\n\n  - name: delete a tenant account\n    netapp.storagegrid.na_sg_grid_account:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      validate_certs: false\n      state: absent\n      name: storagegrid-tenant-1\n      protocol: s3\n"
+  },
+  "netapp.storagegrid.na_sg_grid_certificate": {
+    "doc": {
+      "description": "Set and update the Storage API and Grid Management certificates on NetApp StorageGRID.",
+      "has_action": false,
+      "notes": "The modules prefixed with C(na_sg) are built to manage NetApp StorageGRID.",
+      "options": {
+        "api_url": {
+          "aliases": [],
+          "description": "The url to the StorageGRID Admin Node REST API.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "auth_token": {
+          "aliases": [],
+          "description": "The authorization token for the API request",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "ca_bundle": {
+          "aliases": [],
+          "description": "Intermediate CA certificate bundle in concatenated PEM-encoding.\nOmit if there is no intermediate CA.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "private_key": {
+          "aliases": [],
+          "description": "Certificate private key in PEM-encoding.\nRequired if I(server_certificate) is specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_certificate": {
+          "aliases": [],
+          "description": "X.509 server certificate in PEM-encoding.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified certificate should be set.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "Which certificate to update.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "storage-api",
+            "management"
+          ],
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Should https certificates be validated?",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage the Storage API and Grid Management certificates on StorageGRID.",
+      "version_added": "21.6.0"
+    },
+    "examples": "\n  - name: set storage API certificate\n    netapp.storagegrid.na_sg_grid_certificate:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      validate_certs: false\n      state: present\n      type: storage-api\n      server_certificate: |\n        -----BEGIN CERTIFICATE-----\n        MIIC6DCCAdACCQC7l4WukhKD0zANBgkqhkiG9w0BAQsFADA2MQswCQYDVQQGEwJB\n        BAMMHnNnYW4wMS5kZXYubWljcm9icmV3Lm5ldGFwcC5hdTCCASIwDQYJKoZIhvcN\n        AQEBBQADggEPADCCAQoCggEBAMvjm9I35lmKcC7ITVL8+QiZ/klvdkbfZCUQrfdy\n        71inP+XmPjs0rnkhICA9ItODteRcVlO+t7nDTfm7HgG0mJFkcJm0ffyEYrcx24qu\n        S7gXYQjRsJmrep1awoaCa20BMGuqK2WKI3IvZ7YiT22qkBqKJD+hIFffX6u3Jy+B\n        77pR6YcATtpMHW/AaOx+OX9l80dIRsRZKMDxYQ==\n        -----END CERTIFICATE-----\n      private_key: |\n        -----BEGIN PRIVATE KEY-----\n        MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDL45vSN+ZZinAu\n        L25W0+cz1Oi69AKkI7d9nbFics2ay5+7o+4rKqf3en2R4MSxiJvy+iDlOmATib5O\n        x8TN5pJ9AgMBAAECggEADDLM8tHXXUoUFihzv+BUwff8p8YcbHcXFcSes+xTd5li\n        po8lNsx/v2pQx4ByBkuaYLZGIEXOWS6gkp44xhIXgQKBgQD4Hq7862u5HLbmhrV3\n        vs8nC69b3QKBgQDacCD8d8JpwPbg8t2VjXM3UvdmgAaLUfU7O1DWV+W3jqzmDOoN\n        zWVgPbPNj0UmzvLDbgxLoxe77wjn2BHsAJVAfJ9VeQKBgGqFAegYO+wHR8lJUoa5\n        ZEe8Upy2oBtvND/0dnwO2ym2FGsBJN0Gr4NKdG5vkzLsthKkcwRm0ikwEUOUZQKE\n        K8J5yEVeo9K2v3wggtq8fYn6\n        -----END PRIVATE KEY-----\n\n"
+  },
+  "netapp.storagegrid.na_sg_grid_dns": {
+    "doc": {
+      "description": "Update NetApp StorageGRID DNS addresses.",
+      "has_action": false,
+      "notes": "The modules prefixed with C(na_sg) are built to manage NetApp StorageGRID.",
+      "options": {
+        "api_url": {
+          "aliases": [],
+          "description": "The url to the StorageGRID Admin Node REST API.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "auth_token": {
+          "aliases": [],
+          "description": "The authorization token for the API request",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "dns_servers": {
+          "aliases": [],
+          "description": "List of comma separated DNS Addresses to be updated or delete.",
+          "type": "list",
+          "required": true,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified DNS address should exist or not.\nRequired for all operations.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Should https certificates be validated?",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp StorageGRID manage external DNS servers for the grid.",
+      "version_added": "20.6.0"
+    },
+    "examples": "\n  - name: update DNS servers on StorageGRID\n    netapp.storagegrid.na_sg_grid_dns:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      validate_certs: false\n      state: present\n      dns_servers: \"x.x.x.x,xxx.xxx.xxx.xxx\"\n"
+  },
+  "netapp.storagegrid.na_sg_grid_gateway": {
+    "doc": {
+      "description": "Create or Update Load Balancer Endpoints on StorageGRID.\nThis module is idempotent if I(private_key) is not specified.\nThe module will match an existing config based on I(port) and I(display_name).\nIf multiple load balancer endpoints exist utilizing the same port and display name, use I(gateway_id) to select the intended endpoint.",
+      "has_action": false,
+      "notes": "The modules prefixed with C(na_sg) are built to manage NetApp StorageGRID.",
+      "options": {
+        "api_url": {
+          "aliases": [],
+          "description": "The url to the StorageGRID Admin Node REST API.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "auth_token": {
+          "aliases": [],
+          "description": "The authorization token for the API request",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "binding_mode": {
+          "aliases": [],
+          "description": "Binding mode to restrict accessibility of the load balancer endpoint.\nA binding mode other than I(global) requires StorageGRID 11.5 or greater.",
+          "default": "global",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "global",
+            "ha-groups",
+            "node-interfaces"
+          ],
+          "version_added": "21.9.0",
+          "suboptions": {}
+        },
+        "ca_bundle": {
+          "aliases": [],
+          "description": "Intermediate CA certificate bundle in concatenated PEM-encoding.\nOmit when there is no intermediate CA.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "default_service_type": {
+          "aliases": [],
+          "description": "The type of service to proxy through the load balancer.",
+          "default": "s3",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "s3",
+            "swift"
+          ],
+          "suboptions": {}
+        },
+        "display_name": {
+          "aliases": [],
+          "description": "A display name for the configuration.\nThis parameter can be modified if I(gateway_id) is also specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "enable_ipv4": {
+          "aliases": [],
+          "description": "Indicates whether to listen for connections on IPv4.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "enable_ipv6": {
+          "aliases": [],
+          "description": "Indicates whether to listen for connections on IPv6.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "gateway_id": {
+          "aliases": [],
+          "description": "ID of the load balancer endpoint.",
+          "type": "str",
+          "required": false,
+          "version_added": "21.9.0",
+          "suboptions": {}
+        },
+        "ha_groups": {
+          "aliases": [],
+          "description": "A set of StorageGRID HA Groups to bind the load balancer endpoint to.\nOption is ignored unless I(binding_mode=ha-groups).",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "version_added": "21.9.0",
+          "suboptions": {}
+        },
+        "node_interfaces": {
+          "aliases": [],
+          "description": "A set of StorageGRID node interfaces to bind the load balancer endpoint to.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "version_added": "21.9.0",
+          "suboptions": {
+            "interface": {
+              "aliases": [],
+              "description": "The interface to bind to. eth0 corresponds to the Grid Network, eth1 to the Admin Network, and eth2 to the Client Network.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "node": {
+              "aliases": [],
+              "description": "Name of the StorageGRID node.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "port": {
+          "aliases": [],
+          "description": "The TCP port to serve traffic on.\nThis parameter cannot be modified after the load balancer endpoint has been created.",
+          "type": "int",
+          "required": true,
+          "suboptions": {}
+        },
+        "private_key": {
+          "aliases": [],
+          "description": "Certficate private key in PEM-encoding.\nRequired if I(server_certificate) is not empty.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "secure": {
+          "aliases": [],
+          "description": "Whether the load balancer endpoint serves HTTP or HTTPS traffic.\nThis parameter cannot be modified after the load balancer endpoint has been created.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_certificate": {
+          "aliases": [],
+          "description": "X.509 server certificate in PEM-encoding.\nOmit if using default certificates.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified load balancer endpoint should be configured.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Should https certificates be validated?",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage Load balancer (gateway) endpoints on StorageGRID.",
+      "version_added": "21.7.0"
+    },
+    "examples": "\n  - name: Create and Upload Certificate to a Gateway Endpoint with global binding\n    netapp.storagegrid.na_sg_grid_gateway:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      displayName: \"FabricPool Endpoint\"\n      port: 10443\n      secure: True\n      enable_ipv4: True\n      enable_ipv6: True\n      default_service_type: \"s3\"\n      server_certificate: |\n        -----BEGIN CERTIFICATE-----\n        MIIC6DCCAdACCQC7l4WukhKD0zANBgkqhkiG9w0BAQsFADA2..swCQYDVQQGEwJB\n        BAMMHnNnYW4wMS5kZXYubWljcm9icmV3Lm5ldGFwcC5hdTCC..IwDQYJKoZIhvcN\n        AQEBBQADggEPADCCAQoCggEBAMvjm9I35lmKcC7ITVL8+QiZ..lvdkbfZCUQrfdy\n        71inP+XmPjs0rnkhICA9ItODteRcVlO+t7nDTfm7HgG0mJFk..m0ffyEYrcx24qu\n        S7gXYQjRsJmrep1awoaCa20BMGuqK2WKI3IvZ7YiT22qkBqK..+hIFffX6u3Jy+B\n        77pR6YcATtpMHW/AaOx+OX9l80dIRsRZKMDxYQ==\n        -----END CERTIFICATE-----\n      private_key: |\n        -----BEGIN PRIVATE KEY-----\n        MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIB..DL45vSN+ZZinAu\n        L25W0+cz1Oi69AKkI7d9nbFics2ay5+7o+4rKqf3en2R4MSx..vy+iDlOmATib5O\n        x8TN5pJ9AgMBAAECggEADDLM8tHXXUoUFihzv+BUwff8p8Yc..cXFcSes+xTd5li\n        po8lNsx/v2pQx4ByBkuaYLZGIEXOWS6gkp44xhIXgQKBgQD4..7862u5HLbmhrV3\n        vs8nC69b3QKBgQDacCD8d8JpwPbg8t2VjXM3UvdmgAaLUfU7..DWV+W3jqzmDOoN\n        zWVgPbPNj0UmzvLDbgxLoxe77wjn2BHsAJVAfJ9VeQKBgGqF..gYO+wHR8lJUoa5\n        ZEe8Upy2oBtvND/0dnwO2ym2FGsBJN0Gr4NKdG5vkzLsthKk..Rm0ikwEUOUZQKE\n        K8J5yEVeo9K2v3wggtq8fYn6\n        -----END PRIVATE KEY-----\n      validate_certs: false\n\n  - name: Create a HTTP Gateway Endpoint with HA Group Binding\n    netapp.storagegrid.na_sg_grid_gateway:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      displayName: \"App Endpoint 1\"\n      port: 10501\n      secure: false\n      enable_ipv4: True\n      enable_ipv6: True\n      default_service_type: \"s3\"\n      binding_mode: ha-groups\n      ha_groups: site1_ha_group\n      validate_certs: false\n\n  - name: Create a HTTP Gateway Endpoint with Node Interface Binding\n    netapp.storagegrid.na_sg_grid_gateway:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      displayName: \"App Endpoint 2\"\n      port: 10502\n      secure: false\n      enable_ipv4: True\n      enable_ipv6: True\n      default_service_type: \"s3\"\n      binding_mode: node-interfaces\n      node_interfaecs:\n      - node: SITE1_ADM1\n        interface: eth2\n      - node: SITE2_ADM1\n        interface: eth2\n      validate_certs: false\n\n  - name: Delete Gateway Endpoint\n    netapp.storagegrid.na_sg_grid_gateway:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      displayName: \"App Endpoint 2\"\n      port: 10502\n      default_service_type: \"s3\"\n      validate_certs: false\n"
+  },
+  "netapp.storagegrid.na_sg_grid_group": {
+    "doc": {
+      "description": "Create, Update, Delete Administration Groups within NetApp StorageGRID.",
+      "has_action": false,
+      "notes": "The modules prefixed with C(na_sg) are built to manage NetApp StorageGRID.",
+      "options": {
+        "api_url": {
+          "aliases": [],
+          "description": "The url to the StorageGRID Admin Node REST API.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "auth_token": {
+          "aliases": [],
+          "description": "The authorization token for the API request",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "display_name": {
+          "aliases": [],
+          "description": "Name of the group.\nRequired for create operation",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "management_policy": {
+          "aliases": [],
+          "description": "Management access controls granted to the group within the tenancy.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "activate_features": {
+              "aliases": [],
+              "description": "Users in this group will have permissions to reactivate features.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "alarm_acknowledgement": {
+              "aliases": [],
+              "description": "Group members can have permission to acknowledge alarms.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "change_tenant_root_password": {
+              "aliases": [],
+              "description": "Users in this group will have permissions to change tenant password.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "grid_topology_page_configuration": {
+              "aliases": [],
+              "description": "Users in this group will have permissions to change grid topology.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "ilm": {
+              "aliases": [],
+              "description": "Users in this group will have permissions to manage ILM rules on StorageGRID.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "maintenance": {
+              "aliases": [],
+              "description": "Users in this group will have permissions to run maintenance tasks on StorageGRID.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "metrics_query": {
+              "aliases": [],
+              "description": "Users in this group will have permissions to query metrics on StorageGRID.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "object_metadata": {
+              "aliases": [],
+              "description": "Users in this group will have permissions to manage object metadata.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "other_grid_configuration": {
+              "aliases": [],
+              "description": "Need to investigate.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "root_access": {
+              "aliases": [],
+              "description": "Users in this group will have root access.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "tenant_accounts": {
+              "aliases": [],
+              "description": "Users in this group will have permissions to manage tenant accounts.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified group should exist or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "unique_name": {
+          "aliases": [],
+          "description": "Unique Name for the group. Must begin with C(group/) or C(federated-group/)\nRequired for create, modify or delete operation.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Should https certificates be validated?",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp StorageGRID manage groups.",
+      "version_added": "20.6.0"
+    },
+    "examples": "\n  - name: create a StorageGRID group\n    netapp.storagegrid.na_sg_grid_group:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      validate_certs: false\n      state: present\n      display_name: ansiblegroup100\n      unique_name: group/ansiblegroup100\n      management_policy:\n        tenant_accounts: true\n        maintenance: true\n        root_access: false\n"
+  },
+  "netapp.storagegrid.na_sg_grid_identity_federation": {
+    "doc": {
+      "description": "Configure Grid Identity Federation within NetApp StorageGRID.\nIf module is run with I(check_mode), a connectivity test will be performed using the supplied values without changing the configuration.\nThis module is idempotent if I(password) is not specified.",
+      "has_action": false,
+      "notes": "The modules prefixed with C(na_sg) are built to manage NetApp StorageGRID.",
+      "options": {
+        "api_url": {
+          "aliases": [],
+          "description": "The url to the StorageGRID Admin Node REST API.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "auth_token": {
+          "aliases": [],
+          "description": "The authorization token for the API request",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "base_group_dn": {
+          "aliases": [],
+          "description": "The Distinguished Name of the LDAP subtree to search for groups.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "base_user_dn": {
+          "aliases": [],
+          "description": "The Distinguished Name of the LDAP subtree to search for users.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ca_cert": {
+          "aliases": [],
+          "description": "Custom certificate used to connect to the LDAP server.\nIf a custom certificate is not supplied, the operating system CA certificate will be used.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "The hostname or IP address of the LDAP server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ldap_group_id_attribute": {
+          "aliases": [],
+          "description": "The LDAP attribute which contains the group for a user.\nShould be configured if I(ldap_service_type=Other).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ldap_group_uuid_attribute": {
+          "aliases": [],
+          "description": "The LDAP attribute which contains the group's permanent unique identity.\nShould be configured if I(ldap_service_type=Other).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ldap_service_type": {
+          "aliases": [],
+          "description": "The type of LDAP server.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "Active Directory",
+            "OpenLDAP",
+            "Other"
+          ],
+          "suboptions": {}
+        },
+        "ldap_user_id_attribute": {
+          "aliases": [],
+          "description": "The LDAP attribute which contains the unique user name of a user.\nShould be configured if I(ldap_service_type=Other).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ldap_user_uuid_attribute": {
+          "aliases": [],
+          "description": "The LDAP attribute which contains the permanent unique identity of a user.\nShould be configured if I(ldap_service_type=Other).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "The password associated with the username.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "The port used to connect to the LDAP server. Typically 389 for LDAP, or 636 for LDAPS.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether identity federation should be enabled or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "tls": {
+          "aliases": [],
+          "description": "Whether Transport Layer Security is used to connect to the LDAP server.",
+          "default": "STARTTLS",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "STARTTLS",
+            "LDAPS",
+            "Disabled"
+          ],
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "The type of identity source.\nDefault is C(ldap).",
+          "default": "ldap",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "The username to bind to the LDAP server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Should https certificates be validated?",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp StorageGRID manage Grid identity federation.",
+      "version_added": "21.6.0"
+    },
+    "examples": "\n  - name: test identity federation configuration\n    netapp.storagegrid.na_sg_grid_identity_federation:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      validate_certs: false\n      state: present\n      ldap_service_type: \"Active Directory\"\n      hostname: \"ad.example.com\"\n      port: 389\n      username: \"binduser\"\n      password: \"bindpass\"\n      base_group_dn: \"DC=example,DC=com\"\n      base_user_dn: \"DC=example,DC=com\"\n      tls: \"Disabled\"\n    check_mode: yes\n\n  - name: configure identity federation with AD and TLS\n    netapp.storagegrid.na_sg_grid_identity_federation:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      validate_certs: false\n      state: present\n      ldap_service_type: \"Active Directory\"\n      hostname: \"ad.example.com\"\n      port: 636\n      username: \"binduser\"\n      password: \"bindpass\"\n      base_group_dn: \"DC=example,DC=com\"\n      base_user_dn: \"DC=example,DC=com\"\n      tls: \"LDAPS\"\n      ca_cert: |\n          -----BEGIN CERTIFICATE-----\n          MIIC+jCCAeICCQDmn9Gow08LTzANBgkqhkiG9w0BAQsFADA/..swCQYDVQQGEwJV\n          bXBsZTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB..JFzNIXQEGnsgjV\n          JGU4giuvOLOZ8Q3gyuUbkSUQDjmjpMR8PliwJ6iW2Ity89Dv..dl1TaIYI/ansyZ\n          Uxk4YXeN6kUkrDtNxCg1McALzXVAfxMTtj2SFlLxne4Z6rX2..UyftQrfM13F1vY\n          gK8dBPz+l+X/Uozo/xNm7gxe68p9le9/pcULst1CQn5/sPqq..kgWcSvlKUItu82\n          lq3B2169rovdIaNdcvaQjMPhrDGo5rvLfMN35U3Hgbz41PL5..x2BcUE6/0ab5T4\n          qKBxKa3t9twj+zpUqOzyL0PFfCE+SK5fEXAS1ow4eAcLN+eB..gR/PuvGAyIPCtE\n          1+X4GrECAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAFpO+04Ra..FMJPH6dBmzfb7l\n          k04BWTvSlur6HiQdXY+oFQMJZzyI7MQ8v9HBIzS0ZAzYWLp4..VZhHmRxnrWyxVs\n          u783V5YfQH2L4QnBDoiDefgxyfDs2PcoF5C+X9CGXmPqzst2..y/6tdOVJzdiA==\n          -----END CERTIFICATE-----\n"
+  },
+  "netapp.storagegrid.na_sg_grid_info": {
+    "doc": {
+      "description": "This module allows you to gather various information about StorageGRID Grid configuration.",
+      "has_action": false,
+      "notes": "The modules prefixed with C(na_sg) are built to manage NetApp StorageGRID.",
+      "options": {
+        "api_url": {
+          "aliases": [],
+          "description": "The url to the StorageGRID Admin Node REST API.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "auth_token": {
+          "aliases": [],
+          "description": "The authorization token for the API request",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "gather_subset": {
+          "aliases": [],
+          "description": "When supplied, this argument will restrict the information collected to a given subset.\nEither the info name or the REST API can be given.\nPossible values for this argument include\nC(grid_accounts_info) or C(grid/accounts)\nC(grid_alarms_info) or C(grid/alarms)\nC(grid_audit_info) or C(grid/audit)\nC(grid_compliance_global_info) or C(grid/compliance-global)\nC(grid_config_info) or C(grid/config)\nC(grid_config_management_info) or C(grid/config/management)\nC(grid_config_product_version_info) or C(grid/config/product-version)\nC(grid_deactivated_features_info) or C(grid/deactivated-features)\nC(grid_dns_servers_info) or C(grid/dns-servers)\nC(grid_domain_names_info) or C(grid/domain-names)\nC(grid_ec_profiles_info) or C(grid/ec-profiles)\nC(grid_expansion_info) or C(grid/expansion)\nC(grid_expansion_nodes_info) or C(grid/expansion/nodes)\nC(grid_expansion_sites_info) or C(grid/expansion/sites)\nC(grid_grid_networks_info) or C(grid/grid-networks)\nC(grid_groups_info) or C(grid/groups)\nC(grid_health_info) or C(grid/health)\nC(grid_health_topology_info) or C(grid/health/topology)\nC(grid_identity_source_info) or C(grid/identity-source)\nC(grid_ilm_criteria_info) or C(grid/ilm-criteria)\nC(grid_ilm_policies_info) or C(grid/ilm-policies)\nC(grid_ilm_rules_info) or C(grid/ilm-rules)\nC(grid_license_info) or C(grid/license)\nC(grid_management_certificate_info) or C(grid/management-certificate)\nC(grid_ntp_servers_info) or C(grid/ntp-servers)\nC(grid_recovery_available_nodes_info) or C(grid/recovery/available-nodes)\nC(grid_recovery_info) or C(grid/recovery)\nC(grid_regions_info) or C(grid/regions)\nC(grid_schemes_info) or C(grid/schemes)\nC(grid_snmp_info) or C(grid/snmp)\nC(grid_storage_api_certificate_info) or C(grid/storage-api-certificate)\nC(grid_untrusted_client_network_info) or C(grid/untrusted-client-network)\nC(grid_users_info) or C(grid/users)\nC(grid_users_root_info) or C(grid/users/root)\nC(versions_info) or C(versions)\nCan specify a list of values to include a larger subset.",
+          "default": "all",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "parameters": {
+          "aliases": [],
+          "description": "Allows for any rest option to be passed in.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Should https certificates be validated?",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp StorageGRID Grid information gatherer.",
+      "version_added": "20.11.0"
+    },
+    "examples": "\n- name: Gather StorageGRID Grid info\n  netapp.storagegrid.na_sg_grid_info:\n    api_url: \"https://1.2.3.4/\"\n    auth_token: \"storagegrid-auth-token\"\n    validate_certs: false\n  register: sg_grid_info\n\n- name: Gather StorageGRID Grid info for grid/accounts and grid/config subsets\n  netapp.storagegrid.na_sg_grid_info:\n    api_url: \"https://1.2.3.4/\"\n    auth_token: \"storagegrid-auth-token\"\n    validate_certs: false\n    gather_subset:\n      - grid_accounts_info\n      - grid/config\n  register: sg_grid_info\n\n- name: Gather StorageGRID Grid info for all subsets\n  netapp.storagegrid.na_sg_grid_info:\n    api_url: \"https://1.2.3.4/\"\n    auth_token: \"storagegrid-auth-token\"\n    validate_certs: false\n    gather_subset:\n      - all\n  register: sg_grid_info\n\n- name: Gather StorageGRID Grid info for grid/accounts and grid/users subsets, limit to 5 results for each subset\n  netapp.storagegrid.na_sg_grid_info:\n    api_url: \"https://1.2.3.4/\"\n    auth_token: \"storagegrid-auth-token\"\n    validate_certs: false\n    gather_subset:\n      - grid/accounts\n      - grid/users\n    parameters:\n      limit: 5\n  register: sg_grid_info\n"
+  },
+  "netapp.storagegrid.na_sg_grid_ntp": {
+    "doc": {
+      "description": "Update NTP server on NetApp StorageGRID.",
+      "has_action": false,
+      "notes": "The modules prefixed with C(na_sg) are built to manage NetApp StorageGRID.",
+      "options": {
+        "api_url": {
+          "aliases": [],
+          "description": "The url to the StorageGRID Admin Node REST API.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "auth_token": {
+          "aliases": [],
+          "description": "The authorization token for the API request",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "ntp_servers": {
+          "aliases": [],
+          "description": "List of comma separated NTP server address.",
+          "type": "list",
+          "required": true,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "passphrase": {
+          "aliases": [],
+          "description": "passphrase for GRID.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified user should exist or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Should https certificates be validated?",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp StorageGRID manage external NTP servers for the grid.",
+      "version_added": "20.6.0"
+    },
+    "examples": "\n  - name: update NTP servers\n    netapp.storagegrid.na_sg_grid_ntp:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      validate_certs: false\n      state: present\n      passphrase: \"{{ grid_pass }}\"\n      ntp_servers: \"x.x.x.x,xx.x.xx.x\"\n"
+  },
+  "netapp.storagegrid.na_sg_grid_regions": {
+    "doc": {
+      "description": "Create, Update, Delete Users within a NetApp StorageGRID tenant.",
+      "has_action": false,
+      "notes": "The modules prefixed with C(na_sg) are built to manage NetApp StorageGRID.",
+      "options": {
+        "api_url": {
+          "aliases": [],
+          "description": "The url to the StorageGRID Admin Node REST API.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "auth_token": {
+          "aliases": [],
+          "description": "The authorization token for the API request",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "regions": {
+          "aliases": [],
+          "description": "List of regions",
+          "type": "list",
+          "required": true,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified user should exist or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Should https certificates be validated?",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp StorageGRID manage Regions for the grid.",
+      "version_added": "20.6.0"
+    },
+    "examples": "\n  - name: update Regions\n    netapp.storagegrid.na_sg_grid_regions:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      validate_certs: false\n      state: present\n      regions: \"us-east-1\"\n"
+  },
+  "netapp.storagegrid.na_sg_grid_user": {
+    "doc": {
+      "description": "Create, Update, Delete Administrative Users within NetApp StorageGRID.",
+      "has_action": false,
+      "notes": "The modules prefixed with C(na_sg) are built to manage NetApp StorageGRID.",
+      "options": {
+        "api_url": {
+          "aliases": [],
+          "description": "The url to the StorageGRID Admin Node REST API.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "auth_token": {
+          "aliases": [],
+          "description": "The authorization token for the API request",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "disable": {
+          "aliases": [],
+          "description": "Disable the user from signing in. Does not apply to federated users.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "full_name": {
+          "aliases": [],
+          "description": "Full Name of the user.\nRequired for create operation",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "member_of": {
+          "aliases": [],
+          "description": "List of C(unique_groups) that the user is a member of.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Set a password for a local user. Does not apply to federated users.\nRequires root privilege.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified user should exist or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "unique_name": {
+          "aliases": [],
+          "description": "Unique Name for the user. Must begin with C(user/) or C(federated-user/)\nRequired for create, modify or delete operation.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "update_password": {
+          "aliases": [],
+          "description": "Choose when to update the password.\nWhen set to C(always), the password will always be updated.\nWhen set to C(on_create), the password will only be set upon a new user creation.",
+          "default": "on_create",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "on_create",
+            "always"
+          ],
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Should https certificates be validated?",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp StorageGRID manage users.",
+      "version_added": "20.6.0"
+    },
+    "examples": "\n  - name: create a user\n    netapp.storagegrid.na_sg_grid_user:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      validate_certs: false\n      state: present\n      full_name: ansibleuser100\n      unique_name: user/ansibleuser100\n      member_of: \"group/ansiblegroup100\"\n      disable: false\n\n"
+  },
+  "netapp.storagegrid.na_sg_org_container": {
+    "doc": {
+      "description": "Create S3 buckets on NetApp StorageGRID.",
+      "has_action": false,
+      "notes": "The modules prefixed with C(na_sg) are built to manage NetApp StorageGRID.",
+      "options": {
+        "api_url": {
+          "aliases": [],
+          "description": "The url to the StorageGRID Admin Node REST API.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "auth_token": {
+          "aliases": [],
+          "description": "The authorization token for the API request",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "compliance": {
+          "aliases": [],
+          "description": "Configure compliance settings for an S3 bucket.\nCannot be specified along with I(s3_object_lock_enabled).",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "auto_delete": {
+              "aliases": [],
+              "description": "If enabled, objects will be deleted automatically when its retention period expires, unless the bucket is under a legal hold.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "legal_hold": {
+              "aliases": [],
+              "description": "If enabled, objects in this bucket cannot be deleted, even if their retention period has expired.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "retention_period_minutes": {
+              "aliases": [],
+              "description": "specify the length of the retention period for objects added to this bucket, in minutes.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the bucket.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [],
+          "description": "Set a region for the bucket.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "s3_object_lock_enabled": {
+          "aliases": [],
+          "description": "Enable S3 Object Lock on the bucket.\nS3 Object Lock requires StorageGRID 11.5 or greater",
+          "type": "bool",
+          "required": false,
+          "version_added": "21.9.0",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified bucket should exist or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Should https certificates be validated?",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage buckets on StorageGRID.",
+      "version_added": "20.6.0"
+    },
+    "examples": "\n  - name: create a s3 bucket\n    netapp.storagegrid.na_sg_org_container:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      validate_certs: false\n      state: present\n      name: ansiblebucket1\n\n  - name: delete a s3 bucket\n    netapp.storagegrid.na_sg_org_container:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      validate_certs: false\n      state: absent\n      name: ansiblebucket1\n\n  - name: create a s3 bucket with Object Lock\n    netapp.storagegrid.na_sg_org_container:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      validate_certs: false\n      state: present\n      name: objectlock-bucket1\n      s3_object_lock_enaled: true\n"
+  },
+  "netapp.storagegrid.na_sg_org_group": {
+    "doc": {
+      "description": "Create, Update, Delete Groups within NetApp StorageGRID tenant.",
+      "has_action": false,
+      "notes": "The modules prefixed with C(na_sg) are built to manage NetApp StorageGRID.",
+      "options": {
+        "api_url": {
+          "aliases": [],
+          "description": "The url to the StorageGRID Admin Node REST API.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "auth_token": {
+          "aliases": [],
+          "description": "The authorization token for the API request",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "display_name": {
+          "aliases": [],
+          "description": "Name of the group.\nRequired for create operation.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "management_policy": {
+          "aliases": [],
+          "description": "Management access controls granted to the group within the tenancy.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "manage_all_containers": {
+              "aliases": [],
+              "description": "Allows users to manage the settings for all S3 buckets in the tenant account, regardless of S3 bucket or group policies.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "manage_endpoints": {
+              "aliases": [],
+              "description": "Allows users to use the Tenant Manager or the Tenant Management API to create or edit endpoints.\nEndpoints are used as the destination for StorageGRID platform services.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "manage_own_s3_credentials": {
+              "aliases": [],
+              "description": "Allows users to create and remove their own S3 access keys.\nUsers who do not have this permission do not see the S3 > My Credentials menu option.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "root_access": {
+              "aliases": [],
+              "description": "Provides full access to the Tenant Manager and the Tenant Management API.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "s3_policy": {
+          "aliases": [],
+          "description": "StorageGRID S3 Group Policy.",
+          "default": "",
+          "type": "json",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified group should exist or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "unique_name": {
+          "aliases": [],
+          "description": "Unique Name for the group. Must begin with C(group/) or C(federated-group/).\nRequired for create, modify or delete operation.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Should https certificates be validated?",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp StorageGRID manage groups within a tenancy.",
+      "version_added": "20.6.0"
+    },
+    "examples": "\n  - name: create a group\n    netapp.storagegrid.na_sg_org_group:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      validate_certs: false\n      state: present\n      display_name: ansiblegroup1\n      unique_name: group/ansiblegroup1\n      management_policy:\n        manage_all_containers: true\n        manage_endpoints: true\n        manage_own_s3_credentials: false\n        root_access: false\n      s3_policy: {\"Statement\":[{\"Effect\":\"Deny\",\"Action\":\"s3:*\",\"Resource\":\"arn:aws:s3:::*\"}]}\n"
+  },
+  "netapp.storagegrid.na_sg_org_identity_federation": {
+    "doc": {
+      "description": "Configure Tenant Identity Federation within NetApp StorageGRID.\nIf module is run with C(check_mode), a connectivity test will be performed using the supplied values without changing the configuration.\nThis module is idempotent if I(password) is not specified.",
+      "has_action": false,
+      "notes": "The modules prefixed with C(na_sg) are built to manage NetApp StorageGRID.",
+      "options": {
+        "api_url": {
+          "aliases": [],
+          "description": "The url to the StorageGRID Admin Node REST API.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "auth_token": {
+          "aliases": [],
+          "description": "The authorization token for the API request",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "base_group_dn": {
+          "aliases": [],
+          "description": "The Distinguished Name of the LDAP subtree to search for groups.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "base_user_dn": {
+          "aliases": [],
+          "description": "The Distinguished Name of the LDAP subtree to search for users.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ca_cert": {
+          "aliases": [],
+          "description": "Custom certificate used to connect to the LDAP server.\nIf a custom certificate is not supplied, the operating system CA certificate will be used.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "The hostname or IP address of the LDAP server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ldap_group_id_attribute": {
+          "aliases": [],
+          "description": "The LDAP attribute which contains the group for a user.\nShould be configured if I(ldap_service_type=Other).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ldap_group_uuid_attribute": {
+          "aliases": [],
+          "description": "The LDAP attribute which contains the group's permanent unique identity.\nShould be configured if I(ldap_service_type=Other).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ldap_service_type": {
+          "aliases": [],
+          "description": "The type of LDAP server.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "Active Directory",
+            "OpenLDAP",
+            "Other"
+          ],
+          "suboptions": {}
+        },
+        "ldap_user_id_attribute": {
+          "aliases": [],
+          "description": "The LDAP attribute which contains the unique user name of a user.\nShould be configured if I(ldap_service_type=Other).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ldap_user_uuid_attribute": {
+          "aliases": [],
+          "description": "The LDAP attribute which contains the permanent unique identity of a user.\nShould be configured if I(ldap_service_type=Other).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "The password associated with the username.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "The port used to connect to the LDAP server. Typically 389 for LDAP, or 636 for LDAPS.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether identity federation should be enabled or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "tls": {
+          "aliases": [],
+          "description": "Whether Transport Layer Security is used to connect to the LDAP server.",
+          "default": "STARTTLS",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "STARTTLS",
+            "LDAPS",
+            "Disabled"
+          ],
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "The type of identity source.\nDefault is 'ldap'.",
+          "default": "ldap",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "The username to bind to the LDAP server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Should https certificates be validated?",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp StorageGRID manage Tenant identity federation.",
+      "version_added": "21.6.0"
+    },
+    "examples": "\n  - name: test identity federation configuration\n    netapp.storagegrid.na_sg_org_identity_federation:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      validate_certs: false\n      state: present\n      ldap_service_type: \"Active Directory\"\n      hostname: \"ad.example.com\"\n      port: 389\n      username: \"binduser\"\n      password: \"bindpass\"\n      base_group_dn: \"DC=example,DC=com\"\n      base_user_dn: \"DC=example,DC=com\"\n      tls: \"Disabled\"\n    check_mode: yes\n\n  - name: configure identity federation with AD and TLS\n    netapp.storagegrid.na_sg_org_identity_federation:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      validate_certs: false\n      state: present\n      ldap_service_type: \"Active Directory\"\n      hostname: \"ad.example.com\"\n      port: 636,\n      username: \"binduser\"\n      password: \"bindpass\"\n      base_group_dn: \"DC=example,DC=com\"\n      base_user_dn: \"DC=example,DC=com\"\n      tls: \"LDAPS\"\n      ca_cert: |\n          -----BEGIN CERTIFICATE-----\n          MIIC+jCCAeICCQDmn9Gow08LTzANBgkqhkiG9w0BAQsFADA/..swCQYDVQQGEwJV\n          bXBsZTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB..JFzNIXQEGnsgjV\n          JGU4giuvOLOZ8Q3gyuUbkSUQDjmjpMR8PliwJ6iW2Ity89Dv..dl1TaIYI/ansyZ\n          Uxk4YXeN6kUkrDtNxCg1McALzXVAfxMTtj2SFlLxne4Z6rX2..UyftQrfM13F1vY\n          gK8dBPz+l+X/Uozo/xNm7gxe68p9le9/pcULst1CQn5/sPqq..kgWcSvlKUItu82\n          lq3B2169rovdIaNdcvaQjMPhrDGo5rvLfMN35U3Hgbz41PL5..x2BcUE6/0ab5T4\n          qKBxKa3t9twj+zpUqOzyL0PFfCE+SK5fEXAS1ow4eAcLN+eB..gR/PuvGAyIPCtE\n          1+X4GrECAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAFpO+04Ra..FMJPH6dBmzfb7l\n          k04BWTvSlur6HiQdXY+oFQMJZzyI7MQ8v9HBIzS0ZAzYWLp4..VZhHmRxnrWyxVs\n          u783V5YfQH2L4QnBDoiDefgxyfDs2PcoF5C+X9CGXmPqzst2..y/6tdOVJzdiA==\n          -----END CERTIFICATE-----\n"
+  },
+  "netapp.storagegrid.na_sg_org_info": {
+    "doc": {
+      "description": "This module allows you to gather various information about StorageGRID Org configuration.",
+      "has_action": false,
+      "notes": "The modules prefixed with C(na_sg) are built to manage NetApp StorageGRID.",
+      "options": {
+        "api_url": {
+          "aliases": [],
+          "description": "The url to the StorageGRID Admin Node REST API.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "auth_token": {
+          "aliases": [],
+          "description": "The authorization token for the API request",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "gather_subset": {
+          "aliases": [],
+          "description": "When supplied, this argument will restrict the information collected to a given subset.\nEither the info name or the Rest API can be given.\nPossible values for this argument include\nC(org_compliance_global_info) or C(org/compliance-global)\nC(org_config_info) or C(org/config)\nC(org_config_product_version_info) or C(org/config/product-version)\nC(org_containers_info) or C(org/containers)\nC(org_deactivated_features_info) or C(org/deactivated-features)\nC(org_endpoints_info) or C(org/endpoints)\nC(org_groups_info) or C(org/groups)\nC(org_identity_source_info) or C(org/identity-source)\nC(org_regions_info) or C(org/regions)\nC(org_users_current_user_s3_access_keys_info) or C(org/users/current-user/s3-access-keys)\nC(org_usage_info) or C(org/usage)\nC(org_users_info) or C(org/users)\nC(org_users_root_info) or C(org/users/root)\nC(versions_info) or C(versions)\nCan specify a list of values to include a larger subset.",
+          "default": "all",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "parameters": {
+          "aliases": [],
+          "description": "Allows for any rest option to be passed in.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Should https certificates be validated?",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp StorageGRID Org information gatherer.",
+      "version_added": "20.11.0"
+    },
+    "examples": "\n- name: Gather StorageGRID Org info\n  netapp.storagegrid.na_sg_org_info:\n    api_url: \"https://1.2.3.4/\"\n    auth_token: \"storagegrid-auth-token\"\n    validate_certs: false\n  register: sg_org_info\n\n- name: Gather StorageGRID Org info for org/containers and org/config subsets\n  netapp.storagegrid.na_sg_org_info:\n    api_url: \"https://1.2.3.4/\"\n    auth_token: \"storagegrid-auth-token\"\n    validate_certs: false\n    gather_subset:\n      - org_containers_info\n      - org/config\n  register: sg_org_info\n\n- name: Gather StorageGRID Org info for all subsets\n  netapp.storagegrid.na_sg_org_info:\n    api_url: \"https://1.2.3.4/\"\n    auth_token: \"storagegrid-auth-token\"\n    validate_certs: false\n    gather_subset:\n      - all\n  register: sg_org_info\n\n- name: Gather StorageGRID Org info for org/containers and org/users subsets, limit to 5 results for each subset\n  netapp.storagegrid.na_sg_org_info:\n    api_url: \"https://1.2.3.4/\"\n    auth_token: \"storagegrid-auth-token\"\n    validate_certs: false\n    gather_subset:\n      - org/containers\n      - org/users\n    parameters:\n      limit: 5\n  register: sg_org_info\n"
+  },
+  "netapp.storagegrid.na_sg_org_user": {
+    "doc": {
+      "description": "Create, Update, Delete Users within a NetApp StorageGRID tenant.",
+      "has_action": false,
+      "notes": "The modules prefixed with C(na_sg) are built to manage NetApp StorageGRID.",
+      "options": {
+        "api_url": {
+          "aliases": [],
+          "description": "The url to the StorageGRID Admin Node REST API.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "auth_token": {
+          "aliases": [],
+          "description": "The authorization token for the API request",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "disable": {
+          "aliases": [],
+          "description": "Disable the user from signing in. Does not apply to federated users.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "full_name": {
+          "aliases": [],
+          "description": "Full Name of the user.\nRequired for create operation",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "member_of": {
+          "aliases": [],
+          "description": "List of unique_groups that the user is a member of.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Set a password for a local user. Does not apply to federated users.\nRequires root privilege.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified user should exist or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "unique_name": {
+          "aliases": [],
+          "description": "Unique Name for the user. Must begin with C(user/) or C(federated-user/).\nRequired for create, modify or delete operation.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "update_password": {
+          "aliases": [],
+          "description": "Choose when to update the password.\nWhen set to C(always), the password will always be updated.\nWhen set to C(on_create), the password will only be set upon a new user creation.",
+          "default": "on_create",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "on_create",
+            "always"
+          ],
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Should https certificates be validated?",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp StorageGRID manage users within a tenancy.",
+      "version_added": "20.6.0"
+    },
+    "examples": "\n  - name: create a tenant user\n    netapp.storagegrid.na_sg_org_user:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      validate_certs: false\n      state: present\n      full_name: ansibleuser1\n      unique_name: user/ansibleuser1\n      member_of: \"group/ansiblegroup1\"\n      disable: false\n\n"
+  },
+  "netapp.storagegrid.na_sg_org_user_s3_key": {
+    "doc": {
+      "description": "Create, Delete Users S3 keys on NetApp StorageGRID.",
+      "has_action": false,
+      "notes": "The modules prefixed with C(na_sg) are built to manage NetApp StorageGRID.",
+      "options": {
+        "access_key": {
+          "aliases": [],
+          "description": "Access Key or S3 credential pair identifier.\nRequired for delete operation.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_url": {
+          "aliases": [],
+          "description": "The url to the StorageGRID Admin Node REST API.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "auth_token": {
+          "aliases": [],
+          "description": "The authorization token for the API request",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "expires": {
+          "aliases": [],
+          "description": "Date-Time string for the key to expire.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified account should exist or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "unique_user_name": {
+          "aliases": [],
+          "description": "Unique user name owning the S3 Key.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Should https certificates be validated?",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Creates NetApp StorageGRID User S3 keys.",
+      "version_added": "20.6.0"
+    },
+    "examples": "\n  - name: create a s3 key\n    netapp.storagegrid.na_sg_org_user_s3_key:\n      api_url: \"https://<storagegrid-endpoint-url>\"\n      auth_token: \"storagegrid-auth-token\"\n      validate_certs: false\n      state: present\n      unique_user_name: user/ansibleuser1\n"
+  }
+}

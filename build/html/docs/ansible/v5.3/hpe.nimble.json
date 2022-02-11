@@ -1,0 +1,3557 @@
+{
+  "hpe.nimble.hpe_nimble_access_control_record": {
+    "doc": {
+      "description": "Manage the access control records on an HPE Nimble Storage group.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "apply_to": {
+          "aliases": [],
+          "description": "The type of object to which this access control record applies.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "volume",
+            "snapshot",
+            "both"
+          ],
+          "suboptions": {}
+        },
+        "chap_user": {
+          "aliases": [],
+          "description": "Name for the CHAP user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "initiator_group": {
+          "aliases": [],
+          "description": "The initiator group name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "lun": {
+          "aliases": [],
+          "description": "If this access control record applies to a regular volume, this attribute is the volume's LUN (Logical Unit Number).\nIf the access protocol is iSCSI, the LUN will be 0. However, if the access protocol is Fibre Channel, the LUN will be in the range from 0 to 2047.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The access control record operation.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent",
+            "create"
+          ],
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "volume": {
+          "aliases": [],
+          "description": "The name of the volume that this access control record applies to.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage access control records",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n# If state is \"create\", create access control record for given volume, fails if it exist.\n# if state is present, create access control record if not already present.\n- name: Create access control record for volume\n  hpe.nimble.hpe_nimble_access_control_record:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    volume: \"{{ volume }}\"\n    initiator_group: \"{{ initiator_group }}\"\n    state: \"{{ state | default('present') }}\"\n\n# Delete the access control record for a given volume name\n- name: Delete access control record for volume\n  hpe.nimble.hpe_nimble_access_control_record:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    volume: \"{{ volume }}\"\n    initiator_group: \"{{ initiator_group }}\"\n    state: \"absent\" # fail if volume does not exist\n\n"
+  },
+  "hpe.nimble.hpe_nimble_array": {
+    "doc": {
+      "description": "Manage the array on an HPE Nimble Storage group.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "allow_lower_limits": {
+          "aliases": [],
+          "description": "A True setting will allow you to add an array with lower limits to a pool with higher limits.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "change_name": {
+          "aliases": [],
+          "description": "Change the name of the existing array.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "create_pool": {
+          "aliases": [],
+          "description": "Whether to create an associated pool during the array creation.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "ctrlr_a_support_ip": {
+          "aliases": [],
+          "description": "Controller A Support IP Address. Four numbers in the range (0,255) separated by periods.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ctrlr_b_support_ip": {
+          "aliases": [],
+          "description": "Controller B Support IP Address. Four numbers in the range (0,255) separated by periods.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "failover": {
+          "aliases": [],
+          "description": "Perform a failover on the specified array.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Forcibly delete the specified array.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "halt": {
+          "aliases": [],
+          "description": "Halt the specified array. Restarting the array will require physically powering it back on.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The user-provided name of the array. It is also the array's hostname.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "nic_list": {
+          "aliases": [],
+          "description": "List NICs information. Used when creating an array.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "pool_description": {
+          "aliases": [],
+          "description": "Text description of the pool to be created during array creation.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "pool_name": {
+          "aliases": [],
+          "description": "Name of pool to which this is a member.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "reboot": {
+          "aliases": [],
+          "description": "Reboot the specified array.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "secondary_mgmt_ip": {
+          "aliases": [],
+          "description": "Secondary management IP address for the group.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "serial": {
+          "aliases": [],
+          "description": "Serial number of the array.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The array operation",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "create",
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage array",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n# if state is create , then create a array if not present. Fails if already present.\n# if state is present, then create a array if not present. Succeed if it already exists.\n- name: Create array if not present\n  hpe.nimble.hpe_nimble_array:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    state: \"{{ state | default('present') }}\"\n    name: \"{{ name }}\"\n    ctrlr_b_support_ip: \"{{ ctrlr_b_support_ip | mandatory}}\"\n    ctrlr_a_support_ip: \"{{ ctrlr_a_support_ip | mandatory}}\"\n    serial: \"{{ serial | mandatory}}\"\n    nic_list: \"{{ nic_list | mandatory}}\"\n    pool_name: \"{{ pool_name | mandatory}}\"\n\n- name: Delete array\n  hpe.nimble.hpe_nimble_array:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    vol_name: \"{{ansible_default_ipv4['address']}}-{{ vol_name }}\"\n    name: \"{{ name }}\"\n    state: absent\n\n- name: Failover array\n  hpe.nimble.hpe_nimble_array:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    failover: true\n    state: present\n\n- name: Halt array\n  hpe.nimble.hpe_nimble_array:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: present\n    halt: true\n\n- name: Reboot array\n  hpe.nimble.hpe_nimble_array:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: present\n    reboot: true\n\n"
+  },
+  "hpe.nimble.hpe_nimble_chap_user": {
+    "doc": {
+      "description": "Manage the CHAP user on an HPE Nimble Storage group.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "change_name": {
+          "aliases": [],
+          "description": "Change the name of the existing CHAP user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "Text description of CHAP user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "initiator_iqns": {
+          "aliases": [],
+          "description": "List of iSCSI initiators. To be configured with this CHAP user for iSCSI Group Target CHAP authentication. This attribute cannot be modified at the same time with other attributes. If any specified initiator is already associated with another CHAP user, it will be replaced by this CHAP user for future CHAP authentication.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The CHAP user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The CHAP user operation.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "create",
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "user_password": {
+          "aliases": [],
+          "description": "CHAP secret. The CHAP secret should be between 12-16 characters and cannot contain spaces or most punctuation. string of 12 to 16 printable ASCII characters excluding ampersand and ^[];`",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage CHAP user",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n# if state is create, then create chap user, fails if it exist or cannot create\n# if state is present, then create chap user if not present, else success\n- name: Create Chap User\n  hpe.nimble.hpe_nimble_chap_user:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    description: \"{{ description }}\"\n    user_password: \"{{ user_password | mandatory }}\"\n    state: \"{{ state | default('present') }}\"\n\n- name: Delete Chap User\n  hpe.nimble.hpe_nimble_chap_user:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: \"absent\"\n\n"
+  },
+  "hpe.nimble.hpe_nimble_disk": {
+    "doc": {
+      "description": "Manage disks on an HPE Nimble Storage group.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "disk_op": {
+          "aliases": [],
+          "description": "The intended operation to be performed on the specified disk.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "add",
+            "remove"
+          ],
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Forcibly add a disk.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "shelf_location": {
+          "aliases": [],
+          "description": "Position of the shelf the disk belongs to.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "slot": {
+          "aliases": [],
+          "description": "Disk slot number.",
+          "type": "int",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The disk operation.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage disk",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n- name: Update Disk\n  hpe.nimble.hpe_nimble_disk:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    slot: \"{{ slot | mandatory }}\"\n    shelf_location: \"{{ shelf_location | mandatory }}\"\n    disk_op: \"{{ disk_op | mandatory }}\"\n    force: \"{{ force }}\"\n    state: present\n\n"
+  },
+  "hpe.nimble.hpe_nimble_encryption": {
+    "doc": {
+      "description": "Manage the encryption on an Nimble Storage group.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "active": {
+          "aliases": [],
+          "description": "Whether the master key is active or not.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "age": {
+          "aliases": [],
+          "description": "Minimum age (in hours) of inactive encryption keys to be purged. '0' indicates to purge the keys immediately.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "encryption_config": {
+          "aliases": [],
+          "description": "How encryption is configured for this group. Group encryption settings.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "group_encrypt": {
+          "aliases": [],
+          "description": "Flag for setting group encryption.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the master key. The only allowed value is \"default\".",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "new_passphrase": {
+          "aliases": [],
+          "description": "When changing the passphrase, this attribute specifies the new value of the passphrase. String with size from 8 to 64 printable characters.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "passphrase": {
+          "aliases": [],
+          "description": "Passphrase used to protect the master key, required during creation, enabling/disabling the key and change the passphrase to a new value. String with size from 8 to 64 printable characters.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "purge_inactive": {
+          "aliases": [],
+          "description": "Purges encryption keys that have been inactive for the age or longer. If you do not specify an age, the keys will be purged immediately.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The encryption operation.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "create",
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage encryption",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n# if state is create, then create master key, fails if it exist or cannot create\n# if state is present, then create master key if not present ,else success\n- name: Create master key\n  hpe.nimble.hpe_nimble_encryption:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"default\"\n    passphrase: \"{{ passphrase }}\"\n    active: \"{{ active | default('false') }}\"\n    state: \"{{ state | default('present') }}\"\n\n- name: Delete master key\n  hpe.nimble.hpe_nimble_encryption:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"default\"\n    state: \"absent\"\n\n- name: Purge inactive master key\n  hpe.nimble.hpe_nimble_encryption:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"default\"\n    age: \"{{ age | mandatory }}\"\n    state: \"present\"\n    purge_inactive: true\n\n- name: Group encryption\n  hpe.nimble.hpe_nimble_encryption:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    encryption_config: \"{{ encryption_config | mandatory }}\"\n    state: \"present\"\n    group_encrypt: true\n\n"
+  },
+  "hpe.nimble.hpe_nimble_fc": {
+    "doc": {
+      "description": "Manage storage Fibre Channel on an HPE Nimble Storage group.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "array_name_or_serial": {
+          "aliases": [],
+          "description": "Name or serial number of array where the interface is hosted.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "controller": {
+          "aliases": [],
+          "description": "Name (A or B) of the controller where the interface is hosted.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "hw_upgrade": {
+          "aliases": [],
+          "description": "Update fibre channel configuration after hardware changes. Possible values:- 'true' 'false'.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of fibre channel interface",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "online": {
+          "aliases": [],
+          "description": "Identify whether the fibre channel interface is online. Possible values:- 'true' 'false'.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "precheck": {
+          "aliases": [],
+          "description": "Check if the interfaces are offline before regenerating the WWNN. Possible values:- 'true' 'false'.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "regenerate": {
+          "aliases": [],
+          "description": "Regenerate fibre channel configuration. Possible values:- 'true' 'false'.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The fibre channel operation.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "wwnn_base_str": {
+          "aliases": [],
+          "description": "Base WWNN. Six bytes expressed in hex separated by colons. Example:- 'af:32:f1'.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage Fibre Channel",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n- name: Update fibre channel interface\n  hpe.nimble.hpe_nimble_fc:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    array_name_or_serial: \"{{ array_name_or_serial | mandatory }}\"\n    name: \"{{ name | mandatory }}\"\n    controller: \"{{ controller | mandatory }}\"\n    online: \"{{ online | mandatory }}\"\n    state: \"{{ 'present' }}\"\n\n- name: Regenerate fibre channel config\n  hpe.nimble.hpe_nimble_fc:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    array_name_or_serial: \"{{ array_name_or_serial | mandatory }}\" # provide the group_leader_array name\n    wwnn_base_str: \"{{ wwnn_base_str | mandatory }}\"\n    regenerate: true\n    precheck: true\n    state: \"{{ 'present' }}\"\n\n- name: Hardware upgrade for fibre channel\n  hpe.nimble.hpe_nimble_fc:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    array_name_or_serial: \"{{ array_name_or_serial | mandatory }}\"\n    hw_upgrade: true\n    state: \"{{ 'present' }}\"\n\n"
+  },
+  "hpe.nimble.hpe_nimble_group": {
+    "doc": {
+      "description": "Manage an HPE Nimble Storage group on an Nimble Storage array.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "alarms": {
+          "aliases": [],
+          "description": "Whether alarm feature is enabled.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "alert_from_email_addrs": {
+          "aliases": [],
+          "description": "From email address to use while sending emails. Case insensitive email address.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "alert_min_level": {
+          "aliases": [],
+          "description": "Minimum level of alert to be notified.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "info",
+            "notice",
+            "warning",
+            "critical"
+          ],
+          "suboptions": {}
+        },
+        "alert_to_email_addrs": {
+          "aliases": [],
+          "description": "Comma-separated list of email addresses to receive emails. Comma separated email list.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "allow_analytics_gui": {
+          "aliases": [],
+          "description": "Specify whether to allow HPE Nimble Storage to use Google Analytics in the GUI. HPE Nimble Storage uses Google Analytics to gather data related to GUI usage. The data gathered is used to evaluate and improve the product.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "allow_support_tunnel": {
+          "aliases": [],
+          "description": "Whether to allow support tunnel.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "auto_switchover": {
+          "aliases": [],
+          "description": "Whether automatic switchover of Group management services feature is enabled.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "autoclean_unmanaged_snapshots": {
+          "aliases": [],
+          "description": "Whether autoclean unmanaged snapshots feature is enabled.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "autoclean_unmanaged_snapshots_ttl_unit": {
+          "aliases": [],
+          "description": "Unit for unmanaged snapshot time to live.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "autosupport": {
+          "aliases": [],
+          "description": "Whether to send autosupport.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "cc_mode": {
+          "aliases": [],
+          "description": "Enable or disable Common Criteria mode.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "change_name": {
+          "aliases": [],
+          "description": "Change name of the existing group.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "check_migrate": {
+          "aliases": [],
+          "description": "Check if the group Management Service can be migrated to the group Management Service backup array.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "date": {
+          "aliases": [],
+          "description": "Unix epoch time local to the group. Seconds since last epoch. Example- 3400.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "default_iscsi_target_scope": {
+          "aliases": [],
+          "description": "Newly created volumes are exported under iSCSI Group Target or iSCSI Volume Target.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "volume",
+            "group"
+          ],
+          "suboptions": {}
+        },
+        "default_volume_limit": {
+          "aliases": [],
+          "description": "Default limit for a volume space usage as a percentage of volume size. Volume will be taken offline/made non-writable on exceeding its limit. Percentage as integer from 0 to 100.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "dns_servers": {
+          "aliases": [],
+          "description": "IP addresses for this group's dns servers.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {}
+        },
+        "domain_name": {
+          "aliases": [],
+          "description": "Domain name for this group. String of alphanumeric characters, valid range is from 2 to 255; Each label must be between 1 and 63 characters long; - and . are allowed after the first and before the last character.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fc_enabled": {
+          "aliases": [],
+          "description": "Whether FC is enabled on this group.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Can be used with halt or merge flag. Halt remaining arrays when one or more is unreachable. Ignore warnings and forcibly merge specified group with this group.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "group_snapshot_ttl": {
+          "aliases": [],
+          "description": "Snapshot Time-to-live(TTL) configured at group level for automatic deletion of unmanaged snapshots. Value 0 indicates unlimited TTL.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "group_target_enabled": {
+          "aliases": [],
+          "description": "Is group_target enabled on this group.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "group_target_name": {
+          "aliases": [],
+          "description": "Iscsi target name for this group. String of up to 255 alphanumeric, hyphenated, colon, or period-separated characters; but cannot begin with hyphen, colon or period. This type is used for the group target name.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "halt": {
+          "aliases": [],
+          "description": "Halt all arrays in the group.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "iscsi_enabled": {
+          "aliases": [],
+          "description": "Whether iSCSI is enabled on this group.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "isns_enabled": {
+          "aliases": [],
+          "description": "Whether iSNS is enabled.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "isns_port": {
+          "aliases": [],
+          "description": "Port number for iSNS Server. Positive integer value up to 65535 representing TCP/IP port.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "isns_server": {
+          "aliases": [],
+          "description": "Hostname or IP Address of iSNS Server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "level": {
+          "aliases": [],
+          "description": "Level of the test alert.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "info",
+            "notice",
+            "warning",
+            "critical"
+          ],
+          "suboptions": {}
+        },
+        "login_banner_after_auth": {
+          "aliases": [],
+          "description": "Should the banner be displayed before the user credentials are prompted or after prompting the user credentials.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_banner_message": {
+          "aliases": [],
+          "description": "The message for the login banner that is displayed during user login activity. String upto 2048 characters.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_banner_reset": {
+          "aliases": [],
+          "description": "This will reset the banner to the version of the installed NOS. When login_banner_after_auth is specified, login_banner_reset can not be set to true.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "merge": {
+          "aliases": [],
+          "description": "Perform group merge with the specified group.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "migrate": {
+          "aliases": [],
+          "description": "Migrate the group Management Service to the current group Management Service backup array.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the group.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "ntp_server": {
+          "aliases": [],
+          "description": "Either IP address or hostname of the NTP server for this group. Plain string.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "proxy_password": {
+          "aliases": [],
+          "description": "Password to authenticate with HTTP Proxy Server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy_port": {
+          "aliases": [],
+          "description": "Proxy Port of HTTP Proxy Server. Integer value between 0-65535 representing TCP/IP port.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy_server": {
+          "aliases": [],
+          "description": "Hostname or IP Address of HTTP Proxy Server. Setting this attribute to an empty string will unset all proxy settings.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy_username": {
+          "aliases": [],
+          "description": "Username to authenticate with HTTP Proxy Server. HTTP proxy server username, string up to 255 characters, special\ncharacters ([, ], `, ;, ampersand, tab, space, newline) are not allowed.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "reboot": {
+          "aliases": [],
+          "description": "Reboot all arrays in the group.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "repl_throttle_list": {
+          "aliases": [],
+          "description": "All the replication bandwidth limits on the system. All the throttles for the partner.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {}
+        },
+        "send_alert_to_support": {
+          "aliases": [],
+          "description": "Whether to send alert to Support.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "skip_secondary_mgmt_ip": {
+          "aliases": [],
+          "description": "Skip check for secondary management IP address.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "smtp_auth_enabled": {
+          "aliases": [],
+          "description": "Whether SMTP Server requires authentication.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "smtp_auth_password": {
+          "aliases": [],
+          "description": "Password to authenticate with SMTP Server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "smtp_auth_username": {
+          "aliases": [],
+          "description": "Username to authenticate with SMTP Server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "smtp_encrypt_type": {
+          "aliases": [],
+          "description": "Level of encryption for SMTP.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "none",
+            "starttls",
+            "ssl"
+          ],
+          "suboptions": {}
+        },
+        "smtp_port": {
+          "aliases": [],
+          "description": "Port number of SMTP Server.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "snmp_community": {
+          "aliases": [],
+          "description": "Community string to be used with SNMP.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "snmp_get_enabled": {
+          "aliases": [],
+          "description": "Whether to accept SNMP get commands.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "snmp_get_port": {
+          "aliases": [],
+          "description": "Port number to which SNMP get requests should be sent.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "snmp_sys_contact": {
+          "aliases": [],
+          "description": "Name of the SNMP administrator. Plain string.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "snmp_sys_location": {
+          "aliases": [],
+          "description": "Location of the group. Plain string.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "snmp_trap_enabled": {
+          "aliases": [],
+          "description": "Whether to enable SNMP traps.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "snmp_trap_host": {
+          "aliases": [],
+          "description": "Hostname or IP Address to send SNMP traps.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "snmp_trap_port": {
+          "aliases": [],
+          "description": "Port number of SNMP trap host.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "src_group_ip": {
+          "aliases": [],
+          "description": "IP address of the source group.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "src_group_name": {
+          "aliases": [],
+          "description": "Name of the source group.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "src_passphrase": {
+          "aliases": [],
+          "description": "Source group encryption passphrase. Encryption passphrase. String with size from 8 to 64 printable characters.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "src_password": {
+          "aliases": [],
+          "description": "Password of the source group.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "src_username": {
+          "aliases": [],
+          "description": "Username of the source group.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The group operation.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "syslogd_enabled": {
+          "aliases": [],
+          "description": "Is syslogd enabled on this system.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "syslogd_port": {
+          "aliases": [],
+          "description": "Port number for syslogd server.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "syslogd_server": {
+          "aliases": [],
+          "description": "Hostname of the syslogd server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tdz_enabled": {
+          "aliases": [],
+          "description": "Is Target Driven Zoning (TDZ) enabled on this group.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "tdz_prefix": {
+          "aliases": [],
+          "description": "Target Driven Zoning (TDZ) prefix for peer zones created by TDZ.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "test_alert": {
+          "aliases": [],
+          "description": "Generate a test alert.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "timezone": {
+          "aliases": [],
+          "description": "Timezone in which this group is located. Plain string.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tlsv1_enabled": {
+          "aliases": [],
+          "description": "Enable or disable TLSv1.0 and TLSv1.1.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "user_inactivity_timeout": {
+          "aliases": [],
+          "description": "The amount of time in seconds that the user session is inactive before timing out. User inactivity timeout in second, valid range is from 1 to 43200.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "validate_merge": {
+          "aliases": [],
+          "description": "Perform group merge validation.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "vss_validation_timeout": {
+          "aliases": [],
+          "description": "The amount of time in seconds to validate Microsoft VSS application synchronization before timing out. VSS validation timeout in second, valid range is from 1 to 3600.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "vvol_enabled": {
+          "aliases": [],
+          "description": "Are vVol enabled on this group.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage group",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n- name: Update group\n  hpe.nimble.hpe_nimble_group:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    send_alert_to_support: \"{{ send_alert_to_support }}\"\n    alert_to_email_addrs: \"{{ alert_to_email_addrs }}\"\n    state: \"present\"\n\n- name: Reboot group\n  hpe.nimble.hpe_nimble_group:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: \"present\"\n    reboot: true\n\n- name: Halt group\n  hpe.nimble.hpe_nimble_group:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: \"present\"\n    halt: true\n\n- name: Validate merge group\n  hpe.nimble.hpe_nimble_group:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    src_group_ip: \"{{ src_group_ip }}\"\n    src_password: \"{{ src_password }}\"\n    skip_secondary_mgmt_ip: \"{{ skip_secondary_mgmt_ip }}\"\n    src_passphrase: \"{{ src_passphrase }}\"\n    state: \"present\"\n    validate_merge: true\n\n- name: Merge group\n  hpe.nimble.hpe_nimble_group:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    src_group_ip: \"{{ src_group_ip }}\"\n    src_password: \"{{ src_password }}\"\n    skip_secondary_mgmt_ip: \"{{ skip_secondary_mgmt_ip }}\"\n    src_passphrase: \"{{ src_passphrase }}\"\n    state: \"present\"\n    merge: true\n\n- name: Test alert group\n  hpe.nimble.hpe_nimble_group:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    level: \"{{ level }}\"\n    state: \"present\"\n    test_alert: true\n\n- name: Migrate group\n  hpe.nimble.hpe_nimble_group:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: \"present\"\n    migrate: true\n\n- name: Check migrate group\n  hpe.nimble.hpe_nimble_group:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: \"present\"\n    check_migrate: true\n\n"
+  },
+  "hpe.nimble.hpe_nimble_info": {
+    "doc": {
+      "description": "Collect information from a HPE Nimble Storage array. By default, the module will collect basic information including array, groups config, protection templates, protection schedules, snapshots, snapshot collections, volume collections and volume counts. Additional information can be collected based on the configured set of arguments.",
+      "has_action": false,
+      "notes": "This module supports C(check_mode).",
+      "options": {
+        "gather_subset": {
+          "aliases": [],
+          "description": "When supplied, this argument will define the information to be collected. Possible values for this include \"all\" \"minimum\" \"config\" \"access_control_records\", \"alarms\", \"application_servers\", \"application_categories\", \"arrays\", \"chap_users\", \"controllers\", \"disks\", \"fibre_channel_interfaces\", \"fibre_channel_configs\", \"fibre_channel_initiator_aliases\", \"fibre_channel_ports\", \"folders\", \"groups\", \"initiator_groups\", \"initiators\", \"master_key\", \"network_configs\", \"performance_policies\", \"pools\", \"protection_schedules\", \"protection_templates\", \"protocol_endpoints\", \"replication_partners\", \"shelves\", \"snapshots\", \"snapshot_collections\", \"software_versions\", \"user_groups\", \"user_policies\", \"users\", \"volumes\", \"volume_collections\".\nEach subset except \"all\", \"minimum\" and \"config\" supports four types of subset options. Subset \"all\" supports limit and detail as subset options. Subset \"config\" and \"minimum\" does not support any subset options.\nSee the example section for usage of the following subset options.\nfields - A string representing which attributes to display for a given subset.\nlimit - An integer value which represents how many latest items to show for a given subset.\ndetail - A bool flag when set to true fetches everything for a given subset. Default is \"True\".\nquery - A key-value pair to query.",
+          "default": "minimum",
+          "type": "list",
+          "required": false,
+          "elements": "raw",
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Collect information from HPE Nimble Storage array",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n- name: Collect default set of information\n  hpe.nimble.hpe_nimble_info:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    gather_subset:\n      - minimum:\n  register: array_info\n\n- name: Show default information\n  ansible.builtin.debug:\n    msg: \"{{ array_info['nimble_info']['default'] }}\"\n\n- name: Collect config\n  hpe.nimble.hpe_nimble_info:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    gather_subset:\n      - config:\n  register: array_info\n\n- name: Show config information\n  ansible.builtin.debug:\n    msg: \"{{ array_info['nimble_info']['config'] }}\"\n\n- name: Collect all\n  hpe.nimble.hpe_nimble_info:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    gather_subset:\n      - all:\n          limit: 1\n  register: array_info\n\n- name: Show all information\n  ansible.builtin.debug:\n    msg: \"{{ array_info['nimble_info'] }}\"\n\n- name: Collect volume, snapshot and volume collection. Below query will show just one\n        snapshot detail with attributes 'name and id' for a volume called 'vol1'\n  hpe.nimble.hpe_nimble_info:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    gather_subset:\n      - volumes:\n          fields: \"name,id\"\n          limit: 2\n      - volume_collections:\n          limit: 1\n          detail: false\n      - snapshots:\n          fields: \"name,id\"\n          query:\n            vol_name: \"vol1\"\n          limit: 1\n          detail: True\n  register: array_info\n\n- name: Show information\n  ansible.builtin.debug:\n    msg: \"{{ array_info['nimble_info'] }}\"\n\n"
+  },
+  "hpe.nimble.hpe_nimble_initiator_group": {
+    "doc": {
+      "description": "Manage the HPE Nimble Storage initiator groups.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "access_protocol": {
+          "aliases": [],
+          "description": "Initiator group access protocol.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "iscsi",
+            "fc"
+          ],
+          "suboptions": {}
+        },
+        "app_uuid": {
+          "aliases": [],
+          "description": "Application identifier of initiator group. String of up to 255 alphanumeric characters, hyphen, colon, dot and underscore are allowed.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "change_name": {
+          "aliases": [],
+          "description": "Change name of the existing initiator group.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "Text description of initiator group.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fc_initiators": {
+          "aliases": [],
+          "description": "List of FC initiators. When create/update fc_initiators, WWPN is required.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {}
+        },
+        "fc_tdz_ports": {
+          "aliases": [],
+          "description": "List of target fibre channel ports with target driven zoning configured on this initiator group.",
+          "type": "list",
+          "required": false,
+          "elements": "int",
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "host_type": {
+          "aliases": [],
+          "description": "Initiator group host type. Available options are auto and hpux. The default option is auto. This attribute will be applied to all the initiators in the initiator group. Initiators with different host OSes should not be kept in the same initiator group having a non-default host type attribute.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "iscsi_initiators": {
+          "aliases": [],
+          "description": "List of iSCSI initiators. When create/update iscsi_initiators, either iqn or ip_address is always required with label.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {}
+        },
+        "metadata": {
+          "aliases": [],
+          "description": "Key-value pairs that augment an initiator group's attributes. List of key-value pairs. Keys must be unique and non-empty.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the initiator group.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The initiator group operation.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent",
+            "create"
+          ],
+          "suboptions": {}
+        },
+        "target_subnets": {
+          "aliases": [],
+          "description": "List of target subnet labels. If specified, discovery and access to volumes will be restricted to the specified subnets.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage initiator groups",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n# if state is create, then create ig. Fails if already present.\n# if state is present, then create ig if not present. Succeeds if it already exists.\n- name: Create an igroup\n  hpe.nimble.hpe_nimble_initiator_group:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    access_protocol: \"{{ access_protocol | default('iscsi')}}\"\n    name: \"{{ name }}\"\n    iscsi_initiators: \"{{ iscsi_initiators | default([])}}\"  # list of dictionaries. Each entry in the dictionary has one initiator details.\n    description: \"{{ description | default(None) }}\"\n    state: \"{{ state | default('present') }}\"\n\n- name: Delete igroup\n  hpe.nimble.hpe_nimble_initiator_group:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    access_protocol: \"{{ access_protocol | default('iscsi')}}\"\n    name: \"{{ name }}\"\n    state: absent\n\n"
+  },
+  "hpe.nimble.hpe_nimble_network": {
+    "doc": {
+      "description": "Manage the storage network configuration on the HPE Nimble Storage group.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "activate": {
+          "aliases": [],
+          "description": "Activate a network configuration.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "array": {
+          "aliases": [],
+          "description": "List of array network configs.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {}
+        },
+        "change_name": {
+          "aliases": [],
+          "description": "Change name of the existing network config.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "ignore_validation_mask": {
+          "aliases": [],
+          "description": "Indicates whether to ignore the validation.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "iscsi_automatic_connection_method": {
+          "aliases": [],
+          "description": "Whether automatic connection method is enabled. Enabling this means means redirecting connections from the specified iSCSI discovery IP address to the best data IP address based on connection counts.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "iscsi_connection_rebalancing": {
+          "aliases": [],
+          "description": "Whether rebalancing is enabled. Enabling this means rebalancing iSCSI connections by periodically breaking existing connections that are out-of-balance, allowing the host to reconnect to a more appropriate data IP address.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "mgmt_ip": {
+          "aliases": [],
+          "description": "Management IP address for the Group. Four numbers in the range (0,255) separated by periods.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the network configuration. Use the name 'draft' when creating a draft configuration.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "active",
+            "backup",
+            "draft"
+          ],
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "route": {
+          "aliases": [],
+          "description": "List of static routes.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {}
+        },
+        "secondary_mgmt_ip": {
+          "aliases": [],
+          "description": "Secondary management IP address for the Group. Four numbers in the range [0,255] separated by periods.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The network config operation.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "create",
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "subnet": {
+          "aliases": [],
+          "description": "List of subnet configs.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "validate": {
+          "aliases": [],
+          "description": "Validate a network configuration.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage network configuration",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n# if state is create, then create network config, fails if it exist or cannot create\n# if state is present, then create network config if not present ,else success\n- name: Create network config\n  hpe.nimble.hpe_nimble_network:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    route: \"{{ route }}\"\n    subnet: \"{{ subnet }}\"\n    array: \"{{ array }}\"\n    iscsi_automatic_connection_method: true\n    iscsi_connection_rebalancing: False\n    mgmt_ip: \"{{ mgmt_ip }}\"\n    state: \"{{ state | default('present') }}\"\n\n- name: Delete network config\n  hpe.nimble.hpe_nimble_network:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: \"absent\"\n\n- name: Validate network config\n  hpe.nimble.hpe_nimble_network:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: \"present\"\n    ignore_validation_mask: 1\n    validate: true\n\n- name: Activate Network config\n  hpe.nimble.hpe_nimble_network:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: \"present\"\n    ignore_validation_mask: 1\n    activate: true\n\n"
+  },
+  "hpe.nimble.hpe_nimble_partner": {
+    "doc": {
+      "description": "Manage the replication partner on an HPE Nimble Storage group.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "control_port": {
+          "aliases": [],
+          "description": "Port number of partner control interface. Value -1 for an invalid port or a positive integer value up to 65535 representing the TCP/IP port.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "data_port": {
+          "aliases": [],
+          "description": "Port number of partner data interface. Value -1 for an invalid port or a positive integer value up to 65535 representing the TCP/IP port.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "Description of replication partner.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "downstream_hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of partner interface. This must be the partner's Group Management IP address. String of up to 64 alphanumeric characters, - and . and ':' are allowed after first character.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "folder": {
+          "aliases": [],
+          "description": "The Folder ID within the pool where volumes replicated from this partner will be created. This is not supported for pool partners.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "match_folder": {
+          "aliases": [],
+          "description": "Indicates whether to match the upstream volume's folder on the downstream.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of replication partner. String of up to 64 alphanumeric characters, - and . and  ':' are allowed after first character.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "pause": {
+          "aliases": [],
+          "description": "Pause replication for the specified partner.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "pool": {
+          "aliases": [],
+          "description": "The pool name where volumes replicated from this partner will be created. Replica volumes created as clones ignore this parameter and are always created in the same pool as their parent volume.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "repl_data_hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of partner data interface. String of up to 64 alphanumeric characters, - and . and ':' are allowed after first character.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "resume": {
+          "aliases": [],
+          "description": "Resume replication for the specified partner.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "secret": {
+          "aliases": [],
+          "description": "Replication partner shared secret, used for mutual authentication of the partners.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The replication partner operation.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "create",
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "subnet_label": {
+          "aliases": [],
+          "description": "Indicates whether to match the upstream volume's folder on the downstream.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "subnet_type": {
+          "aliases": [],
+          "description": "Type of the subnet used to replicate to this partner.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "invalid",
+            "unconfigured",
+            "unconfigured",
+            "mgmt",
+            "data",
+            "mgmt_data"
+          ],
+          "suboptions": {}
+        },
+        "test": {
+          "aliases": [],
+          "description": "Test connectivity to the specified partner.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "throttles": {
+          "aliases": [],
+          "description": "Throttles used while replicating from/to this partner. All the throttles for the partner.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage Replication Partner",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n# if state is create, then create partner, fails if it exist or cannot create\n# if state is present, then create partner if not present ,else success\n- name: Create Partner\n  hpe.nimble.hpe_nimble_partner:\n    host: \"{{ host }}\"  # upstream host\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name | mandatory }}\"\n    description: \"{{ description }}\"\n    downstream_hostname: \"{{ downstream_hostname | mandatory }}\"\n    secret: \"{{ secret | mandatory }}\"\n    subnet_label: \"{{ subnet_label | mandatory }}\"\n    state: \"{{ state | default('present') }}\"\n\n- name: Delete Partner\n  hpe.nimble.hpe_nimble_partner:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    downstream_hostname: \"{{ downstream_hostname | mandatory }}\"\n    state: \"absent\"\n\n- name: Test Partner\n  hpe.nimble.hpe_nimble_partner:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    downstream_hostname: \"{{ downstream_hostname | mandatory }}\"\n    state: \"present\"\n    test: true\n\n- name: Pause Partner\n  hpe.nimble.hpe_nimble_partner:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    downstream_hostname: \"{{ downstream_hostname | mandatory }}\"\n    state: \"present\"\n    pause: true\n\n- name: Resume Partner\n  hpe.nimble.hpe_nimble_partner:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    downstream_hostname: \"{{ downstream_hostname | mandatory }}\"\n    state: \"present\"\n    resume: true\n\n"
+  },
+  "hpe.nimble.hpe_nimble_performance_policy": {
+    "doc": {
+      "description": "Manage the performance policies on an HPE Nimble Storage group.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "app_category": {
+          "aliases": [],
+          "description": "Specifies the application category of the associated volume.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "block_size": {
+          "aliases": [],
+          "description": "Block Size in bytes to be used by the volumes created with this specific performance policy. Supported block sizes are 4096 bytes (4 KB), 8192 bytes (8 KB), 16384 bytes(16 KB), and 32768 bytes (32 KB). Block size of a performance policy cannot be changed once the performance policy is created.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "cache": {
+          "aliases": [],
+          "description": "Flag denoting if data in the associated volume should be cached.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "cache_policy": {
+          "aliases": [],
+          "description": "Specifies how data of associated volume should be cached. Normal policy caches data but skips in certain conditions such as sequential I/O. Aggressive policy will accelerate caching of all data belonging to this volume, regardless of sequentiality.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "disabled",
+            "normal",
+            "aggressive",
+            "no_write",
+            "aggressive_read_no_write"
+          ],
+          "suboptions": {}
+        },
+        "change_name": {
+          "aliases": [],
+          "description": "Change name of the existing performance policy.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "compress": {
+          "aliases": [],
+          "description": "Flag denoting if data in the associated volume should be compressed.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "dedupe": {
+          "aliases": [],
+          "description": "Specifies if dedupe is enabled for volumes created with this performance policy.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "Description of a performance policy.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the performance policy.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "space_policy": {
+          "aliases": [],
+          "description": "Specifies the state of the volume upon space constraint violation such as volume limit violation or volumes above their volume reserve, if the pool free space is exhausted. Supports two policies, 'offline' and 'non_writable'.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "invalid",
+            "offline",
+            "non_writable",
+            "read_only",
+            "login_only"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The performance policy operation.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent",
+            "create"
+          ],
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage performance policies",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n# if state is create , then create a performance policy if not present. Fails if already present.\n# if state is present, then create a performance policy if not present. Succeed if it already exists.\n- name: Create performance policy if not present\n  hpe.nimble.hpe_nimble_performance_policy:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    state: \"{{ state | default('present') }}\"\n    name: \"{{ name }}\"\n    description: \"{{ description }}\"\n    block_size: \"{{ block_size }}\"\n    compress: \"{{ compress }}\"\n\n- name: Delete performance policy\n  hpe.nimble.hpe_nimble_performance_policy:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: absent\n\n"
+  },
+  "hpe.nimble.hpe_nimble_pool": {
+    "doc": {
+      "description": "Manage the storage pools on an HPE Nimble Storage group.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "array_list": {
+          "aliases": [],
+          "description": "List of arrays in the pool with detailed information. To create or update array list, only array ID is required.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {}
+        },
+        "change_name": {
+          "aliases": [],
+          "description": "Change name of the existing pool.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "dedupe_all_volumes": {
+          "aliases": [],
+          "description": "Indicates if dedupe is enabled by default for new volumes on this pool.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "Text description of pool.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Forcibly delete the specified pool even if it contains deleted volumes whose space is being reclaimed. Forcibly remove an array from array_list via an update operation even if the array is not reachable. There should no volumes in the pool for the force update operation to succeed.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "is_default": {
+          "aliases": [],
+          "description": "Indicates if this is the default pool.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "merge": {
+          "aliases": [],
+          "description": "Merge the specified pool into the target pool. All volumes on the specified pool are moved to the target pool and the specified pool is then deleted. All the arrays in the pool are assigned to the target pool.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the pool.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The pool operation.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent",
+            "create"
+          ],
+          "suboptions": {}
+        },
+        "target": {
+          "aliases": [],
+          "description": "Name of the target pool.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage pools",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n# if state is create , then create a pool if not present. Fails if already present.\n# if state is present, then create a pool if not present. Succeed if it already exists.\n- name: Create pool if not present\n  hpe.nimble.hpe_nimble_pool:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    state: \"{{ state | default('present') }}\"\n    name: \"{{ name }}\"\n    array_list: \"{{ array_list }} \"\n    description: \"{{ description }}\"\n\n- name: Delete pool\n  hpe.nimble.hpe_nimble_pool:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: absent\n\n"
+  },
+  "hpe.nimble.hpe_nimble_protection_schedule": {
+    "doc": {
+      "description": "Manage the protection schedules on an HPE Nimble Storage group.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "at_time": {
+          "aliases": [],
+          "description": "Time of day when snapshot should be taken. In case repeat frequency specifies more than one snapshot in a day then the until_time option specifies until what time of day to take snapshots.",
+          "default": "0",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "change_name": {
+          "aliases": [],
+          "description": "Change the name of existing protection schedule.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "days": {
+          "aliases": [],
+          "description": "Specifies which days snapshots should be taken. Comma separated list of days of the week or 'all'.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "Description of the schedule.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "disable_appsync": {
+          "aliases": [],
+          "description": "Disables application synchronized snapshots and creates crash consistent snapshots instead.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "downstream_partner": {
+          "aliases": [],
+          "description": "Specifies the partner name if snapshots created by this schedule should be replicated.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the protection schedule to create.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "num_retain": {
+          "aliases": [],
+          "description": "Number of snapshots to retain. If replication is enabled on this schedule the array will always retain the latest replicated snapshot, which may exceed the specified retention value. This is necessary to ensure efficient replication performance.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "num_retain_replica": {
+          "aliases": [],
+          "description": "Number of snapshots to retain on the replica.",
+          "default": "0",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "period": {
+          "aliases": [],
+          "description": "Repeat interval for snapshots with respect to the period_unit. For example, a value of 2 with the 'period_unit' of 'hours' results in one snapshot every 2 hours.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "period_unit": {
+          "aliases": [],
+          "description": "Time unit over which to take the number of snapshots specified in 'period'. For example, a value of 'days' with a 'period' of '1' results in one snapshot every day.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "minutes",
+            "hours",
+            "days",
+            "weeks"
+          ],
+          "suboptions": {}
+        },
+        "prot_template_name": {
+          "aliases": [],
+          "description": "Name of the protection template in which this protection schedule is attached to.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "repl_alert_thres": {
+          "aliases": [],
+          "description": "Replication alert threshold in seconds. If the replication of a snapshot takes more than this amount of time to complete an alert will be generated. Enter 0 to disable this alert.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "replicate_every": {
+          "aliases": [],
+          "description": "Specifies which snapshots should be replicated. If snapshots are replicated and this option is not specified, every snapshot is replicated.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "schedule_type": {
+          "aliases": [],
+          "description": "Normal schedules have internal timers which drive snapshot creation. An externally driven schedule has no internal timers. All snapshot activity is driven by an external trigger. In other words, these schedules are used only for externally driven manual snapshots.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "regular",
+            "external_trigger"
+          ],
+          "suboptions": {}
+        },
+        "skip_db_consistency_check": {
+          "aliases": [],
+          "description": "Skip consistency check for database files on snapshots created by this schedule. This option only applies to snapshot schedules of a protection template with application synchronization set to VSS, application ID set to MS Exchange 2010 or later w/DAG, this schedule's snap_verify option set to yes, and its disable_appsync option set to false. Skipping consistency checks is only recommended if each database in a DAG has multiple copies.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "snap_verify": {
+          "aliases": [],
+          "description": "Run verification tool on snapshot created by this schedule. This option can only be used with snapshot schedules of a protection template that has application synchronization. The tool used to verify snapshot depends on the type of application. For example, if application synchronization is VSS and the application ID is Exchange, eseutil tool is run on the snapshots. If verification fails, the logs are not truncated.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The protection schedule operations",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent",
+            "create"
+          ],
+          "suboptions": {}
+        },
+        "until_time": {
+          "aliases": [],
+          "description": "Time of day to stop taking snapshots. Applicable only when repeat frequency specifies more than one snapshot in a day.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_downstream_for_DR": {
+          "aliases": [],
+          "description": "Break synchronous replication for the specified volume collection and present downstream volumes to host(s). Downstream volumes in the volume collection will be set to online and presented to the host(s) using new serial and LUN numbers. No changes will be made to the upstream volumes, their serial and LUN numbers, and their online state. The existing ACLs on the upstream volumes will be copied to the downstream volumes. Use this in conjunction with an empty downstream_partner_id. This unconfigures synchronous replication when the partner is removed from the last replicating schedule in the specified volume collection and presents the downstream volumes to host(s). Host(s) will need to be configured to access the new volumes with the newly assigned serial and LUN numbers. Use this option to expose downstream volumes in a synchronously replicated volume collection to host(s) only when the upstream partner is confirmed to be down and there is no communication between partners. Do not execute this operation if a previous Group Management Service takeover has been performed on a different array. Do not perform a subsequent Group Management Service takeover on a different array as it will lead to irreconcilable conflicts. This limitation is cleared once the Group management service backup array has successfully synchronized after reconnection.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "volcoll_name": {
+          "aliases": [],
+          "description": "Name of the volume collection in which this protection schedule is attached to.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "volcoll_or_prottmpl_type": {
+          "aliases": [],
+          "description": "Type of the protection policy this schedule is attached to.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "protection_template",
+            "volume_collection"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage protection schedules",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n# if state is create , then create a protection schedule if not present. Fails if already present.\n# if state is present, then create a protection schedule if not present. Succeed if it already exists.\n- name: Create protection schedule if not present\n  hpe.nimble.hpe_nimble_protection_schedule:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    description: \"{{ description | default(None)}}\"\n    state: \"{{ state | default('present') }}\"\n    volcoll_or_prottmpl_type: \"{{ volcoll_or_prottmpl_type }}\"\n    prot_template_name: \"{{ prot_template_name }}\"\n    num_retain: \"{{ num_retain }}\"\n\n- name: Delete protection schedule\n  hpe.nimble.hpe_nimble_protection_schedule:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    volcoll_or_prottmpl_type: \"{{ volcoll_or_prottmpl_type }}\"\n    volcoll_name: \"{{ volcoll_name }}\"\n    state: absent\n\n"
+  },
+  "hpe.nimble.hpe_nimble_protection_template": {
+    "doc": {
+      "description": "Manage the protection templates on an HPE Nimble Storage group.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "agent_hostname": {
+          "aliases": [],
+          "description": "Generic backup agent hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "agent_password": {
+          "aliases": [],
+          "description": "Generic backup agent password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "agent_username": {
+          "aliases": [],
+          "description": "Generic backup agent username.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "app_cluster": {
+          "aliases": [],
+          "description": "If the application is running within a windows cluster environment, this is the cluster name.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "app_id": {
+          "aliases": [],
+          "description": "Application ID running on the server.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "inval",
+            "exchange",
+            "exchange_dag",
+            "hyperv",
+            "sql2005",
+            "sql2008",
+            "sql2012",
+            "sql2014",
+            "sql2016",
+            "sql2017"
+          ],
+          "suboptions": {}
+        },
+        "app_server": {
+          "aliases": [],
+          "description": "Application server hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "app_service_name": {
+          "aliases": [],
+          "description": "If the application is running within a windows cluster environment then this is the instance name of the service running within the cluster environment.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "app_sync": {
+          "aliases": [],
+          "description": "Application synchronization.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "none",
+            "vss",
+            "vmware",
+            "generic"
+          ],
+          "suboptions": {}
+        },
+        "change_name": {
+          "aliases": [],
+          "description": "Change name of the existing protection template.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "Text description of protection template.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the protection template.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The protection template operations.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent",
+            "create"
+          ],
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "vcenter_hostname": {
+          "aliases": [],
+          "description": "VMware vCenter hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vcenter_password": {
+          "aliases": [],
+          "description": "Application VMware vCenter password. A password with few constraints.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vcenter_username": {
+          "aliases": [],
+          "description": "Application VMware vCenter username. String of up to 80 alphanumeric characters, beginning with a letter. It can include ampersand (@), backslash (\\), dash (-), period (.), and underscore (_).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage protection templates",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n# if state is create , then create a protection template if not present. Fails if already present.\n# if state is present, then create a protection template if not present. Succeed if it already exists.\n- name: Create protection template if not present\n  hpe.nimble.hpe_nimble_protection_template:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    description: \"{{ description | default(None)}}\"\n    state: \"{{ state | default('present') }}\"\n\n- name: Delete protection template\n  hpe.nimble.hpe_nimble_protection_template:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: absent\n\n"
+  },
+  "hpe.nimble.hpe_nimble_shelf": {
+    "doc": {
+      "description": "Manage the shelves on an HPE Nimble Storage group.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "accept_dedupe_impact": {
+          "aliases": [],
+          "description": "Accept the reduction or elimination of deduplication capability on the system as a result of activating a shelf that does not meet the necessary deduplication requirements.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "accept_foreign": {
+          "aliases": [],
+          "description": "Accept the removal of data on the shelf disks and activate foreign shelf.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "activated": {
+          "aliases": [],
+          "description": "Activated state for shelf or disk set means it is available to store date on. An activated shelf may not be deactivated.",
+          "type": "bool",
+          "required": true,
+          "suboptions": {}
+        },
+        "driveset": {
+          "aliases": [],
+          "description": "Driveset to activate.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Forcibly activate shelf.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "last_request": {
+          "aliases": [],
+          "description": "Indicates this is the last request in a series of shelf add requests.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "shelf_serial": {
+          "aliases": [],
+          "description": "Serial number of shelf.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The shelf operation.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage shelves",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n- name: Update shelf\n  hpe.nimble.hpe_nimble_shelf:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    shelf_serial: \"{{ shelf_serial | mandatory }}\"\n    accept_foreign: \"{{ accept_foreign }}\"\n    force: \"{{ force }}\"\n    activated: \"{{ activated }}\"\n    state: present\n\n"
+  },
+  "hpe.nimble.hpe_nimble_snapshot": {
+    "doc": {
+      "description": "Manage the snapshots on an HPE Nimble Storage group.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "agent_type": {
+          "aliases": [],
+          "description": "External management agent type.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "none",
+            "smis",
+            "vvol",
+            "openstack",
+            "openstackv2"
+          ],
+          "suboptions": {}
+        },
+        "app_uuid": {
+          "aliases": [],
+          "description": "Application identifier of snapshot.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "change_name": {
+          "aliases": [],
+          "description": "Change name of the existing snapshot.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "Text description of snapshot.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "expiry_after": {
+          "aliases": [],
+          "description": "Number of seconds after which this snapshot is considered expired by snapshot TTL. A value of 0 indicates that snapshot never expires.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Forcibly delete the specified snapshot even if it is the last replicated collection. Doing so could lead to full re-seeding at the next replication.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "metadata": {
+          "aliases": [],
+          "description": "Key-value pairs that augment a snapshot's attributes. List of key-value pairs. Keys must be unique and non-empty.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the snapshot.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "online": {
+          "aliases": [],
+          "description": "Online state for a snapshot means it could be mounted for data restore.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The snapshot state.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent",
+            "create"
+          ],
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "volume": {
+          "aliases": [],
+          "description": "Parent volume name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "writable": {
+          "aliases": [],
+          "description": "Allow snapshot to be writable. Mandatory and must be set to 'true' for VSS application synchronized snapshots.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage snapshots",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n# if state is create , then create a snapshot if not present. Fails if already present.\n# if state is present, then create a snapshot if not present. Succeeds if it already exists.\n- name: Create snapshot if not present\n  hpe.nimble.hpe_nimble_snapshot:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    state: \"{{ state | default('present') }}\"\n    volume: \"{{ volume }}\"\n    name: \"{{ name }}\"\n    online: \"{{ online | default(true) }}\"\n    writable: \"{{ writable | default(false) }}\"\n\n- name: Delete snapshot  (must be offline)\n  hpe.nimble.hpe_nimble_snapshot:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    volume: \"{{ volume }}\"\n    name: \"{{ name }}\"\n    state: absent\n\n"
+  },
+  "hpe.nimble.hpe_nimble_snapshot_collection": {
+    "doc": {
+      "description": "Manage the snapshot collections on an HPE Nimble Storage group.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "agent_type": {
+          "aliases": [],
+          "description": "External management agent type for snapshots being created as part of snapshot collection.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "allow_writes": {
+          "aliases": [],
+          "description": "Allow applications to write to created snapshot(s). Mandatory and must be set to 'true' for VSS application synchronized snapshots.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "change_name": {
+          "aliases": [],
+          "description": "Change name of the existing snapshot collection.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "Text description of snapshot collection.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "disable_appsync": {
+          "aliases": [],
+          "description": "Do not perform application synchronization for this snapshot. Create a crash-consistent snapshot instead.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "expiry_after": {
+          "aliases": [],
+          "description": "Number of seconds after which this snapcoll is considered expired by the snapshot TTL. A value of 0 indicates that the snapshot never expires, 1 indicates that the snapshot uses a group-level configured TTL value and any other value indicates the number of seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Forcibly delete the specified snapshot collection even if it is the last replicated snapshot. Doing so could lead to full re-seeding at the next replication.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "invoke_on_upstream_partner": {
+          "aliases": [],
+          "description": "Invoke snapshot request on upstream partner. This operation is not supported for synchronous replication volume collections.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "is_external_trigger": {
+          "aliases": [],
+          "description": "Is externally triggered.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "metadata": {
+          "aliases": [],
+          "description": "Key-value pairs that augment a snapshot collection attributes. List of key-value pairs. Keys must be unique and non-empty.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the snapshot collection.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "replicate_to": {
+          "aliases": [],
+          "description": "Specifies the partner name that the snapshots in this snapshot collection are replicated to.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "skip_db_consistency_check": {
+          "aliases": [],
+          "description": "Skip consistency check for database files on this snapshot. This option only applies to volume collections with application synchronization set to VSS, application ID set to MS Exchange 2010 or later with Database Availability Group (DAG), snap_verify option set to true, and disable_appsync option set to false.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "snap_verify": {
+          "aliases": [],
+          "description": "Run verification tool on this snapshot. This option can only be used with a volume collection that has application synchronization.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "start_online": {
+          "aliases": [],
+          "description": "Start with snapshot set online.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The snapshot collection operation.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent",
+            "create"
+          ],
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "vol_snap_attr_list": {
+          "aliases": [],
+          "description": "List of snapshot attributes for snapshots being created as part of snapshot collection creation. List of volumes with per snapshot attributes.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {}
+        },
+        "volcoll": {
+          "aliases": [],
+          "description": "Parent volume collection name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage snapshot collections",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n# if state is create , then create a snapshot collection if not present. Fails if already present.\n# if state is present, then create a snapshot collection if not present. Succeeds if it already exists\n- name: Create snapshot collection if not present\n  hpe.nimble.hpe_nimble_snapshot_collection:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    state: \"{{ state | default('present') }}\"\n    name: \"{{ name | mandatory}}\"\n    volcoll: \"{{ volcoll | mandatory}}\"\n    description: \"{{ description }}\"\n\n- name: Delete snapshot collection (must be offline)\n  hpe.nimble.hpe_nimble_snapshot_collection:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    volcoll: \"{{ volcoll }}\"\n    state: absent\n\n"
+  },
+  "hpe.nimble.hpe_nimble_user": {
+    "doc": {
+      "description": "Manage the users on an HPE Nimble Storage group.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "auth_password": {
+          "aliases": [],
+          "description": "Authorization password for changing password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "change_name": {
+          "aliases": [],
+          "description": "Change name of the existing user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "Description of the user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "disabled": {
+          "aliases": [],
+          "description": "User is currently disabled.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "email_addr": {
+          "aliases": [],
+          "description": "Email address of the user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "full_name": {
+          "aliases": [],
+          "description": "Fully qualified name of the user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "inactivity_timeout": {
+          "aliases": [],
+          "description": "The amount of time that the user session is inactive before timing out. A value of 0 indicates that the timeout is taken from the group setting.",
+          "default": "0",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "role": {
+          "aliases": [],
+          "description": "Role of the user. Default is 'guest'.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "administrator",
+            "poweruser",
+            "operator",
+            "guest"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The user operation.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "create",
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "unlock": {
+          "aliases": [],
+          "description": "Unlock the user.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "user_password": {
+          "aliases": [],
+          "description": "User's login password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage users",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n# if state is create, then create user, fails if it exist or cannot create\n# if state is present, then create user if not present, else success\n- name: Create user\n  hpe.nimble.hpe_nimble_user:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    description: \"{{ description }}\"\n    state: \"{{ state | default('present') }}\"\n\n- name: Delete user\n  hpe.nimble.hpe_nimble_user:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: \"absent\"\n\n- name: Unlock user\n  hpe.nimble.hpe_nimble_user:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: \"present\"\n    unlock: true\n\n"
+  },
+  "hpe.nimble.hpe_nimble_user_policy": {
+    "doc": {
+      "description": "Manage the user policies on an HPE Nimble Storage group.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "allowed_attempts": {
+          "aliases": [],
+          "description": "Number of authentication attempts allowed before the user account is locked. Allowed range is [1, 10] inclusive. '0' indicates no limit.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "digit": {
+          "aliases": [],
+          "description": "Number of numerical characters required in user passwords. Allowed range is [0, 255] inclusive.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "lower": {
+          "aliases": [],
+          "description": "Number of lowercase characters required in user passwords. Allowed range is [0, 255] inclusive.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "max_sessions": {
+          "aliases": [],
+          "description": "Maximum number of sessions allowed for a group. Allowed range is [10, 1000] inclusive.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "min_length": {
+          "aliases": [],
+          "description": "Minimum length for user passwords. Allowed range is [8, 255] inclusive.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "no_reuse": {
+          "aliases": [],
+          "description": "Number of times that a password must change before you can reuse a previous password. Allowed range is [1,20] inclusive.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "previous_diff": {
+          "aliases": [],
+          "description": "Number of characters that must be different from the previous password. Allowed range is [1, 255] inclusive.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "special": {
+          "aliases": [],
+          "description": "Number of special characters required in user passwords. Allowed range is [0, 255] inclusive.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The user policy operation.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "upper": {
+          "aliases": [],
+          "description": "Number of uppercase characters required in user passwords. Allowed range is [0, 255] inclusive.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage user policies",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n- name: Update user policy\n  hpe.nimble.hpe_nimble_user_policy:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    upper: \"{{ upper }}\"\n    allowed_attempts: 2\n    min_length: 10\n    state: \"present\"\n\n"
+  },
+  "hpe.nimble.hpe_nimble_volume": {
+    "doc": {
+      "description": "Manage the volumes on an HPE Nimble Storage group.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "agent_type": {
+          "aliases": [],
+          "description": "External management agent type.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "none",
+            "smis",
+            "vvol",
+            "openstack",
+            "openstackv2"
+          ],
+          "suboptions": {}
+        },
+        "app_uuid": {
+          "aliases": [],
+          "description": "Application identifier of volume.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "block_size": {
+          "aliases": [],
+          "description": "Size in bytes of blocks in the volume.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "cache_pinned": {
+          "aliases": [],
+          "description": "If set to true, all the contents of this volume are kept in flash cache.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "caching": {
+          "aliases": [],
+          "description": "Indicate caching the volume is enabled.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "change_name": {
+          "aliases": [],
+          "description": "Change name of the existing source volume.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "clone": {
+          "aliases": [],
+          "description": "Whether this volume is a clone. Use this attribute in combination with name and snapshot to create a clone by setting clone = true.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "dedupe": {
+          "aliases": [],
+          "description": "Indicate whether dedupe is enabled.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "Text description of volume.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "destination": {
+          "aliases": [],
+          "description": "Name of the destination pool where the volume is moving to.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "encryption_cipher": {
+          "aliases": [],
+          "description": "The encryption cipher of the volume.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "none",
+            "aes_256_xts"
+          ],
+          "suboptions": {}
+        },
+        "folder": {
+          "aliases": [],
+          "description": "Name of the folder holding this volume.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Forcibly offline, reduce size or change read-only status a volume.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "force_vvol": {
+          "aliases": [],
+          "description": "Forcibly move a virtual volume.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "iscsi_target_scope": {
+          "aliases": [],
+          "description": "This indicates whether volume is exported under iSCSI Group Target or iSCSI volume target. This attribute is only meaningful to iSCSI system.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "volume",
+            "group"
+          ],
+          "suboptions": {}
+        },
+        "limit": {
+          "aliases": [],
+          "description": "Limit on the volume's mapped usage, expressed as a percentage of the volume's size.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "limit_iops": {
+          "aliases": [],
+          "description": "IOPS limit for this volume.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "limit_mbps": {
+          "aliases": [],
+          "description": "Throughput limit for this volume in MB/s.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "metadata": {
+          "aliases": [],
+          "description": "User defined key-value pairs that augment an volume's attributes. List of key-value pairs. Keys must be unique and non-empty. When creating an object, values must be non-empty. When updating an object, an empty value causes the corresponding key to be removed.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "move": {
+          "aliases": [],
+          "description": "Move a volume to different pool.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "multi_initiator": {
+          "aliases": [],
+          "description": "For iSCSI volume target, this flag indicates whether the volume and its snapshots can be accessed from multiple initiators at the same time.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the source volume.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "online": {
+          "aliases": [],
+          "description": "Online state of volume, available for host initiators to establish connections.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "owned_by_group": {
+          "aliases": [],
+          "description": "Name of group that currently owns the volume.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "parent": {
+          "aliases": [],
+          "description": "Name of parent volume.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "perf_policy": {
+          "aliases": [],
+          "description": "Name of the performance policy. After creating a volume, performance policy for the volume can only be changed to another performance policy with same block size.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "pool": {
+          "aliases": [],
+          "description": "Name associated with the pool in the storage pool table.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "read_only": {
+          "aliases": [],
+          "description": "Volume is read-only.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "size": {
+          "aliases": [],
+          "description": "Volume size in megabytes. Size is required for creating a volume but not for cloning an existing volume.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "snapshot": {
+          "aliases": [],
+          "description": "Base snapshot name. This attribute is required together with name and clone when cloning a volume with the create operation.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The volume operations.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent",
+            "create",
+            "restore"
+          ],
+          "suboptions": {}
+        },
+        "thinly_provisioned": {
+          "aliases": [],
+          "description": "Set volume's provisioning level to thin.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "volcoll": {
+          "aliases": [],
+          "description": "Name of volume collection of which this volume is a member. Use this attribute in update operation to associate or dissociate volumes with or from volume collections. When associating, set this attribute to the name of the volume collection. When dissociating, set this attribute to empty string.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage volumes",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n# If state is \"create\", then create a volume if not present. Fails if already present.\n# if state is present, then create a volume if not present. Succeeds if it already exists.\n- name: Create volume if not present\n  hpe.nimble.hpe_nimble_volume:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    state: \"{{ state | default('present') }}\"\n    size: \"{{ size }}\"\n    limit_iops: \"{{ limit_iops }}\"\n    limit_mbps: 5000\n    force: false\n    metadata: \"{{ metadata }}\" # metadata = {'mykey1': 'myval1', 'mykey2': 'myval2'}\n    description: \"{{ description }}\"\n    name: \"{{ name }}\"\n\n- name: Changing volume \"{{ name }}\" to offline state\n  hpe.nimble.hpe_nimble_volume:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    online: False\n    state: present\n    name: \"{{ name }}\"\n\n- name: Changing volume \"{{ name }}\" to online state\n  hpe.nimble.hpe_nimble_volume:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    online: True\n    state: present\n    name: \"{{ name }}\"\n\n# Create a clone from the given snapshot name.\n# If snapshot name is not provided then a snapshot is created on the source volume.\n# Clone task only run if \"parent\" is specified. Snapshot is optional.\n- name: Create or Refresh a clone\n  hpe.nimble.hpe_nimble_volume:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\" # name here is the name of cloned volume\n    parent: \"{{ parent | mandatory }}\"\n    snapshot: \"{{ snapshot | default(None)}}\"\n    state: \"{{ state | default('present') }}\"\n  when:\n    - parent is defined\n\n- name: Destroy volume (must be offline)\n  hpe.nimble.hpe_nimble_volume:\n    name: \"{{ name }}\"\n    state: absent\n\n# If no snapshot is given, then restore volume to last snapshot. Fails if no snapshots exist.\n# If snapshot is provided, then restore volume from specified snapshot.\n- name: Restore volume \"{{ name }}\"\n  hpe.nimble.hpe_nimble_volume:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    snapshot: \"{{ snapshot | default(None)}}\"\n    state: restore\n\n- name: Delete volume \"{{ name }}\" (must be offline)\n  hpe.nimble.hpe_nimble_volume:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: absent\n\n- name: Move volume to pool\n  hpe.nimble.hpe_nimble_volume:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    move: true\n    name: \"{{ name }}\"\n    state: present\n    destination: \"{{ destination | mandatory }}\"\n\n"
+  },
+  "hpe.nimble.hpe_nimble_volume_collection": {
+    "doc": {
+      "description": "Manage the volume collections on an HPE Nimble Storage group.",
+      "has_action": false,
+      "notes": "This module does not support C(check_mode).",
+      "options": {
+        "abort_handover": {
+          "aliases": [],
+          "description": "Abort in-progress handover. If for some reason a previously invoked handover request is unable to complete, this action can be used to cancel it. This operation is not supported for synchronous replication volume collections.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "agent_hostname": {
+          "aliases": [],
+          "description": "Generic backup agent hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "agent_password": {
+          "aliases": [],
+          "description": "Generic backup agent password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "agent_username": {
+          "aliases": [],
+          "description": "Generic backup agent username.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "app_cluster": {
+          "aliases": [],
+          "description": "If the application is running within a Windows cluster environment, this is the cluster name.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "app_id": {
+          "aliases": [],
+          "description": "Application ID running on the server.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "inval",
+            "exchange",
+            "exchange_dag",
+            "hyperv",
+            "sql2005",
+            "sql2008",
+            "sql2012",
+            "sql2014",
+            "sql2016",
+            "sql2017"
+          ],
+          "suboptions": {}
+        },
+        "app_server": {
+          "aliases": [],
+          "description": "Application server hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "app_service": {
+          "aliases": [],
+          "description": "If the application is running within a windows cluster environment then this is the instance name of the service running within the cluster environment.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "app_sync": {
+          "aliases": [],
+          "description": "Application synchronization.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "none",
+            "vss",
+            "vmware",
+            "generic"
+          ],
+          "suboptions": {}
+        },
+        "change_name": {
+          "aliases": [],
+          "description": "Change name of the existing volume collection.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "demote": {
+          "aliases": [],
+          "description": "Release ownership of the specified volume collection. The volumes associated with the volume collection will be set to offline and a snapshot will be created, then full control over the volume collection will be transferred to the new owner. This option can be used following a promote to revert the volume collection back to its prior configured state. This operation does not alter the configuration on the new owner itself, but does require the new owner to be running in order to obtain its identity information. This operation is not supported for synchronous replication volume collections.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "Text description of volume collection.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "handover": {
+          "aliases": [],
+          "description": "Gracefully transfer ownership of the specified volume collection. This action can be used to pass control of the volume collection to the downstream replication partner. Ownership and full control over the volume collection will be given to the downstream replication partner. The volumes associated with the volume collection will be set to offline prior to the final snapshot being taken and replicated, thus ensuring full data synchronization as part of the transfer. By default, the new owner will automatically begin replicating the volume collection back to this node when the handover completes.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "HPE Nimble Storage IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "invoke_on_upstream_partner": {
+          "aliases": [],
+          "description": "Invoke handover request on upstream partner. This operation is not supported for synchronous replication volume collections.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "is_standalone_volcoll": {
+          "aliases": [],
+          "description": "Indicates whether this is a standalone volume collection.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "metadata": {
+          "aliases": [],
+          "description": "User defined key-value pairs that augment a volume collection attributes. List of key-value pairs. Keys must be unique and non-empty. When creating an object, values must be non-empty. When updating an object, an empty value causes the corresponding key to be removed.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the volume collection.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "no_reverse": {
+          "aliases": [],
+          "description": "Do not automatically reverse direction of replication. Using this argument will prevent the new owner from automatically replicating the volume collection to this node when the handover completes.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "override_upstream_down": {
+          "aliases": [],
+          "description": "Allow the handover request to proceed even if upstream array is down. The default behavior is to return an error when upstream is down. This option is applicable for synchronous replication only.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "HPE Nimble Storage password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "promote": {
+          "aliases": [],
+          "description": "Take ownership of the specified volume collection. The volumes associated with the volume collection will be set to online and be available for reading and writing. Replication will be disabled on the affected schedules and must be re-configured if desired. Snapshot retention for the affected schedules will be set to the greater of the current local or replica retention values. This operation is not supported for synchronous replication volume collections.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "prot_template": {
+          "aliases": [],
+          "description": "Name of the protection template whose attributes will be used to create this volume collection. This attribute is only used for input when creating a volume collection and is not outputted.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "replication_partner": {
+          "aliases": [],
+          "description": "Name of the new volume collection owner.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "replication_type": {
+          "aliases": [],
+          "description": "Type of replication configured for the volume collection.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "periodic_snapshot",
+            "synchronous"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The volume collection operations.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent",
+            "create"
+          ],
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "HPE Nimble Storage user name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "validate": {
+          "aliases": [],
+          "description": "Validate a volume collection with either Microsoft VSS or VMware application synchronization.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "vcenter_hostname": {
+          "aliases": [],
+          "description": "VMware vCenter hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vcenter_password": {
+          "aliases": [],
+          "description": "Application VMware vCenter password. A password with few constraints.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vcenter_username": {
+          "aliases": [],
+          "description": "Application VMware vCenter username. String of up to 80 alphanumeric characters, beginning with a letter. It can include ampersand (@), backslash (\\), dash (-), period (.), and underscore (_).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Ansible 2.9 or later",
+        "Python 3.6 or later",
+        "HPE Nimble Storage SDK for Python",
+        "HPE Nimble Storage arrays running NimbleOS 5.0 or later"
+      ],
+      "short_description": "Manage the HPE Nimble Storage volume collections",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n\n# if state is create , then create a volcoll if not present. Fails if already present.\n# if state is present, then create a volcoll if not present. Succeed if it already exists.\n- name: Create volume collection if not present\n  hpe.nimble.hpe_nimble_volume_collection:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    description: \"{{ description | default(None)}}\"\n    state: \"{{ state | default('present') }}\"\n\n- name: Delete volume collection\n  hpe.nimble.hpe_nimble_volume_collection:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: absent\n\n- name: Promote volume collection\n  hpe.nimble.hpe_nimble_volume_collection:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: present\n    promote: True\n\n- name: Demote volume collection\n  hpe.nimble.hpe_nimble_volume_collection:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: present\n    demote: True\n\n- name: Handover volume collection\n  hpe.nimble.hpe_nimble_volume_collection:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: present\n    handover: True\n\n- name: Abort handover volume collection\n  hpe.nimble.hpe_nimble_volume_collection:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: present\n    abort_handover: True\n\n- name: Validate volume collection\n  hpe.nimble.hpe_nimble_volume_collection:\n    host: \"{{ host }}\"\n    username: \"{{ username }}\"\n    password: \"{{ password }}\"\n    name: \"{{ name }}\"\n    state: present\n    validate: True\n\n"
+  }
+}

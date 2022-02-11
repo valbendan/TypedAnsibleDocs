@@ -1,0 +1,1699 @@
+{
+  "ansible.netcommon.cli_command": {
+    "doc": {
+      "description": "Sends a command to a network device and returns the result read from the device.",
+      "has_action": true,
+      "notes": "This module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "answer": {
+          "aliases": [],
+          "description": "The answer to reply with if I(prompt) is matched. The value can be a single answer or a list of answer for multiple prompts. In case the command execution results in multiple prompts the sequence of the prompt and excepted answer should be in same order.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "check_all": {
+          "aliases": [],
+          "description": "By default if any one of the prompts mentioned in C(prompt) option is matched it won't check for other prompts. This boolean flag, that when set to I(True) will check for all the prompts mentioned in C(prompt) option in the given order. If the option is set to I(True) all the prompts should be received from remote host if not it will result in timeout.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "command": {
+          "aliases": [],
+          "description": "The command to send to the remote network device.  The resulting output from the command is returned, unless I(sendonly) is set.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "newline": {
+          "aliases": [],
+          "description": "The boolean value, that when set to false will send I(answer) to the device without a trailing newline.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "prompt": {
+          "aliases": [],
+          "description": "A single regex pattern or a sequence of patterns to evaluate the expected prompt from I(command).",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "sendonly": {
+          "aliases": [],
+          "description": "The boolean value, that when set to true will send I(command) to the device but not wait for a result.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Run a cli command on cli-based network devices",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: run show version on remote devices\n  ansible.netcommon.cli_command:\n    command: show version\n\n- name: run command with json formatted output\n  ansible.netcommon.cli_command:\n    command: show version | json\n\n- name: run command expecting user confirmation\n  ansible.netcommon.cli_command:\n    command: commit replace\n    prompt: This commit will replace or remove the entire running configuration\n    answer: yes\n\n- name: run command expecting user confirmation\n  ansible.netcommon.cli_command:\n    command: show interface summary\n    prompt: Press any key to continue\n    answer: y\n    newline: false\n\n- name: run config mode command and handle prompt/answer\n  ansible.netcommon.cli_command:\n    command: '{{ item }}'\n    prompt:\n    - Exit with uncommitted changes\n    answer: y\n  loop:\n  - configure\n  - set system syslog file test any any\n  - exit\n\n- name: multiple prompt, multiple answer (mandatory check for all prompts)\n  ansible.netcommon.cli_command:\n    command: copy sftp sftp://user@host//user/test.img\n    check_all: true\n    prompt:\n    - Confirm download operation\n    - Password\n    - Do you want to change that to the standby image\n    answer:\n    - y\n    - <password>\n    - y\n"
+  },
+  "ansible.netcommon.cli_config": {
+    "doc": {
+      "description": "This module provides platform agnostic way of pushing text based configuration to network devices over network_cli connection plugin.",
+      "has_action": true,
+      "notes": "The commands will be returned only for platforms that do not support onbox diff. The C(--diff) option with the playbook will return the difference in configuration for devices that has support for onbox diff\nTo ensure idempotency and correct diff the configuration lines in the relevant module options should be similar to how they appear if present in the running configuration on device including the indentation.\nThis module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "backup": {
+          "aliases": [],
+          "description": "This argument will cause the module to create a full backup of the current running config from the remote device before any changes are made. If the C(backup_options) value is not given, the backup file is written to the C(backup) folder in the playbook root directory or role root directory, if playbook is part of an ansible role. If the directory does not exist, it is created.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "backup_options": {
+          "aliases": [],
+          "description": "This is a dict object containing configurable options related to backup file path. The value of this option is read only when C(backup) is set to I(yes), if C(backup) is set to I(no) this option will be silently ignored.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "dir_path": {
+              "aliases": [],
+              "description": "This option provides the path ending with directory name in which the backup configuration file will be stored. If the directory does not exist it will be first created and the filename is either the value of C(filename) or default filename as described in C(filename) options description. If the path value is not given in that case a I(backup) directory will be created in the current working directory and backup configuration will be copied in C(filename) within I(backup) directory.",
+              "type": "path",
+              "required": false,
+              "suboptions": {}
+            },
+            "filename": {
+              "aliases": [],
+              "description": "The filename to be used to store the backup configuration. If the filename is not given it will be generated based on the hostname, current time and date in format defined by <hostname>_config.<current-date>@<current-time>",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "commit": {
+          "aliases": [],
+          "description": "The C(commit) argument instructs the module to push the configuration to the device. This is mapped to module check mode.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "commit_comment": {
+          "aliases": [],
+          "description": "The C(commit_comment) argument specifies a text string to be used when committing the configuration. If the C(commit) argument is set to False, this argument is silently ignored. This argument is only valid for the platforms that support commit operation with comment.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "config": {
+          "aliases": [],
+          "description": "The config to be pushed to the network device. This argument is mutually exclusive with C(rollback) and either one of the option should be given as input. To ensure idempotency and correct diff the configuration lines should be similar to how they appear if present in the running configuration on device including the indentation.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "defaults": {
+          "aliases": [],
+          "description": "The I(defaults) argument will influence how the running-config is collected from the device.  When the value is set to true, the command used to collect the running-config is append with the all keyword.  When the value is set to false, the command is issued without the all keyword.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "diff_ignore_lines": {
+          "aliases": [],
+          "description": "Use this argument to specify one or more lines that should be ignored during the diff. This is used for lines in the configuration that are automatically updated by the system. This argument takes a list of regular expressions or exact line matches. Note that this parameter will be ignored if the platform has onbox diff support.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "diff_match": {
+          "aliases": [],
+          "description": "Instructs the module on the way to perform the matching of the set of commands against the current device config. If C(diff_match) is set to I(line), commands are matched line by line. If C(diff_match) is set to I(strict), command lines are matched with respect to position. If C(diff_match) is set to I(exact), command lines must be an equal match. Finally, if C(diff_match) is set to I(none), the module will not attempt to compare the source configuration with the running configuration on the remote device. Note that this parameter will be ignored if the platform has onbox diff support.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "line",
+            "strict",
+            "exact",
+            "none"
+          ],
+          "suboptions": {}
+        },
+        "diff_replace": {
+          "aliases": [],
+          "description": "Instructs the module on the way to perform the configuration on the device. If the C(diff_replace) argument is set to I(line) then the modified lines are pushed to the device in configuration mode. If the argument is set to I(block) then the entire command block is pushed to the device in configuration mode if any line is not correct. Note that this parameter will be ignored if the platform has onbox diff support.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "line",
+            "block",
+            "config"
+          ],
+          "suboptions": {}
+        },
+        "multiline_delimiter": {
+          "aliases": [],
+          "description": "This argument is used when pushing a multiline configuration element to the device. It specifies the character to use as the delimiting character. This only applies to the configuration action.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "replace": {
+          "aliases": [],
+          "description": "If the C(replace) argument is set to C(yes), it will replace the entire running-config of the device with the C(config) argument value. For devices that support replacing running configuration from file on device like NXOS/JUNOS, the C(replace) argument takes path to the file on the device that will be used for replacing the entire running-config. The value of C(config) option should be I(None) for such devices. Nexus 9K devices only support replace. Use I(net_put) or I(nxos_file_copy) in case of NXOS module to copy the flat file to remote device and then use set the fullpath to this argument.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "rollback": {
+          "aliases": [],
+          "description": "The C(rollback) argument instructs the module to rollback the current configuration to the identifier specified in the argument.  If the specified rollback identifier does not exist on the remote device, the module will fail. To rollback to the most recent commit, set the C(rollback) argument to 0. This option is mutually exclusive with C(config).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Push text based configuration to network devices over network_cli",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: configure device with config\n  ansible.netcommon.cli_config:\n    config: \"{{ lookup('template', 'basic/config.j2') }}\"\n\n- name: multiline config\n  ansible.netcommon.cli_config:\n    config: |\n      hostname foo\n      feature nxapi\n\n- name: configure device with config with defaults enabled\n  ansible.netcommon.cli_config:\n    config: \"{{ lookup('template', 'basic/config.j2') }}\"\n    defaults: yes\n\n- name: Use diff_match\n  ansible.netcommon.cli_config:\n    config: \"{{ lookup('file', 'interface_config') }}\"\n    diff_match: none\n\n- name: nxos replace config\n  ansible.netcommon.cli_config:\n    replace: bootflash:nxoscfg\n\n- name: junos replace config\n  ansible.netcommon.cli_config:\n    replace: /var/home/ansible/junos01.cfg\n\n- name: commit with comment\n  ansible.netcommon.cli_config:\n    config: set system host-name foo\n    commit_comment: this is a test\n\n- name: configurable backup path\n  ansible.netcommon.cli_config:\n    config: \"{{ lookup('template', 'basic/config.j2') }}\"\n    backup: yes\n    backup_options:\n      filename: backup.cfg\n      dir_path: /home/user\n"
+  },
+  "ansible.netcommon.cli_parse": {
+    "doc": {
+      "description": "Parse cli output or text using a variety of parsers",
+      "has_action": true,
+      "notes": "The default search path for a parser template is templates/{{ short_os }}_{{ command }}.{{ extension }}\n=> short_os derived from ansible_network_os or ansible_distribution and set to lower case\n=> command is the command passed to the module with spaces replaced with _\n=> extension is specific to the parser used (native=yaml, textfsm=textfsm, ttp=ttp)\nThe default Ansible search path for the templates directory is used for parser templates as well\nSome parsers may have additional configuration options available. See the parsers/vars key and the parser's documentation\nSome parsers require third-party python libraries be installed on the Ansible control node and a specific python version\ne.g. Pyats requires pyats and genie and requires Python 3\ne.g. ntc_templates requires ntc_templates\ne.g. textfsm requires textfsm\ne.g. ttp requires ttp\ne.g. xml requires xml_to_dict\nSupport of 3rd party python libraries is limited to the use of their public APIs as documented\nAdditional information and examples can be found in the parsing user guide:\nhttps://docs.ansible.com/ansible/latest/network/user_guide/cli_parsing.html",
+      "options": {
+        "command": {
+          "aliases": [],
+          "description": "The command to run on the host",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "parser": {
+          "aliases": [],
+          "description": "Parser specific parameters",
+          "type": "dict",
+          "required": true,
+          "suboptions": {
+            "command": {
+              "aliases": [],
+              "description": "The command used to locate the parser's template",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "name": {
+              "aliases": [],
+              "description": "The name of the parser to use",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "os": {
+              "aliases": [],
+              "description": "Provide an operating system value to the parser\nFor `ntc_templates` parser, this should be in the supported `<vendor>_<os>` format.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "template_path": {
+              "aliases": [],
+              "description": "Path of the parser template on the Ansible controller\nThis can be a relative or an absolute path",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "vars": {
+              "aliases": [],
+              "description": "Additional parser specific parameters\nSee the cli_parse user guide for examples of parser specific variables\nU(https://docs.ansible.com/ansible/latest/network/user_guide/cli_parsing.html)",
+              "type": "dict",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "set_fact": {
+          "aliases": [],
+          "description": "Set the resulting parsed data as a fact",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "text": {
+          "aliases": [],
+          "description": "Text to be parsed",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Parse cli output or text using a variety of parsers",
+      "version_added": "1.2.0"
+    },
+    "examples": "\n\n# Using the native parser\n\n# -------------\n# templates/nxos_show_interface.yaml\n# - example: Ethernet1/1 is up\n#   getval: '(?P<name>\\S+) is (?P<oper_state>\\S+)'\n#   result:\n#     \"{{ name }}\":\n#         name: \"{{ name }}\"\n#         state:\n#         operating: \"{{ oper_state }}\"\n#   shared: True\n#\n# - example: admin state is up, Dedicated Interface\n#   getval: 'admin state is (?P<admin_state>\\S+)'\n#   result:\n#     \"{{ name }}\":\n#         name: \"{{ name }}\"\n#         state:\n#         admin: \"{{ admin_state }}\"\n#\n# - example: \"  Hardware: Ethernet, address: 0000.5E00.5301 (bia 0000.5E00.5301)\"\n#   getval: '\\s+Hardware: (?P<hardware>.*), address: (?P<mac>\\S+)'\n#   result:\n#     \"{{ name }}\":\n#         hardware: \"{{ hardware }}\"\n#         mac_address: \"{{ mac }}\"\n\n- name: Run command and parse with native\n  ansible.netcommon.cli_parse:\n    command: \"show interface\"\n    parser:\n      name: ansible.netcommon.native\n    set_fact: interfaces_fact\n\n\n- name: Pass text and template_path\n  ansible.netcommon.cli_parse:\n    text: \"{{ previous_command['stdout'] }}\"\n    parser:\n      name: ansible.netcommon.native\n      template_path: \"{{ role_path }}/templates/nxos_show_interface.yaml\"\n\n\n# Using the ntc_templates parser\n\n# -------------\n# The ntc_templates use 'vendor_platform' for the file name\n# it will be derived from ansible_network_os if not provided\n# e.g. cisco.ios.ios => cisco_ios\n\n- name: Run command and parse with ntc_templates\n  ansible.netcommon.cli_parse:\n    command: \"show interface\"\n    parser:\n      name: ansible.netcommon.ntc_templates\n  register: parser_output\n\n- name: Pass text and command\n  ansible.netcommon.cli_parse:\n    text: \"{{ previous_command['stdout'] }}\"\n    parser:\n      name: ansible.netcommon.ntc_templates\n      command: show interface\n  register: parser_output\n\n\n# Using the pyats parser\n\n# -------------\n# The pyats parser uses 'os' to locate the appropriate parser\n# it will be derived from ansible_network_os if not provided\n# in the case of pyats: cisco.ios.ios => iosxe\n\n- name: Run command and parse with pyats\n  ansible.netcommon.cli_parse:\n    command: \"show interface\"\n    parser:\n        name: ansible.netcommon.pyats\n  register: parser_output\n\n- name: Pass text and command\n  ansible.netcommon.cli_parse:\n    text: \"{{ previous_command['stdout'] }}\"\n    parser:\n        name: ansible.netcommon.pyats\n        command: show interface\n  register: parser_output\n\n- name: Provide an OS to pyats to use an ios parser\n  ansible.netcommon.cli_parse:\n    text: \"{{ previous_command['stdout'] }}\"\n    parser:\n        name: ansible.netcommon.pyats\n        command: show interface\n        os: ios\n  register: parser_output\n\n\n# Using the textfsm parser\n\n# -------------\n# templates/nxos_show_version.textfsm\n#\n# Value UPTIME ((\\d+\\s\\w+.s.,?\\s?){4})\n# Value LAST_REBOOT_REASON (.+)\n# Value OS (\\d+.\\d+(.+)?)\n# Value BOOT_IMAGE (.*)\n# Value PLATFORM (\\w+)\n#\n# Start\n#   ^\\s+(NXOS: version|system:\\s+version)\\s+${OS}\\s*$$\n#   ^\\s+(NXOS|kickstart)\\s+image\\s+file\\s+is:\\s+${BOOT_IMAGE}\\s*$$\n#   ^\\s+cisco\\s+${PLATFORM}\\s+[cC]hassis\n#   ^\\s+cisco\\s+Nexus\\d+\\s+${PLATFORM}\n#   # Cisco N5K platform\n#   ^\\s+cisco\\s+Nexus\\s+${PLATFORM}\\s+[cC]hassis\n#   ^\\s+cisco\\s+.+-${PLATFORM}\\s*\n#   ^Kernel\\s+uptime\\s+is\\s+${UPTIME}\n#   ^\\s+Reason:\\s${LAST_REBOOT_REASON} -> Record\n\n- name: Run command and parse with textfsm\n  ansible.netcommon.cli_parse:\n    command: \"show version\"\n    parser:\n      name: ansible.netcommon.textfsm\n  register: parser_output\n\n- name: Pass text and command\n  ansible.netcommon.cli_parse:\n    text: \"{{ previous_command['stdout'] }}\"\n    parser:\n      name: ansible.netcommon.textfsm\n      command: show version\n  register: parser_output\n\n# Using the ttp parser\n\n# -------------\n# templates/nxos_show_interface.ttp\n#\n# {{ interface }} is {{ state }}\n# admin state is {{ admin_state }}{{ ignore(\".*\") }}\n\n- name: Run command and parse with ttp\n  ansible.netcommon.cli_parse:\n    command: \"show interface\"\n    parser:\n      name: ansible.netcommon.ttp\n    set_fact: new_fact_key\n\n- name: Pass text and template_path\n  ansible.netcommon.cli_parse:\n    text: \"{{ previous_command['stdout'] }}\"\n    parser:\n      name: ansible.netcommon.ttp\n      template_path: \"{{ role_path }}/templates/nxos_show_interface.ttp\"\n  register: parser_output\n\n# Using the XML parser\n\n# -------------\n- name: Run command and parse with xml\n  ansible.netcommon.cli_parse:\n    command: \"show interface | xml\"\n    parser:\n      name: ansible.netcommon.xml\n  register: parser_output\n\n- name: Pass text and parse with xml\n  ansible.netcommon.cli_parse:\n    text: \"{{ previous_command['stdout'] }}\"\n    parser:\n      name: ansible.netcommon.xml\n  register: parser_output\n"
+  },
+  "ansible.netcommon.net_banner": {
+    "doc": {
+      "description": "This will configure both login and motd banners on network devices. It allows playbooks to add or remove banner text from the active running configuration.",
+      "has_action": true,
+      "notes": "This module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "banner": {
+          "aliases": [],
+          "description": "Specifies which banner that should be configured on the remote device.",
+          "required": true,
+          "choices": [
+            "login",
+            "motd"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Specifies whether or not the configuration is present in the current devices active running configuration.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "text": {
+          "aliases": [],
+          "description": "The banner text that should be present in the remote device running configuration.  This argument accepts a multiline string, with no empty lines. Requires I(state=present).",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "(deprecated, removed after 2022-06-01) Manage multiline banners on network devices",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: configure the login banner\n  ansible.netcommon.net_banner:\n    banner: login\n    text: |\n      this is my login banner\n      that contains a multiline\n      string\n    state: present\n\n- name: remove the motd banner\n  ansible.netcommon.net_banner:\n    banner: motd\n    state: absent\n\n- name: Configure banner from file\n  ansible.netcommon.net_banner:\n    banner: motd\n    text: \"{{ lookup('file', './config_partial/raw_banner.cfg') }}\"\n    state: present\n\n"
+  },
+  "ansible.netcommon.net_get": {
+    "doc": {
+      "description": "This module provides functionality to copy file from network device to ansible controller.",
+      "has_action": true,
+      "notes": "Some devices need specific configurations to be enabled before scp can work These configuration should be pre-configured before using this module e.g ios - C(ip scp server enable).\nUser privilege to do scp on network device should be pre-configured e.g. ios - need user privilege 15 by default for allowing scp.\nDefault destination of source file.\nThis module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "dest": {
+          "aliases": [],
+          "description": "Specifies the destination file. The path to the destination file can either be the full path on the Ansible control host or a relative path from the playbook or role root directory.",
+          "default": "['Same filename as specified in I(src). The path will be playbook root or role root directory if playbook is part of a role.']",
+          "required": false,
+          "suboptions": {}
+        },
+        "protocol": {
+          "aliases": [],
+          "description": "Protocol used to transfer file.",
+          "default": "scp",
+          "required": false,
+          "choices": [
+            "scp",
+            "sftp"
+          ],
+          "suboptions": {}
+        },
+        "src": {
+          "aliases": [],
+          "description": "Specifies the source file. The path to the source file can either be the full path on the network device or a relative path as per path supported by destination network device.",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "scp if using protocol=scp with paramiko"
+      ],
+      "short_description": "Copy a file from a network device to Ansible Controller",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: copy file from the network device to Ansible controller\n  ansible.netcommon.net_get:\n    src: running_cfg_ios1.txt\n\n- name: copy file from ios to common location at /tmp\n  ansible.netcommon.net_get:\n    src: running_cfg_sw1.txt\n    dest: /tmp/ios1.txt\n"
+  },
+  "ansible.netcommon.net_interface": {
+    "doc": {
+      "description": "This module provides declarative management of Interfaces on network devices.",
+      "has_action": true,
+      "notes": "This module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "aggregate": {
+          "aliases": [],
+          "description": "List of Interfaces definitions.",
+          "required": false,
+          "suboptions": {}
+        },
+        "delay": {
+          "aliases": [],
+          "description": "Time in seconds to wait before checking for the operational state on remote device. This wait is applicable for operational state argument which are I(state) with values C(up)/C(down), I(tx_rate) and I(rx_rate).",
+          "default": "10",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "Description of Interface.",
+          "required": false,
+          "suboptions": {}
+        },
+        "duplex": {
+          "aliases": [],
+          "description": "Interface link status",
+          "default": "auto",
+          "required": false,
+          "choices": [
+            "full",
+            "half",
+            "auto"
+          ],
+          "suboptions": {}
+        },
+        "enabled": {
+          "aliases": [],
+          "description": "Configure interface link status.",
+          "required": false,
+          "suboptions": {}
+        },
+        "mtu": {
+          "aliases": [],
+          "description": "Maximum size of transmit packet.",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the Interface.",
+          "required": true,
+          "suboptions": {}
+        },
+        "purge": {
+          "aliases": [],
+          "description": "Purge Interfaces not defined in the aggregate parameter. This applies only for logical interface.",
+          "default": "False",
+          "required": false,
+          "suboptions": {}
+        },
+        "rx_rate": {
+          "aliases": [],
+          "description": "Receiver rate in bits per second (bps).\nThis is state check parameter only.\nSupports conditionals, see L(Conditionals in Networking Modules,../network/user_guide/network_working_with_command_output.html)",
+          "required": false,
+          "suboptions": {}
+        },
+        "speed": {
+          "aliases": [],
+          "description": "Interface link speed.",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the Interface configuration, C(up) indicates present and operationally up and C(down) indicates present and operationally C(down)",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent",
+            "up",
+            "down"
+          ],
+          "suboptions": {}
+        },
+        "tx_rate": {
+          "aliases": [],
+          "description": "Transmit rate in bits per second (bps).\nThis is state check parameter only.\nSupports conditionals, see L(Conditionals in Networking Modules,../network/user_guide/network_working_with_command_output.html)",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "(deprecated, removed after 2022-06-01) Manage Interface on network devices",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: configure interface\n  ansible.netcommon.net_interface:\n    name: ge-0/0/1\n    description: test-interface\n\n- name: remove interface\n  ansible.netcommon.net_interface:\n    name: ge-0/0/1\n    state: absent\n\n- name: make interface up\n  ansible.netcommon.net_interface:\n    name: ge-0/0/1\n    description: test-interface\n    enabled: true\n\n- name: make interface down\n  ansible.netcommon.net_interface:\n    name: ge-0/0/1\n    description: test-interface\n    enabled: false\n\n- name: Create interface using aggregate\n  ansible.netcommon.net_interface:\n    aggregate:\n    - {name: ge-0/0/1, description: test-interface-1}\n    - {name: ge-0/0/2, description: test-interface-2}\n    speed: 1g\n    duplex: full\n    mtu: 512\n\n- name: Delete interface using aggregate\n  ansible.netcommon.net_interface:\n    aggregate:\n    - {name: ge-0/0/1}\n    - {name: ge-0/0/2}\n    state: absent\n\n- name: Check intent arguments\n  ansible.netcommon.net_interface:\n    name: fxp0\n    state: up\n    tx_rate: ge(0)\n    rx_rate: le(0)\n\n- name: Config + intent\n  ansible.netcommon.net_interface:\n    name: fxp0\n    enabled: false\n    state: down\n"
+  },
+  "ansible.netcommon.net_l2_interface": {
+    "doc": {
+      "description": "This module provides declarative management of Layer-2 interface on network devices.",
+      "has_action": true,
+      "notes": "This module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "access_vlan": {
+          "aliases": [],
+          "description": "Configure given VLAN in access port.",
+          "required": false,
+          "suboptions": {}
+        },
+        "aggregate": {
+          "aliases": [],
+          "description": "List of Layer-2 interface definitions.",
+          "required": false,
+          "suboptions": {}
+        },
+        "mode": {
+          "aliases": [],
+          "description": "Mode in which interface needs to be configured.",
+          "default": "access",
+          "required": false,
+          "choices": [
+            "access",
+            "trunk"
+          ],
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the interface excluding any logical unit number.",
+          "required": false,
+          "suboptions": {}
+        },
+        "native_vlan": {
+          "aliases": [],
+          "description": "Native VLAN to be configured in trunk port.",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the Layer-2 Interface configuration.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "trunk_allowed_vlans": {
+          "aliases": [],
+          "description": "List of allowed VLAN's in a given trunk port.",
+          "required": false,
+          "suboptions": {}
+        },
+        "trunk_vlans": {
+          "aliases": [],
+          "description": "List of VLANs to be configured in trunk port.",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "(deprecated, removed after 2022-06-01) Manage Layer-2 interface on network devices",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: configure Layer-2 interface\n  ansible.netcommon.net_l2_interface:\n    name: gigabitethernet0/0/1\n    mode: access\n    access_vlan: 30\n\n- name: remove Layer-2 interface configuration\n  ansible.netcommon.net_l2_interface:\n    name: gigabitethernet0/0/1\n    state: absent\n"
+  },
+  "ansible.netcommon.net_l3_interface": {
+    "doc": {
+      "description": "This module provides declarative management of L3 interfaces on network devices.",
+      "has_action": true,
+      "notes": "This module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "aggregate": {
+          "aliases": [],
+          "description": "List of L3 interfaces definitions",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipv4": {
+          "aliases": [],
+          "description": "IPv4 of the L3 interface.",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipv6": {
+          "aliases": [],
+          "description": "IPv6 of the L3 interface.",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the L3 interface.",
+          "required": false,
+          "suboptions": {}
+        },
+        "purge": {
+          "aliases": [],
+          "description": "Purge L3 interfaces not defined in the I(aggregate) parameter.",
+          "default": "False",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the L3 interface configuration.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "(deprecated, removed after 2022-06-01) Manage L3 interfaces on network devices",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Set eth0 IPv4 address\n  ansible.netcommon.net_l3_interface:\n    name: eth0\n    ipv4: 192.168.0.1/24\n\n- name: Remove eth0 IPv4 address\n  ansible.netcommon.net_l3_interface:\n    name: eth0\n    state: absent\n\n- name: Set IP addresses on aggregate\n  ansible.netcommon.net_l3_interface:\n    aggregate:\n    - name: eth1\n      ipv4: 192.168.2.10/24\n    - name: eth2\n      ipv4: 192.168.3.10/24\n      ipv6: fd5d:12c9:2201:1::1/64\n\n- name: Remove IP addresses on aggregate\n  ansible.netcommon.net_l3_interface:\n    aggregate:\n    - name: eth1\n      ipv4: 192.168.2.10/24\n    - name: eth2\n      ipv4: 192.168.3.10/24\n      ipv6: fd5d:12c9:2201:1::1/64\n    state: absent\n"
+  },
+  "ansible.netcommon.net_linkagg": {
+    "doc": {
+      "description": "This module provides declarative management of link aggregation groups on network devices.",
+      "has_action": true,
+      "notes": "This module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "aggregate": {
+          "aliases": [],
+          "description": "List of link aggregation definitions.",
+          "required": false,
+          "suboptions": {}
+        },
+        "members": {
+          "aliases": [],
+          "description": "List of members interfaces of the link aggregation group. The value can be single interface or list of interfaces.",
+          "required": true,
+          "suboptions": {}
+        },
+        "min_links": {
+          "aliases": [],
+          "description": "Minimum members that should be up before bringing up the link aggregation group.",
+          "required": false,
+          "suboptions": {}
+        },
+        "mode": {
+          "aliases": [],
+          "description": "Mode of the link aggregation group. A value of C(on) will enable LACP. C(active) configures the link to actively information about the state of the link, or it can be configured in C(passive) mode ie. send link state information only when received them from another link.",
+          "default": "True",
+          "required": false,
+          "choices": [
+            "True",
+            "active",
+            "passive"
+          ],
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the link aggregation group.",
+          "required": true,
+          "suboptions": {}
+        },
+        "purge": {
+          "aliases": [],
+          "description": "Purge link aggregation groups not defined in the I(aggregate) parameter.",
+          "default": "False",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the link aggregation group.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent",
+            "up",
+            "down"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "(deprecated, removed after 2022-06-01) Manage link aggregation groups on network devices",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: configure link aggregation group\n  ansible.netcommon.net_linkagg:\n    name: bond0\n    members:\n    - eth0\n    - eth1\n\n- name: remove configuration\n  ansible.netcommon.net_linkagg:\n    name: bond0\n    state: absent\n\n- name: Create aggregate of linkagg definitions\n  ansible.netcommon.net_linkagg:\n    aggregate:\n    - {name: bond0, members: [eth1]}\n    - {name: bond1, members: [eth2]}\n\n- name: Remove aggregate of linkagg definitions\n  ansible.netcommon.net_linkagg:\n    aggregate:\n    - name: bond0\n    - name: bond1\n    state: absent\n"
+  },
+  "ansible.netcommon.net_lldp": {
+    "doc": {
+      "description": "This module provides declarative management of LLDP service configuration on network devices.",
+      "has_action": true,
+      "notes": "This module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "state": {
+          "aliases": [],
+          "description": "State of the LLDP service configuration.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "(deprecated, removed after 2022-06-01) Manage LLDP service configuration on network devices",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Enable LLDP service\n  ansible.netcommon.net_lldp:\n    state: present\n\n- name: Disable LLDP service\n  ansible.netcommon.net_lldp:\n    state: absent\n"
+  },
+  "ansible.netcommon.net_lldp_interface": {
+    "doc": {
+      "description": "This module provides declarative management of LLDP interfaces configuration on network devices.",
+      "has_action": true,
+      "notes": "This module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "aggregate": {
+          "aliases": [],
+          "description": "List of interfaces LLDP should be configured on.",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the interface LLDP should be configured on.",
+          "required": false,
+          "suboptions": {}
+        },
+        "purge": {
+          "aliases": [],
+          "description": "Purge interfaces not defined in the aggregate parameter.",
+          "default": "False",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the LLDP configuration.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent",
+            "enabled",
+            "disabled"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "(deprecated, removed after 2022-06-01) Manage LLDP interfaces configuration on network devices",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Configure LLDP on specific interfaces\n  ansible.netcommon.net_lldp_interface:\n    name: eth1\n    state: present\n\n- name: Disable LLDP on specific interfaces\n  ansible.netcommon.net_lldp_interface:\n    name: eth1\n    state: disabled\n\n- name: Enable LLDP on specific interfaces\n  ansible.netcommon.net_lldp_interface:\n    name: eth1\n    state: enabled\n\n- name: Delete LLDP on specific interfaces\n  ansible.netcommon.net_lldp_interface:\n    name: eth1\n    state: absent\n\n- name: Create aggregate of LLDP interface configurations\n  ansible.netcommon.net_lldp_interface:\n    aggregate:\n    - {name: eth1}\n    - {name: eth2}\n    state: present\n\n- name: Delete aggregate of LLDP interface configurations\n  ansible.netcommon.net_lldp_interface:\n    aggregate:\n    - {name: eth1}\n    - {name: eth2}\n    state: absent\n"
+  },
+  "ansible.netcommon.net_logging": {
+    "doc": {
+      "description": "This module provides declarative management of logging on network devices.",
+      "has_action": true,
+      "notes": "This module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "aggregate": {
+          "aliases": [],
+          "description": "List of logging definitions.",
+          "required": false,
+          "suboptions": {}
+        },
+        "dest": {
+          "aliases": [],
+          "description": "Destination of the logs.",
+          "required": false,
+          "choices": [
+            "console",
+            "host"
+          ],
+          "suboptions": {}
+        },
+        "facility": {
+          "aliases": [],
+          "description": "Set logging facility.",
+          "required": false,
+          "suboptions": {}
+        },
+        "level": {
+          "aliases": [],
+          "description": "Set logging severity levels.",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "If value of C(dest) is I(host) it indicates file-name the host name to be notified.",
+          "required": false,
+          "suboptions": {}
+        },
+        "purge": {
+          "aliases": [],
+          "description": "Purge logging not defined in the I(aggregate) parameter.",
+          "default": "False",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the logging configuration.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "(deprecated, removed after 2022-06-01) Manage logging on network devices",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: configure console logging\n  ansible.netcommon.net_logging:\n    dest: console\n    facility: any\n    level: critical\n\n- name: remove console logging configuration\n  ansible.netcommon.net_logging:\n    dest: console\n    state: absent\n\n- name: configure host logging\n  ansible.netcommon.net_logging:\n    dest: host\n    name: 192.0.2.1\n    facility: kernel\n    level: critical\n\n- name: Configure file logging using aggregate\n  ansible.netcommon.net_logging:\n    dest: file\n    aggregate:\n    - name: test-1\n      facility: pfe\n      level: critical\n    - name: test-2\n      facility: kernel\n      level: emergency\n- name: Delete file logging using aggregate\n  ansible.netcommon.net_logging:\n    dest: file\n    aggregate:\n    - name: test-1\n      facility: pfe\n      level: critical\n    - name: test-2\n      facility: kernel\n      level: emergency\n    state: absent\n"
+  },
+  "ansible.netcommon.net_ping": {
+    "doc": {
+      "description": "Tests reachability using ping from network device to a remote destination.",
+      "has_action": true,
+      "notes": "For targets running Python, use the M(ansible.builtin.shell) module along with ping command instead.\nThis module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "count": {
+          "aliases": [],
+          "description": "Number of packets to send.",
+          "default": "5",
+          "required": false,
+          "suboptions": {}
+        },
+        "dest": {
+          "aliases": [],
+          "description": "The IP Address or hostname (resolvable by switch) of the remote node.",
+          "required": true,
+          "suboptions": {}
+        },
+        "source": {
+          "aliases": [],
+          "description": "The source IP Address.",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Determines if the expected result is success or fail.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "vrf": {
+          "aliases": [],
+          "description": "The VRF to use for forwarding.",
+          "default": "default",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Tests reachability using ping from a network device",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Test reachability to 10.10.10.10 using default vrf\n  ansible.netcommon.net_ping:\n    dest: 10.10.10.10\n\n- name: Test reachability to 10.20.20.20 using prod vrf\n  ansible.netcommon.net_ping:\n    dest: 10.20.20.20\n    vrf: prod\n\n- name: Test unreachability to 10.30.30.30 using default vrf\n  ansible.netcommon.net_ping:\n    dest: 10.30.30.30\n    state: absent\n\n- name: Test reachability to 10.40.40.40 using prod vrf and setting count and source\n  ansible.netcommon.net_ping:\n    dest: 10.40.40.40\n    source: loopback0\n    vrf: prod\n    count: 20\n\n- Note:\n    - For targets running Python, use the M(ansible.builtin.shell) module along with ping command instead.\n    - Example:\n        name: ping\n        shell: ping -c 1 <remote-ip>\n"
+  },
+  "ansible.netcommon.net_put": {
+    "doc": {
+      "description": "This module provides functionality to copy file from Ansible controller to network devices.",
+      "has_action": true,
+      "notes": "Some devices need specific configurations to be enabled before scp can work These configuration should be pre-configured before using this module e.g ios - C(ip scp server enable).\nUser privilege to do scp on network device should be pre-configured e.g. ios - need user privilege 15 by default for allowing scp.\nDefault destination of source file.\nThis module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "dest": {
+          "aliases": [],
+          "description": "Specifies the destination file. The path to destination file can either be the full path or relative path as supported by network_os.",
+          "default": "['Filename from src and at default directory of user shell on network_os.']",
+          "required": false,
+          "suboptions": {}
+        },
+        "mode": {
+          "aliases": [],
+          "description": "Set the file transfer mode. If mode is set to I(text) then I(src) file will go through Jinja2 template engine to replace any vars if present in the src file. If mode is set to I(binary) then file will be copied as it is to destination device.",
+          "default": "binary",
+          "required": false,
+          "choices": [
+            "binary",
+            "text"
+          ],
+          "suboptions": {}
+        },
+        "protocol": {
+          "aliases": [],
+          "description": "Protocol used to transfer file.",
+          "default": "scp",
+          "required": false,
+          "choices": [
+            "scp",
+            "sftp"
+          ],
+          "suboptions": {}
+        },
+        "src": {
+          "aliases": [],
+          "description": "Specifies the source file. The path to the source file can either be the full path on the Ansible control host or a relative path from the playbook or role root directory.",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "scp if using protocol=scp with paramiko"
+      ],
+      "short_description": "Copy a file from Ansible Controller to a network device",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: copy file from ansible controller to a network device\n  ansible.netcommon.net_put:\n    src: running_cfg_ios1.txt\n\n- name: copy file at root dir of flash in slot 3 of sw1(ios)\n  ansible.netcommon.net_put:\n    src: running_cfg_sw1.txt\n    protocol: sftp\n    dest: flash3:/running_cfg_sw1.txt\n"
+  },
+  "ansible.netcommon.net_static_route": {
+    "doc": {
+      "description": "This module provides declarative management of static IP routes on network appliances (routers, switches et. al.).",
+      "has_action": true,
+      "notes": "This module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "admin_distance": {
+          "aliases": [],
+          "description": "Admin distance of the static route.",
+          "required": false,
+          "suboptions": {}
+        },
+        "aggregate": {
+          "aliases": [],
+          "description": "List of static route definitions",
+          "required": false,
+          "suboptions": {}
+        },
+        "mask": {
+          "aliases": [],
+          "description": "Network prefix mask of the static route.",
+          "required": true,
+          "suboptions": {}
+        },
+        "next_hop": {
+          "aliases": [],
+          "description": "Next hop IP of the static route.",
+          "required": true,
+          "suboptions": {}
+        },
+        "prefix": {
+          "aliases": [],
+          "description": "Network prefix of the static route.",
+          "required": true,
+          "suboptions": {}
+        },
+        "purge": {
+          "aliases": [],
+          "description": "Purge static routes not defined in the I(aggregate) parameter.",
+          "default": "False",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the static route configuration.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "(deprecated, removed after 2022-06-01) Manage static IP routes on network appliances (routers, switches et. al.)",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: configure static route\n  ansible.netcommon.net_static_route:\n    prefix: 192.168.2.0\n    mask: 255.255.255.0\n    next_hop: 10.0.0.1\n\n- name: remove configuration\n  ansible.netcommon.net_static_route:\n    prefix: 192.168.2.0\n    mask: 255.255.255.0\n    next_hop: 10.0.0.1\n    state: absent\n\n- name: configure aggregates of static routes\n  ansible.netcommon.net_static_route:\n    aggregate:\n    - {prefix: 192.168.2.0, mask: 255.255.255.0, next_hop: 10.0.0.1}\n    - {prefix: 192.168.3.0, mask: 255.255.255.0, next_hop: 10.0.2.1}\n\n- name: Remove static route collections\n  ansible.netcommon.net_static_route:\n    aggregate:\n    - {prefix: 172.24.1.0/24, next_hop: 192.168.42.64}\n    - {prefix: 172.24.3.0/24, next_hop: 192.168.42.64}\n    state: absent\n"
+  },
+  "ansible.netcommon.net_system": {
+    "doc": {
+      "description": "This module provides declarative management of node system attributes on network devices.  It provides an option to configure host system parameters or remove those parameters from the device active configuration.",
+      "has_action": true,
+      "notes": "This module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "domain_name": {
+          "aliases": [],
+          "description": "Configure the IP domain name on the remote device to the provided value. Value should be in the dotted name form and will be appended to the C(hostname) to create a fully-qualified domain name.",
+          "required": false,
+          "suboptions": {}
+        },
+        "domain_search": {
+          "aliases": [],
+          "description": "Provides the list of domain suffixes to append to the hostname for the purpose of doing name resolution. This argument accepts a name or list of names and will be reconciled with the current active configuration on the running node.",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "Configure the device hostname parameter. This option takes an ASCII string value.",
+          "required": false,
+          "suboptions": {}
+        },
+        "lookup_source": {
+          "aliases": [],
+          "description": "Provides one or more source interfaces to use for performing DNS lookups.  The interface provided in C(lookup_source) must be a valid interface configured on the device.",
+          "required": false,
+          "suboptions": {}
+        },
+        "name_servers": {
+          "aliases": [],
+          "description": "List of DNS name servers by IP address to use to perform name resolution lookups.  This argument accepts either a list of DNS servers See examples.",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the configuration values in the device's current active configuration.  When set to I(present), the values should be configured in the device active configuration and when set to I(absent) the values should not be in the device active configuration",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "(deprecated, removed after 2022-06-01) Manage the system attributes on network devices",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: configure hostname and domain name\n  ansible.netcommon.net_system:\n    hostname: ios01\n    domain_name: test.example.com\n    domain_search:\n    - ansible.com\n    - redhat.com\n    - cisco.com\n\n- name: domain search on single domain\n  ansible.netcommon.net_system:\n    domain_search: ansible.com\n\n- name: remove configuration\n  ansible.netcommon.net_system:\n    state: absent\n\n- name: configure DNS lookup sources\n  ansible.netcommon.net_system:\n    lookup_source: MgmtEth0/0/CPU0/0\n\n- name: configure name servers\n  ansible.netcommon.net_system:\n    name_servers:\n    - 8.8.8.8\n    - 8.8.4.4\n"
+  },
+  "ansible.netcommon.net_user": {
+    "doc": {
+      "description": "This module provides declarative management of the local usernames configured on network devices. It allows playbooks to manage either individual usernames or the aggregate of usernames in the current running config. It also supports purging usernames from the configuration that are not explicitly defined.",
+      "has_action": true,
+      "notes": "This module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "aggregate": {
+          "aliases": [],
+          "description": "The set of username objects to be configured on the remote network device. The list entries can either be the username or a hash of username and properties. This argument is mutually exclusive with the C(name) argument.",
+          "required": false,
+          "suboptions": {}
+        },
+        "configured_password": {
+          "aliases": [],
+          "description": "The password to be configured on the remote network device. The password needs to be provided in clear and it will be encrypted on the device. Please note that this option is not same as C(provider password).",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The username to be configured on the remote network device. This argument accepts a string value and is mutually exclusive with the C(aggregate) argument. Please note that this option is not same as C(provider username).",
+          "required": false,
+          "suboptions": {}
+        },
+        "nopassword": {
+          "aliases": [],
+          "description": "Defines the username without assigning a password. This will allow the user to login to the system without being authenticated by a password.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "privilege": {
+          "aliases": [],
+          "description": "The C(privilege) argument configures the privilege level of the user when logged into the system. This argument accepts integer values in the range of 1 to 15.",
+          "required": false,
+          "suboptions": {}
+        },
+        "purge": {
+          "aliases": [],
+          "description": "Instructs the module to consider the resource definition absolute. It will remove any previously configured usernames on the device with the exception of the `admin` user (the current defined set of users).",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "role": {
+          "aliases": [],
+          "description": "Configures the role for the username in the device running configuration. The argument accepts a string value defining the role name. This argument does not check if the role has been configured on the device.",
+          "required": false,
+          "suboptions": {}
+        },
+        "sshkey": {
+          "aliases": [],
+          "description": "Specifies the SSH public key to configure for the given username. This argument accepts a valid SSH key value.",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Configures the state of the username definition as it relates to the device operational configuration. When set to I(present), the username(s) should be configured in the device active configuration and when set to I(absent) the username(s) should not be in the device active configuration",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "update_password": {
+          "aliases": [],
+          "description": "Since passwords are encrypted in the device running config, this argument will instruct the module when to change the password.  When set to C(always), the password will always be updated in the device and when set to C(on_create) the password will be updated only if the username is created.",
+          "default": "always",
+          "required": false,
+          "choices": [
+            "on_create",
+            "always"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "(deprecated, removed after 2022-06-01) Manage the aggregate of local users on network device",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: create a new user\n  ansible.netcommon.net_user:\n    name: ansible\n    sshkey: \"{{ lookup('file', '~/.ssh/id_rsa.pub') }}\"\n    state: present\n\n- name: remove all users except admin\n  ansible.netcommon.net_user:\n    purge: yes\n\n- name: set multiple users to privilege level 15\n  ansible.netcommon.net_user:\n    aggregate:\n    - {name: netop}\n    - {name: netend}\n    privilege: 15\n    state: present\n\n- name: Change Password for User netop\n  ansible.netcommon.net_user:\n    name: netop\n    configured_password: '{{ new_password }}'\n    update_password: always\n    state: present\n"
+  },
+  "ansible.netcommon.net_vlan": {
+    "doc": {
+      "description": "This module provides declarative management of VLANs on network devices.",
+      "has_action": true,
+      "notes": "This module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "aggregate": {
+          "aliases": [],
+          "description": "List of VLANs definitions.",
+          "required": false,
+          "suboptions": {}
+        },
+        "interfaces": {
+          "aliases": [],
+          "description": "List of interfaces the VLAN should be configured on.",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the VLAN.",
+          "required": false,
+          "suboptions": {}
+        },
+        "purge": {
+          "aliases": [],
+          "description": "Purge VLANs not defined in the I(aggregate) parameter.",
+          "default": "False",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the VLAN configuration.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent",
+            "active",
+            "suspend"
+          ],
+          "suboptions": {}
+        },
+        "vlan_id": {
+          "aliases": [],
+          "description": "ID of the VLAN.",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "(deprecated, removed after 2022-06-01) Manage VLANs on network devices",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: configure VLAN ID and name\n  ansible.netcommon.net_vlan:\n    vlan_id: 20\n    name: test-vlan\n\n- name: remove configuration\n  ansible.netcommon.net_vlan:\n    state: absent\n\n- name: configure VLAN state\n  ansible.netcommon.net_vlan:\n    vlan_id:\n    state: suspend\n\n"
+  },
+  "ansible.netcommon.net_vrf": {
+    "doc": {
+      "description": "This module provides declarative management of VRFs on network devices.",
+      "has_action": true,
+      "notes": "This module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "aggregate": {
+          "aliases": [],
+          "description": "List of VRFs definitions",
+          "required": false,
+          "suboptions": {}
+        },
+        "interfaces": {
+          "aliases": [],
+          "description": "List of interfaces the VRF should be configured on.",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the VRF.",
+          "required": false,
+          "suboptions": {}
+        },
+        "purge": {
+          "aliases": [],
+          "description": "Purge VRFs not defined in the I(aggregate) parameter.",
+          "default": "False",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the VRF configuration.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "(deprecated, removed after 2022-06-01) Manage VRFs on network devices",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Create VRF named MANAGEMENT\n  ansible.netcommon.net_vrf:\n    name: MANAGEMENT\n\n- name: remove VRF named MANAGEMENT\n  ansible.netcommon.net_vrf:\n    name: MANAGEMENT\n    state: absent\n\n- name: Create aggregate of VRFs with purge\n  ansible.netcommon.net_vrf:\n    aggregate:\n    - name: test4\n      rd: 1:204\n    - name: test5\n      rd: 1:205\n    state: present\n    purge: yes\n\n- name: Delete aggregate of VRFs\n  ansible.netcommon.net_vrf:\n    aggregate:\n    - name: test2\n    - name: test3\n    - name: test4\n    - name: test5\n    state: absent\n"
+  },
+  "ansible.netcommon.netconf_config": {
+    "doc": {
+      "description": "Netconf is a network management protocol developed and standardized by the IETF. It is documented in RFC 6241.\nThis module allows the user to send a configuration XML file to a netconf device, and detects if there was a configuration change.",
+      "has_action": false,
+      "notes": "This module requires the netconf system service be enabled on the remote device being managed.\nThis module supports devices with and without the candidate and confirmed-commit capabilities. It will always use the safer feature.\nThis module supports the use of connection=netconf\nThis module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "backup": {
+          "aliases": [],
+          "description": "This argument will cause the module to create a full backup of the current C(running-config) from the remote device before any changes are made. If the C(backup_options) value is not given, the backup file is written to the C(backup) folder in the playbook root directory or role root directory, if playbook is part of an ansible role. If the directory does not exist, it is created.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "backup_options": {
+          "aliases": [],
+          "description": "This is a dict object containing configurable options related to backup file path. The value of this option is read only when C(backup) is set to I(yes), if C(backup) is set to I(no) this option will be silently ignored.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "dir_path": {
+              "aliases": [],
+              "description": "This option provides the path ending with directory name in which the backup configuration file will be stored. If the directory does not exist it will be first created and the filename is either the value of C(filename) or default filename as described in C(filename) options description. If the path value is not given in that case a I(backup) directory will be created in the current working directory and backup configuration will be copied in C(filename) within I(backup) directory.",
+              "type": "path",
+              "required": false,
+              "suboptions": {}
+            },
+            "filename": {
+              "aliases": [],
+              "description": "The filename to be used to store the backup configuration. If the filename is not given it will be generated based on the hostname, current time and date in format defined by <hostname>_config.<current-date>@<current-time>",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "commit": {
+          "aliases": [],
+          "description": "This boolean flag controls if the configuration changes should be committed or not after editing the candidate datastore. This option is supported only if remote Netconf server supports :candidate capability. If the value is set to I(False) commit won't be issued after edit-config operation and user needs to handle commit or discard-changes explicitly.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "confirm": {
+          "aliases": [],
+          "description": "This argument will configure a timeout value for the commit to be confirmed before it is automatically rolled back. If the C(confirm_commit) argument is set to False, this argument is silently ignored. If the value of this argument is set to 0, the commit is confirmed immediately. The remote host MUST support :candidate and :confirmed-commit capability for this option to .",
+          "default": "0",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "confirm_commit": {
+          "aliases": [],
+          "description": "This argument will execute commit operation on remote device. It can be used to confirm a previous commit.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "content": {
+          "aliases": [
+            "xml"
+          ],
+          "description": "The configuration data as defined by the device's data models, the value can be either in xml string format or text format or python dictionary representation of JSON format.\nIn case of json string format it will be converted to the corresponding xml string using xmltodict library before pushing onto the remote host.\nIn case the value of this option isn I(text) format the format should be supported by remote Netconf server.\nIf the value of C(content) option is in I(xml) format in that case the xml value should have I(config) as root tag.",
+          "type": "raw",
+          "required": false,
+          "suboptions": {}
+        },
+        "default_operation": {
+          "aliases": [],
+          "description": "The default operation for <edit-config> rpc, valid values are I(merge), I(replace) and I(none). If the default value is merge, the configuration data in the C(content) option is merged at the corresponding level in the C(target) datastore. If the value is replace the data in the C(content) option completely replaces the configuration in the C(target) datastore. If the value is none the C(target) datastore is unaffected by the configuration in the config option, unless and until the incoming configuration data uses the C(operation) operation to request a different operation.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merge",
+            "replace",
+            "none"
+          ],
+          "suboptions": {}
+        },
+        "delete": {
+          "aliases": [],
+          "description": "It instructs the module to delete the configuration from value mentioned in C(target) datastore.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "error_option": {
+          "aliases": [],
+          "description": "This option controls the netconf server action after an error occurs while editing the configuration.\nIf I(error_option=stop-on-error), abort the config edit on first error.\nIf I(error_option=continue-on-error), continue to process configuration data on error. The error is recorded and negative response is generated if any errors occur.\nIf I(error_option=rollback-on-error), rollback to the original configuration if any error occurs. This requires the remote Netconf server to support the I(error_option=rollback-on-error) capability.",
+          "default": "stop-on-error",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "stop-on-error",
+            "continue-on-error",
+            "rollback-on-error"
+          ],
+          "suboptions": {}
+        },
+        "format": {
+          "aliases": [],
+          "description": "The format of the configuration provided as value of C(content).\nIn case of json string format it will be converted to the corresponding xml string using xmltodict library before pushing onto the remote host.\nIn case of I(text) format of the configuration should be supported by remote Netconf server.\nIf the value of C(format) options is not given it tries to guess the data format of C(content) option as one of I(xml) or I(json) or I(text).\nIf the data format is not identified it is set to I(xml) by default.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "xml",
+            "text",
+            "json"
+          ],
+          "suboptions": {}
+        },
+        "get_filter": {
+          "aliases": [],
+          "description": "This argument specifies the XML string which acts as a filter to restrict the portions of the data retrieved from the remote device when comparing the before and after state of the device following calls to edit_config. When not specified, the entire configuration or state data is returned for comparison depending on the value of C(source) option. The C(get_filter) value can be either XML string or XPath or JSON string or native python dictionary, if the filter is in XPath format the NETCONF server running on remote host should support xpath capability else it will result in an error.",
+          "type": "raw",
+          "required": false,
+          "suboptions": {}
+        },
+        "lock": {
+          "aliases": [],
+          "description": "Instructs the module to explicitly lock the datastore specified as C(target). By setting the option value I(always) is will explicitly lock the datastore mentioned in C(target) option. It the value is I(never) it will not lock the C(target) datastore. The value I(if-supported) lock the C(target) datastore only if it is supported by the remote Netconf server.",
+          "default": "always",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "never",
+            "always",
+            "if-supported"
+          ],
+          "suboptions": {}
+        },
+        "save": {
+          "aliases": [],
+          "description": "The C(save) argument instructs the module to save the configuration in C(target) datastore to the startup-config if changed and if :startup capability is supported by Netconf server.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "source_datastore": {
+          "aliases": [
+            "source"
+          ],
+          "description": "Name of the configuration datastore to use as the source to copy the configuration to the datastore mentioned by C(target) option. The values can be either I(running), I(candidate), I(startup) or a remote URL",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "target": {
+          "aliases": [
+            "datastore"
+          ],
+          "description": "Name of the configuration datastore to be edited. - auto, uses candidate and fallback to running - candidate, edit <candidate/> datastore and then commit - running, edit <running/> datastore directly",
+          "default": "auto",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "auto",
+            "candidate",
+            "running"
+          ],
+          "suboptions": {}
+        },
+        "validate": {
+          "aliases": [],
+          "description": "This boolean flag if set validates the content of datastore given in C(target) option. For this option to work remote Netconf server should support :validate capability.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ncclient"
+      ],
+      "short_description": "netconf device configuration",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: use lookup filter to provide xml configuration\n  ansible.netcommon.netconf_config:\n    content: \"{{ lookup('file', './config.xml') }}\"\n\n- name: set ntp server in the device\n  ansible.netcommon.netconf_config:\n    content: |\n      <config xmlns:xc=\"urn:ietf:params:xml:ns:netconf:base:1.0\">\n          <system xmlns=\"urn:ietf:params:xml:ns:yang:ietf-system\">\n              <ntp>\n                  <enabled>true</enabled>\n                  <server>\n                      <name>ntp1</name>\n                      <udp><address>127.0.0.1</address></udp>\n                  </server>\n              </ntp>\n          </system>\n      </config>\n\n- name: wipe ntp configuration\n  ansible.netcommon.netconf_config:\n    content: |\n      <config xmlns:xc=\"urn:ietf:params:xml:ns:netconf:base:1.0\">\n          <system xmlns=\"urn:ietf:params:xml:ns:yang:ietf-system\">\n              <ntp>\n                  <enabled>false</enabled>\n                  <server operation=\"remove\">\n                      <name>ntp1</name>\n                  </server>\n              </ntp>\n          </system>\n      </config>\n\n- name: configure interface while providing different private key file path (for connection=netconf)\n  ansible.netcommon.netconf_config:\n    backup: yes\n  register: backup_junos_location\n  vars:\n    ansible_private_key_file: /home/admin/.ssh/newprivatekeyfile\n\n- name: configurable backup path\n  ansible.netcommon.netconf_config:\n    backup: yes\n    backup_options:\n      filename: backup.cfg\n      dir_path: /home/user\n\n- name: \"configure using direct native format configuration (cisco iosxr)\"\n  ansible.netcommon.netconf_config:\n    format: json\n    content: {\n                \"config\": {\n                    \"interface-configurations\": {\n                        \"@xmlns\": \"http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg\",\n                        \"interface-configuration\": {\n                            \"active\": \"act\",\n                            \"description\": \"test for ansible Loopback999\",\n                            \"interface-name\": \"Loopback999\"\n                        }\n                    }\n                }\n            }\n    get_filter: {\n                  \"interface-configurations\": {\n                      \"@xmlns\": \"http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg\",\n                      \"interface-configuration\": null\n                  }\n              }\n\n- name: \"configure using json string format configuration (cisco iosxr)\"\n  ansible.netcommon.netconf_config:\n    format: json\n    content: |\n            {\n                \"config\": {\n                    \"interface-configurations\": {\n                        \"@xmlns\": \"http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg\",\n                        \"interface-configuration\": {\n                            \"active\": \"act\",\n                            \"description\": \"test for ansible Loopback999\",\n                            \"interface-name\": \"Loopback999\"\n                        }\n                    }\n                }\n            }\n    get_filter: |\n            {\n                  \"interface-configurations\": {\n                      \"@xmlns\": \"http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg\",\n                      \"interface-configuration\": null\n                  }\n              }\n\n\n# Make a round-trip interface description change, diff the before and after\n# this demonstrates the use of the native display format and several utilities\n# from the ansible.utils collection\n\n- name: Define the openconfig interface filter\n  set_fact:\n    filter:\n      interfaces:\n        \"@xmlns\": \"http://openconfig.net/yang/interfaces\"\n        interface:\n          name: Ethernet2\n\n- name: Get the pre-change config using the filter\n  ansible.netcommon.netconf_get:\n    source: running\n    filter: \"{{ filter }}\"\n    display: native\n  register: pre\n\n- name: Update the description\n  ansible.utils.update_fact:\n    updates:\n    - path: pre.output.data.interfaces.interface.config.description\n      value: \"Configured by ansible {{ 100 | random }}\"\n  register: updated\n\n- name: Apply the new configuration\n  ansible.netcommon.netconf_config:\n    content:\n      config:\n        interfaces: \"{{ updated.pre.output.data.interfaces }}\"\n\n- name: Get the post-change config using the filter\n  ansible.netcommon.netconf_get:\n    source: running\n    filter: \"{{ filter }}\"\n    display: native\n  register: post\n\n- name: Show the differences between the pre and post configurations\n  ansible.utils.fact_diff:\n    before: \"{{ pre.output.data|ansible.utils.to_paths }}\"\n    after: \"{{ post.output.data|ansible.utils.to_paths }}\"\n\n# TASK [Show the differences between the pre and post configurations] ********\n# --- before\n# +++ after\n# @@ -1,11 +1,11 @@\n#  {\n# -    \"@time-modified\": \"2020-10-23T12:27:17.462332477Z\",\n# +    \"@time-modified\": \"2020-10-23T12:27:21.744541708Z\",\n#      \"@xmlns\": \"urn:ietf:params:xml:ns:netconf:base:1.0\",\n#      \"interfaces.interface.aggregation.config['fallback-timeout']['#text']\": \"90\",\n#      \"interfaces.interface.aggregation.config['fallback-timeout']['@xmlns']\": \"http://arista.com/yang/openconfig/interfaces/augments\",\n#      \"interfaces.interface.aggregation.config['min-links']\": \"0\",\n#      \"interfaces.interface.aggregation['@xmlns']\": \"http://openconfig.net/yang/interfaces/aggregate\",\n# -    \"interfaces.interface.config.description\": \"Configured by ansible 56\",\n# +    \"interfaces.interface.config.description\": \"Configured by ansible 67\",\n#      \"interfaces.interface.config.enabled\": \"true\",\n#      \"interfaces.interface.config.mtu\": \"0\",\n#      \"interfaces.interface.config.name\": \"Ethernet2\",\n\n"
+  },
+  "ansible.netcommon.netconf_get": {
+    "doc": {
+      "description": "NETCONF is a network management protocol developed and standardized by the IETF. It is documented in RFC 6241.\nThis module allows the user to fetch configuration and state data from NETCONF enabled network devices.",
+      "has_action": false,
+      "notes": "This module requires the NETCONF system service be enabled on the remote device being managed.\nThis module supports the use of connection=netconf\nThis module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "display": {
+          "aliases": [],
+          "description": "Encoding scheme to use when serializing output from the device. The option I(json) will serialize the output as JSON data. If the option value is I(json) it requires jxmlease to be installed on control node. The option I(pretty) is similar to received XML response but is using human readable format (spaces, new lines). The option value I(xml) is similar to received XML response but removes all XML namespaces.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "json",
+            "pretty",
+            "xml",
+            "native"
+          ],
+          "suboptions": {}
+        },
+        "filter": {
+          "aliases": [],
+          "description": "This argument specifies the string which acts as a filter to restrict the portions of the data to be are retrieved from the remote device. If this option is not specified entire configuration or state data is returned in result depending on the value of C(source) option. The C(filter) value can be either XML string or XPath or JSON string or native python dictionary, if the filter is in XPath format the NETCONF server running on remote host should support xpath capability else it will result in an error. If the filter is in JSON format the xmltodict library should be installed on the control node for JSON to XML conversion.",
+          "type": "raw",
+          "required": false,
+          "suboptions": {}
+        },
+        "lock": {
+          "aliases": [],
+          "description": "Instructs the module to explicitly lock the datastore specified as C(source). If no I(source) is defined, the I(running) datastore will be locked. By setting the option value I(always) is will explicitly lock the datastore mentioned in C(source) option. By setting the option value I(never) it will not lock the C(source) datastore. The value I(if-supported) allows better interworking with NETCONF servers, which do not support the (un)lock operation for all supported datastores.",
+          "default": "never",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "never",
+            "always",
+            "if-supported"
+          ],
+          "suboptions": {}
+        },
+        "source": {
+          "aliases": [],
+          "description": "This argument specifies the datastore from which configuration data should be fetched. Valid values are I(running), I(candidate) and I(startup). If the C(source) value is not set both configuration and state information are returned in response from running datastore.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "running",
+            "candidate",
+            "startup"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ncclient (>=v0.5.2)",
+        "jxmlease (for display=json)",
+        "xmltodict (for display=native)"
+      ],
+      "short_description": "Fetch configuration/state data from NETCONF enabled network devices.",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Get running configuration and state data\n  ansible.netcommon.netconf_get:\n\n- name: Get configuration and state data from startup datastore\n  ansible.netcommon.netconf_get:\n    source: startup\n\n- name: Get system configuration data from running datastore state (junos)\n  ansible.netcommon.netconf_get:\n    source: running\n    filter: <configuration><system></system></configuration>\n\n- name: Get configuration and state data in JSON format\n  ansible.netcommon.netconf_get:\n    display: json\n\n- name: get schema list using subtree w/ namespaces\n  ansible.netcommon.netconf_get:\n    display: json\n    filter: <netconf-state xmlns=\"urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring\"><schemas><schema/></schemas></netconf-state>\n    lock: never\n\n- name: get schema list using xpath\n  ansible.netcommon.netconf_get:\n    display: xml\n    filter: /netconf-state/schemas/schema\n\n- name: get interface configuration with filter (iosxr)\n  ansible.netcommon.netconf_get:\n    display: pretty\n    filter: <interface-configurations xmlns=\"http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg\"></interface-configurations>\n    lock: if-supported\n\n- name: Get system configuration data from running datastore state (junos)\n  ansible.netcommon.netconf_get:\n    source: running\n    filter: <configuration><system></system></configuration>\n    lock: if-supported\n\n- name: Get complete configuration data from running datastore (SROS)\n  ansible.netcommon.netconf_get:\n    source: running\n    filter: <configure xmlns=\"urn:nokia.com:sros:ns:yang:sr:conf\"/>\n\n- name: Get complete state data (SROS)\n  ansible.netcommon.netconf_get:\n    filter: <state xmlns=\"urn:nokia.com:sros:ns:yang:sr:state\"/>\n\n- name: \"get configuration with json filter string and native output (using xmltodict)\"\n  netconf_get:\n    filter: |\n              {\n                  \"interface-configurations\": {\n                      \"@xmlns\": \"http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg\",\n                      \"interface-configuration\": null\n                  }\n              }\n    display: native\n\n- name: Define the Cisco IOSXR interface filter\n  set_fact:\n    filter:\n      interface-configurations:\n        \"@xmlns\": \"http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg\"\n        interface-configuration: null\n\n- name: \"get configuration with native filter type using set_facts\"\n  ansible.netcommon.netconf_get:\n    filter: \"{{ filter }}\"\n    display: native\n  register: result\n\n- name: \"get configuration with direct native filter type\"\n  ansible.netcommon.netconf_get:\n    filter: {\n            \"interface-configurations\": {\n            \"@xmlns\": \"http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg\",\n            \"interface-configuration\": null\n      }\n    }\n    display: native\n  register: result\n\n\n# Make a round-trip interface description change, diff the before and after\n# this demonstrates the use of the native display format and several utilities\n# from the ansible.utils collection\n\n- name: Define the openconfig interface filter\n  set_fact:\n    filter:\n      interfaces:\n        \"@xmlns\": \"http://openconfig.net/yang/interfaces\"\n        interface:\n          name: Ethernet2\n\n- name: Get the pre-change config using the filter\n  ansible.netcommon.netconf_get:\n    source: running\n    filter: \"{{ filter }}\"\n    display: native\n  register: pre\n\n- name: Update the description\n  ansible.utils.update_fact:\n    updates:\n    - path: pre.output.data.interfaces.interface.config.description\n      value: \"Configured by ansible {{ 100 | random }}\"\n  register: updated\n\n- name: Apply the new configuration\n  ansible.netcommon.netconf_config:\n    content:\n      config:\n        interfaces: \"{{ updated.pre.output.data.interfaces }}\"\n\n- name: Get the post-change config using the filter\n  ansible.netcommon.netconf_get:\n    source: running\n    filter: \"{{ filter }}\"\n    display: native\n  register: post\n\n- name: Show the differences between the pre and post configurations\n  ansible.utils.fact_diff:\n    before: \"{{ pre.output.data|ansible.utils.to_paths }}\"\n    after: \"{{ post.output.data|ansible.utils.to_paths }}\"\n\n# TASK [Show the differences between the pre and post configurations] ********\n# --- before\n# +++ after\n# @@ -1,11 +1,11 @@\n#  {\n# -    \"@time-modified\": \"2020-10-23T12:27:17.462332477Z\",\n# +    \"@time-modified\": \"2020-10-23T12:27:21.744541708Z\",\n#      \"@xmlns\": \"urn:ietf:params:xml:ns:netconf:base:1.0\",\n#      \"interfaces.interface.aggregation.config['fallback-timeout']['#text']\": \"90\",\n#      \"interfaces.interface.aggregation.config['fallback-timeout']['@xmlns']\": \"http://arista.com/yang/openconfig/interfaces/augments\",\n#      \"interfaces.interface.aggregation.config['min-links']\": \"0\",\n#      \"interfaces.interface.aggregation['@xmlns']\": \"http://openconfig.net/yang/interfaces/aggregate\",\n# -    \"interfaces.interface.config.description\": \"Configured by ansible 56\",\n# +    \"interfaces.interface.config.description\": \"Configured by ansible 67\",\n#      \"interfaces.interface.config.enabled\": \"true\",\n#      \"interfaces.interface.config.mtu\": \"0\",\n#      \"interfaces.interface.config.name\": \"Ethernet2\",\n"
+  },
+  "ansible.netcommon.netconf_rpc": {
+    "doc": {
+      "description": "NETCONF is a network management protocol developed and standardized by the IETF. It is documented in RFC 6241.\nThis module allows the user to execute NETCONF RPC requests as defined by IETF RFC standards as well as proprietary requests.",
+      "has_action": false,
+      "notes": "This module requires the NETCONF system service be enabled on the remote device being managed.\nThis module supports the use of connection=netconf\nTo execute C(get-config), C(get) or C(edit-config) requests it is recommended to use the Ansible I(netconf_get) and I(netconf_config) modules.\nThis module is supported on C(ansible_network_os) network platforms. See the :ref:`Network Platform Options <platform_options>` for details.",
+      "options": {
+        "content": {
+          "aliases": [],
+          "description": "This argument specifies the optional request content (all RPC attributes). The I(content) value can either be provided as XML formatted string or as dictionary.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "display": {
+          "aliases": [],
+          "description": "Encoding scheme to use when serializing output from the device. The option I(json) will serialize the output as JSON data. If the option value is I(json) it requires jxmlease to be installed on control node. The option I(pretty) is similar to received XML response but is using human readable format (spaces, new lines). The option value I(xml) is similar to received XML response but removes all XML namespaces.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "json",
+            "pretty",
+            "xml"
+          ],
+          "suboptions": {}
+        },
+        "rpc": {
+          "aliases": [],
+          "description": "This argument specifies the request (name of the operation) to be executed on the remote NETCONF enabled device.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "xmlns": {
+          "aliases": [],
+          "description": "NETCONF operations not defined in rfc6241 typically require the appropriate XML namespace to be set. In the case the I(request) option is not already provided in XML format, the namespace can be defined by the I(xmlns) option.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ncclient (>=v0.5.2)",
+        "jxmlease"
+      ],
+      "short_description": "Execute operations on NETCONF enabled network devices.",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: lock candidate\n  ansible.netcommon.netconf_rpc:\n    rpc: lock\n    content:\n      target:\n        candidate:\n\n- name: unlock candidate\n  ansible.netcommon.netconf_rpc:\n    rpc: unlock\n    xmlns: urn:ietf:params:xml:ns:netconf:base:1.0\n    content: \"{'target': {'candidate': None}}\"\n\n- name: discard changes\n  ansible.netcommon.netconf_rpc:\n    rpc: discard-changes\n\n- name: get-schema\n  ansible.netcommon.netconf_rpc:\n    rpc: get-schema\n    xmlns: urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring\n    content:\n      identifier: ietf-netconf\n      version: '2011-06-01'\n\n- name: copy running to startup\n  ansible.netcommon.netconf_rpc:\n    rpc: copy-config\n    content:\n      source:\n        running:\n      target:\n        startup:\n\n- name: get schema list with JSON output\n  ansible.netcommon.netconf_rpc:\n    rpc: get\n    content: |\n      <filter>\n        <netconf-state xmlns=\"urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring\">\n          <schemas/>\n        </netconf-state>\n      </filter>\n    display: json\n\n- name: get schema using XML request\n  ansible.netcommon.netconf_rpc:\n    rpc: get-schema\n    xmlns: urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring\n    content: |\n      <identifier>ietf-netconf-monitoring</identifier>\n      <version>2010-10-04</version>\n    display: json\n"
+  },
+  "ansible.netcommon.network_resource": {
+    "doc": {
+      "description": "Get list of available resource modules for given os name\nRetrieve given resource module configuration facts\nPush given resource module configuration",
+      "has_action": true,
+      "notes": "Refer the individual module documentation for the valid inputs of I(state) and I(config) modules.",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "The resource module configuration. For details on the type and structure of this option refer the individual resource module platform documentation.",
+          "type": "raw",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the resource module to manage.\nThe resource module should be supported for given I(os_name), if not supported it will result in error.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "os_name": {
+          "aliases": [],
+          "description": "The name of the os to manage the resource modules.\nThe name should be fully qualified collection name format, that is I(<namespace>.<collection-name>.<plugin-name>).\nIf value of this option is not set the os value will be read from I(ansible_network_os) variable.\nIf value of both I(os_name) and I(ansible_network_os) is not set it will result in error.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "running_config": {
+          "aliases": [],
+          "description": "This option is used only with state I(parsed).\nThe value of this option should be the output received from the host device by executing the cli command to get the resource configuration on host.\nThe state I(parsed) reads the configuration from C(running_config) option and transforms it into Ansible structured data as per the resource module's argspec and the value is then returned in the I(parsed) key within the result.",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The state the configuration should be left in.\nFor supported values refer the individual resource module platform documentation.",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage resource modules",
+      "version_added": "2.4.0"
+    },
+    "examples": "\n- name: get list of resource modules for given network_os\n  ansible.netcommon.network_resource:\n  register: result\n\n- name: fetch acl config for\n  ansible.netcommon.network_resource:\n    os_name: cisco.ios.ios\n    name: acls\n    state: gathered\n\n- name: manage acl config for cisco.ios.ios network os.\n  ansible.netcommon.network_resource:\n    name: acls\n    config:\n      - afi: ipv4\n        acls:\n          - name: test_acl\n            acl_type: extended\n            aces:\n              - grant: deny\n                protocol_options:\n                  tcp:\n                    fin: true\n                source:\n                  address: 192.0.2.0\n                  wildcard_bits: 0.0.0.255\n                destination:\n                  address: 192.0.3.0\n                  wildcard_bits: 0.0.0.255\n                  port_protocol:\n                    eq: www\n                option:\n                  traceroute: true\n                ttl:\n                  eq: 10\n    state: merged\n"
+  },
+  "ansible.netcommon.restconf_config": {
+    "doc": {
+      "description": "RESTCONF is a standard mechanisms to allow web applications to configure and manage data. RESTCONF is a IETF standard and documented on RFC 8040.\nThis module allows the user to configure data on RESTCONF enabled devices.",
+      "has_action": false,
+      "notes": "This module requires the RESTCONF system service be enabled on the remote device being managed.\nThis module is supported with I(ansible_connection) value of I(ansible.netcommon.httpapi) and I(ansible_network_os) value of I(ansible.netcommon.restconf).\nThis module is tested against Cisco IOSXE 16.12.02 version.",
+      "options": {
+        "content": {
+          "aliases": [],
+          "description": "The configuration data in format as specififed in C(format) option. Required unless C(method) is I(delete).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "format": {
+          "aliases": [],
+          "description": "The format of the configuration provided as value of C(content). Accepted values are I(xml) and I(json) and the given configuration format should be supported by remote RESTCONF server.",
+          "default": "json",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "json",
+            "xml"
+          ],
+          "suboptions": {}
+        },
+        "method": {
+          "aliases": [],
+          "description": "The RESTCONF method to manage the configuration change on device. The value I(post) is used to create a data resource or invoke an operation resource, I(put) is used to replace the target data resource, I(patch) is used to modify the target resource, and I(delete) is used to delete the target resource.",
+          "default": "post",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "post",
+            "put",
+            "patch",
+            "delete"
+          ],
+          "suboptions": {}
+        },
+        "path": {
+          "aliases": [],
+          "description": "URI being used to execute API calls.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Handles create, update, read and delete of configuration data on RESTCONF enabled devices.",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: create l3vpn services\n  ansible.netcommon.restconf_config:\n    path: /config/ietf-l3vpn-svc:l3vpn-svc/vpn-services\n    content: |\n      {\n        \"vpn-service\":[\n                        {\n                          \"vpn-id\": \"red_vpn2\",\n                          \"customer-name\": \"blue\",\n                          \"vpn-service-topology\": \"ietf-l3vpn-svc:any-to-any\"\n                        },\n                        {\n                          \"vpn-id\": \"blue_vpn1\",\n                          \"customer-name\": \"red\",\n                          \"vpn-service-topology\": \"ietf-l3vpn-svc:any-to-any\"\n                        }\n                      ]\n       }\n"
+  },
+  "ansible.netcommon.restconf_get": {
+    "doc": {
+      "description": "RESTCONF is a standard mechanisms to allow web applications to access the configuration data and state data developed and standardized by the IETF. It is documented in RFC 8040.\nThis module allows the user to fetch configuration and state data from RESTCONF enabled devices.",
+      "has_action": false,
+      "notes": "This module requires the RESTCONF system service be enabled on the remote device being managed.\nThis module is supported with I(ansible_connection) value of I(ansible.netcommon.httpapi) and I(ansible_network_os) value of I(ansible.netcommon.restconf).\nThis module is tested against Cisco IOSXE 16.12.02 version.",
+      "options": {
+        "content": {
+          "aliases": [],
+          "description": "The C(content) is a query parameter that controls how descendant nodes of the requested data nodes in C(path) will be processed in the reply. If value is I(config) return only configuration descendant data nodes of value in C(path). If value is I(nonconfig) return only non-configuration descendant data nodes of value in C(path). If value is I(all) return all descendant data nodes of value in C(path)",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "config",
+            "nonconfig",
+            "all"
+          ],
+          "suboptions": {}
+        },
+        "output": {
+          "aliases": [],
+          "description": "The output of response received.",
+          "default": "json",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "json",
+            "xml"
+          ],
+          "suboptions": {}
+        },
+        "path": {
+          "aliases": [],
+          "description": "URI being used to execute API calls.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Fetch configuration/state data from RESTCONF enabled devices.",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: get l3vpn services\n  ansible.netcommon.restconf_get:\n    path: /config/ietf-l3vpn-svc:l3vpn-svc/vpn-services\n"
+  },
+  "ansible.netcommon.telnet": {
+    "doc": {
+      "description": "Executes a low-down and dirty telnet command, not going through the module subsystem.\nThis is mostly to be used for enabling ssh on devices that only have telnet enabled by default.",
+      "has_action": true,
+      "notes": "The C(environment) keyword does not work with this task",
+      "options": {
+        "command": {
+          "aliases": [
+            "commands"
+          ],
+          "description": "List of commands to be executed in the telnet session.",
+          "type": "list",
+          "required": true,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "The host/target on which to execute the command",
+          "default": "remote_addr",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_prompt": {
+          "aliases": [],
+          "description": "Login or username prompt to expect",
+          "default": "login: ",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "The password for login",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password_prompt": {
+          "aliases": [],
+          "description": "Login or username prompt to expect",
+          "default": "Password: ",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "pause": {
+          "aliases": [],
+          "description": "Seconds to pause between each command issued",
+          "default": "1",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Remote port to use",
+          "default": "23",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "prompts": {
+          "aliases": [],
+          "description": "List of prompts expected before sending next command",
+          "default": "['$']",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "send_newline": {
+          "aliases": [],
+          "description": "Sends a newline character upon successful connection to start the terminal session.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "timeout for remote operations",
+          "default": "120",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "user": {
+          "aliases": [],
+          "description": "The user for login",
+          "default": "remote_user",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Executes a low-down and dirty telnet command",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: send configuration commands to IOS\n  ansible.netcommon.telnet:\n    user: cisco\n    password: cisco\n    login_prompt: 'Username: '\n    prompts:\n    - '[>#]'\n    command:\n    - terminal length 0\n    - configure terminal\n    - hostname ios01\n\n- name: run show commands\n  ansible.netcommon.telnet:\n    user: cisco\n    password: cisco\n    login_prompt: 'Username: '\n    prompts:\n    - '[>#]'\n    command:\n    - terminal length 0\n    - show version\n"
+  }
+}

@@ -1,0 +1,3630 @@
+{
+  "purestorage.flashblade.purefb_ad": {
+    "doc": {
+      "description": "Add or delete FlashBlade Active Directory Account\nFlashBlade allows the creation of one AD computer account, or joining of an existing AD computer account.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "computer": {
+          "aliases": [],
+          "description": "The common name of the computer account to be created in the Active Directory domain.\nIf not specified, defaults to the name of the Active Directory configuration.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "directory_servers": {
+          "aliases": [],
+          "description": "A list of directory servers that will be used for lookups related to user authorization\nAccepted server formats are IP address and DNS name\nAll specified servers must be registered to the domain appropriately in the array configured DNS and will only be communicated with over the secure LDAP (LDAPS) protocol. If not specified, servers are resolved for the domain in DNS\nThe specified list can have a maximum length of 5. If more are provided only the first 5 are used.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "domain": {
+          "aliases": [],
+          "description": "The Active Directory domain to join",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "encryption": {
+          "aliases": [],
+          "description": "The encryption types that will be supported for use by clients for Kerberos authentication",
+          "default": "aes256-sha1",
+          "type": "list",
+          "required": false,
+          "choices": [
+            "aes256-sha1",
+            "aes128-sha1",
+            "arcfour-hmac"
+          ],
+          "elements": "str",
+          "suboptions": {}
+        },
+        "existing": {
+          "aliases": [],
+          "description": "Does the account I(name) already exist in the AD environment",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "join_ou": {
+          "aliases": [],
+          "description": "Location where the Computer account will be created. e.g. OU=Arrays,OU=Storage.\nIf left empty, defaults to B(CN=Computers).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "kerberos_servers": {
+          "aliases": [],
+          "description": "A list of key distribution servers to use for Kerberos protocol\nAccepted server formats are IP address and DNS name\nAll specified servers must be registered to the domain appropriately in the array configured DNS. If not specified, servers are resolved for the domain in DNS.\nThe specified list can have a maximum length of 5. If more are provided only the first 5 are used.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "local_only": {
+          "aliases": [],
+          "description": "Do a local-only delete of an active directory account",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the AD account",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password string for I(username)",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "service": {
+          "aliases": [],
+          "description": "Service protocol for Active Directory principals\nRefer to FlashBlade User Guide for more details",
+          "default": "nfs",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "nfs",
+            "cifs",
+            "HOST"
+          ],
+          "suboptions": {}
+        },
+        "service_principals": {
+          "aliases": [],
+          "description": "A list of either FQDNs or SPNs for registering services with the domain.\nIf not specified B(Computer Name.Domain) is used",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Define whether the AD sccount is deleted or not",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "A user capable of creating a computer account within the domain",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage FlashBlade Active Directory Account",
+      "version_added": "1.6.0"
+    },
+    "examples": "\n- name: Create new AD account\n  purefb_ad:\n    name: ad_account\n    computer: FLASHBLADE\n    domain: acme.com\n    username: Administrator\n    password: Password\n    join_ou: \"CN=FakeOU\"\n    encryption:\n    - aes128-cts-hmac-sha1-96\n    - aes256-cts-hmac-sha1-96\n    kerberos_servers:\n    - kdc.acme.com\n    directory_servers:\n    - ldap.acme.com\n    service_principals:\n    - vip1.flashblade.acme.com\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Connect to existing AD account\n  purefb_ad:\n    name: ad_account\n    computer: FLASHBLADE\n    domain: acme.com\n    username: Administrator\n    password: Password\n    existing: True\n    kerberos_servers:\n    - kdc.acme.com\n    directory_servers:\n    - ldap.acme.com\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Update existing AD account\n  purefb_ad:\n    name: ad_account\n    encryption:\n    - aes256-cts-hmac-sha1-96\n    kerberos_servers:\n    - kdc.acme.com\n    directory_servers:\n    - ldap.acme.com\n    service_principals:\n    - vip1.flashblade.acme.com\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Delete local AD account\n  purefb_ad:\n    name: ad_account\n    local_only: True\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Fully delete AD account\n  purefb_ad:\n    name: ad_account\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n"
+  },
+  "purestorage.flashblade.purefb_admin": {
+    "doc": {
+      "description": "Set global admin settings for the FlashBlade",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "lockout": {
+          "aliases": [],
+          "description": "Account lockout duration, in seconds, after max_login exceeded\nRange between 1 second and 90 days (7776000 seconds)",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "max_login": {
+          "aliases": [],
+          "description": "Maximum number of failed logins before account is locked",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "min_password": {
+          "aliases": [],
+          "description": "Minimum user password length\nRange between 1 and 100",
+          "default": "1",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Configure Pure Storage FlashBlade Global Admin settings",
+      "version_added": "1.8.0"
+    },
+    "examples": "\n- name: Set global login parameters\n  purefb_admin:\n    max_login: 5\n    min_password: 10\n    lockout: 300\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n"
+  },
+  "purestorage.flashblade.purefb_alert": {
+    "doc": {
+      "description": "Configure alert email configuration for Pure Storage FlashArrays.\nAdd or delete an individual syslog server to the existing list of serves.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "address": {
+          "aliases": [],
+          "description": "Email address (valid format required)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "enabled": {
+          "aliases": [],
+          "description": "Set specified email address to be enabled or disabled",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "severity": {
+          "aliases": [],
+          "description": "The minimum severity that an alert must have in order for emails to be sent to the array's alert watchers",
+          "default": "info",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "info",
+            "warning",
+            "critical"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create or delete alert email",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Configure Pure Storage FlashBlade alert email settings",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Add new email recipient and enable, or enable existing email\n  purefb_alert:\n    address: \"user@domain.com\"\n    enabled: true\n    state: present\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n- name: Delete existing email recipient\n  purefb_alert:\n    state: absent\n    address: \"user@domain.com\"\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n"
+  },
+  "purestorage.flashblade.purefb_apiclient": {
+    "doc": {
+      "description": "Enable or disable FlashBlade API Clients",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "enabled": {
+          "aliases": [],
+          "description": "State of the API Client Key",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "issuer": {
+          "aliases": [],
+          "description": "The name of the identity provider that will be issuing ID Tokens for this API client\nIf not specified, defaults to the API client name, I(name).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the API Client",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "public_key": {
+          "aliases": [],
+          "description": "The API clients PEM formatted (Base64 encoded) RSA public key.\nInclude the I(—–BEGIN PUBLIC KEY—–) and I(—–END PUBLIC KEY—–) lines",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "role": {
+          "aliases": [],
+          "description": "The maximum role allowed for ID Tokens issued by this API client",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "readonly",
+            "ops_admin",
+            "storage_admin",
+            "array_admin"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Define whether the API client should exist or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "token_ttl": {
+          "aliases": [],
+          "description": "Time To Live length in seconds for the exchanged access token\nRange is 1 second to 1 day (86400 seconds)",
+          "default": "86400",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage FlashBlade API Clients",
+      "version_added": "1.6.0"
+    },
+    "examples": "\n- name: Create API token ansible-token\n  purefb_apiclient:\n    name: ansible_token\n    issuer: \"Pure_Storage\"\n    token_ttl: 3000\n    role: array_admin\n    public_key: \"{{lookup('file', 'public_pem_file') }}\"\n    fb_url: 10.10.10.2\n    api_token: T-68618f31-0c9e-4e57-aa44-5306a2cf10e3\n\n- name: Disable API CLient\n  purefb_apiclient:\n    name: ansible_token\n    enabled: false\n    fb_url: 10.10.10.2\n    api_token: T-68618f31-0c9e-4e57-aa44-5306a2cf10e3\n\n- name: Enable API CLient\n  purefb_apiclient:\n    name: ansible_token\n    enabled: true\n    fb_url: 10.10.10.2\n    api_token: T-68618f31-0c9e-4e57-aa44-5306a2cf10e3\n\n- name: Delete API Client\n  purefb_apiclient:\n    state: absent\n    name: ansible_token\n    fb_url: 10.10.10.2\n    api_token: T-68618f31-0c9e-4e57-aa44-5306a2cf10e3\n"
+  },
+  "purestorage.flashblade.purefb_banner": {
+    "doc": {
+      "description": "Configure MOTD for Pure Storage FlashBlades.\nThis will be shown during an SSH or GUI login to the system.\nMultiple line messages can be achieved using \\\\n.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "banner": {
+          "aliases": [],
+          "description": "Banner text, or MOTD, to use",
+          "default": "Welcome to the machine...",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Set ot delete the MOTD",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Configure Pure Storage FlashBlade GUI and SSH MOTD message",
+      "version_added": "1.4.0"
+    },
+    "examples": "\n- name: Set new banner text\n  purefb_banner:\n    banner: \"Banner over\\ntwo lines\"\n    state: present\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Delete banner text\n  purefb_banner:\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n"
+  },
+  "purestorage.flashblade.purefb_bladename": {
+    "doc": {
+      "description": "Configure name of Pure Storage FlashBlades.\nIdeal for Day 0 initial configuration.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the FlashBlade. Must conform to correct naming schema.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Set the FlashBlade name",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Configure Pure Storage FlashBlade name",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Set new FlashBlade name\n  purefb_bladename:\n    name: new-flashblade-name\n    state: present\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n"
+  },
+  "purestorage.flashblade.purefb_bucket": {
+    "doc": {
+      "description": "This module managess object store (s3) buckets on Pure Storage FlashBlade.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "account": {
+          "aliases": [],
+          "description": "Object Store Account for Bucket.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "eradicate": {
+          "aliases": [],
+          "description": "Define whether to eradicate the bucket on delete or leave in trash.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Bucket Name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create, delete or modifies a bucket.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "versioning": {
+          "aliases": [],
+          "description": "State of S3 bucket versioning",
+          "default": "absent",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "enabled",
+            "suspended",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage Object Store Buckets on a  Pure Storage FlashBlade.",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Create new bucket named foo in account bar\n  purefb_bucket:\n    name: foo\n    account: bar\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Delete bucket named foo in account bar\n  purefb_bucket:\n    name: foo\n    account: bar\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Change bucket versioning state\n  purefb_bucket:\n    name: foo\n    account: bar\n    versioning: enabled\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Recover deleted bucket named foo in account bar\n  purefb_bucket:\n    name: foo\n    account: bar\n    state: present\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Eradicate bucket named foo in account bar\n  purefb_bucket:\n    name: foo\n    account: bar\n    state: absent\n    eradicate: true\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n"
+  },
+  "purestorage.flashblade.purefb_bucket_replica": {
+    "doc": {
+      "description": "This module manages bucket replica links between Pure Storage FlashBlades.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "credential": {
+          "aliases": [],
+          "description": "Name of remote credential name to use.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Local Bucket Name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "paused": {
+          "aliases": [],
+          "description": "State of the bucket replica link",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Creates or modifies a bucket replica link",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "target": {
+          "aliases": [],
+          "description": "Remote array or target name to create replica on.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "target_bucket": {
+          "aliases": [],
+          "description": "Name of target bucket name\nIf not supplied, will default to I(name).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage bucket replica links between Pure Storage FlashBlades",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Create new bucket replica from foo to bar on arrayB\n  purefb_bucket_replica:\n    name: foo\n    target: arrayB\n    target_bucket: bar\n    credentials: cred_1\n    state: present\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Pause exisitng bucket replica link\n  purefb_bucket_replica:\n    name: foo\n    paused: true\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Delete bucket replica link foo\n  purefb_fs_replica:\n    name: foo\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641"
+  },
+  "purestorage.flashblade.purefb_certgrp": {
+    "doc": {
+      "description": "Manage certifcate groups for FlashBlades",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "certificates": {
+          "aliases": [],
+          "description": "List of certifcates to add to a policy on creation",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the certificate group",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create or delete certifcate group",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage FlashBlade Certifcate Groups",
+      "version_added": "1.4.0"
+    },
+    "examples": "\n- name: Create a certifcate group\n  purefb_certgrp:\n    name: test_grp\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Create a cerifcate group and add existing certificates\n  purefb_certgrp:\n    name: test_grp\n    certifcates:\n    - cert1\n    - cert2\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Delete a certifcate from a group\n  purefb_certgrp:\n    name: test_grp\n    certificates:\n    - cert2\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Delete a certifcate group\n  purefb_certgrp:\n    name: test_grp\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n"
+  },
+  "purestorage.flashblade.purefb_certs": {
+    "doc": {
+      "description": "Manage SSL certifcates for FlashBlades",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "contents": {
+          "aliases": [],
+          "description": "SSL certifcate text",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the certificate",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "passphrase": {
+          "aliases": [],
+          "description": "Passphrase for the private_key",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "private_key": {
+          "aliases": [],
+          "description": "SSL certificate private key test",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create or delete certifcate",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage FlashBlade SSL Certifcates",
+      "version_added": "1.4.0"
+    },
+    "examples": "\n- name: Create a SSL certifcate\n  purefb_certs:\n    name: test_cert\n    contents: \"{{lookup('file', 'certicate_file_name') }}\"\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Delete a SSL certifcate\n  purefb_certs:\n    name: test_cert\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Update SSL certificate\n  purefb_certs:\n    name: global\n    contents: \"{{ lookup('file', 'certificate_file_name') }}\"\n    private_key: \"{{ lookup('file', 'certificate_key_file_name') }}\"\n    passphrase: 'mypassword'\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n"
+  },
+  "purestorage.flashblade.purefb_connect": {
+    "doc": {
+      "description": "Manage replication connections to specified remote FlashBlade system",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "default_limit": {
+          "aliases": [],
+          "description": "Default maximum bandwidth threshold for outbound traffic in bytes.\nB, K, M, or G units. See examples.\nMust be 0 or between 5MB and 28GB\nOnce exceeded, bandwidth throttling occurs",
+          "type": "str",
+          "required": false,
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "encrypted": {
+          "aliases": [],
+          "description": "Define if replication connection is encrypted",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create or delete replication connection",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "target_api": {
+          "aliases": [],
+          "description": "API token for target FlashBlade system",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "target_repl": {
+          "aliases": [],
+          "description": "Replication IP address of target FlashBlade system\nIf not set at time of connection creation, will default to all the replication addresses available on the target array at the time of connection creation.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "target_url": {
+          "aliases": [],
+          "description": "Management IP address of target FlashBlade system",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "window_end": {
+          "aliases": [],
+          "description": "The window end time.\nThe time must be set to the hour.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "window_limit": {
+          "aliases": [],
+          "description": "Maximum bandwidth threshold for outbound traffic during the specified time range in bytes.\nB, K, M, or G units. See examples.\nMust be 0 or between 5MB and 28GB\nOnce exceeded, bandwidth throttling occurs",
+          "type": "str",
+          "required": false,
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "window_start": {
+          "aliases": [],
+          "description": "The window start time.\nThe time must be set to the hour.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.9.0",
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage replication connections between two FlashBlades",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Create a connection to remote FlashBlade system\n  purefb_connect:\n    target_url: 10.10.10.20\n    target_api: T-b3275b1c-8958-4190-9052-eb46b0bd09f8\n    fb_url: 10.10.10.2\n    api_token: T-91528421-fe42-47ee-bcb1-47eefb0a9220\n- name: Create a connection to remote FlashBlade system with bandwidth limits\n  purefb_connect:\n    target_url: 10.10.10.20\n    target_api: T-b3275b1c-8958-4190-9052-eb46b0bd09f8\n    window_limit: 28G\n    window_start: 1AM\n    window_end: 7AM\n    default_limit: 5M\n    fb_url: 10.10.10.2\n    api_token: T-91528421-fe42-47ee-bcb1-47eefb0a9220\n- name: Delete connection to target FlashBlade system\n  purefb_connect:\n    state: absent\n    target_url: 10.10.10.20\n    target_api: T-b3275b1c-8958-4190-9052-eb46b0bd09f8\n    fb_url: 10.10.10.2\n    api_token: T-91528421-fe42-47ee-bcb1-47eefb0a9220\n"
+  },
+  "purestorage.flashblade.purefb_dns": {
+    "doc": {
+      "description": "Set or erase DNS configuration for Pure Storage FlashBlades.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "domain": {
+          "aliases": [],
+          "description": "Domain suffix to be appended when perofrming DNS lookups.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "nameservers": {
+          "aliases": [],
+          "description": "List of up to 3 unique DNS server IP addresses. These can be IPv4 or IPv6 - No validation is done of the addresses is performed.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "search": {
+          "aliases": [],
+          "description": "Ordered list of domain names to search\nDeprecated option. Will be removed in Collection v1.6.0, There is no replacement for this.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create or delete DNS servers configuration",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Configure Pure Storage FlashBlade DNS settings",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Delete exisitng DNS settings\n  purefb_dns:\n    state: absent\n    fa_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n\n- name: Set DNS settings\n  purefb_dns:\n    domain: purestorage.com\n    nameservers:\n      - 8.8.8.8\n      - 8.8.4.4\n    search:\n      - purestorage.com\n      - acme.com\n    fa_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n"
+  },
+  "purestorage.flashblade.purefb_ds": {
+    "doc": {
+      "description": "Create, modify or erase directory services configurations. There is no facility to SSL certificates at this time. Use the FlashBlade GUI for this additional configuration work.\nIf updating a directory service and i(bind_password) is provided this will always cause a change, even if the password given isn't different from the current. This makes this part of the module non-idempotent..",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "base_dn": {
+          "aliases": [],
+          "description": "Sets the base of the Distinguished Name (DN) of the directory service groups. The base should consist of only Domain Components (DCs). The base_dn will populate with a default value when a URI is entered by parsing domain components from the URI. The base DN should specify DC= for each domain component and multiple DCs should be separated by commas.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "bind_password": {
+          "aliases": [],
+          "description": "Sets the password of the bind_user user name account.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "bind_user": {
+          "aliases": [],
+          "description": "Sets the user name that can be used to bind to and query the directory.\nFor Active Directory, enter the username - often referred to as sAMAccountName or User Logon Name - of the account that is used to perform directory lookups.\nFor OpenLDAP, enter the full DN of the user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "dstype": {
+          "aliases": [],
+          "description": "The type of directory service to work on",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "management",
+            "nfs",
+            "smb"
+          ],
+          "suboptions": {}
+        },
+        "enable": {
+          "aliases": [],
+          "description": "Whether to enable or disable directory service support.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "join_ou": {
+          "aliases": [],
+          "description": "The optional organizational unit (OU) where the machine account for the directory service will be created.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "nis_domain": {
+          "aliases": [],
+          "description": "The NIS domain to search\nThis cannot be used in conjunction with LDAP configurations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "nis_servers": {
+          "aliases": [],
+          "description": "A list of up to 30 IP addresses or FQDNs for NIS servers.\nThis cannot be used in conjunction with LDAP configurations.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create or delete directory service configuration",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "uri": {
+          "aliases": [],
+          "description": "A list of up to 30 URIs of the directory servers. Each URI must include the scheme ldap:// or ldaps:// (for LDAP over SSL), a hostname, and a domain name or IP address. For example, ldap://ad.company.com configures the directory service with the hostname \"ad\" in the domain \"company.com\" while specifying the unencrypted LDAP protocol.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Configure FlashBlade Directory Service",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Delete existing management directory service\n  purefb_ds:\n    dstype: management\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n\n- name: Create NFS directory service (disabled)\n  purefb_ds:\n    dstype: nfs\n    uri: \"ldaps://lab.purestorage.com\"\n    base_dn: \"DC=lab,DC=purestorage,DC=com\"\n    bind_user: Administrator\n    bind_password: password\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n\n- name: Enable existing SMB directory service\n  purefb_ds:\n    dstypr: smb\n    enable: true\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n\n- name: Disable existing management directory service\n  purefb_ds:\n    dstype: management\n    enable: false\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n\n- name: Create NFS directory service (enabled)\n  purefb_ds:\n    dstype: nfs\n    enable: true\n    uri: \"ldaps://lab.purestorage.com\"\n    base_dn: \"DC=lab,DC=purestorage,DC=com\"\n    bind_user: Administrator\n    bind_password: password\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n"
+  },
+  "purestorage.flashblade.purefb_dsrole": {
+    "doc": {
+      "description": "Set or erase directory services role configurations.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "group": {
+          "aliases": [],
+          "description": "Sets the common Name (CN) of the configured directory service group containing users for the FlashBlade. This name should be just the Common Name of the group without the CN= specifier.\nCommon Names should not exceed 64 characters in length.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "group_base": {
+          "aliases": [],
+          "description": "Specifies where the configured group is located in the directory tree. This field consists of Organizational Units (OUs) that combine with the base DN attribute and the configured group CNs to complete the full Distinguished Name of the groups. The group base should specify OU= for each OU and multiple OUs should be separated by commas. The order of OUs is important and should get larger in scope from left to right.\nEach OU should not exceed 64 characters in length.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "role": {
+          "aliases": [],
+          "description": "The directory service role to work on",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "array_admin",
+            "ops_admin",
+            "readonly",
+            "storage_admin"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create or delete directory service role",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Configure FlashBlade  Management Directory Service Roles",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Delete existing array_admin directory service role\n  purefb_dsrole:\n    role: array_admin\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n\n- name: Create array_admin directory service role\n  purefb_dsrole:\n    role: array_admin\n    group_base: \"OU=PureGroups,OU=SANManagers\"\n    group: pureadmins\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n\n- name: Update ops_admin directory service role\n  purefb_dsrole:\n    role: ops_admin\n    group_base: \"OU=PureGroups\"\n    group: opsgroup\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n"
+  },
+  "purestorage.flashblade.purefb_eula": {
+    "doc": {
+      "description": "Sign the FlashBlade EULA for Day 0 config, or change signatory.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "company": {
+          "aliases": [],
+          "description": "Full legal name of the entity.\nThe value must be between 1 and 64 characters in length.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Full legal name of the individual at the company who has the authority to accept the terms of the agreement.\nThe value must be between 1 and 64 characters in length.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "title": {
+          "aliases": [],
+          "description": "Individual's job title at the company.\nThe value must be between 1 and 64 characters in length.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Sign Pure Storage FlashBlade EULA",
+      "version_added": "1.6.0"
+    },
+    "examples": "\n- name: Sign EULA for FlashBlade\n  purefb_eula:\n    company: \"ACME Storage, Inc.\"\n    name: \"Fred Bloggs\"\n    title: \"Storage Manager\"\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n"
+  },
+  "purestorage.flashblade.purefb_fs": {
+    "doc": {
+      "description": "This module manages filesystems on Pure Storage FlashBlade.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "access_control": {
+          "aliases": [],
+          "description": "The access control style that is utilized for client actions such as setting file and directory ACLs.\nOnly available from Purity//FB 3.1.1",
+          "default": "shared",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "nfs",
+            "smb",
+            "shared",
+            "independent",
+            "mode-bits"
+          ],
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "delete_link": {
+          "aliases": [],
+          "description": "Define if the filesystem can be deleted even if it has a replica link",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "discard_snaps": {
+          "aliases": [],
+          "description": "Allow a filesystem to be demoted.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "eradicate": {
+          "aliases": [],
+          "description": "Define whether to eradicate the filesystem on delete or leave in trash.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "export_policy": {
+          "aliases": [],
+          "description": "Name of NFS export policy to assign to filesystem\nOverrides I(nfs_rules)\nOnly valid for Purity//FB 3.3.0 or higher",
+          "type": "str",
+          "required": false,
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "fastremove": {
+          "aliases": [],
+          "description": "Define whether the fast remove directory is enabled for the filesystem.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "group_quota": {
+          "aliases": [],
+          "description": "Default quota in M, G, T or P units for a group under this file system.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hard_limit": {
+          "aliases": [],
+          "description": "Define whether the capacity for a filesystem is a hard limit.\nCAUTION This will cause the filesystem to go Read-Only if the capacity has already exceeded the logical size of the filesystem.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "http": {
+          "aliases": [],
+          "description": "Define whether to HTTP/HTTPS protocol is enabled for the filesystem.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Filesystem Name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "nfs_rules": {
+          "aliases": [],
+          "description": "Define the NFS rules in operation.\nIf not set at filesystem creation time it defaults to I(*(rw,no_root_squash))\nSupported binary options are ro/rw, secure/insecure, fileid_32bit/no_fileid_32bit, root_squash/no_root_squash, all_squash/no_all_squash and atime/noatime\nSupported non-binary options are anonuid=#, anongid=#, sec=(sys|krb5)\nSuperceeded by I(export_policy) if provided",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "nfsv3": {
+          "aliases": [],
+          "description": "Define whether to NFSv3 protocol is enabled for the filesystem.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "nfsv4": {
+          "aliases": [],
+          "description": "Define whether to NFSv4.1 protocol is enabled for the filesystem.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "policy": {
+          "aliases": [],
+          "description": "Filesystem policy to assign to or remove from a filesystem.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "policy_state": {
+          "aliases": [],
+          "description": "Add or delete a policy from a filesystem",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "promote": {
+          "aliases": [],
+          "description": "Promote/demote a filesystem.\nCan only demote the file-system if it is in a replica-link relationship.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "safeguard_acls": {
+          "aliases": [],
+          "description": "Safeguards ACLs on a filesystem.\nPerforms different roles depending on the filesystem protocol enabled.\nSee Purity//FB documentation for detailed description.\nOnly available from Purity//FB 3.1.1",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "size": {
+          "aliases": [],
+          "description": "Volume size in M, G, T or P units. See examples.\nIf size is not set at filesystem creation time the filesystem size becomes unlimited.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "smb": {
+          "aliases": [],
+          "description": "Define whether to SMB protocol is enabled for the filesystem.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "smb_aclmode": {
+          "aliases": [],
+          "description": "Specify the ACL mode for the SMB protocol.\nDeprecated from Purity//FB 3.1.1. Use I(access_control) instead.",
+          "default": "shared",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "shared",
+            "native"
+          ],
+          "suboptions": {}
+        },
+        "snapshot": {
+          "aliases": [],
+          "description": "Define whether a snapshot directory is enabled for the filesystem.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create, delete or modifies a filesystem.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "user_quota": {
+          "aliases": [],
+          "description": "Default quota in M, G, T or P units for a user under this file system.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "writable": {
+          "aliases": [],
+          "description": "Define if a filesystem is writeable.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage filesystemon Pure Storage FlashBlade`",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Create new filesystem named foo\n  purefb_fs:\n    name: foo\n    size: 1T\n    state: present\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Delete filesystem named foo\n  purefb_fs:\n    name: foo\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Recover filesystem named foo\n  purefb_fs:\n    name: foo\n    state: present\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Eradicate filesystem named foo\n  purefb_fs:\n    name: foo\n    state: absent\n    eradicate: true\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Promote filesystem named foo ready for failover\n  purefb_fs:\n    name: foo\n    promote: true\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Demote filesystem named foo after failover\n  purefb_fs:\n    name: foo\n    promote: false\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Modify attributes of an existing filesystem named foo\n  purefb_fs:\n    name: foo\n    size: 2T\n    nfsv3 : false\n    nfsv4 : true\n    user_quota: 10K\n    group_quota: 25M\n    nfs_rules: '10.21.200.0/24(ro)'\n    snapshot: true\n    fastremove: true\n    hard_limit: true\n    smb: true\n    state: present\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641"
+  },
+  "purestorage.flashblade.purefb_fs_replica": {
+    "doc": {
+      "description": "This module manages filesystem replica links between Pure Storage FlashBlades.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Local Filesystem Name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "policy": {
+          "aliases": [],
+          "description": "Name of filesystem snapshot policy to apply to the replica link.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Creates or modifies a filesystem replica link",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "target_array": {
+          "aliases": [],
+          "description": "Remote array name to create replica on.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "target_fs": {
+          "aliases": [],
+          "description": "Name of target filesystem name\nIf not supplied, will default to I(name).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage filesystem replica links between Pure Storage FlashBlades",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Create new filesystem replica from foo to bar on arrayB\n  purefb_fs_replica:\n    name: foo\n    target_array: arrayB\n    target_fs: bar\n    policy: daily\n    state: present\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Add new snapshot policy to exisitng filesystem replica link\n  purefb_fs_replica:\n    name: foo\n    policy: weekly\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Delete snapshot policy from filesystem replica foo\n  purefb_fs_replica:\n    name: foo\n    policy: weekly\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641"
+  },
+  "purestorage.flashblade.purefb_groupquota": {
+    "doc": {
+      "description": "This module manages group quotas for filesystems on Pure Storage FlashBlade.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "gid": {
+          "aliases": [],
+          "description": "The group id on which the quota is enforced.\nCannot be combined with I(gname)",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "gname": {
+          "aliases": [],
+          "description": "The group name on which the quota is enforced.\nCannot be combined with I(gid)",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Filesystem Name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "quota": {
+          "aliases": [],
+          "description": "Group quota in M, G, T or P units. This cannot be 0.\nThis value will override the file system's default group quota.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create, delete or modifies a quota.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage filesystem group quotas",
+      "version_added": "1.7.0"
+    },
+    "examples": "\n- name: Create new group (using GID) quota for filesystem named foo\n  purefb_groupquota:\n    name: foo\n    quota: 1T\n    gid: 1234\n    state: present\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Create new group (using groupname) quota for filesystem named foo\n  purefb_groupquota:\n    name: foo\n    quota: 1T\n    gname: bar\n    state: present\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Delete group quota on filesystem foo for group by GID\n  purefb_groupquota:\n    name: foo\n    gid: 1234\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Delete group quota on filesystem foo for group by groupname\n  purefb_groupquota:\n    name: foo\n    gname: bar\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Update group quota on filesystem foo for group by groupname\n  purefb_groupquota:\n    name: foo\n    quota: 20G\n    gname: bar\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Update group quota on filesystem foo for group by GID\n  purefb_groupquota:\n    name: foo\n    quota: 20G\n    gid: bar\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641"
+  },
+  "purestorage.flashblade.purefb_info": {
+    "doc": {
+      "description": "Collect information from a Pure Storage FlashBlade running the Purity//FB operating system. By default, the module will collect basic information including hosts, host groups, protection groups and volume counts. Additional information can be collected based on the configured set of arguements.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "gather_subset": {
+          "aliases": [],
+          "description": "When supplied, this argument will define the information to be collected. Possible values for this include all, minimum, config, performance, capacity, network, subnets, lags, filesystems, snapshots, buckets, replication, policies, arrays, accounts, admins, ad and kerberos.",
+          "default": "minimum",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Collect information from Pure Storage FlashBlade",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: collect default set of info\n  purefb_info:\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n  register: blade_info\n- name: show default information\n  debug:\n    msg: \"{{ blade_info['purefb_info']['default'] }}\"\n\n- name: collect configuration and capacity info\n  purefb_info:\n    gather_subset:\n      - config\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n  register: blade_info\n- name: show config information\n  debug:\n    msg: \"{{ blade_info['purefb_info']['config'] }}\"\n\n- name: collect all info\n  purefb_info:\n    gather_subset:\n      - all\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n  register: blade_info\n- name: show all information\n  debug:\n    msg: \"{{ blade_info['purefb_info'] }}\"\n"
+  },
+  "purestorage.flashblade.purefb_inventory": {
+    "doc": {
+      "description": "Collect information from a Pure Storage FlashBlade running the Purity//FB operating system. By default, the module will collect basic information including hosts, host groups, protection groups and volume counts. Additional information can be collected based on the configured set of arguements.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Collect information from Pure Storage FlashBlade",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: collect FlashBlade invenroty\n  purefa_inventory:\n    fa_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n- name: show default information\n  debug:\n    msg: \"{{ array_info['purefb_info'] }}\"\n\n"
+  },
+  "purestorage.flashblade.purefb_keytabs": {
+    "doc": {
+      "description": "Manage Kerberos Keytabs for FlashBlades",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "filetype": {
+          "aliases": [],
+          "description": "Format of the keytab file",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "binary",
+            "base64"
+          ],
+          "suboptions": {}
+        },
+        "keytab_file": {
+          "aliases": [],
+          "description": "Name of file holding Keytab",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the Keytab\nMust include prefix and suffix",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "prefix": {
+          "aliases": [],
+          "description": "Only required for I(import) or I(rotate)\nPrefix to use for naming the files slots\nSpecifying a file entry prefix is required because a single keytab file can contain multiple keytab entries in multiple slots.\nIf not provided for I(import) the current AD Account name will be used.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Manage Kerberos Keytabs",
+          "default": "import",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "import",
+            "export",
+            "rotate"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage FlashBlade Kerberos Keytabs",
+      "version_added": "1.6.0"
+    },
+    "examples": "\n- name: Import a binary keytab\n  purefb_keytabs:\n    state: import\n    prefix: example\n    keytab_file: pure_krb.keytab\n    filetype: binary\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n\n- name: Import a base64 keytab\n  purefb_keytabs:\n    state: import\n    prefix: example\n    keytab_file: pure_krb.keytab.mime\n    filetype: base64\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n\n- name: Export a keytab\n  purefb_keytabs:\n    state: export\n    name: example.3\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n  register: download_file\n\n- name: Delete a keytab\n  purefb_keytabs:\n    state: absent\n    name: example.3\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n\n- name: Rotate current AD account keytabs\n  purefb_keytabs:\n    state: rotate\n    fb_url: 10.10.10.2\n\n- name: Rotate AD account keytabs by creating new series\n  purefb_keytabs:\n    state: rotate\n    name: next_prefix\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n"
+  },
+  "purestorage.flashblade.purefb_lag": {
+    "doc": {
+      "description": "Maintain FlashBlade Link Aggregation Groups",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the Link Aggregation Group",
+          "default": "uplink",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ports": {
+          "aliases": [],
+          "description": "Name of network ports assigned to the LAG\nFormat should be CHx.ETHy, where CHx is the chassis number and ETHy is the ethernet port number.\nMatched port pairs from each Fabric Module in the Chassis will be used.\nTo modify required ports for a LAG specify only the ports required by the LAG. Any ports currently used by the LAG not specified will be disconnected from the LAG.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Define whether the LAG should be added or deleted",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage FlashBlade Link Aggregation Groups",
+      "version_added": "1.7.0"
+    },
+    "examples": "\n- name: Add LAG\n  purefb_lag:\n    name: lag2\n    ports:\n    - ch1.eth2\n    fb_url: 10.10.10.2\n    api_token: T-68618f31-0c9e-4e57-aa44-5306a2cf10e3\n\n- name: Upate LAG\n  purefb_lag:\n    name: lag2\n    ports:\n    - ch1.eth2\n    - ch1.eth4\n    fb_url: 10.10.10.2\n    api_token: T-68618f31-0c9e-4e57-aa44-5306a2cf10e3\n\n- name: Delete LAG\n  purefb_lag:\n    name: lag2\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-68618f31-0c9e-4e57-aa44-5306a2cf10e3\n"
+  },
+  "purestorage.flashblade.purefb_lifecycle": {
+    "doc": {
+      "description": "Manage lifecycles for object buckets",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "abort_uploads_after": {
+          "aliases": [],
+          "description": "Duration of time after which incomplete multipart uploads will be aborted.\nEnter as days (d) or weeks (w). Range is 1 - 2147483647 days.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.8.0",
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "bucket": {
+          "aliases": [],
+          "description": "Bucket the lifecycle rule applies to",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "enabled": {
+          "aliases": [],
+          "description": "State of lifecycle rule",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "keep_current_for": {
+          "aliases": [],
+          "description": "Time after which current versions will be marked expired.\nEnter as days (d) or weeks (w). Range is 1 - 2147483647 days.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.8.0",
+          "suboptions": {}
+        },
+        "keep_current_until": {
+          "aliases": [],
+          "description": "Date after which current versions will be marked expired.\nEnter as date in form YYYY-MM-DD.\nB(Note:) setting a date in the past will delete ALL objects with the value of I(prefix) as they are created.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.8.0",
+          "suboptions": {}
+        },
+        "keep_previous_for": {
+          "aliases": [
+            "keep_for"
+          ],
+          "description": "Time after which previous versions will be marked expired.\nEnter as days (d) or weeks (w). Range is 1 - 2147483647 days.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the lifecycle rule",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "prefix": {
+          "aliases": [],
+          "description": "Object key prefix identifying one or more objects in the bucket",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create or delete lifecycle rule",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage FlashBlade object lifecycles",
+      "version_added": "1.4.0"
+    },
+    "examples": "\n- name: Create a lifecycle rule called bar for bucket foo (pre-Purity//FB 3.2.3)\n  purefb_lifecycle:\n    name: bar\n    bucket: foo\n    keep_previous_for: 2d\n    prefix: test\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Create a lifecycle rule called bar for bucket foo (post-Purity//FB 3.2.3)\n  purefb_lifecycle:\n    name: bar\n    bucket: foo\n    keep_previous_for: 2d\n    keep_current_for: 1w\n    abort_uploads_after: 1d\n    keep_current_until: 2020-11-23\n    prefix: test\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Modify a lifecycle rule (post-Purity//FB 3.2.3)\n  purefb_lifecycle:\n    name: bar\n    bucket: foo\n    keep_previous_for: 10d\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Delete lifecycle rule foo from bucket foo\n  purefb_lifecycle:\n    name: foo\n    bucket: bar\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n"
+  },
+  "purestorage.flashblade.purefb_network": {
+    "doc": {
+      "description": "This module manages network interfaces on Pure Storage FlashBlade.\nWhen creating a network interface a subnet must already exist with a network prefix that covers the IP address of the interface being created.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "address": {
+          "aliases": [],
+          "description": "IP address of interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "itype": {
+          "aliases": [],
+          "description": "Type of interface.",
+          "default": "vip",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "vip"
+          ],
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Interface Name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "services": {
+          "aliases": [],
+          "description": "Define which services are configured for the interfaces.",
+          "default": "data",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "data",
+            "replication"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create, delete or modifies a network interface.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage network interfaces in a Pure Storage FlashBlade",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Create new network interface named foo\n  purefb_network:\n    name: foo\n    address: 10.21.200.23\n    state: present\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Change IP address of network interface named foo\n  purefb_network:\n    name: foo\n    state: present\n    address: 10.21.200.123\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Delete network interface named foo\n  purefb_network:\n    name: foo\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641"
+  },
+  "purestorage.flashblade.purefb_ntp": {
+    "doc": {
+      "description": "Set or erase NTP configuration for Pure Storage FlashBlades.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ntp_servers": {
+          "aliases": [],
+          "description": "A list of up to 4 alternate NTP servers. These may include IPv4, IPv6 or FQDNs. Invalid IP addresses will cause the module to fail. No validation is performed for FQDNs.\nIf more than 4 servers are provided, only the first 4 unique nameservers will be used.\nif no servers are given a default of I(0.pool.ntp.org) will be used.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create or delete NTP servers configuration",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Configure Pure Storage FlashBlade NTP settings",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Delete exisitng NTP server entries\n  purefb_ntp:\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n\n- name: Set array NTP servers\n  purefb_ntp:\n    state: present\n    ntp_servers:\n      - \"0.pool.ntp.org\"\n      - \"1.pool.ntp.org\"\n      - \"2.pool.ntp.org\"\n      - \"3.pool.ntp.org\"\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n"
+  },
+  "purestorage.flashblade.purefb_phonehome": {
+    "doc": {
+      "description": "Enablke or Disable Remote Phone Home for a Pure Storage FlashBlade.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Define state of phone home",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Enable or Disable Pure Storage FlashBlade Phone Home",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Enable Remote Phone Home\n  purefb_phonehome:\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Disable Remote Phone Home\n  purefb_phonehome:\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n"
+  },
+  "purestorage.flashblade.purefb_policy": {
+    "doc": {
+      "description": "Manage policies for filesystem, file replica links and object store access",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "access": {
+          "aliases": [],
+          "description": "Specifies access control for the export policy rule",
+          "default": "root-squash",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "root-squash",
+            "all-squash",
+            "no-squash"
+          ],
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "account": {
+          "aliases": [],
+          "description": "Name of Object Store account policy applies to.\nB(Special Case) I(pure:policy) is used for the system-wide S3 policies",
+          "type": "str",
+          "required": false,
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "actions": {
+          "aliases": [],
+          "description": "List of permissions to grant.\nSystem-wide policy rules cannot be deleted or modified",
+          "type": "list",
+          "required": false,
+          "choices": [
+            "s3:*",
+            "s3:AbortMultipartUpload",
+            "s3:CreateBucket",
+            "s3:DeleteBucket",
+            "s3:DeleteObject",
+            "s3:DeleteObjectVersion",
+            "s3:ExtendSafemodeRetentionPeriod",
+            "s3:GetBucketAcl",
+            "s3:GetBucketLocation",
+            "s3:GetBucketVersioning",
+            "s3:GetLifecycleConfiguration",
+            "s3:GetObject",
+            "s3:GetObjectAcl",
+            "s3:GetObjectVersion",
+            "s3:ListAllMyBuckets",
+            "s3:ListBucket",
+            "s3:ListBucketMultipartUploads",
+            "s3:ListBucketVersions",
+            "s3:ListMultipartUploadParts",
+            "s3:PutBucketVersioning",
+            "s3:PutLifecycleConfiguration",
+            "s3:PutObject"
+          ],
+          "elements": "str",
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "anongid": {
+          "aliases": [],
+          "description": "Any user whose GID is affected by an I(access) of `root_squash` or `all_squash` will have their GID mapped to anongid. The default anongid is null, which means 65534. Use \"\" to clear.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "anonuid": {
+          "aliases": [],
+          "description": "Any user whose UID is affected by an I(access) of `root_squash` or `all_squash` will have their UID mapped to anonuid. The defaultis null, which means 65534. Use \"\" to clear.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "at": {
+          "aliases": [],
+          "description": "Provide a time in 12-hour AM/PM format, eg. 11AM",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "atime": {
+          "aliases": [],
+          "description": "After a read operation has occurred, the inode access time is updated only if any of the following conditions is true; the previous access time is less than the inode modify time, the previous access time is less than the inode change time, or the previous access time is more than 24 hours ago.\nIf set to false, disables the update of inode access times after read operations.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "before_rule": {
+          "aliases": [],
+          "description": "The index of the client rule to insert or move a client rule before.",
+          "type": "int",
+          "required": false,
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "client": {
+          "aliases": [],
+          "description": "Specifies the clients that will be permitted to access the export.\nAccepted notation is a single IP address, subnet in CIDR notation, netgroup, or anonymous (*).",
+          "default": "*",
+          "type": "str",
+          "required": false,
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "effect": {
+          "aliases": [],
+          "description": "Allow S3 requests that match all of the I(actions) item selected. Rules are additive.",
+          "default": "allow",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "allow"
+          ],
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "enabled": {
+          "aliases": [],
+          "description": "State of policy",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "every": {
+          "aliases": [],
+          "description": "Interval between snapshots in seconds\nRange available 300 - 31536000 (equates to 5m to 365d)",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fileid_32bit": {
+          "aliases": [],
+          "description": "Whether the file id is 32 bits or not.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "filesystem": {
+          "aliases": [],
+          "description": "List of filesystems to add to a policy on creation\nTo amend policy members use the I(purefb_fs) module",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "force_delete": {
+          "aliases": [],
+          "description": "Force the deletion of a Object Store Access Policy is this has attached users.\nWARNING This can have undesired side-effects.\nSystem-wide policies cannot be deleted",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "ignore_enforcement": {
+          "aliases": [],
+          "description": "Certain combinations of actions and other rule elements are inherently ignored if specified together in a rule.\nIf set to true, operations which attempt to set these combinations will fail.\nIf set to false, such operations will instead be allowed.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "keep_for": {
+          "aliases": [],
+          "description": "How long to keep snapshots for\nRange available 300 - 31536000 (equates to 5m to 365d)\nMust not be set less than I(every)",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the policy",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "object_resources": {
+          "aliases": [],
+          "description": "List of bucket names and object paths, with a wildcard (*) to specify objects in a bucket; e.g., bucket1, bucket1/*, bucket2, bucket2/*.\nSystem-wide policy rules cannot be deleted or modified",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "permission": {
+          "aliases": [],
+          "description": "Specifies which read-write client access permissions are allowed for the export.",
+          "default": "ro",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "rw",
+            "ro"
+          ],
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "policy_type": {
+          "aliases": [],
+          "description": "Type of policy",
+          "default": "snapshot",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "snapshot",
+            "access",
+            "nfs"
+          ],
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "replica_link": {
+          "aliases": [],
+          "description": "List of filesystem replica links to add to a policy on creation\nTo amend policy members use the I(purefb_fs_replica) module",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "rule": {
+          "aliases": [],
+          "description": "Name of the rule for the Object Store Access Policy\nRules in system-wide policies cannot be deleted or modified",
+          "type": "str",
+          "required": false,
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "s3_delimiters": {
+          "aliases": [],
+          "description": "List of delimiter characters allowed in object list requests.\nGrants permissions to list 'folder names' (prefixes ending in a delimiter) instead of object keys.\nSystem-wide policy rules cannot be deleted or modified",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "s3_prefixes": {
+          "aliases": [],
+          "description": "List of 'folders' (object key prefixes) for which object listings may be requested.\nSystem-wide policy rules cannot be deleted or modified",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "secure": {
+          "aliases": [],
+          "description": "If true, this prevents NFS access to client connections coming from non-reserved ports.\nIf false, allows NFS access to client connections coming from non-reserved ports.\nApplies to NFSv3, NFSv4.1, and auxiliary protocols MOUNT and NLM.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "security": {
+          "aliases": [],
+          "description": "The security flavors to use for accessing files on this mount point.\nIf the server does not support the requested flavor, the mount operation fails.\nI(sys) trusts the client to specify users identity.\nI(krb) provides cryptographic proof of a users identity in each RPC request.\nI(krb5i) adds integrity checking to krb5, to ensure the data has not been tampered with.\nI(krb5p) adds integrity checking and encryption to krb5.",
+          "default": "sys",
+          "type": "list",
+          "required": false,
+          "choices": [
+            "sys",
+            "krb5",
+            "krb5i",
+            "krb5p"
+          ],
+          "elements": "str",
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "source_ips": {
+          "aliases": [],
+          "description": "List of IPs and subnets from which this rule should allow requests; e.g., 10.20.30.40, 10.20.30.0/24, 2001:DB8:1234:5678::/64.\nSystem-wide policy rules cannot be deleted or modified",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create or delete policy.\nCopy is applicable only to Object Store Access Policies Rules",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present",
+            "copy"
+          ],
+          "suboptions": {}
+        },
+        "target": {
+          "aliases": [],
+          "description": "Name of policy to copy rule to",
+          "type": "str",
+          "required": false,
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "target_rule": {
+          "aliases": [],
+          "description": "Name of the rule to copy the exisitng rule to.\nIf not defined the existing rule name is used.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.9.0",
+          "suboptions": {}
+        },
+        "timezone": {
+          "aliases": [],
+          "description": "Time Zone used for the I(at) parameter\nIf not provided, the module will attempt to get the current local timezone from the server",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "user": {
+          "aliases": [],
+          "description": "User in the I(account) that the policy is granted to.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.9.0",
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage FlashBlade policies",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Create a simple snapshot policy with no rules\n  purefb_policy:\n    name: test_policy\n    policy_type: snapshot\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Create a snapshot policy and connect to existing filesystems and filesystem replica links\n  purefb_policy:\n    name: test_policy_with_members\n    policy_type: snapshot\n    filesystem:\n    - fs1\n    - fs2\n    replica_link:\n    - rl1\n    - rl2\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Create a snapshot policy with rules\n  purefb_policy:\n    name: test_policy2\n    policy_type: snapshot\n    at: 11AM\n    keep_for: 86400\n    every: 86400\n    timezone: Asia/Shanghai\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Delete a snapshot policy\n  purefb_policy:\n    name: test_policy\n    policy_type: snapshot\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Create an empty object store access policy\n  purefb_policy:\n    name: test_os_policy\n    account: test\n    policy_type: access\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Create an empty object store access policy and assign user\n  purefb_policy:\n    name: test_os_policy\n    account: test\n    policy_type: access\n    user: fred\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Create a object store access policy with simple rule\n  purefb_policy:\n    name: test_os_policy_rule\n    policy_type: access\n    account: test\n    rule: rule1\n    actions: \"s3:*\"\n    object_resources: \"*\"\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Create an empty NFS export policy\n  purefb_policy:\n    name: test_nfs_export\n    policy_type: nfs\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Create an NFS export policy with a client rule\n  purefb_policy:\n    name: test_nfs_export\n    policy_type: nfs\n    atime: true\n    client: \"10.0.1.0/24\"\n    secure: true\n    security: [sys, krb5]\n    permission: rw\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Create a new rule for an existing NFS export policy\n  purefb_policy:\n    name: test_nfs_export\n    policy_type: nfs\n    atime: true\n    client: \"10.0.2.0/24\"\n    security: sys\n    permission: ro\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Delete a client rule from an NFS export policy\n  purefb_policy:\n    name: test_nfs_export\n    client: \"10.0.1.0/24\"\n    policy_type: nfs\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Delete an NFS export policy and all associated rules\n  purefb_policy:\n    name: test_nfs_export\n    state: absent\n    policy_type: nfs\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Delete a rule from an object store access policy\n  purefb_policy:\n    name: test_os_policy_rule\n    account: test\n    policy_type: access\n    rule: rule1\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Delete a user from an object store access policy\n  purefb_policy:\n    name: test_os_policy_rule\n    account: test\n    user: fred\n    policy_type: access\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Delete an object store access policy with attached users (USE WITH CAUTION)\n  purefb_policy:\n    name: test_os_policy_rule\n    account: test\n    policy_type: access\n    force_delete: true\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Delete an object store access policy with no attached users\n  purefb_policy:\n    name: test_os_policy_rule\n    account: test\n    policy_type: access\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Copy an object store access policy rule to another exisitng policy\n  purefb_policy:\n    name: test_os_policy_rule\n    policy_type: access\n    account: test\n    target: \"account2/anotherpolicy\"\n    target_rule: new_rule1\n    state: copy\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n"
+  },
+  "purestorage.flashblade.purefb_proxy": {
+    "doc": {
+      "description": "Set or erase configuration for the HTTPS phonehome proxy settings.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "The proxy host name.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "The proxy TCP/IP port number.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Set or delete proxy configuration",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Configure FlashBlade phonehome HTTPs proxy settings",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Delete exisitng proxy settings\n  purefb_proxy:\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n\n- name: Set proxy settings\n  purefb_proxy:\n    host: purestorage.com\n    port: 8080\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n"
+  },
+  "purestorage.flashblade.purefb_ra": {
+    "doc": {
+      "description": "Enablke or Disable Remote Assist for a Pure Storage FlashBlade.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Define state of remote assist\nWhen set to I(enable) the RA port can be exposed using the I(debug) module.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Enable or Disable Pure Storage FlashBlade Remote Assist",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Enable Remote Assist port\n  purefb_ra:\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Disable Remote Assist port\n  purefb_ra:\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n"
+  },
+  "purestorage.flashblade.purefb_remote_cred": {
+    "doc": {
+      "description": "Create, modify and delete object store remote credentials\nYou must have a correctly configured remote array or target\nThis module is B(not) idempotent when updating existing remote credentials",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "access_key": {
+          "aliases": [],
+          "description": "Access Key ID of the S3 target",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the credential",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "secret": {
+          "aliases": [],
+          "description": "Secret Access Key for the S3 or Azure target",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Define state of remote credential",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "target": {
+          "aliases": [],
+          "description": "Define whether to initialize the S3 bucket",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Create, modify and delete FlashBlade object store remote credentials",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Create remote credential\n  purefb_remote_cred:\n    name: cred1\n    access_key: \"3794fb12c6204e19195f\"\n    secret: \"wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY\"\n    target: target1\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Delete remote credential\n  purefb_remote_cred:\n    name: cred1\n    target: target1\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n"
+  },
+  "purestorage.flashblade.purefb_s3acc": {
+    "doc": {
+      "description": "Create or delete object store accounts on a Pure Stoage FlashBlade.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of object store account",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create or delete object store account",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Create or delete FlashBlade Object Store accounts",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Crrate object store account foo\n  purefb_s3acc:\n    name: foo\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n\n- name: Delete object store account foo\n  purefb_s3acc:\n    name: foo\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n"
+  },
+  "purestorage.flashblade.purefb_s3user": {
+    "doc": {
+      "description": "Create or delete object store account users on a Pure Stoage FlashBlade.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "access_key": {
+          "aliases": [],
+          "description": "Create secret access key.\nKey can be exposed using the I(debug) module\nIf enabled this will override I(imported_key)",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "account": {
+          "aliases": [],
+          "description": "The name of object store account associated with user",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "imported_key": {
+          "aliases": [],
+          "description": "Access key of imported credentials",
+          "type": "str",
+          "required": false,
+          "version_added": "1.4.0",
+          "suboptions": {}
+        },
+        "imported_secret": {
+          "aliases": [],
+          "description": "Access key secret for access key to import",
+          "type": "str",
+          "required": false,
+          "version_added": "1.4.0",
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of object store user",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "policy": {
+          "aliases": [],
+          "description": "User Access Policies to be assigned to user on creation\nTo amend policies use the I(purefb_userpolicy) module\nIf not specified, I(pure\\:policy/full-access) will be added",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "version_added": "1.6.0",
+          "suboptions": {}
+        },
+        "remove_key": {
+          "aliases": [],
+          "description": "Access key to be removed from user",
+          "type": "str",
+          "required": false,
+          "version_added": "1.5.0",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create or delete object store account user\nRemove a specified access key for a user",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present",
+            "remove_key"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Create or delete FlashBlade Object Store account users",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Create object store user (with access ID and key) foo in account bar\n  purefb_s3user:\n    name: foo\n    account: bar\n    access_key: true\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n  register: result\n\n- debug:\n    msg: \"S3 User: {{ result['s3user_info'] }}\"\n\n- name: Create object store user (with access ID and key) foo in account bar with access policy (Purity 3.2 and higher)\n  purefb_s3user:\n    name: foo\n    account: bar\n    access_key: true\n    policy:\n      - pure:policy/safemode-configure\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n\n- name: Create object store user foo using imported key/secret in account bar\n  purefb_s3user:\n    name: foo\n    account: bar\n    imported_key: \"PSABSSZRHPMEDKHMAAJPJBONPJGGDDAOFABDGLBJLHO\"\n    imported_secret: \"BAG61F63105e0d3669/e066+5C5DFBE2c127d395LBGG\"\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n\n- name: Delete object store user foo in account bar\n  purefb_s3user:\n    name: foo\n    account: bar\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n"
+  },
+  "purestorage.flashblade.purefb_smtp": {
+    "doc": {
+      "description": "Configure SMTP for a Pure Storage FlashBlade.\nWhilst there can be no relay host, a sender domain must be configured.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "domain": {
+          "aliases": [],
+          "description": "Domain name for alert messages",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "Relay server name",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Configure SMTP for Pure Storage FlashBlade",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Configure SMTP settings\n  purefb_smtp:\n    host: hostname\n    domain: xyz.com\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n"
+  },
+  "purestorage.flashblade.purefb_snap": {
+    "doc": {
+      "description": "Create or delete volumes and filesystem snapshots on Pure Storage FlashBlades.\nRestoring a filesystem from a snapshot is only supported using the latest snapshot.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "eradicate": {
+          "aliases": [],
+          "description": "Define whether to eradicate the snapshot on delete or leave in trash.",
+          "default": "no",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the source filesystem.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "now": {
+          "aliases": [],
+          "description": "Whether to initiate a snapshot replication immeadiately",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.7.0",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Define whether the filesystem snapshot should exist or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present",
+            "restore"
+          ],
+          "suboptions": {}
+        },
+        "suffix": {
+          "aliases": [],
+          "description": "Suffix of snapshot name.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "targets": {
+          "aliases": [],
+          "description": "Name of target to replicate snapshot to.\nThis is only applicable when I(now) is B(True)",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "version_added": "1.7.0",
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage filesystem snapshots on Pure Storage FlashBlades",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Create snapshot foo.ansible\n  purefb_snap:\n    name: foo\n    suffix: ansible\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n    state: present\n\n- name: Create immeadiate snapshot foo.ansible to connected FB bar\n  purefb_snap:\n    name: foo\n    suffix: ansible\n    now: True\n    targets:\n    - bar\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n    state: present\n\n- name: Delete snapshot named foo.snap\n  purefb_snap:\n    name: foo\n    suffix: snap\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n    state: absent\n\n- name: Recover deleted snapshot foo.ansible\n  purefb_snap:\n    name: foo\n    suffix: ansible\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n    state: present\n\n- name: Restore filesystem foo (uses latest snapshot)\n  purefb_snap:\n    name: foo\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n    state: restore\n\n- name: Eradicate snapshot named foo.snap\n  purefb_snap:\n    name: foo\n    suffix: snap\n    eradicate: true\n    fb_url: 10.10.10.2\n    api_token: e31060a7-21fc-e277-6240-25983c6c4592\n    state: absent\n"
+  },
+  "purestorage.flashblade.purefb_snmp_agent": {
+    "doc": {
+      "description": "Configure the management SNMP Agent on a Pure Storage FlashBlade.\nThis module is not idempotent and will always modify the existing management SNMP agent due to hidden parameters that cannot be compared to the play parameters.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "auth_passphrase": {
+          "aliases": [],
+          "description": "SNMPv3 only. Passphrase of 8 - 32 characters.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "auth_protocol": {
+          "aliases": [],
+          "description": "SNMP v3 only. Hash algorithm to use",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "MD5",
+            "SHA"
+          ],
+          "suboptions": {}
+        },
+        "community": {
+          "aliases": [],
+          "description": "SNMP v2c only. Manager community ID. Between 1 and 32 characters long.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "privacy_passphrase": {
+          "aliases": [],
+          "description": "SNMPv3 only. Passphrase to encrypt SNMP messages. Must be between 8 and 63 non-space ASCII characters.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "privacy_protocol": {
+          "aliases": [],
+          "description": "SNMP v3 only. Encryption protocol to use",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "AES",
+            "DES"
+          ],
+          "suboptions": {}
+        },
+        "user": {
+          "aliases": [],
+          "description": "SNMP v3 only. User ID recognized by the specified SNMP agent. Must be between 1 and 32 characters.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "version": {
+          "aliases": [],
+          "description": "Version of SNMP protocol to use for the agent.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "v2c",
+            "v3"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Configure the FlashBlade SNMP Agent",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Update v2c SNMP agent\n  purefb_snmp_agent:\n    community: public\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Update v3 SNMP agent\n  purefb_snmp_agent:\n    version: v3\n    auth_protocol: MD5\n    auth_passphrase: password\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n"
+  },
+  "purestorage.flashblade.purefb_snmp_mgr": {
+    "doc": {
+      "description": "Manage SNMP managers on a Pure Storage FlashBlade.\nThis module is not idempotent and will always modify an existing SNMP manager due to hidden parameters that cannot be compared to the play parameters.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "auth_passphrase": {
+          "aliases": [],
+          "description": "SNMPv3 only. Passphrase of 8 - 32 characters.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "auth_protocol": {
+          "aliases": [],
+          "description": "SNMP v3 only. Hash algorithm to use",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "MD5",
+            "SHA"
+          ],
+          "suboptions": {}
+        },
+        "community": {
+          "aliases": [],
+          "description": "SNMP v2c only. Manager community ID. Between 1 and 32 characters long.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "IPv4 or IPv6 address or FQDN to send trap messages to.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of SNMP Manager",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "notification": {
+          "aliases": [],
+          "description": "Action to perform on event.",
+          "default": "trap",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "inform",
+            "trap"
+          ],
+          "suboptions": {}
+        },
+        "privacy_passphrase": {
+          "aliases": [],
+          "description": "SNMPv3 only. Passphrase to encrypt SNMP messages. Must be between 8 and 63 non-space ASCII characters.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "privacy_protocol": {
+          "aliases": [],
+          "description": "SNMP v3 only. Encryption protocol to use",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "AES",
+            "DES"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create or delete SNMP manager",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "user": {
+          "aliases": [],
+          "description": "SNMP v3 only. User ID recognized by the specified SNMP manager. Must be between 1 and 32 characters.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "version": {
+          "aliases": [],
+          "description": "Version of SNMP protocol to use for the manager.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "v2c",
+            "v3"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Configure FlashBlade SNMP Managers",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Delete exisitng SNMP manager\n  purefb_snmp_mgr:\n    name: manager1\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Create v2c SNMP manager\n  purefb_snmp_mgr:\n    name: manager1\n    community: public\n    host: 10.21.22.23\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Create v3 SNMP manager\n  purefb_snmp_mgr:\n    name: manager2\n    version: v3\n    auth_protocol: MD5\n    auth_passphrase: password\n    host: 10.21.22.23\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n- name: Update existing SNMP manager\n  purefb_snmp_mgr:\n    name: manager1\n    community: private\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n"
+  },
+  "purestorage.flashblade.purefb_subnet": {
+    "doc": {
+      "description": "This module manages network subnets on Pure Storage FlashBlade.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "gateway": {
+          "aliases": [],
+          "description": "IPv4 or IPv6 address of subnet gateway.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "lag": {
+          "aliases": [],
+          "description": "Name of the Link Aggreation Group to use for the subnet.",
+          "default": "uplink",
+          "type": "str",
+          "required": false,
+          "version_added": "1.7.0",
+          "suboptions": {}
+        },
+        "mtu": {
+          "aliases": [],
+          "description": "MTU size of the subnet. Range is 1280 to 9216.",
+          "default": "1500",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Subnet Name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "prefix": {
+          "aliases": [],
+          "description": "IPv4 or IPv6 address associated with the subnet.\nSupply the prefix length (CIDR) as well as the IP address.\nRequired for subnet creation.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create, delete or modifies a subnet.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "vlan": {
+          "aliases": [],
+          "description": "VLAN ID of the subnet.",
+          "default": "0",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage network subnets in a Pure Storage FlashBlade",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Create new network subnet named foo\n  purefb_subnet:\n    name: foo\n    prefix: \"10.21.200.3/24\"\n    gateway: 10.21.200.1\n    mtu: 9000\n    vlan: 2200\n    lag: bar\n    state: present\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Change configuration of existing subnet foo\n  purefb_network:\n    name: foo\n    state: present\n    prefix: \"10.21.100.3/24\"\n    gateway: 10.21.100.1\n    mtu: 1500\n    address: 10.21.200.123\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Delete network subnet named foo\n  purefb_subnet:\n    name: foo\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641"
+  },
+  "purestorage.flashblade.purefb_syslog": {
+    "doc": {
+      "description": "Configure syslog configuration for Pure Storage FlashBlades.\nAdd or delete an individual syslog server to the existing list of serves.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "address": {
+          "aliases": [],
+          "description": "Syslog server address. This field supports IPv4 or FQDN. An invalid IP addresses will cause the module to fail. No validation is performed for FQDNs.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Unique identifier for the syslog server address",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port at which the server is listening. If no port is specified the system will use 514",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "protocol": {
+          "aliases": [],
+          "description": "Protocol which server uses",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "tcp",
+            "tls",
+            "udp"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create or delete syslog servers configuration",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Configure Pure Storage FlashBlade syslog settings",
+      "version_added": "1.4.0"
+    },
+    "examples": "\n- name: Delete exisitng syslog server entries\n  purefb_syslog:\n    name: syslog1\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Set array syslog servers\n  purefb_syslog:\n    state: present\n    name: syslog1\n    address: syslog1.com\n    protocol: udp\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n"
+  },
+  "purestorage.flashblade.purefb_target": {
+    "doc": {
+      "description": "Manage remote S3-capable targets for a FlashBlade system\nUse this for non-FlashBlade targets.\nUse I(purefb_connect) for FlashBlade targets.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "address": {
+          "aliases": [],
+          "description": "Address of S3-capable target (IP or FQDN)",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of S3-capable target (IP or FQDN)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create or delete remote target",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage remote S3-capable targets for a FlashBlade",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Create a connection to remote S3-capable target\n  purefb_target:\n    name: target_1\n    address: 10.10.10.20\n    fb_url: 10.10.10.2\n    api_token: T-89faa581-c668-483d-b77d-23c5d88ba35c\n- name: Delete connection to remote S3-capable system\n  purefb_target:\n    state: absent\n    name: target_1\n    target_api: 9c0b56bc-f941-f7a6-9f85-dcc3e9a8f7d6\n    fb_url: 10.10.10.2\n    api_token: T-89faa581-c668-483d-b77d-23c5d88ba35c\n"
+  },
+  "purestorage.flashblade.purefb_timeout": {
+    "doc": {
+      "description": "Configure GUI idle timeout for Pure Storage FlashBlade.\nThis does not affect existing GUI sessions.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Set or disable the GUI idle timeout",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "Minutes for idle timeout.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Configure Pure Storage FlashBlade GUI idle timeout",
+      "version_added": "1.6.0"
+    },
+    "examples": "\n- name: Set GUI idle timeout to 25 minutes\n  purefb_timeout:\n    timeout: 25\n    state: present\n    fb_url: 10.10.10.2\n    api_token: T-68618f31-0c9e-4e57-aa44-5306a2cf10e3\n\n- name: Disable idle timeout\n  purefb_timeout:\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-68618f31-0c9e-4e57-aa44-5306a2cf10e3\n"
+  },
+  "purestorage.flashblade.purefb_user": {
+    "doc": {
+      "description": "Modify user on a Pure Stoage FlashBlade.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "clear_lock": {
+          "aliases": [],
+          "description": "Clear user lockout flag",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.8.0",
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the user account",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "old_password": {
+          "aliases": [],
+          "description": "If changing an existing password, you must provide the old password for security\nOnly applies to the local user 'pureuser'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for the local user.\nOnly applies to the local user 'pureuser'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "public_key": {
+          "aliases": [],
+          "description": "The API clients PEM formatted (Base64 encoded) RSA public key.\nInclude the I(—–BEGIN PUBLIC KEY—–) and I(—–END PUBLIC KEY—–) lines",
+          "type": "str",
+          "required": false,
+          "version_added": "1.8.0",
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Modify FlashBlade user accounts",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Change password for local user (NOT IDEMPOTENT)\n  purefb_user:\n    name: pureuser\n    password: anewpassword\n    old_password: apassword\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n\n- name: Set public key for user\n  purefb_user:\n    name: fred\n    public_key: \"{{lookup('file', 'public_pem_file') }}\"\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n\n- name: Clear user lockout\n  purefb_user:\n    name: fred\n    clear_lock: true\n    fb_url: 10.10.10.2\n    api_token: T-9f276a18-50ab-446e-8a0c-666a3529a1b6\n"
+  },
+  "purestorage.flashblade.purefb_userpolicy": {
+    "doc": {
+      "description": "Add or Remove FlashBlade Object Store Access Policies for Account User",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "account": {
+          "aliases": [],
+          "description": "Name of the Object Store Account associated with the user",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the Object Store User\nThe user to have the policy request applied to",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "policy": {
+          "aliases": [],
+          "description": "Policies to added or deleted from the Object Store User\nOnly valid policies can be used\nuse I(list) to see available policies",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Define whether the Access Policy should be added or deleted\nOption to list all available policies",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present",
+            "show"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage FlashBlade Object Store User Access Policies",
+      "version_added": "1.6.0"
+    },
+    "examples": "\n- name: List existng ruser access policies for a specific user\n  purefb_userpolicy:\n    state: show\n    account: foo\n    name: bar\n    fb_url: 10.10.10.2\n    api_token: T-68618f31-0c9e-4e57-aa44-5306a2cf10e3\n  register: policy_list\n\n- name: List all available user access policies\n  purefb_userpolicy:\n    state: show\n    fb_url: 10.10.10.2\n    api_token: T-68618f31-0c9e-4e57-aa44-5306a2cf10e3\n  register: policy_list\n\n- name: Add user access policies to account user foo/bar\n  purefb_userpolicy:\n    name: bar\n    account: foo\n    policy:\n      - pure:policy/bucket-create\n      - pure:policy/bucket-delete\n    fb_url: 10.10.10.2\n    api_token: T-68618f31-0c9e-4e57-aa44-5306a2cf10e3\n\n- name: Delete user access policies to account user foo/bar\n  purefb_userpolicy:\n    name: bar\n    account: foo\n    policy:\n      - pure:policy/bucket-create\n      - pure:policy/bucket-delete\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-68618f31-0c9e-4e57-aa44-5306a2cf10e3\n"
+  },
+  "purestorage.flashblade.purefb_userquota": {
+    "doc": {
+      "description": "This module manages user quotas for filesystems on Pure Storage FlashBlade.",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Filesystem Name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "quota": {
+          "aliases": [],
+          "description": "User quota in M, G, T or P units. This cannot be 0.\nThis value will override the file system's default user quota.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Create, delete or modifies a quota.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "uid": {
+          "aliases": [],
+          "description": "The user id on which the quota is enforced.\nCannot be combined with I(uname)",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "uname": {
+          "aliases": [],
+          "description": "The user name on which the quota is enforced.\nCannot be combined with I(uid)",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage filesystem user quotas",
+      "version_added": "1.7.0"
+    },
+    "examples": "\n- name: Create new user (using UID) quota for filesystem named foo\n  purefb_userquota:\n    name: foo\n    quota: 1T\n    uid: 1234\n    state: present\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Create new user (using username) quota for filesystem named foo\n  purefb_userquota:\n    name: foo\n    quota: 1T\n    uname: bar\n    state: present\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Delete user quota on filesystem foo for user by UID\n  purefb_userquota:\n    name: foo\n    uid: 1234\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Delete user quota on filesystem foo for user by username\n  purefb_userquota:\n    name: foo\n    uname: bar\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Update user quota on filesystem foo for user by username\n  purefb_userquota:\n    name: foo\n    quota: 20G\n    uname: bar\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641\n\n- name: Update user quota on filesystem foo for user by UID\n  purefb_userquota:\n    name: foo\n    quota: 20G\n    uid: bar\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-55a68eb5-c785-4720-a2ca-8b03903bf641"
+  },
+  "purestorage.flashblade.purefb_virtualhost": {
+    "doc": {
+      "description": "Add or delete FlashBlade Object Store Virtual Hosts",
+      "has_action": false,
+      "notes": "This module requires the C(purity_fb) Python library\nYou must set C(PUREFB_URL) and C(PUREFB_API) environment variables if I(fb_url) and I(api_token) arguments are not passed to the module directly",
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "FlashBlade API token for admin privileged user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fb_url": {
+          "aliases": [],
+          "description": "FlashBlade management IP address or Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the Object Store Virtual Host\nA hostname or domain by which the array can be addressed for virtual hosted-style S3 requests.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Define whether the Object Store Virtual Host should be added or deleted",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.7",
+        "purity_fb >= 1.9",
+        "netaddr",
+        "pytz"
+      ],
+      "short_description": "Manage FlashBlade Object Store Virtual Hosts",
+      "version_added": "1.6.0"
+    },
+    "examples": "\n- name: Add Object Store Virtual Host\n  purefb_virtualhost:\n    name: \"s3.acme.com\"\n    fb_url: 10.10.10.2\n    api_token: T-68618f31-0c9e-4e57-aa44-5306a2cf10e3\n\n- name: Delete Object Store Virtual Host\n  purefb_virtualhost:\n    name: \"nohost.acme.com\"\n    state: absent\n    fb_url: 10.10.10.2\n    api_token: T-68618f31-0c9e-4e57-aa44-5306a2cf10e3\n"
+  }
+}

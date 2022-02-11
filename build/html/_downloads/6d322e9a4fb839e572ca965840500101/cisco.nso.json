@@ -1,0 +1,340 @@
+{
+  "cisco.nso.nso_action": {
+    "doc": {
+      "description": "This module provides support for executing Cisco NSO actions and then verifying that the output is as expected.",
+      "has_action": false,
+      "options": {
+        "input": {
+          "aliases": [],
+          "description": "NSO action parameters.\n",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "output_invalid": {
+          "aliases": [],
+          "description": "List of result parameter names that will cause the task to fail if they are present.\n",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "output_required": {
+          "aliases": [],
+          "description": "Required output parameters.\n",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "NSO password",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "path": {
+          "aliases": [],
+          "description": "Path to NSO action.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "JSON-RPC request timeout in seconds",
+          "default": "300",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "url": {
+          "aliases": [],
+          "description": "NSO JSON-RPC URL, http://localhost:8080/jsonrpc",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "NSO username",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "When set to true, validates the SSL certificate of NSO when using SSL",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_strict": {
+          "aliases": [],
+          "description": "If set to true, the task will fail if any output parameters not in output_required is present in the output.\n",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Cisco NSO version 3.4 or higher."
+      ],
+      "short_description": "Executes Cisco NSO actions and verifies output."
+    },
+    "examples": "\n- name: Sync NSO device\n  cisco.nso.nso_action:\n    url: https://10.10.20.49/jsonrpc\n    username: developer\n    password: C1sco12345\n    path: /ncs:devices/device{dist-rtr01}/sync-from\n    input: {}\n\n- name: Check device sync\n  cisco.nso.nso_action:\n    url: https://10.10.20.49/jsonrpc\n    username: developer\n    password: C1sco12345\n    path: /ncs:devices/check-sync\n    input: {}\n\n- name: Load Native Config\n  cisco.nso.nso_action:\n    url: \"https://10.10.20.49/jsonrpc\"\n    username: developer\n    password: C1sco12345\n    path: /ncs:devices/ncs:device{dist-rtr01}/load-native-config\n    input: { file: \"/home/developer/test.cfg\" , verbose: true, mode: \"merge\"}\n  register: result\n"
+  },
+  "cisco.nso.nso_config": {
+    "doc": {
+      "description": "This module provides support for managing configuration in Cisco NSO and can also ensure services are in sync.",
+      "has_action": false,
+      "options": {
+        "commit_flags": {
+          "aliases": [],
+          "description": "A list containing commit flags. See the API documentation for supported commit flags. https://developer.cisco.com/docs/nso/guides/#!life-cycle-operations-how-to-manipulate-existing-services-and-devices/commit-flags-and-device-service-actions\n",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "data": {
+          "aliases": [],
+          "description": "NSO data in format as | display json converted to YAML. List entries can be annotated with a __state entry. Set to in-sync/deep-in-sync for services to verify service is in sync with the network. Set to absent in list entries to ensure they are deleted if they exist in NSO.\n",
+          "type": "dict",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "NSO password",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "JSON-RPC request timeout in seconds",
+          "default": "300",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "url": {
+          "aliases": [],
+          "description": "NSO JSON-RPC URL, http://localhost:8080/jsonrpc",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "NSO username",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "When set to true, validates the SSL certificate of NSO when using SSL",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Cisco NSO version 3.4.12 or higher, 4.2.7 or higher, 4.3.8 or higher, 4.4.3 or higher, 4.5 or higher."
+      ],
+      "short_description": "Manage Cisco NSO configuration and service synchronization."
+    },
+    "examples": "\n- name: CREATE DEVICE IN NSO\n  cisco.nso.nso_config:\n    url: https://10.10.20.49/jsonrpc\n    username: developer\n    password: C1sco12345\n    data:\n      tailf-ncs:devices:\n        device:\n        - address: 10.10.20.175\n          description: CONFIGURED BY ANSIBLE!\n          name: dist-rtr01\n          authgroup: \"labadmin\"\n          device-type:\n            cli:\n              ned-id: \"cisco-ios-cli-6.44\"\n            port: \"22\"\n            state:\n              admin-state: \"unlocked\"\n\n- name: ADD NEW LOOPBACK\n  cisco.nso.nso_config:\n    url: https://10.10.20.49/jsonrpc\n    username: developer\n    password: C1sco12345\n    data:\n        tailf-ncs:devices:\n        device:\n        - name: dist-rtr01\n          config:\n            tailf-ned-cisco-ios:interface:\n                Loopback:\n                - name: \"1\"\n                  description: Created by Ansible!\n\n- name: CONFIGURE IP ADDRESS ON LOOPBACK\n  cisco.nso.nso_config:\n    url: https://10.10.20.49/jsonrpc\n    username: developer\n    password: C1sco12345\n    data:\n      tailf-ncs:devices:\n        device:\n        - name: dist-rtr01\n          config:\n            tailf-ned-cisco-ios:interface:\n              Loopback:\n              - name: \"1\"\n                description: Created by Ansible!\n                ip:\n                  address:\n                    primary:\n                      address: 10.10.10.10\n                      mask: 255.255.255.255\n\n- name: CONFIGURE NTP SERVER ON DEVICE\n  cisco.nso.nso_config:\n    url: https://10.10.20.49/jsonrpc\n    username: developer\n    password: C1sco12345\n    data:\n      tailf-ncs:devices:\n        device:\n        - name: dist-rtr01\n          config:\n            tailf-ned-cisco-ios:ntp:\n              server:\n                peer-list:\n                  - name: 2.2.2.2\n"
+  },
+  "cisco.nso.nso_query": {
+    "doc": {
+      "description": "This module provides support for querying data from Cisco NSO using XPath.",
+      "has_action": false,
+      "options": {
+        "fields": {
+          "aliases": [],
+          "description": "List of fields to select from matching nodes.\n",
+          "type": "list",
+          "required": true,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "NSO password",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "JSON-RPC request timeout in seconds",
+          "default": "300",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "url": {
+          "aliases": [],
+          "description": "NSO JSON-RPC URL, http://localhost:8080/jsonrpc",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "NSO username",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "When set to true, validates the SSL certificate of NSO when using SSL",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "xpath": {
+          "aliases": [],
+          "description": "XPath selection relative to the root.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Cisco NSO version 3.4 or higher."
+      ],
+      "short_description": "Query data from Cisco NSO."
+    },
+    "examples": "\n- name: QUERY DEVICES DISPLAYING NAME AND DESCRIPTION\n  cisco.nso.nso_query:\n    url: https://10.10.20.49/jsonrpc\n    username: developer\n    password: C1sco12345\n    xpath: /ncs:devices/device\n    fields:\n    - name\n    - description\n  register: nso_query_result\n\n- name: DISPLAY NSO_QUERY RESULT\n  debug:\n    var: nso_query_result\n"
+  },
+  "cisco.nso.nso_show": {
+    "doc": {
+      "description": "This module provides support for displaying data from Cisco NSO.",
+      "has_action": false,
+      "options": {
+        "operational": {
+          "aliases": [],
+          "description": "Controls whether or not operational data is included in the result.\n",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "NSO password",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "path": {
+          "aliases": [],
+          "description": "Path to NSO data.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "JSON-RPC request timeout in seconds",
+          "default": "300",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "url": {
+          "aliases": [],
+          "description": "NSO JSON-RPC URL, http://localhost:8080/jsonrpc",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "NSO username",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "When set to true, validates the SSL certificate of NSO when using SSL",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Cisco NSO version 3.4.12 or higher, 4.1.9 or higher, 4.2.6 or higher, 4.3.7 or higher, 4.4.5 or higher, 4.5 or higher."
+      ],
+      "short_description": "Displays data from Cisco NSO."
+    },
+    "examples": "\n- name: DISPLAY DEVICE INCLUDING OPERATIONAL DATA\n  cisco.nso.nso_show:\n    url: https://10.10.20.49/jsonrpc\n    username: developer\n    password: C1sco12345\n    path: /ncs:devices/device{dist-rtr01}\n    operational: true\n  register: result\n\n- name: Display the result\n  debug:\n    var: result\n\n- name: DISPLAY INTERFACES\n  cisco.nso.nso_show:\n    url: \"https://10.10.20.49/jsonrpc\"\n    username: developer\n    password: C1sco12345\n    path: /ncs:devices/device{dist-rtr01}/config/interface\n    operational: true\n  register: result\n\n- name: Display the result\n  debug:\n    var: result\n"
+  },
+  "cisco.nso.nso_verify": {
+    "doc": {
+      "description": "This module provides support for verifying Cisco NSO configuration is in compliance with specified values.",
+      "has_action": false,
+      "options": {
+        "data": {
+          "aliases": [],
+          "description": "NSO data in format as C(| display json) converted to YAML. List entries can be annotated with a C(__state) entry. Set to in-sync/deep-in-sync for services to verify service is in sync with the network. Set to absent in list entries to ensure they are deleted if they exist in NSO.\n",
+          "type": "dict",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "NSO password",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "JSON-RPC request timeout in seconds",
+          "default": "300",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "url": {
+          "aliases": [],
+          "description": "NSO JSON-RPC URL, http://localhost:8080/jsonrpc",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "NSO username",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "When set to true, validates the SSL certificate of NSO when using SSL",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Cisco NSO version 3.4.12 or higher, 4.2.7 or higher, 4.3.8 or higher, 4.4.3 or higher, 4.5 or higher."
+      ],
+      "short_description": "Verifies Cisco NSO configuration."
+    },
+    "examples": "\n- name: VERIFY INTERFACE IS ADMINISTRATIVELY UP\n  cisco.nso.nso_verify:\n    url: http://localhost:8080/jsonrpc\n    username: username\n    password: password\n    data:\n      tailf-ncs:devices:\n        device:\n        - name: dist-sw01\n          config:\n            interface:\n              Ethernet:\n                - name: \"1/1\"\n                  shutdown: false\n"
+  }
+}

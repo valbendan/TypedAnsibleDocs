@@ -1,0 +1,196 @@
+{
+  "community.routeros.api": {
+    "doc": {
+      "description": "Ansible module for RouterOS API with python librouteros.\nThis module can add, remove, update, query and execute arbitrary command in routeros via API.",
+      "has_action": false,
+      "notes": "I(add), I(remove), I(update), I(cmd) and I(query) are mutually exclusive.\nI(check_mode) is not supported.",
+      "options": {
+        "add": {
+          "aliases": [],
+          "description": "Will add selected arguments in selected path to RouterOS config.\nExample C(address=1.1.1.1/32 interface=ether1).\nEquivalent in RouterOS CLI C(/ip address add address=1.1.1.1/32 interface=ether1).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ca_path": {
+          "aliases": [],
+          "description": "PEM formatted file that contains a CA certificate to be used for certificate validation.\nSee also I(validate_cert_hostname). Only used when I(tls=true) and I(validate_certs=true).",
+          "type": "path",
+          "required": false,
+          "version_added": "1.2.0",
+          "suboptions": {}
+        },
+        "cmd": {
+          "aliases": [],
+          "description": "Execute any/arbitrary command in selected path, after the command we can add C(.id).\nExample path C(system script) and cmd C(run .id=*03) is equivalent in RouterOS CLI C(/system script run number=0).\nExample path C(ip address) and cmd C(print) is equivalent in RouterOS CLI C(/ip address print).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "RouterOS hostname API.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "RouterOS user password.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "path": {
+          "aliases": [],
+          "description": "Main path for all other arguments.\nIf other arguments are not set, api will return all items in selected path.\nExample C(ip address). Equivalent of RouterOS CLI C(/ip address print).",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "RouterOS api port. If I(tls) is set, port will apply to TLS/SSL connection.\nDefaults are C(8728) for the HTTP API, and C(8729) for the HTTPS API.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "query": {
+          "aliases": [],
+          "description": "Query given path for selected query attributes from RouterOS aip and return '.id'.\nWHERE is key word which extend query. WHERE format is key operator value - with spaces.\nWHERE valid operators are C(==), C(!=), C(>), C(<).\nExample path C(ip address) and query C(.id address) will return only C(.id) and C(address) for all items in C(ip address) path.\nExample path C(ip address) and query C(.id address WHERE address == 1.1.1.3/32). will return only C(.id) and C(address) for items in C(ip address) path, where address is eq to 1.1.1.3/32.\nExample path C(interface) and query C(mtu name WHERE mut > 1400) will return only interfaces C(mtu,name) where mtu is bigger than 1400.\nEquivalent in RouterOS CLI C(/interface print where mtu > 1400).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "remove": {
+          "aliases": [],
+          "description": "Remove config/value from RouterOS by '.id'.\nExample C(*03) will remove config/value with C(id=*03) in selected path.\nEquivalent in RouterOS CLI C(/ip address remove numbers=1).\nNote C(number) in RouterOS CLI is different from C(.id).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tls": {
+          "aliases": [
+            "ssl"
+          ],
+          "description": "If is set TLS will be used for RouterOS API connection.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "update": {
+          "aliases": [],
+          "description": "Update config/value in RouterOS by '.id' in selected path.\nExample C(.id=*03 address=1.1.1.3/32) and path C(ip address) will replace existing ip address with C(.id=*03).\nEquivalent in RouterOS CLI C(/ip address set address=1.1.1.3/32 numbers=1).\nNote C(number) in RouterOS CLI is different from C(.id).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "RouterOS login user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "validate_cert_hostname": {
+          "aliases": [],
+          "description": "Set to C(true) to validate hostnames in certificates.\nSee also I(validate_certs). Only used when I(tls=true) and I(validate_certs=true).",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.2.0",
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Set to C(false) to skip validation of TLS certificates.\nSee also I(validate_cert_hostname). Only used when I(tls=true).\nB(Note:) instead of simply deactivating certificate validations to \"make things work\", please consider creating your own CA certificate and using it to sign certificates used for your router. You can tell the module about your CA certificate with the I(ca_path) option.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.2.0",
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "librouteros",
+        "Python >= 3.6 (for librouteros)"
+      ],
+      "short_description": "Ansible module for RouterOS API"
+    },
+    "examples": "\n---\n- name: Use RouterOS API\n  hosts: localhost\n  gather_facts: no\n  vars:\n    hostname: \"ros_api_hostname/ip\"\n    username: \"admin\"\n    password: \"secret_password\"\n\n    path: \"ip address\"\n\n    nic: \"ether2\"\n    ip1: \"1.1.1.1/32\"\n    ip2: \"2.2.2.2/32\"\n    ip3: \"3.3.3.3/32\"\n\n  tasks:\n    - name: Get \"{{ path }} print\"\n      community.routeros.api:\n        hostname: \"{{ hostname }}\"\n        password: \"{{ password }}\"\n        username: \"{{ username }}\"\n        path: \"{{ path }}\"\n      register: print_path\n\n    - name: Dump \"{{ path }} print\" output\n      ansible.builtin.debug:\n        msg: '{{ print_path }}'\n\n    - name: Add ip address \"{{ ip1 }}\" and \"{{ ip2 }}\"\n      community.routeros.api:\n        hostname: \"{{ hostname }}\"\n        password: \"{{ password }}\"\n        username: \"{{ username }}\"\n        path: \"{{ path }}\"\n        add: \"{{ item }}\"\n      loop:\n        - \"address={{ ip1 }} interface={{ nic }}\"\n        - \"address={{ ip2 }} interface={{ nic }}\"\n      register: addout\n\n    - name: Dump \"Add ip address\" output - \".id\" for new added items\n      ansible.builtin.debug:\n        msg: '{{ addout }}'\n\n    - name: Query for \".id\" in \"{{ path }} WHERE address == {{ ip2 }}\"\n      community.routeros.api:\n        hostname: \"{{ hostname }}\"\n        password: \"{{ password }}\"\n        username: \"{{ username }}\"\n        path: \"{{ path }}\"\n        query: \".id address WHERE address == {{ ip2 }}\"\n      register: queryout\n\n    - name: Dump \"Query for\" output and set fact with \".id\" for \"{{ ip2 }}\"\n      ansible.builtin.debug:\n        msg: '{{ queryout }}'\n\n    - name: Store query_id for later usage\n      ansible.builtin.set_fact:\n        query_id: \"{{ queryout['msg'][0]['.id'] }}\"\n\n    - name: Update \".id = {{ query_id }}\" taken with custom fact \"fquery_id\"\n      community.routeros.api:\n        hostname: \"{{ hostname }}\"\n        password: \"{{ password }}\"\n        username: \"{{ username }}\"\n        path: \"{{ path }}\"\n        update: >-\n            .id={{ query_id }}\n            address={{ ip3 }}\n            comment={{ 'A comment with spaces' | community.routeros.quote_argument_value }}\n      register: updateout\n\n    - name: Dump \"Update\" output\n      ansible.builtin.debug:\n        msg: '{{ updateout }}'\n\n    - name: Remove ips - stage 1 - query \".id\" for \"{{ ip2 }}\" and \"{{ ip3 }}\"\n      community.routeros.api:\n        hostname: \"{{ hostname }}\"\n        password: \"{{ password }}\"\n        username: \"{{ username }}\"\n        path: \"{{ path }}\"\n        query: \".id address WHERE address == {{ item }}\"\n      register: id_to_remove\n      loop:\n        - \"{{ ip2 }}\"\n        - \"{{ ip3 }}\"\n\n    - name: Set fact for \".id\" from \"Remove ips - stage 1 - query\"\n      ansible.builtin.set_fact:\n        to_be_remove: \"{{ to_be_remove |default([]) + [item['msg'][0]['.id']] }}\"\n      loop: \"{{ id_to_remove.results }}\"\n\n    - name: Dump \"Remove ips - stage 1 - query\" output\n      ansible.builtin.debug:\n        msg: '{{ to_be_remove }}'\n\n    # Remove \"{{ rmips }}\" with \".id\" by \"to_be_remove\" from query\n    - name: Remove ips - stage 2 - remove \"{{ ip2 }}\" and \"{{ ip3 }}\" by '.id'\n      community.routeros.api:\n        hostname: \"{{ hostname }}\"\n        password: \"{{ password }}\"\n        username: \"{{ username }}\"\n        path: \"{{ path }}\"\n        remove: \"{{ item }}\"\n      register: remove\n      loop: \"{{ to_be_remove }}\"\n\n    - name: Dump \"Remove ips - stage 2 - remove\" output\n      ansible.builtin.debug:\n        msg: '{{ remove }}'\n\n    - name: Arbitrary command example \"/system identity print\"\n      community.routeros.api:\n        hostname: \"{{ hostname }}\"\n        password: \"{{ password }}\"\n        username: \"{{ username }}\"\n        path: \"system identity\"\n        cmd: \"print\"\n      register: cmdout\n\n    - name: Dump \"Arbitrary command example\" output\n      ansible.builtin.debug:\n        msg: \"{{ cmdout }}\"\n"
+  },
+  "community.routeros.command": {
+    "doc": {
+      "description": "Sends arbitrary commands to an RouterOS node and returns the results read from the device. This module includes an argument that will cause the module to wait for a specific condition before returning or timing out if the condition is not met.\nThe module always indicates a (changed) status. You can use R(the changed_when task property,override_the_changed_result) to determine whether a command task actually resulted in a change or not.",
+      "has_action": false,
+      "options": {
+        "commands": {
+          "aliases": [],
+          "description": "List of commands to send to the remote RouterOS device over the configured provider. The resulting output from the command is returned. If the I(wait_for) argument is provided, the module is not returned until the condition is satisfied or the number of retries has expired.",
+          "type": "list",
+          "required": true,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "interval": {
+          "aliases": [],
+          "description": "Configures the interval in seconds to wait between retries of the command. If the command does not pass the specified conditions, the interval indicates how long to wait before trying the command again.",
+          "default": "1",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "match": {
+          "aliases": [],
+          "description": "The I(match) argument is used in conjunction with the I(wait_for) argument to specify the match policy.  Valid values are C(all) or C(any).  If the value is set to C(all) then all conditionals in the wait_for must be satisfied.  If the value is set to C(any) then only one of the values must be satisfied.",
+          "default": "all",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "any",
+            "all"
+          ],
+          "suboptions": {}
+        },
+        "retries": {
+          "aliases": [],
+          "description": "Specifies the number of retries a command should by tried before it is considered failed. The command is run on the target device every retry and evaluated against the I(wait_for) conditions.",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_for": {
+          "aliases": [],
+          "description": "List of conditions to evaluate against the output of the command. The task will wait for each condition to be true before moving forward. If the conditional is not true within the configured number of retries, the task fails. See examples.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        }
+      },
+      "short_description": "Run commands on remote devices running MikroTik RouterOS"
+    },
+    "examples": "\n- name: Run command on remote devices\n  community.routeros.command:\n    commands: /system routerboard print\n\n- name: Run command and check to see if output contains routeros\n  community.routeros.command:\n    commands: /system resource print\n    wait_for: result[0] contains MikroTik\n\n- name: Run multiple commands on remote nodes\n  community.routeros.command:\n    commands:\n      - /system routerboard print\n      - /system identity print\n\n- name: Run multiple commands and evaluate the output\n  community.routeros.command:\n    commands:\n      - /system routerboard print\n      - /interface ethernet print\n    wait_for:\n      - result[0] contains x86\n      - result[1] contains ether1\n"
+  },
+  "community.routeros.facts": {
+    "doc": {
+      "description": "Collects a base set of device facts from a remote device that is running RotuerOS.  This module prepends all of the base network fact keys with C(ansible_net_<fact>).  The facts module will always collect a base set of facts from the device and can enable or disable collection of additional facts.",
+      "has_action": false,
+      "options": {
+        "gather_subset": {
+          "aliases": [],
+          "description": "When supplied, this argument will restrict the facts collected to a given subset.  Possible values for this argument include C(all), C(hardware), C(config), and C(interfaces).  Can specify a list of values to include a larger subset.  Values can also be used with an initial C(!) to specify that a specific subset should not be collected.",
+          "default": "!config",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        }
+      },
+      "short_description": "Collect facts from remote devices running MikroTik RouterOS"
+    },
+    "examples": "\n- name: Collect all facts from the device\n  community.routeros.facts:\n    gather_subset: all\n\n- name: Collect only the config and default facts\n  community.routeros.facts:\n    gather_subset:\n      - config\n\n- name: Do not collect hardware facts\n  community.routeros.facts:\n    gather_subset:\n      - \"!hardware\"\n"
+  }
+}

@@ -1,0 +1,1081 @@
+{
+  "community.okd.k8s": {
+    "doc": {
+      "description": "Use the Kubernetes Python client to perform CRUD operations on K8s objects.\nPass the object definition from a source file or inline. See examples for reading files and using Jinja templates or vault-encrypted files.\nAccess to the full range of K8s APIs.\nUse the M(kubernetes.core.k8s_info) module to obtain a list of items about an object of type C(kind).\nAuthenticate using either a config file, certificates, password or token.\nSupports check mode.\nOptimized for OKD/OpenShift Kubernetes flavors.",
+      "has_action": true,
+      "notes": "To avoid SSL certificate validation errors when C(validate_certs) is I(True), the full certificate chain for the API server must be provided via C(ca_cert) or in the kubeconfig file.",
+      "options": {
+        "api_key": {
+          "aliases": [],
+          "description": "Token used to authenticate with the API. Can also be specified via K8S_AUTH_API_KEY environment variable.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_version": {
+          "aliases": [
+            "api",
+            "version"
+          ],
+          "description": "Use to specify the API version.\nUse to create, delete, or discover an object without providing a full resource definition.\nUse in conjunction with I(kind), I(name), and I(namespace) to identify a specific object.\nIf I(resource definition) is provided, the I(apiVersion) value from the I(resource_definition) will override this option.",
+          "default": "v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "append_hash": {
+          "aliases": [],
+          "description": "Whether to append a hash to a resource name for immutability purposes\nApplies only to ConfigMap and Secret resources\nThe parameter will be silently ignored for other resource kinds\nThe full definition of an object is needed to generate the hash - this means that deleting an object created with append_hash will only work if the same object is passed with state=absent (alternatively, just use state=absent with the name including the generated hash and append_hash=no)",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "apply": {
+          "aliases": [],
+          "description": "C(apply) compares the desired resource definition with the previously supplied resource definition, ignoring properties that are automatically generated\nC(apply) works better with Services than 'force=yes'\nmutually exclusive with C(merge_type)",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "ca_cert": {
+          "aliases": [
+            "ssl_ca_cert"
+          ],
+          "description": "Path to a CA certificate used to authenticate with the API. The full certificate chain must be provided to avoid certificate validation errors. Can also be specified via K8S_AUTH_SSL_CA_CERT environment variable.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_cert": {
+          "aliases": [
+            "cert_file"
+          ],
+          "description": "Path to a certificate used to authenticate with the API. Can also be specified via K8S_AUTH_CERT_FILE environment variable.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_key": {
+          "aliases": [
+            "key_file"
+          ],
+          "description": "Path to a key file used to authenticate with the API. Can also be specified via K8S_AUTH_KEY_FILE environment variable.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "context": {
+          "aliases": [],
+          "description": "The name of a context found in the config file. Can also be specified via K8S_AUTH_CONTEXT environment variable.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "continue_on_error": {
+          "aliases": [],
+          "description": "Whether to continue on creation/deletion errors when multiple resources are defined.\nThis has no effect on the validation step which is controlled by the C(validate.fail_on_error) parameter.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "2.0.0",
+          "suboptions": {}
+        },
+        "delete_options": {
+          "aliases": [],
+          "description": "Configure behavior when deleting an object.\nOnly used when I(state=absent).",
+          "type": "dict",
+          "required": false,
+          "version_added": "1.2.0",
+          "suboptions": {
+            "gracePeriodSeconds": {
+              "aliases": [],
+              "description": "Specify how many seconds to wait before forcefully terminating.\nOnly implemented for Pod resources.\nIf not specified, the default grace period for the object type will be used.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "preconditions": {
+              "aliases": [],
+              "description": "Specify condition that must be met for delete to proceed.",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "resourceVersion": {
+                  "aliases": [],
+                  "description": "Specify the resource version of the target object.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "uid": {
+                  "aliases": [],
+                  "description": "Specify the UID of the target object.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                }
+              }
+            },
+            "propagationPolicy": {
+              "aliases": [],
+              "description": "Use to control how dependent objects are deleted.\nIf not specified, the default policy for the object type will be used. This may vary across object types.",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "Foreground",
+                "Background",
+                "Orphan"
+              ],
+              "suboptions": {}
+            }
+          }
+        },
+        "force": {
+          "aliases": [],
+          "description": "If set to C(yes), and I(state) is C(present), an existing object will be replaced.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "Provide a URL for accessing the API. Can also be specified via K8S_AUTH_HOST environment variable.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "kind": {
+          "aliases": [],
+          "description": "Use to specify an object model.\nUse to create, delete, or discover an object without providing a full resource definition.\nUse in conjunction with I(api_version), I(name), and I(namespace) to identify a specific object.\nIf I(resource definition) is provided, the I(kind) value from the I(resource_definition) will override this option.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "kubeconfig": {
+          "aliases": [],
+          "description": "Path to an existing Kubernetes config file. If not provided, and no other connection options are provided, the Kubernetes client will attempt to load the default configuration file from I(~/.kube/config). Can also be specified via K8S_AUTH_KUBECONFIG environment variable.\nThe kubernetes configuration can be provided as dictionary. This feature requires a python kubernetes client version >= 17.17.0. Added in version 2.2.0.",
+          "type": "raw",
+          "required": false,
+          "suboptions": {}
+        },
+        "merge_type": {
+          "aliases": [],
+          "description": "Whether to override the default patch merge approach with a specific type. By default, the strategic merge will typically be used.\nFor example, Custom Resource Definitions typically aren't updatable by the usual strategic merge. You may want to use C(merge) if you see \"strategic merge patch format is not supported\"\nSee U(https://kubernetes.io/docs/tasks/run-application/update-api-object-kubectl-patch/#use-a-json-merge-patch-to-update-a-deployment)\nIf more than one merge_type is given, the merge_types will be tried in order\nDefaults to C(['strategic-merge', 'merge']), which is ideal for using the same parameters on resource kinds that combine Custom Resources and built-in resources.\nmutually exclusive with C(apply)\nI(merge_type=json) is deprecated and will be removed in version 3.0.0. Please use M(kubernetes.core.k8s_json_patch) instead.",
+          "type": "list",
+          "required": false,
+          "choices": [
+            "json",
+            "merge",
+            "strategic-merge"
+          ],
+          "elements": "str",
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Use to specify an object name.\nUse to create, delete, or discover an object without providing a full resource definition.\nUse in conjunction with I(api_version), I(kind) and I(namespace) to identify a specific object.\nIf I(resource definition) is provided, the I(metadata.name) value from the I(resource_definition) will override this option.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "namespace": {
+          "aliases": [],
+          "description": "Use to specify an object namespace.\nUseful when creating, deleting, or discovering an object without providing a full resource definition.\nUse in conjunction with I(api_version), I(kind), and I(name) to identify a specific object.\nIf I(resource definition) is provided, the I(metadata.namespace) value from the I(resource_definition) will override this option.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Provide a password for authenticating with the API. Can also be specified via K8S_AUTH_PASSWORD environment variable.\nPlease read the description of the C(username) option for a discussion of when this option is applicable.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "persist_config": {
+          "aliases": [],
+          "description": "Whether or not to save the kube config refresh tokens. Can also be specified via K8S_AUTH_PERSIST_CONFIG environment variable.\nWhen the k8s context is using a user credentials with refresh tokens (like oidc or gke/gcloud auth), the token is refreshed by the k8s python client library but not saved by default. So the old refresh token can expire and the next auth might fail. Setting this flag to true will tell the k8s python client to save the new refresh token to the kube config file.\nDefault to false.\nPlease note that the current version of the k8s python client library does not support setting this flag to True yet.\nThe fix for this k8s python library is here: https://github.com/kubernetes-client/python-base/pull/169",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "The URL of an HTTP proxy to use for the connection. Can also be specified via K8S_AUTH_PROXY environment variable.\nPlease note that this module does not pick up typical proxy settings from the environment (e.g. HTTP_PROXY).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy_headers": {
+          "aliases": [],
+          "description": "The Header used for the HTTP proxy.\nDocumentation can be found here U(https://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html?highlight=proxy_headers#urllib3.util.make_headers).",
+          "type": "dict",
+          "required": false,
+          "version_added": "2.0.0",
+          "suboptions": {
+            "basic_auth": {
+              "aliases": [],
+              "description": "Colon-separated username:password for basic authentication header.\nCan also be specified via K8S_AUTH_PROXY_HEADERS_BASIC_AUTH environment.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "proxy_basic_auth": {
+              "aliases": [],
+              "description": "Colon-separated username:password for proxy basic authentication header.\nCan also be specified via K8S_AUTH_PROXY_HEADERS_PROXY_BASIC_AUTH environment.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "user_agent": {
+              "aliases": [],
+              "description": "String representing the user-agent you want, such as foo/1.0.\nCan also be specified via K8S_AUTH_PROXY_HEADERS_USER_AGENT environment.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "resource_definition": {
+          "aliases": [
+            "definition",
+            "inline"
+          ],
+          "description": "Provide a valid YAML definition (either as a string, list, or dict) for an object when creating or updating.\nNOTE: I(kind), I(api_version), I(name), and I(namespace) will be overwritten by corresponding values found in the provided I(resource_definition).",
+          "required": false,
+          "suboptions": {}
+        },
+        "src": {
+          "aliases": [],
+          "description": "Provide a path to a file containing a valid YAML definition of an object or objects to be created or updated. Mutually exclusive with I(resource_definition). NOTE: I(kind), I(api_version), I(name), and I(namespace) will be overwritten by corresponding values found in the configuration read in from the I(src) file.\nReads from the local file system. To read from the Ansible controller's file system, including vaulted files, use the file lookup plugin or template lookup plugin, combined with the from_yaml filter, and pass the result to I(resource_definition). See Examples below.\nMutually exclusive with I(template) in case of M(kubernetes.core.k8s) module.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Determines if an object should be created, patched, or deleted. When set to C(present), an object will be created, if it does not already exist. If set to C(absent), an existing object will be deleted. If set to C(present), an existing object will be patched, if its attributes differ from those specified using I(resource_definition) or I(src).\nC(patched) state is an existing resource that has a given patch applied. If the resource doesn't exist, silently skip it (do not raise an error).",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present",
+            "patched"
+          ],
+          "suboptions": {}
+        },
+        "template": {
+          "aliases": [],
+          "description": "Provide a valid YAML template definition file for an object when creating or updating.\nValue can be provided as string or dictionary.\nMutually exclusive with C(src) and C(resource_definition).\nTemplate files needs to be present on the Ansible Controller's file system.\nAdditional parameters can be specified using dictionary.\nValid additional parameters - \nC(newline_sequence) (str): Specify the newline sequence to use for templating files. valid choices are \"\\n\", \"\\r\", \"\\r\\n\". Default value \"\\n\".\nC(block_start_string) (str): The string marking the beginning of a block. Default value \"{%\".\nC(block_end_string) (str): The string marking the end of a block. Default value \"%}\".\nC(variable_start_string) (str): The string marking the beginning of a print statement. Default value \"{{\".\nC(variable_end_string) (str): The string marking the end of a print statement. Default value \"}}\".\nC(trim_blocks) (bool): Determine when newlines should be removed from blocks. When set to C(yes) the first newline after a block is removed (block, not variable tag!). Default value is true.\nC(lstrip_blocks) (bool): Determine when leading spaces and tabs should be stripped. When set to C(yes) leading spaces and tabs are stripped from the start of a line to a block. This functionality requires Jinja 2.7 or newer. Default value is false.",
+          "type": "raw",
+          "required": false,
+          "version_added": "2.0.0",
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Provide a username for authenticating with the API. Can also be specified via K8S_AUTH_USERNAME environment variable.\nPlease note that this only works with clusters configured to use HTTP Basic Auth. If your cluster has a different form of authentication (e.g. OAuth2 in OpenShift), this option will not work as expected and you should look into the M(community.okd.k8s_auth) module, as that might do what you need.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate": {
+          "aliases": [],
+          "description": "how (if at all) to validate the resource definition against the kubernetes schema. Requires the kubernetes-validate python module",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "fail_on_error": {
+              "aliases": [],
+              "description": "whether to fail on validation errors.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "strict": {
+              "aliases": [],
+              "description": "whether to fail when passing unexpected properties",
+              "default": "True",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "version": {
+              "aliases": [],
+              "description": "version of Kubernetes to validate against. defaults to Kubernetes server version",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "validate_certs": {
+          "aliases": [
+            "verify_ssl"
+          ],
+          "description": "Whether or not to verify the API server's SSL certificates. Can also be specified via K8S_AUTH_VERIFY_SSL environment variable.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait": {
+          "aliases": [],
+          "description": "Whether to wait for certain resource kinds to end up in the desired state.\nBy default the module exits once Kubernetes has received the request.\nImplemented for C(state=present) for C(Deployment), C(DaemonSet) and C(Pod), and for C(state=absent) for all resource kinds.\nFor resource kinds without an implementation, C(wait) returns immediately unless C(wait_condition) is set.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_condition": {
+          "aliases": [],
+          "description": "Specifies a custom condition on the status to wait for.\nIgnored if C(wait) is not set or is set to False.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "reason": {
+              "aliases": [],
+              "description": "The value of the reason field in your desired condition\nFor example, if a C(Deployment) is paused, The C(Progressing) C(type) will have the C(DeploymentPaused) reason.\nThe possible reasons in a condition are specific to each resource type in Kubernetes.\nSee the API documentation of the status field for a given resource to see possible choices.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "status": {
+              "aliases": [],
+              "description": "The value of the status field in your desired condition.\nFor example, if a C(Deployment) is paused, the C(Progressing) C(type) will have the C(Unknown) status.",
+              "default": "True",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "True",
+                "False",
+                "Unknown"
+              ],
+              "suboptions": {}
+            },
+            "type": {
+              "aliases": [],
+              "description": "The type of condition to wait for.\nFor example, the C(Pod) resource will set the C(Ready) condition (among others).\nRequired if you are specifying a C(wait_condition).\nIf left empty, the C(wait_condition) field will be ignored.\nThe possible types for a condition are specific to each resource type in Kubernetes.\nSee the API documentation of the status field for a given resource to see possible choices.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "wait_sleep": {
+          "aliases": [],
+          "description": "Number of seconds to sleep between checks.",
+          "default": "5",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_timeout": {
+          "aliases": [],
+          "description": "How long in seconds to wait for the resource to end up in the desired state.\nIgnored if C(wait) is not set.",
+          "default": "120",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 3.6",
+        "kubernetes >= 12.0.0",
+        "PyYAML >= 3.11"
+      ],
+      "short_description": "Manage OpenShift objects"
+    },
+    "examples": "\n- name: Create a k8s namespace\n  community.okd.k8s:\n    name: testing\n    api_version: v1\n    kind: Namespace\n    state: present\n\n- name: Create a Service object from an inline definition\n  community.okd.k8s:\n    state: present\n    definition:\n      apiVersion: v1\n      kind: Service\n      metadata:\n        name: web\n        namespace: testing\n        labels:\n          app: galaxy\n          service: web\n      spec:\n        selector:\n          app: galaxy\n          service: web\n        ports:\n        - protocol: TCP\n          targetPort: 8000\n          name: port-8000-tcp\n          port: 8000\n\n- name: Remove an existing Service object\n  community.okd.k8s:\n    state: absent\n    api_version: v1\n    kind: Service\n    namespace: testing\n    name: web\n\n# Passing the object definition from a file\n\n- name: Create a Deployment by reading the definition from a local file\n  community.okd.k8s:\n    state: present\n    src: /testing/deployment.yml\n\n- name: >-\n    Read definition file from the Ansible controller file system.\n    If the definition file has been encrypted with Ansible Vault it will automatically be decrypted.\n  community.okd.k8s:\n    state: present\n    definition: \"{{ lookup('file', '/testing/deployment.yml') | from_yaml }}\"\n\n- name: Read definition file from the Ansible controller file system after Jinja templating\n  community.okd.k8s:\n    state: present\n    definition: \"{{ lookup('template', '/testing/deployment.yml') | from_yaml }}\"\n\n- name: fail on validation errors\n  community.okd.k8s:\n    state: present\n    definition: \"{{ lookup('template', '/testing/deployment.yml') | from_yaml }}\"\n    validate:\n      fail_on_error: yes\n\n- name: warn on validation errors, check for unexpected properties\n  community.okd.k8s:\n    state: present\n    definition: \"{{ lookup('template', '/testing/deployment.yml') | from_yaml }}\"\n    validate:\n      fail_on_error: no\n      strict: yes\n"
+  },
+  "community.okd.openshift_auth": {
+    "doc": {
+      "description": "This module handles authenticating to OpenShift clusters requiring I(explicit) authentication procedures, meaning ones where a client logs in (obtains an authentication token), performs API operations using said token and then logs out (revokes the token).\nOn the other hand a popular configuration for username+password authentication is one utilizing HTTP Basic Auth, which does not involve any additional login/logout steps (instead login credentials can be attached to each and every API call performed) and as such is handled directly by the C(k8s) module (and other resource–specific modules) by utilizing the C(host), C(username) and C(password) parameters. Please consult your preferred module's documentation for more details.",
+      "has_action": false,
+      "options": {
+        "api_key": {
+          "aliases": [],
+          "description": "When C(state) is set to I(absent), this specifies the token to revoke.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ca_cert": {
+          "aliases": [
+            "ssl_ca_cert"
+          ],
+          "description": "Path to a CA certificate file used to verify connection to the API server. The full certificate chain must be provided to avoid certificate validation errors.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "Provide a URL for accessing the API server.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Provide a password for authenticating with the API server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If set to I(present) connect to the API server using the URL specified in C(host) and attempt to log in.\nIf set to I(absent) attempt to log out by revoking the authentication token specified in C(api_key).",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Provide a username for authenticating with the API server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [
+            "verify_ssl"
+          ],
+          "description": "Whether or not to verify the API server's SSL certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 3.6",
+        "urllib3",
+        "requests",
+        "requests-oauthlib"
+      ],
+      "short_description": "Authenticate to OpenShift clusters which require an explicit login step",
+      "version_added": "0.2.0"
+    },
+    "examples": "\n- hosts: localhost\n  module_defaults:\n    group/k8s:\n      host: https://k8s.example.com/\n      ca_cert: ca.pem\n  tasks:\n  - block:\n    # It's good practice to store login credentials in a secure vault and not\n    # directly in playbooks.\n    - include_vars: openshift_passwords.yml\n\n    - name: Log in (obtain access token)\n      community.okd.openshift_auth:\n        username: admin\n        password: \"{{ openshift_admin_password }}\"\n      register: openshift_auth_results\n\n    # Previous task provides the token/api_key, while all other parameters\n    # are taken from module_defaults\n    - name: Get a list of all pods from any namespace\n      kubernetes.core.k8s_info:\n        api_key: \"{{ openshift_auth_results.openshift_auth.api_key }}\"\n        kind: Pod\n      register: pod_list\n\n    always:\n    - name: If login succeeded, try to log out (revoke access token)\n      when: openshift_auth_results.openshift_auth.api_key is defined\n      community.okd.openshift_auth:\n        state: absent\n        api_key: \"{{ openshift_auth_results.openshift_auth.api_key }}\"\n"
+  },
+  "community.okd.openshift_process": {
+    "doc": {
+      "description": "Processes a specified OpenShift template with the provided template.\nTemplates can be provided inline, from a file, or specified by name and namespace in the cluster.\nAnalogous to `oc process`.\nFor CRUD operations on Template resources themselves, see the community.okd.k8s module.",
+      "has_action": false,
+      "notes": "To avoid SSL certificate validation errors when C(validate_certs) is I(True), the full certificate chain for the API server must be provided via C(ca_cert) or in the kubeconfig file.",
+      "options": {
+        "api_key": {
+          "aliases": [],
+          "description": "Token used to authenticate with the API. Can also be specified via K8S_AUTH_API_KEY environment variable.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ca_cert": {
+          "aliases": [
+            "ssl_ca_cert"
+          ],
+          "description": "Path to a CA certificate used to authenticate with the API. The full certificate chain must be provided to avoid certificate validation errors. Can also be specified via K8S_AUTH_SSL_CA_CERT environment variable.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_cert": {
+          "aliases": [
+            "cert_file"
+          ],
+          "description": "Path to a certificate used to authenticate with the API. Can also be specified via K8S_AUTH_CERT_FILE environment variable.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_key": {
+          "aliases": [
+            "key_file"
+          ],
+          "description": "Path to a key file used to authenticate with the API. Can also be specified via K8S_AUTH_KEY_FILE environment variable.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "context": {
+          "aliases": [],
+          "description": "The name of a context found in the config file. Can also be specified via K8S_AUTH_CONTEXT environment variable.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "Provide a URL for accessing the API. Can also be specified via K8S_AUTH_HOST environment variable.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "kubeconfig": {
+          "aliases": [],
+          "description": "Path to an existing Kubernetes config file. If not provided, and no other connection options are provided, the Kubernetes client will attempt to load the default configuration file from I(~/.kube/config). Can also be specified via K8S_AUTH_KUBECONFIG environment variable.\nThe kubernetes configuration can be provided as dictionary. This feature requires a python kubernetes client version >= 17.17.0. Added in version 2.2.0.",
+          "type": "raw",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the Template to process.\nThe Template must be present in the cluster.\nWhen provided, I(namespace) is required.\nMutually exclusive with I(resource_definition) or I(src)",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "namespace": {
+          "aliases": [],
+          "description": "The namespace that the template can be found in.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "namespace_target": {
+          "aliases": [],
+          "description": "The namespace that resources should be created, updated, or deleted in.\nOnly used when I(state) is present or absent.",
+          "required": false,
+          "suboptions": {}
+        },
+        "parameter_file": {
+          "aliases": [],
+          "description": "A path to a file containing template parameter values to override/set values in the Template.\nCorresponds to the `--param-file` argument to oc process.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "parameters": {
+          "aliases": [],
+          "description": "A set of key: value pairs that will be used to set/override values in the Template.\nCorresponds to the `--param` argument to oc process.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Provide a password for authenticating with the API. Can also be specified via K8S_AUTH_PASSWORD environment variable.\nPlease read the description of the C(username) option for a discussion of when this option is applicable.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "persist_config": {
+          "aliases": [],
+          "description": "Whether or not to save the kube config refresh tokens. Can also be specified via K8S_AUTH_PERSIST_CONFIG environment variable.\nWhen the k8s context is using a user credentials with refresh tokens (like oidc or gke/gcloud auth), the token is refreshed by the k8s python client library but not saved by default. So the old refresh token can expire and the next auth might fail. Setting this flag to true will tell the k8s python client to save the new refresh token to the kube config file.\nDefault to false.\nPlease note that the current version of the k8s python client library does not support setting this flag to True yet.\nThe fix for this k8s python library is here: https://github.com/kubernetes-client/python-base/pull/169",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "The URL of an HTTP proxy to use for the connection. Can also be specified via K8S_AUTH_PROXY environment variable.\nPlease note that this module does not pick up typical proxy settings from the environment (e.g. HTTP_PROXY).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy_headers": {
+          "aliases": [],
+          "description": "The Header used for the HTTP proxy.\nDocumentation can be found here U(https://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html?highlight=proxy_headers#urllib3.util.make_headers).",
+          "type": "dict",
+          "required": false,
+          "version_added": "2.0.0",
+          "suboptions": {
+            "basic_auth": {
+              "aliases": [],
+              "description": "Colon-separated username:password for basic authentication header.\nCan also be specified via K8S_AUTH_PROXY_HEADERS_BASIC_AUTH environment.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "proxy_basic_auth": {
+              "aliases": [],
+              "description": "Colon-separated username:password for proxy basic authentication header.\nCan also be specified via K8S_AUTH_PROXY_HEADERS_PROXY_BASIC_AUTH environment.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "user_agent": {
+              "aliases": [],
+              "description": "String representing the user-agent you want, such as foo/1.0.\nCan also be specified via K8S_AUTH_PROXY_HEADERS_USER_AGENT environment.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "resource_definition": {
+          "aliases": [
+            "definition",
+            "inline"
+          ],
+          "description": "Provide a valid YAML definition (either as a string, list, or dict) for an object when creating or updating.\nNOTE: I(kind), I(api_version), I(name), and I(namespace) will be overwritten by corresponding values found in the provided I(resource_definition).",
+          "required": false,
+          "suboptions": {}
+        },
+        "src": {
+          "aliases": [],
+          "description": "Provide a path to a file containing a valid YAML definition of an object or objects to be created or updated. Mutually exclusive with I(resource_definition). NOTE: I(kind), I(api_version), I(name), and I(namespace) will be overwritten by corresponding values found in the configuration read in from the I(src) file.\nReads from the local file system. To read from the Ansible controller's file system, including vaulted files, use the file lookup plugin or template lookup plugin, combined with the from_yaml filter, and pass the result to I(resource_definition). See Examples below.\nMutually exclusive with I(template) in case of M(kubernetes.core.k8s) module.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Determines what to do with the rendered Template.\nThe state I(rendered) will render the Template based on the provided parameters, and return the rendered objects in the I(resources) field. These can then be referenced in future tasks.\nThe state I(present) will cause the resources in the rendered Template to be created if they do not already exist, and patched if they do.\nThe state I(absent) will delete the resources in the rendered Template.",
+          "default": "rendered",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present",
+            "rendered"
+          ],
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Provide a username for authenticating with the API. Can also be specified via K8S_AUTH_USERNAME environment variable.\nPlease note that this only works with clusters configured to use HTTP Basic Auth. If your cluster has a different form of authentication (e.g. OAuth2 in OpenShift), this option will not work as expected and you should look into the M(community.okd.k8s_auth) module, as that might do what you need.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [
+            "verify_ssl"
+          ],
+          "description": "Whether or not to verify the API server's SSL certificates. Can also be specified via K8S_AUTH_VERIFY_SSL environment variable.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait": {
+          "aliases": [],
+          "description": "Whether to wait for certain resource kinds to end up in the desired state.\nBy default the module exits once Kubernetes has received the request.\nImplemented for C(state=present) for C(Deployment), C(DaemonSet) and C(Pod), and for C(state=absent) for all resource kinds.\nFor resource kinds without an implementation, C(wait) returns immediately unless C(wait_condition) is set.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_condition": {
+          "aliases": [],
+          "description": "Specifies a custom condition on the status to wait for.\nIgnored if C(wait) is not set or is set to False.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "reason": {
+              "aliases": [],
+              "description": "The value of the reason field in your desired condition\nFor example, if a C(Deployment) is paused, The C(Progressing) C(type) will have the C(DeploymentPaused) reason.\nThe possible reasons in a condition are specific to each resource type in Kubernetes.\nSee the API documentation of the status field for a given resource to see possible choices.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "status": {
+              "aliases": [],
+              "description": "The value of the status field in your desired condition.\nFor example, if a C(Deployment) is paused, the C(Progressing) C(type) will have the C(Unknown) status.",
+              "default": "True",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "True",
+                "False",
+                "Unknown"
+              ],
+              "suboptions": {}
+            },
+            "type": {
+              "aliases": [],
+              "description": "The type of condition to wait for.\nFor example, the C(Pod) resource will set the C(Ready) condition (among others).\nRequired if you are specifying a C(wait_condition).\nIf left empty, the C(wait_condition) field will be ignored.\nThe possible types for a condition are specific to each resource type in Kubernetes.\nSee the API documentation of the status field for a given resource to see possible choices.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "wait_sleep": {
+          "aliases": [],
+          "description": "Number of seconds to sleep between checks.",
+          "default": "5",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_timeout": {
+          "aliases": [],
+          "description": "How long in seconds to wait for the resource to end up in the desired state.\nIgnored if C(wait) is not set.",
+          "default": "120",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 3.6",
+        "kubernetes >= 12.0.0",
+        "PyYAML >= 3.11"
+      ],
+      "short_description": "Process an OpenShift template.openshift.io/v1 Template",
+      "version_added": "0.3.0"
+    },
+    "examples": "\n- name: Process a template in the cluster\n  community.okd.openshift_process:\n    name: nginx-example\n    namespace: openshift # only needed if using a template already on the server\n    parameters:\n      NAMESPACE: openshift\n      NAME: test123\n    state: rendered\n  register: result\n\n- name: Create the rendered resources using apply\n  community.okd.k8s:\n    namespace: default\n    definition: '{{ item }}'\n    wait: yes\n    apply: yes\n  loop: '{{ result.resources }}'\n\n- name: Process a template with parameters from an env file and create the resources\n  community.okd.openshift_process:\n    name: nginx-example\n    namespace: openshift\n    namespace_target: default\n    parameter_file: 'files/nginx.env'\n    state: present\n    wait: yes\n\n- name: Process a local template and create the resources\n  community.okd.openshift_process:\n    src: files/example-template.yaml\n    parameter_file: files/example.env\n    namespace_target: default\n    state: present\n\n- name: Process a local template, delete the resources, and wait for them to terminate\n  community.okd.openshift_process:\n    src: files/example-template.yaml\n    parameter_file: files/example.env\n    namespace_target: default\n    state: absent\n    wait: yes\n"
+  },
+  "community.okd.openshift_route": {
+    "doc": {
+      "description": "Looks up a Service and creates a new Route based on it.\nAnalogous to `oc expose` and `oc create route` for creating Routes, but does not support creating Services.\nFor creating Services from other resources, see kubernetes.core.k8s.",
+      "has_action": false,
+      "notes": "To avoid SSL certificate validation errors when C(validate_certs) is I(True), the full certificate chain for the API server must be provided via C(ca_cert) or in the kubeconfig file.",
+      "options": {
+        "annotations": {
+          "aliases": [],
+          "description": "Specify the Route Annotations.\nA set of key: value pairs.",
+          "type": "dict",
+          "required": false,
+          "version_added": "2.1.0",
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "Token used to authenticate with the API. Can also be specified via K8S_AUTH_API_KEY environment variable.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ca_cert": {
+          "aliases": [
+            "ssl_ca_cert"
+          ],
+          "description": "Path to a CA certificate used to authenticate with the API. The full certificate chain must be provided to avoid certificate validation errors. Can also be specified via K8S_AUTH_SSL_CA_CERT environment variable.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_cert": {
+          "aliases": [
+            "cert_file"
+          ],
+          "description": "Path to a certificate used to authenticate with the API. Can also be specified via K8S_AUTH_CERT_FILE environment variable.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_key": {
+          "aliases": [
+            "key_file"
+          ],
+          "description": "Path to a key file used to authenticate with the API. Can also be specified via K8S_AUTH_KEY_FILE environment variable.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "context": {
+          "aliases": [],
+          "description": "The name of a context found in the config file. Can also be specified via K8S_AUTH_CONTEXT environment variable.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "If set to C(yes), and I(state) is C(present), an existing object will be replaced.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "Provide a URL for accessing the API. Can also be specified via K8S_AUTH_HOST environment variable.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "The hostname for the Route.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "kubeconfig": {
+          "aliases": [],
+          "description": "Path to an existing Kubernetes config file. If not provided, and no other connection options are provided, the Kubernetes client will attempt to load the default configuration file from I(~/.kube/config). Can also be specified via K8S_AUTH_KUBECONFIG environment variable.\nThe kubernetes configuration can be provided as dictionary. This feature requires a python kubernetes client version >= 17.17.0. Added in version 2.2.0.",
+          "type": "raw",
+          "required": false,
+          "suboptions": {}
+        },
+        "labels": {
+          "aliases": [],
+          "description": "Specify the labels to apply to the created Route.\nA set of key: value pairs.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The desired name of the Route to be created.\nDefaults to the value of I(service)",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "namespace": {
+          "aliases": [],
+          "description": "The namespace of the resource being targeted.\nThe Route will be created in this namespace as well.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Provide a password for authenticating with the API. Can also be specified via K8S_AUTH_PASSWORD environment variable.\nPlease read the description of the C(username) option for a discussion of when this option is applicable.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "path": {
+          "aliases": [],
+          "description": "The path for the Route",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "persist_config": {
+          "aliases": [],
+          "description": "Whether or not to save the kube config refresh tokens. Can also be specified via K8S_AUTH_PERSIST_CONFIG environment variable.\nWhen the k8s context is using a user credentials with refresh tokens (like oidc or gke/gcloud auth), the token is refreshed by the k8s python client library but not saved by default. So the old refresh token can expire and the next auth might fail. Setting this flag to true will tell the k8s python client to save the new refresh token to the kube config file.\nDefault to false.\nPlease note that the current version of the k8s python client library does not support setting this flag to True yet.\nThe fix for this k8s python library is here: https://github.com/kubernetes-client/python-base/pull/169",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Name or number of the port the Route will route traffic to.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "The URL of an HTTP proxy to use for the connection. Can also be specified via K8S_AUTH_PROXY environment variable.\nPlease note that this module does not pick up typical proxy settings from the environment (e.g. HTTP_PROXY).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy_headers": {
+          "aliases": [],
+          "description": "The Header used for the HTTP proxy.\nDocumentation can be found here U(https://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html?highlight=proxy_headers#urllib3.util.make_headers).",
+          "type": "dict",
+          "required": false,
+          "version_added": "2.0.0",
+          "suboptions": {
+            "basic_auth": {
+              "aliases": [],
+              "description": "Colon-separated username:password for basic authentication header.\nCan also be specified via K8S_AUTH_PROXY_HEADERS_BASIC_AUTH environment.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "proxy_basic_auth": {
+              "aliases": [],
+              "description": "Colon-separated username:password for proxy basic authentication header.\nCan also be specified via K8S_AUTH_PROXY_HEADERS_PROXY_BASIC_AUTH environment.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "user_agent": {
+              "aliases": [],
+              "description": "String representing the user-agent you want, such as foo/1.0.\nCan also be specified via K8S_AUTH_PROXY_HEADERS_USER_AGENT environment.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "service": {
+          "aliases": [
+            "svc"
+          ],
+          "description": "The name of the service to expose.\nRequired when I(state) is not absent.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Determines if an object should be created, patched, or deleted. When set to C(present), an object will be created, if it does not already exist. If set to C(absent), an existing object will be deleted. If set to C(present), an existing object will be patched, if its attributes differ from those specified using I(resource_definition) or I(src).",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "termination": {
+          "aliases": [],
+          "description": "The termination type of the Route.\nIf left empty no termination type will be set, and the route will be insecure.\nWhen set to insecure I(tls) will be ignored.",
+          "default": "insecure",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "edge",
+            "passthrough",
+            "reencrypt",
+            "insecure"
+          ],
+          "suboptions": {}
+        },
+        "tls": {
+          "aliases": [],
+          "description": "TLS configuration for the newly created route.\nOnly used when I(termination) is set.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "ca_certificate": {
+              "aliases": [],
+              "description": "Path to a CA certificate file on the target host.\nNot supported when I(termination) is set to passthrough.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "certificate": {
+              "aliases": [],
+              "description": "Path to a certificate file on the target host.\nNot supported when I(termination) is set to passthrough.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "destination_ca_certificate": {
+              "aliases": [],
+              "description": "Path to a CA certificate file used for securing the connection.\nOnly used when I(termination) is set to reencrypt.\nDefaults to the Service CA.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "insecure_policy": {
+              "aliases": [],
+              "description": "Sets the InsecureEdgeTerminationPolicy for the Route.\nNot supported when I(termination) is set to reencrypt.\nWhen I(termination) is set to passthrough, only redirect is supported.\nIf not provided, insecure traffic will be disallowed.",
+              "default": "disallow",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "allow",
+                "redirect",
+                "disallow"
+              ],
+              "suboptions": {}
+            },
+            "key": {
+              "aliases": [],
+              "description": "Path to a key file on the target host.\nNot supported when I(termination) is set to passthrough.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "username": {
+          "aliases": [],
+          "description": "Provide a username for authenticating with the API. Can also be specified via K8S_AUTH_USERNAME environment variable.\nPlease note that this only works with clusters configured to use HTTP Basic Auth. If your cluster has a different form of authentication (e.g. OAuth2 in OpenShift), this option will not work as expected and you should look into the M(community.okd.k8s_auth) module, as that might do what you need.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [
+            "verify_ssl"
+          ],
+          "description": "Whether or not to verify the API server's SSL certificates. Can also be specified via K8S_AUTH_VERIFY_SSL environment variable.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait": {
+          "aliases": [],
+          "description": "Whether to wait for certain resource kinds to end up in the desired state.\nBy default the module exits once Kubernetes has received the request.\nImplemented for C(state=present) for C(Deployment), C(DaemonSet) and C(Pod), and for C(state=absent) for all resource kinds.\nFor resource kinds without an implementation, C(wait) returns immediately unless C(wait_condition) is set.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_condition": {
+          "aliases": [],
+          "description": "Specifies a custom condition on the status to wait for.\nIgnored if C(wait) is not set or is set to False.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "reason": {
+              "aliases": [],
+              "description": "The value of the reason field in your desired condition\nFor example, if a C(Deployment) is paused, The C(Progressing) C(type) will have the C(DeploymentPaused) reason.\nThe possible reasons in a condition are specific to each resource type in Kubernetes.\nSee the API documentation of the status field for a given resource to see possible choices.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "status": {
+              "aliases": [],
+              "description": "The value of the status field in your desired condition.\nFor example, if a C(Deployment) is paused, the C(Progressing) C(type) will have the C(Unknown) status.",
+              "default": "True",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "True",
+                "False",
+                "Unknown"
+              ],
+              "suboptions": {}
+            },
+            "type": {
+              "aliases": [],
+              "description": "The type of condition to wait for.\nFor example, the C(Pod) resource will set the C(Ready) condition (among others).\nRequired if you are specifying a C(wait_condition).\nIf left empty, the C(wait_condition) field will be ignored.\nThe possible types for a condition are specific to each resource type in Kubernetes.\nSee the API documentation of the status field for a given resource to see possible choices.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "wait_sleep": {
+          "aliases": [],
+          "description": "Number of seconds to sleep between checks.",
+          "default": "5",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_timeout": {
+          "aliases": [],
+          "description": "How long in seconds to wait for the resource to end up in the desired state.\nIgnored if C(wait) is not set.",
+          "default": "120",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "wildcard_policy": {
+          "aliases": [],
+          "description": "The wildcard policy for the hostname.\nCurrently only Subdomain is supported.\nIf not provided, the default of None will be used.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "Subdomain"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 3.6",
+        "kubernetes >= 12.0.0",
+        "PyYAML >= 3.11"
+      ],
+      "short_description": "Expose a Service as an OpenShift Route.",
+      "version_added": "0.3.0"
+    },
+    "examples": "\n- name: Create hello-world deployment\n  community.okd.k8s:\n    definition:\n      apiVersion: apps/v1\n      kind: Deployment\n      metadata:\n        name: hello-kubernetes\n        namespace: default\n      spec:\n        replicas: 3\n        selector:\n          matchLabels:\n            app: hello-kubernetes\n        template:\n          metadata:\n            labels:\n              app: hello-kubernetes\n          spec:\n            containers:\n            - name: hello-kubernetes\n              image: paulbouwer/hello-kubernetes:1.8\n              ports:\n              - containerPort: 8080\n\n- name: Create Service for the hello-world deployment\n  community.okd.k8s:\n    definition:\n      apiVersion: v1\n      kind: Service\n      metadata:\n        name: hello-kubernetes\n        namespace: default\n      spec:\n        ports:\n        - port: 80\n          targetPort: 8080\n        selector:\n          app: hello-kubernetes\n\n- name: Expose the insecure hello-world service externally\n  community.okd.openshift_route:\n    service: hello-kubernetes\n    namespace: default\n    insecure_policy: allow\n    annotations:\n      haproxy.router.openshift.io/balance: roundrobin\n  register: route\n"
+  }
+}

@@ -1,0 +1,2256 @@
+{
+  "ngine_io.vultr.vultr_account_info": {
+    "doc": {
+      "description": "Get infos about account balance, charges and payments.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Get information about the Vultr account.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Get Vultr account infos\n  ngine_io.vultr.vultr_account_info:\n  register: result\n\n- name: Print the infos\n  debug:\n    var: result.vultr_account_info\n"
+  },
+  "ngine_io.vultr.vultr_block_storage": {
+    "doc": {
+      "description": "Manage block storage volumes on Vultr.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "attached_to_SUBID": {
+          "aliases": [
+            "attached_to_id"
+          ],
+          "description": "The ID of the server the volume is attached to.\nRequired if I(state) is attached.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "live_attachment": {
+          "aliases": [],
+          "description": "Whether the volume should be attached/detached, even if the server not stopped.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [
+            "description",
+            "label"
+          ],
+          "description": "Name of the block storage volume.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [],
+          "description": "Region the block storage volume is deployed into.\nRequired if I(state) is present.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "size": {
+          "aliases": [],
+          "description": "Size of the block storage volume in GB.\nRequired if I(state) is present.\nIf it's larger than the volume's current size, the volume will be resized.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the block storage volume.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent",
+            "attached",
+            "detached"
+          ],
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Manages block storage volumes on Vultr.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Ensure a block storage volume is present\n  ngine_io.vultr.vultr_block_storage:\n    name: myvolume\n    size: 10\n    region: Amsterdam\n\n- name: Ensure a block storage volume is absent\n  ngine_io.vultr.vultr_block_storage:\n    name: myvolume\n    state: absent\n\n- name: Ensure a block storage volume exists and is attached to server 114\n  ngine_io.vultr.vultr_block_storage:\n    name: myvolume\n    state: attached\n    attached_to_id: 114\n    size: 10\n\n- name: Ensure a block storage volume exists and is not attached to any server\n  ngine_io.vultr.vultr_block_storage:\n    name: myvolume\n    state: detached\n    size: 10\n"
+  },
+  "ngine_io.vultr.vultr_block_storage_info": {
+    "doc": {
+      "description": "Get infos about block storage volumes available in Vultr.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Get information about the Vultr block storage volumes available.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Get Vultr block storage infos\n  ngine_io.vultr.vultr_block_storage_info:\n  register: result\n\n- name: Print the infos\n  debug:\n    var: result.vultr_block_storage_info\n"
+  },
+  "ngine_io.vultr.vultr_dns_domain": {
+    "doc": {
+      "description": "Create and remove DNS domains.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [
+            "domain"
+          ],
+          "description": "The domain name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "server_ip": {
+          "aliases": [],
+          "description": "The default server IP.\nUse M(vultr_dns_record) to change it once the domain is created.\nRequired if C(state=present).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the DNS domain.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Manages DNS domains on Vultr.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Ensure a domain exists\n  ngine_io.vultr.vultr_dns_domain:\n    name: example.com\n    server_ip: 10.10.10.10\n\n- name: Ensure a domain is absent\n  ngine_io.vultr.vultr_dns_domain:\n    name: example.com\n    state: absent\n"
+  },
+  "ngine_io.vultr.vultr_dns_domain_info": {
+    "doc": {
+      "description": "Gather information about DNS domains available in Vultr.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about the Vultr DNS domains available.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Gather Vultr DNS domains information\n  ngine_io.vultr.vultr_dns_domains_info:\n  register: result\n\n- name: Print the gathered information\n  debug:\n    var: result.vultr_dns_domain_info\n"
+  },
+  "ngine_io.vultr.vultr_dns_record": {
+    "doc": {
+      "description": "Create, update and remove DNS records.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "data": {
+          "aliases": [],
+          "description": "Data of the record.\nRequired if C(state=present) or C(multiple=yes).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "domain": {
+          "aliases": [],
+          "description": "The domain the record is related to.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "multiple": {
+          "aliases": [],
+          "description": "Whether to use more than one record with similar C(name) including no name and C(record_type).\nOnly allowed for a few record types, e.g. C(record_type=A), C(record_type=NS) or C(record_type=MX).\nC(data) will not be updated, instead it is used as a key to find existing records.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [
+            "subrecord"
+          ],
+          "description": "The record name (subrecord).",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "priority": {
+          "aliases": [],
+          "description": "Priority of the record.",
+          "default": "0",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "record_type": {
+          "aliases": [
+            "type"
+          ],
+          "description": "Type of the record.",
+          "default": "A",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "A",
+            "AAAA",
+            "CNAME",
+            "MX",
+            "SRV",
+            "CAA",
+            "TXT",
+            "NS",
+            "SSHFP"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the DNS record.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "ttl": {
+          "aliases": [],
+          "description": "TTL of the record.",
+          "default": "300",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Manages DNS records on Vultr.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Ensure an A record exists\n  ngine_io.vultr.vultr_dns_record:\n    name: www\n    domain: example.com\n    data: 10.10.10.10\n    ttl: 3600\n\n- name: Ensure a second A record exists for round robin LB\n  ngine_io.vultr.vultr_dns_record:\n    name: www\n    domain: example.com\n    data: 10.10.10.11\n    ttl: 60\n    multiple: yes\n\n- name: Ensure a CNAME record exists\n  ngine_io.vultr.vultr_dns_record:\n    name: web\n    record_type: CNAME\n    domain: example.com\n    data: www.example.com\n\n- name: Ensure MX record exists\n  ngine_io.vultr.vultr_dns_record:\n    record_type: MX\n    domain: example.com\n    data: \"{{ item.data }}\"\n    priority: \"{{ item.priority }}\"\n    multiple: yes\n  with_items:\n  - { data: mx1.example.com, priority: 10 }\n  - { data: mx2.example.com, priority: 10 }\n  - { data: mx3.example.com, priority: 20 }\n\n- name: Ensure a record is absent\n  ngine_io.vultr.vultr_dns_record:\n    name: www\n    domain: example.com\n    state: absent\n\n- name: Ensure MX record is absent in case multiple exists\n  ngine_io.vultr.vultr_dns_record:\n    record_type: MX\n    domain: example.com\n    data: mx1.example.com\n    multiple: yes\n    state: absent\n"
+  },
+  "ngine_io.vultr.vultr_firewall_group": {
+    "doc": {
+      "description": "Create and remove firewall groups.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [
+            "description"
+          ],
+          "description": "Name of the firewall group.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the firewall group.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Manages firewall groups on Vultr.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: ensure a firewall group is present\n  ngine_io.vultr.vultr_firewall_group:\n    name: my http firewall\n\n- name: ensure a firewall group is absent\n  ngine_io.vultr.vultr_firewall_group:\n    name: my http firewall\n    state: absent\n"
+  },
+  "ngine_io.vultr.vultr_firewall_group_info": {
+    "doc": {
+      "description": "Gather information about firewall groups available in Vultr.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about the Vultr firewall groups available.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Gather Vultr firewall groups information\n  ngine_io.vultr.vultr_firewall_group_info:\n  register: result\n\n- name: Print the gathered information\n  debug:\n    var: result.vultr_firewall_group_info\n"
+  },
+  "ngine_io.vultr.vultr_firewall_rule": {
+    "doc": {
+      "description": "Create and remove firewall rules.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "cidr": {
+          "aliases": [],
+          "description": "Network in CIDR format\nThe CIDR format must match with the C(ip_version) value.\nRequired if C(state=present).\nDefaulted to 0.0.0.0/0 or ::/0 depending on C(ip_version).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "end_port": {
+          "aliases": [],
+          "description": "End port for the firewall rule.\nOnly considered if C(protocol) is tcp or udp and I(state=present).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "group": {
+          "aliases": [],
+          "description": "Name of the firewall group.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "ip_version": {
+          "aliases": [
+            "ip_type"
+          ],
+          "description": "IP address version",
+          "default": "v4",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "v4",
+            "v6"
+          ],
+          "suboptions": {}
+        },
+        "protocol": {
+          "aliases": [],
+          "description": "Protocol of the firewall rule.",
+          "default": "tcp",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "icmp",
+            "tcp",
+            "udp",
+            "gre"
+          ],
+          "suboptions": {}
+        },
+        "start_port": {
+          "aliases": [
+            "port"
+          ],
+          "description": "Start port for the firewall rule.\nRequired if C(protocol) is tcp or udp and I(state=present).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the firewall rule.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Manages firewall rules on Vultr.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: ensure a firewall rule is present\n  ngine_io.vultr.vultr_firewall_rule:\n    group: application\n    protocol: tcp\n    start_port: 8000\n    end_port: 9000\n    cidr: 17.17.17.0/24\n\n- name: open DNS port for all ipv4 and ipv6\n  ngine_io.vultr.vultr_firewall_rule:\n    group: dns\n    protocol: udp\n    port: 53\n    ip_version: \"{{ item }}\"\n  with_items: [ v4, v6 ]\n\n- name: allow ping\n  ngine_io.vultr.vultr_firewall_rule:\n    group: web\n    protocol: icmp\n\n- name: ensure a firewall rule is absent\n  ngine_io.vultr.vultr_firewall_rule:\n    group: application\n    protocol: tcp\n    start_port: 8000\n    end_port: 9000\n    cidr: 17.17.17.0/24\n    state: absent\n"
+  },
+  "ngine_io.vultr.vultr_network": {
+    "doc": {
+      "description": "Manage networks on Vultr. A network cannot be updated. It needs to be deleted and re-created.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "cidr": {
+          "aliases": [],
+          "description": "The CIDR IPv4 network block to be used when attaching servers to this network. Required if I(state=present).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [
+            "description",
+            "label"
+          ],
+          "description": "Name of the network.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [],
+          "description": "Region the network is deployed into. Required if I(state=present).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the network.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Manages networks on Vultr.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Ensure a network is present\n  ngine_io.vultr.vultr_network:\n    name: mynet\n    cidr: 192.168.42.0/24\n    region: Amsterdam\n\n- name: Ensure a network is absent\n  ngine_io.vultr.vultr_network:\n    name: mynet\n    state: absent\n"
+  },
+  "ngine_io.vultr.vultr_network_info": {
+    "doc": {
+      "description": "Gather information about networks available in Vultr.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about the Vultr networks available.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Gather Vultr networks information\n  ngine_io.vultr.vultr_network_info:\n  register: result\n\n- name: Print the gathered information\n  debug:\n    var: result.vultr_network_info\n"
+  },
+  "ngine_io.vultr.vultr_os_info": {
+    "doc": {
+      "description": "Get infos about OSes available to boot servers.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Get information about the Vultr OSes available.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Get Vultr OSes infos\n  ngine_io.vultr.vultr_os_info:\n  register: results\n\n- name: Print the gathered infos\n  debug:\n    var: results.vultr_os_info\n"
+  },
+  "ngine_io.vultr.vultr_plan_baremetal_info": {
+    "doc": {
+      "description": "Gather information about Bare Metal plans available to boot servers.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about the Vultr Bare Metal plans available.",
+      "version_added": "0.3.0"
+    },
+    "examples": "\n- name: Gather Vultr Bare Metal plans information\n  ngine_io.vultr.vultr_baremetal_plan_info:\n  register: result\n\n- name: Print the gathered information\n  debug:\n    var: result.vultr_baremetal_plan_info\n"
+  },
+  "ngine_io.vultr.vultr_plan_info": {
+    "doc": {
+      "description": "Gather information about plans available to boot servers.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about the Vultr plans available.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Gather Vultr plans information\n  ngine_io.vultr.vultr_plan_info:\n  register: result\n\n- name: Print the gathered information\n  debug:\n    var: result.vultr_plan_info\n"
+  },
+  "ngine_io.vultr.vultr_region_info": {
+    "doc": {
+      "description": "Gather information about regions available to boot servers.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about the Vultr regions available.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Gather Vultr regions information\n  ngine_io.vultr.vultr_region_info:\n  register: result\n\n- name: Print the gathered information\n  debug:\n    var: result.vultr_region_info\n"
+  },
+  "ngine_io.vultr.vultr_server": {
+    "doc": {
+      "description": "Deploy, start, stop, update, restart, reinstall servers.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "auto_backup_enabled": {
+          "aliases": [],
+          "description": "Whether to enable automatic backups or not.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "firewall_group": {
+          "aliases": [],
+          "description": "The firewall group description or ID to assign this server to.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Force stop/start the server if required to apply changes\nOtherwise a running server will not be changed.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "The hostname to assign to this server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipv6_enabled": {
+          "aliases": [],
+          "description": "Whether to enable IPv6 or not.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [
+            "label"
+          ],
+          "description": "Name of the server.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "notify_activate": {
+          "aliases": [],
+          "description": "Whether to send an activation email when the server is ready or not.\nOnly considered on creation.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "os": {
+          "aliases": [],
+          "description": "The operating system name or ID.\nRequired if the server does not yet exist and is not restoring from a snapshot.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "plan": {
+          "aliases": [],
+          "description": "Plan name or ID to use for the server.\nRequired if the server does not yet exist.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "private_network_enabled": {
+          "aliases": [],
+          "description": "Whether to enable private networking or not.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [],
+          "description": "Region name or ID the server is deployed into.\nRequired if the server does not yet exist.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "reserved_ip_v4": {
+          "aliases": [],
+          "description": "IP address of the floating IP to use as the main IP of this server.\nOnly considered on creation.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "snapshot": {
+          "aliases": [],
+          "description": "Name or ID of the snapshot to restore the server from.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ssh_keys": {
+          "aliases": [
+            "ssh_key"
+          ],
+          "description": "List of SSH key names or IDs passed to the server on creation.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "startup_script": {
+          "aliases": [],
+          "description": "Name or ID of the startup script to execute on boot.\nOnly considered while creating the server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the server.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent",
+            "restarted",
+            "reinstalled",
+            "started",
+            "stopped"
+          ],
+          "suboptions": {}
+        },
+        "tag": {
+          "aliases": [],
+          "description": "Tag for the server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "user_data": {
+          "aliases": [],
+          "description": "User data to be passed to the server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Manages virtual servers on Vultr.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: create server\n  ngine_io.vultr.vultr_server:\n    name: \"{{ vultr_server_name }}\"\n    os: CentOS 7 x64\n    plan: 1024 MB RAM,25 GB SSD,1.00 TB BW\n    ssh_keys:\n      - my_key\n      - your_key\n    region: Amsterdam\n    state: present\n\n- name: ensure a server is present and started\n  ngine_io.vultr.vultr_server:\n    name: \"{{ vultr_server_name }}\"\n    os: CentOS 7 x64\n    plan: 1024 MB RAM,25 GB SSD,1.00 TB BW\n    firewall_group: my_group\n    ssh_key: my_key\n    region: Amsterdam\n    state: started\n\n- name: ensure a server is present and stopped provisioned using IDs\n  ngine_io.vultr.vultr_server:\n    name: \"{{ vultr_server_name }}\"\n    os: \"167\"\n    plan: \"201\"\n    region: \"7\"\n    state: stopped\n\n- name: ensure an existing server is stopped\n  ngine_io.vultr.vultr_server:\n    name: \"{{ vultr_server_name }}\"\n    state: stopped\n\n- name: ensure an existing server is started\n  ngine_io.vultr.vultr_server:\n    name: \"{{ vultr_server_name }}\"\n    state: started\n\n- name: ensure a server is absent\n  ngine_io.vultr.vultr_server:\n    name: \"{{ vultr_server_name }}\"\n    state: absent\n"
+  },
+  "ngine_io.vultr.vultr_server_baremetal": {
+    "doc": {
+      "description": "Deploy and destroy servers.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "The hostname to assign to this server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipv6_enabled": {
+          "aliases": [],
+          "description": "Whether to enable IPv6 or not.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [
+            "label"
+          ],
+          "description": "Name of the server.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "notify_activate": {
+          "aliases": [],
+          "description": "Whether to send an activation email when the server is ready or not.\nOnly considered on creation.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "os": {
+          "aliases": [],
+          "description": "The operating system name or ID.\nRequired if the server does not yet exist and is not restoring from a snapshot.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "plan": {
+          "aliases": [],
+          "description": "Plan name or ID to use for the server.\nRequired if the server does not yet exist.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [],
+          "description": "Region name or ID the server is deployed into.\nRequired if the server does not yet exist.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "reserved_ip_v4": {
+          "aliases": [],
+          "description": "IP address of the floating IP to use as the main IP of this server.\nOnly considered on creation.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ssh_keys": {
+          "aliases": [
+            "ssh_key"
+          ],
+          "description": "List of SSH key names or IDs passed to the server on creation.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "startup_script": {
+          "aliases": [],
+          "description": "Name or ID of the startup script to execute on boot.\nOnly considered while creating the server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the server.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "tag": {
+          "aliases": [],
+          "description": "Tag for the server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "user_data": {
+          "aliases": [],
+          "description": "User data to be passed to the server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Manages baremetal servers on Vultr.",
+      "version_added": "0.3.0"
+    },
+    "examples": "\n- name: create server\n  ngine_io.vultr.vultr_server_baremetal:\n    name: \"{{ vultr_server_baremetal_name }}\"\n    os: Debian 9 x64 (stretch)\n    plan: 32768 MB RAM,2x 240 GB SSD,5.00 TB BW\n    region: Amsterdam\n\n- name: ensure a server is absent\n  ngine_io.vultr.vultr_server_baremetal:\n    name: \"{{ vultr_server_baremetal_name }}\"\n    state: absent\n"
+  },
+  "ngine_io.vultr.vultr_server_info": {
+    "doc": {
+      "description": "Gather information about servers available.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about the Vultr servers available.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Gather Vultr servers information\n  ngine_io.vultr.vultr_server_info:\n  register: result\n\n- name: Print the gathered information\n  debug:\n    var: result.vultr_server_info\n"
+  },
+  "ngine_io.vultr.vultr_ssh_key": {
+    "doc": {
+      "description": "Create, update and remove ssh keys.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the ssh key.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "ssh_key": {
+          "aliases": [],
+          "description": "SSH public key.\nRequired if C(state=present).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the ssh key.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Manages ssh keys on Vultr.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: ensure an SSH key is present\n  ngine_io.vultr.vultr_ssh_key:\n    name: my ssh key\n    ssh_key: \"{{ lookup('file', '~/.ssh/id_rsa.pub') }}\"\n\n- name: ensure an SSH key is absent\n  ngine_io.vultr.vultr_ssh_key:\n    name: my ssh key\n    state: absent\n"
+  },
+  "ngine_io.vultr.vultr_ssh_key_info": {
+    "doc": {
+      "description": "Get infos about SSH keys available.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Get information about the Vultr SSH keys available.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Get Vultr SSH keys infos\n  ngine_io.vultr.vultr_ssh_key_info:\n  register: result\n\n- name: Print the infos\n  debug:\n    var: result.vultr_ssh_key_info\n"
+  },
+  "ngine_io.vultr.vultr_startup_script": {
+    "doc": {
+      "description": "Create, update and remove startup scripts.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The script name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "script": {
+          "aliases": [],
+          "description": "The script source code.\nRequired if I(state=present).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "script_type": {
+          "aliases": [
+            "type"
+          ],
+          "description": "The script type, can not be changed once created.",
+          "default": "boot",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "boot",
+            "pxe"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the script.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Manages startup scripts on Vultr.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: ensure a pxe script exists, source from a file\n  ngine_io.vultr.vultr_startup_script:\n    name: my_web_script\n    script_type: pxe\n    script: \"{{ lookup('file', 'path/to/script') }}\"\n\n- name: ensure a boot script exists\n  ngine_io.vultr.vultr_startup_script:\n    name: vultr_startup_script\n    script: \"#!/bin/bash\\necho Hello World > /root/hello\"\n\n- name: ensure a script is absent\n  ngine_io.vultr.vultr_startup_script:\n    name: my_web_script\n    state: absent\n"
+  },
+  "ngine_io.vultr.vultr_startup_script_info": {
+    "doc": {
+      "description": "Gather information about vultr_startup_scripts available.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about the Vultr startup scripts available.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Gather Vultr startup scripts information\n  ngine_io.vultr.vultr_startup_script_info:\n  register: result\n\n- name: Print the gathered information\n  debug:\n    var: result.vultr_startup_script_info\n"
+  },
+  "ngine_io.vultr.vultr_user": {
+    "doc": {
+      "description": "Create, update and remove users.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "acls": {
+          "aliases": [
+            "acl"
+          ],
+          "description": "List of ACLs this users should have, see U(https://www.vultr.com/api/#user_user_list).\nRequired if C(state=present).\nOne or more of the choices list, some depend on each other.",
+          "type": "list",
+          "required": false,
+          "choices": [
+            "manage_users",
+            "subscriptions",
+            "provisioning",
+            "billing",
+            "support",
+            "abuse",
+            "dns",
+            "upgrade"
+          ],
+          "elements": "str",
+          "suboptions": {}
+        },
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_enabled": {
+          "aliases": [],
+          "description": "Whether the API is enabled or not.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "email": {
+          "aliases": [],
+          "description": "Email of the user.\nRequired if C(state=present).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Password will only be changed with enforcement.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the user",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password of the user.\nOnly considered while creating a user or when C(force=yes).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the user.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Manages users on Vultr.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Ensure a user exists\n  ngine_io.vultr.vultr_user:\n    name: john\n    email: john.doe@example.com\n    password: s3cr3t\n    acls:\n      - upgrade\n      - dns\n      - manage_users\n      - subscriptions\n      - upgrade\n\n- name: Remove a user\n  ngine_io.vultr.vultr_user:\n    name: john\n    state: absent\n"
+  },
+  "ngine_io.vultr.vultr_user_info": {
+    "doc": {
+      "description": "Get infos about users available in Vultr.",
+      "has_action": false,
+      "notes": "Also see the API documentation on https://www.vultr.com/api/.",
+      "options": {
+        "api_account": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(vultr.ini) file.\nThe ENV variable C(VULTR_API_ACCOUNT) is used as default, when defined.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_endpoint": {
+          "aliases": [],
+          "description": "URL to API endpint (without trailing slash).\nThe ENV variable C(VULTR_API_ENDPOINT) is used as default, when defined.\nFallback value is U(https://api.vultr.com) if not specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Vultr API.\nThe ENV variable C(VULTR_API_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retries": {
+          "aliases": [],
+          "description": "Amount of retries in case of the Vultr API retuns an HTTP 503 code.\nThe ENV variable C(VULTR_API_RETRIES) is used as default, when defined.\nFallback value is 5 retries if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_retry_max_delay": {
+          "aliases": [],
+          "description": "Retry backoff delay in seconds is exponential up to this max. value, in seconds.\nThe ENV variable C(VULTR_API_RETRY_MAX_DELAY) is used as default, when defined.\nFallback value is 12 seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Vultr API.\nThe ENV variable C(VULTR_API_TIMEOUT) is used as default, when defined.\nFallback value is 60 seconds if not specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Vultr API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Get information about the Vultr user available.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Get Vultr user infos\n  ngine_io.vultr.vultr_user_info:\n  register: result\n\n- name: Print the infos\n  debug:\n    var: result.vultr_user_info\n"
+  }
+}
