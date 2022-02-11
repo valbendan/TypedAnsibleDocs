@@ -1,0 +1,389 @@
+{
+  "frr.frr.frr_bgp": {
+    "doc": {
+      "description": "This module provides configuration management of global BGP parameters on devices running Free Range Routing(FRR).",
+      "has_action": false,
+      "notes": "Tested against FRRouting 6.0.",
+      "options": {
+        "config": {
+          "aliases": [],
+          "description": "Specifies the BGP related configuration.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "address_family": {
+              "aliases": [],
+              "description": "Specifies BGP address family related configurations.",
+              "type": "list",
+              "required": false,
+              "elements": "dict",
+              "suboptions": {
+                "afi": {
+                  "aliases": [],
+                  "description": "Type of address family to configure.",
+                  "type": "str",
+                  "required": true,
+                  "choices": [
+                    "ipv4",
+                    "ipv6"
+                  ],
+                  "suboptions": {}
+                },
+                "neighbors": {
+                  "aliases": [],
+                  "description": "Specifies BGP neighbor related configurations in Address Family configuration mode.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "dict",
+                  "suboptions": {
+                    "activate": {
+                      "aliases": [],
+                      "description": "Enable the address family for this neighbor.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "maximum_prefix": {
+                      "aliases": [],
+                      "description": "Maximum number of prefixes to accept from this peer.\nThe range is from 1 to 4294967295.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "neighbor": {
+                      "aliases": [],
+                      "description": "Neighbor router address.",
+                      "type": "str",
+                      "required": true,
+                      "suboptions": {}
+                    },
+                    "next_hop_self": {
+                      "aliases": [],
+                      "description": "Enable/disable the next hop calculation for this neighbor.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "remove_private_as": {
+                      "aliases": [],
+                      "description": "Remove the private AS number from outbound updates.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "route_reflector_client": {
+                      "aliases": [],
+                      "description": "Specify a neighbor as a route reflector client.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "route_server_client": {
+                      "aliases": [],
+                      "description": "Specify a neighbor as a route server client.",
+                      "type": "bool",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "networks": {
+                  "aliases": [],
+                  "description": "Specify networks to announce via BGP.\nFor operation replace, this option is mutually exclusive with root level networks option.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "dict",
+                  "suboptions": {
+                    "masklen": {
+                      "aliases": [],
+                      "description": "Subnet mask length for the network to announce(e.g, 8, 16, 24, etc.).",
+                      "type": "int",
+                      "required": true,
+                      "suboptions": {}
+                    },
+                    "prefix": {
+                      "aliases": [],
+                      "description": "Network ID to announce via BGP.",
+                      "type": "str",
+                      "required": true,
+                      "suboptions": {}
+                    },
+                    "route_map": {
+                      "aliases": [],
+                      "description": "Route map to modify the attributes.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "redistribute": {
+                  "aliases": [],
+                  "description": "Specifies the redistribute information from another routing protocol.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "dict",
+                  "suboptions": {
+                    "id": {
+                      "aliases": [],
+                      "description": "Specifies the instance ID/table ID for this protocol\nValid for ospf and table",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "metric": {
+                      "aliases": [],
+                      "description": "Specifies the metric for redistributed routes.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "protocol": {
+                      "aliases": [],
+                      "description": "Specifies the protocol for configuring redistribute information.",
+                      "type": "str",
+                      "required": true,
+                      "choices": [
+                        "ospf",
+                        "ospf6",
+                        "eigrp",
+                        "isis",
+                        "table",
+                        "static",
+                        "connected",
+                        "sharp",
+                        "nhrp",
+                        "kernel",
+                        "babel",
+                        "rip"
+                      ],
+                      "suboptions": {}
+                    },
+                    "route_map": {
+                      "aliases": [],
+                      "description": "Specifies the route map reference.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "safi": {
+                  "aliases": [],
+                  "description": "Specifies the type of cast for the address family.",
+                  "default": "unicast",
+                  "type": "str",
+                  "required": false,
+                  "choices": [
+                    "flowspec",
+                    "unicast",
+                    "multicast",
+                    "labeled-unicast"
+                  ],
+                  "suboptions": {}
+                }
+              }
+            },
+            "bgp_as": {
+              "aliases": [],
+              "description": "Specifies the BGP Autonomous System (AS) number to configure on the device.",
+              "type": "int",
+              "required": true,
+              "suboptions": {}
+            },
+            "log_neighbor_changes": {
+              "aliases": [],
+              "description": "Enable/disable logging neighbor up/down and reset reason.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "neighbors": {
+              "aliases": [],
+              "description": "Specifies BGP neighbor related configurations.",
+              "type": "list",
+              "required": false,
+              "elements": "dict",
+              "suboptions": {
+                "advertisement_interval": {
+                  "aliases": [],
+                  "description": "Minimum interval between sending BGP routing updates for this neighbor.",
+                  "type": "int",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "description": {
+                  "aliases": [],
+                  "description": "Neighbor specific description.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "ebgp_multihop": {
+                  "aliases": [],
+                  "description": "Specifies the maximum hop count for EBGP neighbors not on directly connected networks.\nThe range is from 1 to 255.",
+                  "type": "int",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "enabled": {
+                  "aliases": [],
+                  "description": "Administratively shutdown or enable a neighbor.",
+                  "type": "bool",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "local_as": {
+                  "aliases": [],
+                  "description": "The local AS number for the neighbor.",
+                  "type": "int",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "neighbor": {
+                  "aliases": [],
+                  "description": "Neighbor router address.",
+                  "type": "str",
+                  "required": true,
+                  "suboptions": {}
+                },
+                "password": {
+                  "aliases": [],
+                  "description": "Password to authenticate the BGP peer connection.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "peer_group": {
+                  "aliases": [],
+                  "description": "Name of the peer group that the neighbor is a member of.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "port": {
+                  "aliases": [],
+                  "description": "The TCP Port number to use for this neighbor.\nThe range is from 0 to 65535.",
+                  "type": "int",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "remote_as": {
+                  "aliases": [],
+                  "description": "Remote AS of the BGP neighbor to configure.",
+                  "type": "int",
+                  "required": true,
+                  "suboptions": {}
+                },
+                "timers": {
+                  "aliases": [],
+                  "description": "Specifies BGP neighbor timer related configurations.",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "holdtime": {
+                      "aliases": [],
+                      "description": "Interval (in seconds) after not receiving a keepalive message that FRR declares a peer dead.\nThe range is from 0 to 65535.",
+                      "type": "int",
+                      "required": true,
+                      "suboptions": {}
+                    },
+                    "keepalive": {
+                      "aliases": [],
+                      "description": "Frequency (in seconds) with which the FRR sends keepalive messages to its peer.\nThe range is from 0 to 65535.",
+                      "type": "int",
+                      "required": true,
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "update_source": {
+                  "aliases": [],
+                  "description": "Source of the routing updates.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                }
+              }
+            },
+            "networks": {
+              "aliases": [],
+              "description": "Specify networks to announce via BGP.\nFor operation replace, this option is mutually exclusive with networks option under address_family.\nFor operation replace, if the device already has an address family activated, this option is not allowed.",
+              "type": "list",
+              "required": false,
+              "elements": "dict",
+              "suboptions": {
+                "masklen": {
+                  "aliases": [],
+                  "description": "Subnet mask length for the network to announce(e.g, 8, 16, 24, etc.).",
+                  "type": "int",
+                  "required": true,
+                  "suboptions": {}
+                },
+                "prefix": {
+                  "aliases": [],
+                  "description": "Network ID to announce via BGP.",
+                  "type": "str",
+                  "required": true,
+                  "suboptions": {}
+                },
+                "route_map": {
+                  "aliases": [],
+                  "description": "Route map to modify the attributes.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                }
+              }
+            },
+            "router_id": {
+              "aliases": [],
+              "description": "Configures the BGP routing process router-id value.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "operation": {
+          "aliases": [],
+          "description": "Specifies the operation to be performed on the BGP process configured on the device.\nIn case of merge, the input configuration will be merged with the existing BGP configuration on the device.\nIn case of replace, if there is a diff between the existing configuration and the input configuration, the existing configuration will be replaced by the input configuration for every option that has the diff.\nIn case of override, all the existing BGP configuration will be removed from the device and replaced with the input configuration.\nIn case of delete the existing BGP configuration will be removed from the device.",
+          "default": "merge",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merge",
+            "replace",
+            "override",
+            "delete"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Configure global BGP settings on Free Range Routing(FRR).",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: configure global bgp as 64496\n  frr.frr.frr_bgp:\n    config:\n      bgp_as: 64496\n      router_id: 192.0.2.1\n      log_neighbor_changes: true\n      neighbors:\n      - neighbor: 192.51.100.1\n        remote_as: 64497\n        timers:\n          keepalive: 120\n          holdtime: 360\n      - neighbor: 198.51.100.2\n        remote_as: 64498\n      networks:\n      - prefix: 192.0.2.0\n        masklen: 24\n        route_map: RMAP_1\n      - prefix: 198.51.100.0\n        masklen: 24\n      address_family:\n      - afi: ipv4\n        safi: unicast\n        redistribute:\n        - protocol: ospf\n          id: 223\n          metric: 10\n    operation: merge\n\n- name: Configure BGP neighbors\n  frr.frr.frr_bgp:\n    config:\n      bgp_as: 64496\n      neighbors:\n      - neighbor: 192.0.2.10\n        remote_as: 64496\n        password: ansible\n        description: IBGP_NBR_1\n        timers:\n          keepalive: 120\n          holdtime: 360\n      - neighbor: 192.0.2.15\n        remote_as: 64496\n        description: IBGP_NBR_2\n        advertisement_interval: 120\n    operation: merge\n\n- name: Configure BGP neighbors under address family mode\n  frr.frr.frr_bgp:\n    config:\n      bgp_as: 64496\n      address_family:\n      - afi: ipv4\n        safi: multicast\n        neighbors:\n        - neighbor: 203.0.113.10\n          activate: yes\n          maximum_prefix: 250\n\n        - neighbor: 192.0.2.15\n          activate: yes\n          route_reflector_client: true\n    operation: merge\n\n- name: Configure root-level networks for BGP\n  frr.frr.frr_bgp:\n    config:\n      bgp_as: 64496\n      networks:\n      - prefix: 203.0.113.0\n        masklen: 27\n        route_map: RMAP_1\n      - prefix: 203.0.113.32\n        masklen: 27\n        route_map: RMAP_2\n    operation: merge\n\n- name: remove bgp as 64496 from config\n  frr.frr.frr_bgp:\n    config:\n      bgp_as: 64496\n    operation: delete\n"
+  },
+  "frr.frr.frr_facts": {
+    "doc": {
+      "description": "Collects a base set of device facts from a remote device that is running FRR.  This module prepends all of the base network fact keys with C(ansible_net_<fact>).  The facts module will always collect a base set of facts from the device and can enable or disable collection of additional facts.",
+      "has_action": false,
+      "notes": "Tested against FRR 6.0.",
+      "options": {
+        "gather_subset": {
+          "aliases": [],
+          "description": "When supplied, this argument restricts the facts collected to a given subset.\nPossible values for this argument include C(all), C(hardware), C(config), and C(interfaces).\nSpecify a list of values to include a larger subset.\nUse a value with an initial C(!) to collect all facts except that subset.",
+          "default": "!config",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        }
+      },
+      "short_description": "Collect facts from remote devices running Free Range Routing (FRR).",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Collect all facts from the device\n  frr.frr.frr_facts:\n    gather_subset: all\n\n- name: Collect only the config and default facts\n  frr.frr.frr_facts:\n    gather_subset:\n    - config\n\n- name: Collect the config and hardware facts\n  frr.frr.frr_facts:\n    gather_subset:\n    - config\n    - hardware\n\n- name: Do not collect hardware facts\n  frr.frr.frr_facts:\n    gather_subset:\n    - '!hardware'\n"
+  }
+}

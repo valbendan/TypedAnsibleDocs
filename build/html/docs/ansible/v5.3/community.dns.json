@@ -1,0 +1,1569 @@
+{
+  "community.dns.hetzner_dns_record": {
+    "doc": {
+      "description": "Creates and deletes single DNS records in Hetzner DNS service.\nIf you do not want to add/remove values, but replace values, you will be interested in modifying a B(record set) and not a single record. This is in particular important when working with C(CNAME) and C(SOA) records. Use the M(community.dns.hetzner_dns_record_set) module for working with record sets.\nRecords are matched by prefix / record name and value.",
+      "has_action": false,
+      "notes": "Supports C(check_mode) and C(--diff).",
+      "options": {
+        "hetzner_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "The token for the Hetzner API.\nIf not provided, will be read from the environment variable C(HETZNER_DNS_TOKEN).",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "prefix": {
+          "aliases": [
+            "name"
+          ],
+          "description": "The prefix of the DNS record.\nThis is the part of I(record) before I(zone_name). For example, if the record to be modified is C(www.example.com) for the zone C(example.com), the prefix is C(www). If the record in this example would be C(example.com), the prefix would be C('') (empty string).\nExactly one of I(record) and I(prefix) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "record": {
+          "aliases": [],
+          "description": "The full DNS record to create or delete.\nExactly one of I(record) and I(prefix) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Specifies the state of the resource record.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "ttl": {
+          "aliases": [],
+          "description": "The TTL to give the new record, in seconds.\nThis is not used for record deletion.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "txt_transformation": {
+          "aliases": [],
+          "description": "Determines how TXT entry values are converted between the API and this module's input and output.\nThe value C(api) means that values are returned from this module as they are returned from the API, and pushed to the API as they have been passed to this module. For idempotency checks, the input string will be compared to the strings returned by the API. The API might automatically transform some values, like splitting long values or adding quotes, which can cause problems with idempotency.\nThe value C(unquoted) automatically transforms values so that you can pass in unquoted values, and the module will return unquoted values. If you pass in quoted values, they will be double-quoted.\nThe value C(quoted) automatically transforms values so that you must use quoting for values that contain spaces, characters such as quotation marks and backslashes, and that are longer than 255 bytes. It also makes sure to return values from the API in a normalized encoding.\nThe default value, C(unquoted), ensures that you can work with values without having to care about how to correctly quote for DNS. Most users should use one of C(unquoted) or C(quoted), but not C(api).\nB(Note:) the conversion code assumes UTF-8 encoding for values. If you need another encoding use I(txt_transformation=api) and handle the encoding yourself.",
+          "default": "unquoted",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "api",
+            "quoted",
+            "unquoted"
+          ],
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "The type of DNS record to create or delete.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "A",
+            "AAAA",
+            "CAA",
+            "CNAME",
+            "DANE",
+            "DS",
+            "HINFO",
+            "MX",
+            "NS",
+            "RP",
+            "SOA",
+            "SRV",
+            "TLSA",
+            "TXT"
+          ],
+          "suboptions": {}
+        },
+        "value": {
+          "aliases": [],
+          "description": "The new value when creating a DNS record.\nWhen deleting a record all values for the record must be specified or it will not be deleted.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "zone_id": {
+          "aliases": [],
+          "description": "The ID of the DNS zone to modify.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "zone_name": {
+          "aliases": [
+            "zone"
+          ],
+          "description": "The DNS zone to modify.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Add or delete a single record in Hetzner DNS service",
+      "version_added": "2.0.0"
+    },
+    "examples": "\n- name: Add a new.foo.com A record\n  community.dns.hetzner_dns_record:\n    state: present\n    zone: foo.com\n    record: new.foo.com\n    type: A\n    ttl: 7200\n    value: 1.1.1.1\n    hetzner_token: access_token\n\n- name: Remove a new.foo.com A record\n  community.dns.hosttech_dns_record_set:\n    state: present\n    zone_name: foo.com\n    record: new.foo.com\n    type: A\n    ttl: 7200\n    value: 2.2.2.2\n    hetzner_token: access_token\n"
+  },
+  "community.dns.hetzner_dns_record_info": {
+    "doc": {
+      "description": "Retrieves DNS records in Hetzner DNS service.",
+      "has_action": false,
+      "notes": "Supports C(check_mode).",
+      "options": {
+        "hetzner_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "The token for the Hetzner API.\nIf not provided, will be read from the environment variable C(HETZNER_DNS_TOKEN).",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "prefix": {
+          "aliases": [],
+          "description": "The prefix of the DNS record.\nThis is the part of I(record) before I(zone_name). For example, if the record to be modified is C(www.example.com) for the zone C(example.com), the prefix is C(www). If the record in this example would be C(example.com), the prefix would be C('') (empty string).\nIf I(what) is C(single_record) or C(all_types_for_record), exactly one of I(record) and I(prefix) is required.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "record": {
+          "aliases": [],
+          "description": "The full DNS record to retrieve.\nIf I(what) is C(single_record) or C(all_types_for_record), exactly one of I(record) and I(prefix) is required.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "txt_transformation": {
+          "aliases": [],
+          "description": "Determines how TXT entry values are converted between the API and this module's input and output.\nThe value C(api) means that values are returned from this module as they are returned from the API, and pushed to the API as they have been passed to this module. For idempotency checks, the input string will be compared to the strings returned by the API. The API might automatically transform some values, like splitting long values or adding quotes, which can cause problems with idempotency.\nThe value C(unquoted) automatically transforms values so that you can pass in unquoted values, and the module will return unquoted values. If you pass in quoted values, they will be double-quoted.\nThe value C(quoted) automatically transforms values so that you must use quoting for values that contain spaces, characters such as quotation marks and backslashes, and that are longer than 255 bytes. It also makes sure to return values from the API in a normalized encoding.\nThe default value, C(unquoted), ensures that you can work with values without having to care about how to correctly quote for DNS. Most users should use one of C(unquoted) or C(quoted), but not C(api).\nB(Note:) the conversion code assumes UTF-8 encoding for values. If you need another encoding use I(txt_transformation=api) and handle the encoding yourself.",
+          "default": "unquoted",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "api",
+            "quoted",
+            "unquoted"
+          ],
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "The type of DNS record to retrieve.\nRequired if I(what) is C(single_record).",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "A",
+            "AAAA",
+            "CAA",
+            "CNAME",
+            "DANE",
+            "DS",
+            "HINFO",
+            "MX",
+            "NS",
+            "RP",
+            "SOA",
+            "SRV",
+            "TLSA",
+            "TXT"
+          ],
+          "suboptions": {}
+        },
+        "what": {
+          "aliases": [],
+          "description": "Describes whether to fetch a single record and type combination, all types for a record, or all records. By default, a single record and type combination is fetched.\nNote that the return value structure depends on this option.",
+          "default": "single_record",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "single_record",
+            "all_types_for_record",
+            "all_records"
+          ],
+          "suboptions": {}
+        },
+        "zone_id": {
+          "aliases": [],
+          "description": "The ID of the DNS zone to modify.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "zone_name": {
+          "aliases": [
+            "zone"
+          ],
+          "description": "The DNS zone to modify.\nExactly one of I(zone) and I(zone_id) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Retrieve records in Hetzner DNS service",
+      "version_added": "2.0.0"
+    },
+    "examples": "\n- name: Retrieve the details for the A records of new.foo.com\n  community.dns.hetzner_dns_record_info:\n    zone: foo.com\n    record: new.foo.com\n    type: A\n    hetzner_token: access_token\n  register: rec\n\n- name: Print the A records\n  ansible.builtin.debug:\n    msg: \"{{ rec.records }}\"\n"
+  },
+  "community.dns.hetzner_dns_record_set": {
+    "doc": {
+      "description": "Creates and deletes DNS record sets in Hetzner DNS service.",
+      "has_action": false,
+      "notes": "Supports C(check_mode) and C(--diff).",
+      "options": {
+        "bulk_operation_threshold": {
+          "aliases": [],
+          "description": "Determines the threshold from when on bulk operations are used.\nThe default value 2 means that if 2 or more operations of a kind are planned, and the API supports bulk operations for this kind of operation, they will be used.",
+          "default": "2",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "hetzner_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "The token for the Hetzner API.\nIf not provided, will be read from the environment variable C(HETZNER_DNS_TOKEN).",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "on_existing": {
+          "aliases": [],
+          "description": "This option defines the behavior if the record set already exists, but differs from the specified record set. For this comparison, I(value) and I(ttl) are used for all records of type I(type) matching the I(prefix) resp. I(record).\nIf set to C(replace), the record will be updated (I(state=present)) or removed (I(state=absent)). This is the old I(overwrite=true) behavior.\nIf set to C(keep_and_fail), the module will fail and not modify the records. This is the old I(overwrite=false) behavior if I(state=present).\nIf set to C(keep_and_warn), the module will warn and not modify the records.\nIf set to C(keep), the module will not modify the records. This is the old I(overwrite=false) behavior if I(state=absent).\nIf I(state=absent) and the value is not C(replace), I(value) must be specified.",
+          "default": "replace",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "replace",
+            "keep_and_fail",
+            "keep_and_warn",
+            "keep"
+          ],
+          "suboptions": {}
+        },
+        "prefix": {
+          "aliases": [
+            "name"
+          ],
+          "description": "The prefix of the DNS record.\nThis is the part of I(record) before I(zone_name). For example, if the record to be modified is C(www.example.com) for the zone C(example.com), the prefix is C(www). If the record in this example would be C(example.com), the prefix would be C('') (empty string).\nExactly one of I(record) and I(prefix) must be specified.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "record": {
+          "aliases": [],
+          "description": "The full DNS record to create or delete.\nExactly one of I(record) and I(prefix) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Specifies the state of the resource record.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "ttl": {
+          "aliases": [],
+          "description": "The TTL to give the new record, in seconds.\nWill be ignored if I(state=absent) and I(on_existing=replace).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "txt_transformation": {
+          "aliases": [],
+          "description": "Determines how TXT entry values are converted between the API and this module's input and output.\nThe value C(api) means that values are returned from this module as they are returned from the API, and pushed to the API as they have been passed to this module. For idempotency checks, the input string will be compared to the strings returned by the API. The API might automatically transform some values, like splitting long values or adding quotes, which can cause problems with idempotency.\nThe value C(unquoted) automatically transforms values so that you can pass in unquoted values, and the module will return unquoted values. If you pass in quoted values, they will be double-quoted.\nThe value C(quoted) automatically transforms values so that you must use quoting for values that contain spaces, characters such as quotation marks and backslashes, and that are longer than 255 bytes. It also makes sure to return values from the API in a normalized encoding.\nThe default value, C(unquoted), ensures that you can work with values without having to care about how to correctly quote for DNS. Most users should use one of C(unquoted) or C(quoted), but not C(api).\nB(Note:) the conversion code assumes UTF-8 encoding for values. If you need another encoding use I(txt_transformation=api) and handle the encoding yourself.",
+          "default": "unquoted",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "api",
+            "quoted",
+            "unquoted"
+          ],
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "The type of DNS record to create or delete.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "A",
+            "AAAA",
+            "CAA",
+            "CNAME",
+            "DANE",
+            "DS",
+            "HINFO",
+            "MX",
+            "NS",
+            "RP",
+            "SOA",
+            "SRV",
+            "TLSA",
+            "TXT"
+          ],
+          "suboptions": {}
+        },
+        "value": {
+          "aliases": [],
+          "description": "The new value when creating a DNS record.\nYAML lists or multiple comma-spaced values are allowed.\nWhen deleting a record all values for the record must be specified or it will not be deleted.\nMust be specified if I(state=present) or when I(on_existing) is not C(replace).\nWill be ignored if I(state=absent) and I(on_existing=replace).",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "zone_id": {
+          "aliases": [],
+          "description": "The ID of the DNS zone to modify.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "zone_name": {
+          "aliases": [
+            "zone"
+          ],
+          "description": "The DNS zone to modify.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Add or delete record sets in Hetzner DNS service",
+      "version_added": "2.0.0"
+    },
+    "examples": "\n- name: Add new.foo.com as an A record with 3 IPs\n  community.dns.hetzner_dns_record_set:\n    state: present\n    zone: foo.com\n    record: new.foo.com\n    type: A\n    ttl: 7200\n    value: 1.1.1.1,2.2.2.2,3.3.3.3\n    hetzner_token: access_token\n\n- name: Update new.foo.com as an A record with a list of 3 IPs\n  community.dns.hetzner_dns_record_set:\n    state: present\n    zone: foo.com\n    record: new.foo.com\n    type: A\n    ttl: 7200\n    value:\n      - 1.1.1.1\n      - 2.2.2.2\n      - 3.3.3.3\n    hetzner_token: access_token\n\n- name: Retrieve the details for new.foo.com\n  community.dns.hetzner_dns_record_set_info:\n    zone: foo.com\n    record: new.foo.com\n    type: A\n    hetzner_token: access_token\n  register: rec\n\n- name: Delete new.foo.com A record using the results from the facts retrieval command\n  community.dns.hetzner_dns_record_set:\n    state: absent\n    zone: foo.com\n    record: \"{{ rec.set.record }}\"\n    ttl: \"{{ rec.set.ttl }}\"\n    type: \"{{ rec.set.type }}\"\n    value: \"{{ rec.set.value }}\"\n    hetzner_token: access_token\n\n- name: Add an AAAA record\n  # Note that because there are colons in the value that the IPv6 address must be quoted!\n  community.dns.hetzner_dns_record_set:\n    state: present\n    zone: foo.com\n    record: localhost.foo.com\n    type: AAAA\n    ttl: 7200\n    value: \"::1\"\n    hetzner_token: access_token\n\n- name: Add a TXT record\n  community.dns.hetzner_dns_record_set:\n    state: present\n    zone: foo.com\n    record: localhost.foo.com\n    type: TXT\n    ttl: 7200\n    value: 'bar'\n    hetzner_token: access_token\n\n- name: Remove the TXT record\n  community.dns.hetzner_dns_record_set:\n    state: absent\n    zone: foo.com\n    record: localhost.foo.com\n    type: TXT\n    ttl: 7200\n    value: 'bar'\n    hetzner_token: access_token\n\n- name: Add a CAA record\n  community.dns.hetzner_dns_record_set:\n    state: present\n    zone: foo.com\n    record: foo.com\n    type: CAA\n    ttl: 3600\n    value:\n    - \"128 issue letsencrypt.org\"\n    - \"128 iodef mailto:webmaster@foo.com\"\n    hetzner_token: access_token\n\n- name: Add an MX record\n  community.dns.hetzner_dns_record_set:\n    state: present\n    zone: foo.com\n    record: foo.com\n    type: MX\n    ttl: 3600\n    value:\n    - \"10 mail.foo.com\"\n    hetzner_token: access_token\n\n- name: Add a CNAME record\n  community.dns.hetzner_dns_record_set:\n    state: present\n    zone: bla.foo.com\n    record: foo.com\n    type: CNAME\n    ttl: 3600\n    value:\n    - foo.foo.com\n    hetzner_token: access_token\n\n- name: Add a PTR record\n  community.dns.hetzner_dns_record_set:\n    state: present\n    zone: foo.foo.com\n    record: foo.com\n    type: PTR\n    ttl: 3600\n    value:\n    - foo.foo.com\n    hetzner_token: access_token\n\n- name: Add an SPF record\n  community.dns.hetzner_dns_record_set:\n    state: present\n    zone: foo.com\n    record: foo.com\n    type: SPF\n    ttl: 3600\n    value:\n    - \"v=spf1 a mx ~all\"\n    hetzner_token: access_token\n\n- name: Add a PTR record\n  community.dns.hetzner_dns_record_set:\n    state: present\n    zone: foo.com\n    record: foo.com\n    type: PTR\n    ttl: 3600\n    value:\n    - \"10 100 3333 service.foo.com\"\n    hetzner_token: access_token\n"
+  },
+  "community.dns.hetzner_dns_record_set_info": {
+    "doc": {
+      "description": "Retrieves DNS record sets in Hetzner DNS service.",
+      "has_action": false,
+      "notes": "Supports C(check_mode).",
+      "options": {
+        "hetzner_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "The token for the Hetzner API.\nIf not provided, will be read from the environment variable C(HETZNER_DNS_TOKEN).",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "prefix": {
+          "aliases": [],
+          "description": "The prefix of the DNS record.\nThis is the part of I(record) before I(zone_name). For example, if the record to be modified is C(www.example.com) for the zone C(example.com), the prefix is C(www). If the record in this example would be C(example.com), the prefix would be C('') (empty string).\nIf I(what) is C(single_record) or C(all_types_for_record), exactly one of I(record) and I(prefix) is required.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "record": {
+          "aliases": [],
+          "description": "The full DNS record to retrieve.\nIf I(what) is C(single_record) or C(all_types_for_record), exactly one of I(record) and I(prefix) is required.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "txt_transformation": {
+          "aliases": [],
+          "description": "Determines how TXT entry values are converted between the API and this module's input and output.\nThe value C(api) means that values are returned from this module as they are returned from the API, and pushed to the API as they have been passed to this module. For idempotency checks, the input string will be compared to the strings returned by the API. The API might automatically transform some values, like splitting long values or adding quotes, which can cause problems with idempotency.\nThe value C(unquoted) automatically transforms values so that you can pass in unquoted values, and the module will return unquoted values. If you pass in quoted values, they will be double-quoted.\nThe value C(quoted) automatically transforms values so that you must use quoting for values that contain spaces, characters such as quotation marks and backslashes, and that are longer than 255 bytes. It also makes sure to return values from the API in a normalized encoding.\nThe default value, C(unquoted), ensures that you can work with values without having to care about how to correctly quote for DNS. Most users should use one of C(unquoted) or C(quoted), but not C(api).\nB(Note:) the conversion code assumes UTF-8 encoding for values. If you need another encoding use I(txt_transformation=api) and handle the encoding yourself.",
+          "default": "unquoted",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "api",
+            "quoted",
+            "unquoted"
+          ],
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "The type of DNS record to retrieve.\nRequired if I(what) is C(single_record).",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "A",
+            "AAAA",
+            "CAA",
+            "CNAME",
+            "DANE",
+            "DS",
+            "HINFO",
+            "MX",
+            "NS",
+            "RP",
+            "SOA",
+            "SRV",
+            "TLSA",
+            "TXT"
+          ],
+          "suboptions": {}
+        },
+        "what": {
+          "aliases": [],
+          "description": "Describes whether to fetch a single record and type combination, all types for a record, or all records. By default, a single record and type combination is fetched.\nNote that the return value structure depends on this option.",
+          "default": "single_record",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "single_record",
+            "all_types_for_record",
+            "all_records"
+          ],
+          "suboptions": {}
+        },
+        "zone_id": {
+          "aliases": [],
+          "description": "The ID of the DNS zone to modify.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "zone_name": {
+          "aliases": [
+            "zone"
+          ],
+          "description": "The DNS zone to modify.\nExactly one of I(zone) and I(zone_id) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Retrieve record sets in Hetzner DNS service",
+      "version_added": "2.0.0"
+    },
+    "examples": "\n- name: Retrieve the details for the A records of new.foo.com\n  community.dns.hetzner_dns_record_set_info:\n    zone: foo.com\n    record: new.foo.com\n    type: A\n    hetzner_token: access_token\n  register: rec\n\n- name: Print the A record set\n  ansible.builtin.debug:\n    msg: \"{{ rec.set }}\"\n"
+  },
+  "community.dns.hetzner_dns_record_sets": {
+    "doc": {
+      "description": "Bulk synchronize DNS record sets in Hetzner DNS service.\nIt is possible to ignore certain record sets by specifying I(ignore: true) for that record set.\nThe module allows to set, modify and delete multiple DNS record sets at once.\nWith the I(purge) option, it is also possible to delete existing record sets that are not mentioned in the module parameters. With this, it is possible to synchronize the expected state of a DNS zone with the expected state.",
+      "has_action": false,
+      "notes": "Supports C(check_mode) and C(--diff).",
+      "options": {
+        "bulk_operation_threshold": {
+          "aliases": [],
+          "description": "Determines the threshold from when on bulk operations are used.\nThe default value 2 means that if 2 or more operations of a kind are planned, and the API supports bulk operations for this kind of operation, they will be used.",
+          "default": "2",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "hetzner_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "The token for the Hetzner API.\nIf not provided, will be read from the environment variable C(HETZNER_DNS_TOKEN).",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "prune": {
+          "aliases": [],
+          "description": "If set to C(true), will remove all existing records in the zone that are not listed in I(records).",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "record_sets": {
+          "aliases": [
+            "records"
+          ],
+          "description": "The records that should be present in the zone.",
+          "type": "list",
+          "required": true,
+          "elements": "dict",
+          "suboptions": {
+            "ignore": {
+              "aliases": [],
+              "description": "If set to C(true), I(value) will be ignored.\nThis is useful when I(prune=true), but you do not want certain entries to be removed without having to know their current value.",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "prefix": {
+              "aliases": [],
+              "description": "The prefix of the DNS record.\nThis is the part of I(record) before I(zone_name). For example, if the record to be modified is C(www.example.com) for the zone C(example.com), the prefix is C(www). If the record in this example would be C(example.com), the prefix would be C('') (empty string).\nExactly one of I(record) and I(prefix) must be specified.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "record": {
+              "aliases": [],
+              "description": "The full DNS record to create or delete.\nExactly one of I(record) and I(prefix) must be specified.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "ttl": {
+              "aliases": [],
+              "description": "The TTL to give the new record, in seconds.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "type": {
+              "aliases": [],
+              "description": "The type of DNS record to create or delete.",
+              "type": "str",
+              "required": true,
+              "choices": [
+                "A",
+                "AAAA",
+                "CAA",
+                "CNAME",
+                "DANE",
+                "DS",
+                "HINFO",
+                "MX",
+                "NS",
+                "RP",
+                "SOA",
+                "SRV",
+                "TLSA",
+                "TXT"
+              ],
+              "suboptions": {}
+            },
+            "value": {
+              "aliases": [],
+              "description": "The new value when creating a DNS record.\nYAML lists or multiple comma-spaced values are allowed.\nWhen deleting a record all values for the record must be specified or it will not be deleted.\nMust be specified if I(ignore=false).",
+              "type": "list",
+              "required": false,
+              "elements": "str",
+              "suboptions": {}
+            }
+          }
+        },
+        "txt_transformation": {
+          "aliases": [],
+          "description": "Determines how TXT entry values are converted between the API and this module's input and output.\nThe value C(api) means that values are returned from this module as they are returned from the API, and pushed to the API as they have been passed to this module. For idempotency checks, the input string will be compared to the strings returned by the API. The API might automatically transform some values, like splitting long values or adding quotes, which can cause problems with idempotency.\nThe value C(unquoted) automatically transforms values so that you can pass in unquoted values, and the module will return unquoted values. If you pass in quoted values, they will be double-quoted.\nThe value C(quoted) automatically transforms values so that you must use quoting for values that contain spaces, characters such as quotation marks and backslashes, and that are longer than 255 bytes. It also makes sure to return values from the API in a normalized encoding.\nThe default value, C(unquoted), ensures that you can work with values without having to care about how to correctly quote for DNS. Most users should use one of C(unquoted) or C(quoted), but not C(api).\nB(Note:) the conversion code assumes UTF-8 encoding for values. If you need another encoding use I(txt_transformation=api) and handle the encoding yourself.",
+          "default": "unquoted",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "api",
+            "quoted",
+            "unquoted"
+          ],
+          "suboptions": {}
+        },
+        "zone_id": {
+          "aliases": [],
+          "description": "The ID of the DNS zone to modify.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "zone_name": {
+          "aliases": [
+            "zone"
+          ],
+          "description": "The DNS zone to modify.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Bulk synchronize DNS record sets in Hetzner DNS service",
+      "version_added": "2.0.0"
+    },
+    "examples": "\n- name: Make sure some records exist and have the expected values\n  community.dns.hetzner_dns_record_sets:\n    zone: foo.com\n    records:\n      - prefix: new\n        type: A\n        ttl: 7200\n        value:\n          - 1.1.1.1\n          - 2.2.2.2\n      - prefix: new\n        type: AAAA\n        ttl: 7200\n        value:\n          - \"::1\"\n      - record: foo.com\n        type: TXT\n        value:\n          - test\n    hetzner_token: access_token\n\n- name: Synchronize DNS zone with a fixed set of records\n  # If a record exists that is not mentioned here, it will be deleted\n  community.dns.hetzner_dns_record_sets:\n    zone_id: 23\n    purge: true\n    records:\n      - prefix: ''\n        type: A\n        value: 127.0.0.1\n      - prefix: ''\n        type: AAAA\n        value: \"::1\"\n      - prefix: ''\n        type: NS\n        value:\n          - ns-1.hoster.com\n          - ns-2.hoster.com\n          - ns-3.hoster.com\n    hetzner_token: access_token\n"
+  },
+  "community.dns.hetzner_dns_zone_info": {
+    "doc": {
+      "description": "Retrieves zone information in Hetzner DNS service.",
+      "has_action": false,
+      "notes": "Supports C(check_mode).",
+      "options": {
+        "hetzner_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "The token for the Hetzner API.\nIf not provided, will be read from the environment variable C(HETZNER_DNS_TOKEN).",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "zone_id": {
+          "aliases": [],
+          "description": "The ID of the DNS zone to query.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "zone_name": {
+          "aliases": [
+            "zone"
+          ],
+          "description": "The DNS zone to query.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Retrieve zone information in Hetzner DNS service",
+      "version_added": "2.0.0"
+    },
+    "examples": "\n- name: Retrieve details for foo.com zone\n  community.dns.hetzner_dns_zone_info:\n    zone: foo.com\n    hetzner_token: access_token\n  register: rec\n\n- name: Retrieve details for zone 23\n  community.dns.hetzner_dns_record:\n    state: absent\n    zone_id: 23\n    hetzner_token: access_token\n"
+  },
+  "community.dns.hosttech_dns_record": {
+    "doc": {
+      "description": "Creates and deletes single DNS records in Hosttech DNS service.\nIf you do not want to add/remove values, but replace values, you will be interested in modifying a B(record set) and not a single record. This is in particular important when working with C(CNAME) and C(SOA) records. Use the M(community.dns.hosttech_dns_record_set) module for working with record sets.\nRecords are matched by prefix / record name and value.\nThis module replaces C(hosttech_dns_record) from community.dns before 2.0.0.",
+      "has_action": false,
+      "notes": "Supports C(check_mode) and C(--diff).",
+      "options": {
+        "hosttech_password": {
+          "aliases": [],
+          "description": "The password for the Hosttech API user.\nIf provided, I(hosttech_username) must also be provided.\nMutually exclusive with I(hosttech_token).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hosttech_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "The password for the Hosttech API user.\nMutually exclusive with I(hosttech_username) and I(hosttech_password).\nSince community.dns 1.2.0, the alias I(api_token) can be used.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "hosttech_username": {
+          "aliases": [],
+          "description": "The username for the Hosttech API user.\nIf provided, I(hosttech_password) must also be provided.\nMutually exclusive with I(hosttech_token).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "prefix": {
+          "aliases": [],
+          "description": "The prefix of the DNS record.\nThis is the part of I(record) before I(zone_name). For example, if the record to be modified is C(www.example.com) for the zone C(example.com), the prefix is C(www). If the record in this example would be C(example.com), the prefix would be C('') (empty string).\nExactly one of I(record) and I(prefix) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "record": {
+          "aliases": [],
+          "description": "The full DNS record to create or delete.\nExactly one of I(record) and I(prefix) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Specifies the state of the resource record.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "ttl": {
+          "aliases": [],
+          "description": "The TTL to give the new record, in seconds.\nThis is not used for record deletion.",
+          "default": "3600",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "txt_transformation": {
+          "aliases": [],
+          "description": "Determines how TXT entry values are converted between the API and this module's input and output.\nThe value C(api) means that values are returned from this module as they are returned from the API, and pushed to the API as they have been passed to this module. For idempotency checks, the input string will be compared to the strings returned by the API. The API might automatically transform some values, like splitting long values or adding quotes, which can cause problems with idempotency.\nThe value C(unquoted) automatically transforms values so that you can pass in unquoted values, and the module will return unquoted values. If you pass in quoted values, they will be double-quoted.\nThe value C(quoted) automatically transforms values so that you must use quoting for values that contain spaces, characters such as quotation marks and backslashes, and that are longer than 255 bytes. It also makes sure to return values from the API in a normalized encoding.\nThe default value, C(unquoted), ensures that you can work with values without having to care about how to correctly quote for DNS. Most users should use one of C(unquoted) or C(quoted), but not C(api).\nB(Note:) the conversion code assumes UTF-8 encoding for values. If you need another encoding use I(txt_transformation=api) and handle the encoding yourself.",
+          "default": "unquoted",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "api",
+            "quoted",
+            "unquoted"
+          ],
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "The type of DNS record to create or delete.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "A",
+            "AAAA",
+            "CAA",
+            "CNAME",
+            "MX",
+            "NS",
+            "PTR",
+            "SPF",
+            "SRV",
+            "TXT"
+          ],
+          "suboptions": {}
+        },
+        "value": {
+          "aliases": [],
+          "description": "The new value when creating a DNS record.\nWhen deleting a record all values for the record must be specified or it will not be deleted.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "zone_id": {
+          "aliases": [],
+          "description": "The ID of the DNS zone to modify.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "zone_name": {
+          "aliases": [
+            "zone"
+          ],
+          "description": "The DNS zone to modify.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "lxml"
+      ],
+      "short_description": "Add or delete a single record in Hosttech DNS service",
+      "version_added": "2.0.0"
+    },
+    "examples": "\n- name: Add a new.foo.com A record\n  community.dns.hetzner_dns_record:\n    state: present\n    zone: foo.com\n    record: new.foo.com\n    type: A\n    ttl: 7200\n    value: 1.1.1.1\n    hosttech_token: access_token\n\n- name: Remove a new.foo.com A record\n  community.dns.hosttech_dns_record_set:\n    state: present\n    zone_name: foo.com\n    record: new.foo.com\n    type: A\n    ttl: 7200\n    value: 2.2.2.2\n    hosttech_token: access_token\n"
+  },
+  "community.dns.hosttech_dns_record_info": {
+    "doc": {
+      "description": "Retrieves DNS records in Hosttech DNS service.",
+      "has_action": false,
+      "notes": "Supports C(check_mode).",
+      "options": {
+        "hosttech_password": {
+          "aliases": [],
+          "description": "The password for the Hosttech API user.\nIf provided, I(hosttech_username) must also be provided.\nMutually exclusive with I(hosttech_token).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hosttech_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "The password for the Hosttech API user.\nMutually exclusive with I(hosttech_username) and I(hosttech_password).\nSince community.dns 1.2.0, the alias I(api_token) can be used.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "hosttech_username": {
+          "aliases": [],
+          "description": "The username for the Hosttech API user.\nIf provided, I(hosttech_password) must also be provided.\nMutually exclusive with I(hosttech_token).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "prefix": {
+          "aliases": [],
+          "description": "The prefix of the DNS record.\nThis is the part of I(record) before I(zone_name). For example, if the record to be modified is C(www.example.com) for the zone C(example.com), the prefix is C(www). If the record in this example would be C(example.com), the prefix would be C('') (empty string).\nIf I(what) is C(single_record) or C(all_types_for_record), exactly one of I(record) and I(prefix) is required.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "record": {
+          "aliases": [],
+          "description": "The full DNS record to retrieve.\nIf I(what) is C(single_record) or C(all_types_for_record), exactly one of I(record) and I(prefix) is required.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "txt_transformation": {
+          "aliases": [],
+          "description": "Determines how TXT entry values are converted between the API and this module's input and output.\nThe value C(api) means that values are returned from this module as they are returned from the API, and pushed to the API as they have been passed to this module. For idempotency checks, the input string will be compared to the strings returned by the API. The API might automatically transform some values, like splitting long values or adding quotes, which can cause problems with idempotency.\nThe value C(unquoted) automatically transforms values so that you can pass in unquoted values, and the module will return unquoted values. If you pass in quoted values, they will be double-quoted.\nThe value C(quoted) automatically transforms values so that you must use quoting for values that contain spaces, characters such as quotation marks and backslashes, and that are longer than 255 bytes. It also makes sure to return values from the API in a normalized encoding.\nThe default value, C(unquoted), ensures that you can work with values without having to care about how to correctly quote for DNS. Most users should use one of C(unquoted) or C(quoted), but not C(api).\nB(Note:) the conversion code assumes UTF-8 encoding for values. If you need another encoding use I(txt_transformation=api) and handle the encoding yourself.",
+          "default": "unquoted",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "api",
+            "quoted",
+            "unquoted"
+          ],
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "The type of DNS record to retrieve.\nRequired if I(what) is C(single_record).",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "A",
+            "AAAA",
+            "CAA",
+            "CNAME",
+            "MX",
+            "NS",
+            "PTR",
+            "SPF",
+            "SRV",
+            "TXT"
+          ],
+          "suboptions": {}
+        },
+        "what": {
+          "aliases": [],
+          "description": "Describes whether to fetch a single record and type combination, all types for a record, or all records. By default, a single record and type combination is fetched.\nNote that the return value structure depends on this option.",
+          "default": "single_record",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "single_record",
+            "all_types_for_record",
+            "all_records"
+          ],
+          "suboptions": {}
+        },
+        "zone_id": {
+          "aliases": [],
+          "description": "The ID of the DNS zone to modify.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "zone_name": {
+          "aliases": [
+            "zone"
+          ],
+          "description": "The DNS zone to modify.\nExactly one of I(zone) and I(zone_id) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "lxml"
+      ],
+      "short_description": "Retrieve records in Hosttech DNS service",
+      "version_added": "2.0.0"
+    },
+    "examples": "\n- name: Retrieve the details for the A records of new.foo.com\n  community.dns.hosttech_dns_record_info:\n    zone_name: foo.com\n    record: new.foo.com\n    type: A\n    hosttech_token: access_token\n  register: rec\n\n- name: Print the A records\n  ansible.builtin.debug:\n    msg: \"{{ rec.records }}\"\n"
+  },
+  "community.dns.hosttech_dns_record_set": {
+    "doc": {
+      "description": "Creates and deletes DNS record sets in Hosttech DNS service.\nThis module replaces C(hosttech_dns_record) from community.dns before 2.0.0.",
+      "has_action": false,
+      "notes": "Supports C(check_mode) and C(--diff).",
+      "options": {
+        "hosttech_password": {
+          "aliases": [],
+          "description": "The password for the Hosttech API user.\nIf provided, I(hosttech_username) must also be provided.\nMutually exclusive with I(hosttech_token).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hosttech_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "The password for the Hosttech API user.\nMutually exclusive with I(hosttech_username) and I(hosttech_password).\nSince community.dns 1.2.0, the alias I(api_token) can be used.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "hosttech_username": {
+          "aliases": [],
+          "description": "The username for the Hosttech API user.\nIf provided, I(hosttech_password) must also be provided.\nMutually exclusive with I(hosttech_token).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "on_existing": {
+          "aliases": [],
+          "description": "This option defines the behavior if the record set already exists, but differs from the specified record set. For this comparison, I(value) and I(ttl) are used for all records of type I(type) matching the I(prefix) resp. I(record).\nIf set to C(replace), the record will be updated (I(state=present)) or removed (I(state=absent)). This is the old I(overwrite=true) behavior.\nIf set to C(keep_and_fail), the module will fail and not modify the records. This is the old I(overwrite=false) behavior if I(state=present).\nIf set to C(keep_and_warn), the module will warn and not modify the records.\nIf set to C(keep), the module will not modify the records. This is the old I(overwrite=false) behavior if I(state=absent).\nIf I(state=absent) and the value is not C(replace), I(value) must be specified.",
+          "default": "replace",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "replace",
+            "keep_and_fail",
+            "keep_and_warn",
+            "keep"
+          ],
+          "suboptions": {}
+        },
+        "prefix": {
+          "aliases": [],
+          "description": "The prefix of the DNS record.\nThis is the part of I(record) before I(zone_name). For example, if the record to be modified is C(www.example.com) for the zone C(example.com), the prefix is C(www). If the record in this example would be C(example.com), the prefix would be C('') (empty string).\nExactly one of I(record) and I(prefix) must be specified.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "record": {
+          "aliases": [],
+          "description": "The full DNS record to create or delete.\nExactly one of I(record) and I(prefix) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Specifies the state of the resource record.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "ttl": {
+          "aliases": [],
+          "description": "The TTL to give the new record, in seconds.\nWill be ignored if I(state=absent) and I(on_existing=replace).",
+          "default": "3600",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "txt_transformation": {
+          "aliases": [],
+          "description": "Determines how TXT entry values are converted between the API and this module's input and output.\nThe value C(api) means that values are returned from this module as they are returned from the API, and pushed to the API as they have been passed to this module. For idempotency checks, the input string will be compared to the strings returned by the API. The API might automatically transform some values, like splitting long values or adding quotes, which can cause problems with idempotency.\nThe value C(unquoted) automatically transforms values so that you can pass in unquoted values, and the module will return unquoted values. If you pass in quoted values, they will be double-quoted.\nThe value C(quoted) automatically transforms values so that you must use quoting for values that contain spaces, characters such as quotation marks and backslashes, and that are longer than 255 bytes. It also makes sure to return values from the API in a normalized encoding.\nThe default value, C(unquoted), ensures that you can work with values without having to care about how to correctly quote for DNS. Most users should use one of C(unquoted) or C(quoted), but not C(api).\nB(Note:) the conversion code assumes UTF-8 encoding for values. If you need another encoding use I(txt_transformation=api) and handle the encoding yourself.",
+          "default": "unquoted",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "api",
+            "quoted",
+            "unquoted"
+          ],
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "The type of DNS record to create or delete.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "A",
+            "AAAA",
+            "CAA",
+            "CNAME",
+            "MX",
+            "NS",
+            "PTR",
+            "SPF",
+            "SRV",
+            "TXT"
+          ],
+          "suboptions": {}
+        },
+        "value": {
+          "aliases": [],
+          "description": "The new value when creating a DNS record.\nYAML lists or multiple comma-spaced values are allowed.\nWhen deleting a record all values for the record must be specified or it will not be deleted.\nMust be specified if I(state=present) or when I(on_existing) is not C(replace).\nWill be ignored if I(state=absent) and I(on_existing=replace).",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "zone_id": {
+          "aliases": [],
+          "description": "The ID of the DNS zone to modify.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "int",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "zone_name": {
+          "aliases": [
+            "zone"
+          ],
+          "description": "The DNS zone to modify.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "lxml"
+      ],
+      "short_description": "Add or delete record sets in Hosttech DNS service",
+      "version_added": "2.0.0"
+    },
+    "examples": "\n- name: Add new.foo.com as an A record with 3 IPs\n  community.dns.hosttech_dns_record_set:\n    state: present\n    zone_name: foo.com\n    record: new.foo.com\n    type: A\n    ttl: 7200\n    value: 1.1.1.1,2.2.2.2,3.3.3.3\n    hosttech_token: access_token\n\n- name: Update new.foo.com as an A record with a list of 3 IPs\n  community.dns.hosttech_dns_record_set:\n    state: present\n    zone_name: foo.com\n    record: new.foo.com\n    type: A\n    ttl: 7200\n    value:\n      - 1.1.1.1\n      - 2.2.2.2\n      - 3.3.3.3\n    hosttech_token: access_token\n\n- name: Retrieve the details for new.foo.com\n  community.dns.hosttech_dns_record_set_info:\n    zone_name: foo.com\n    record: new.foo.com\n    type: A\n    hosttech_username: foo\n    hosttech_password: bar\n  register: rec\n\n- name: Delete new.foo.com A record using the results from the facts retrieval command\n  community.dns.hosttech_dns_record_set:\n    state: absent\n    zone_name: foo.com\n    record: \"{{ rec.set.record }}\"\n    ttl: \"{{ rec.set.ttl }}\"\n    type: \"{{ rec.set.type }}\"\n    value: \"{{ rec.set.value }}\"\n    hosttech_username: foo\n    hosttech_password: bar\n\n- name: Add an AAAA record\n  # Note that because there are colons in the value that the IPv6 address must be quoted!\n  community.dns.hosttech_dns_record_set:\n    state: present\n    zone_name: foo.com\n    record: localhost.foo.com\n    type: AAAA\n    ttl: 7200\n    value: \"::1\"\n    hosttech_token: access_token\n\n- name: Add a TXT record\n  community.dns.hosttech_dns_record_set:\n    state: present\n    zone_name: foo.com\n    record: localhost.foo.com\n    type: TXT\n    ttl: 7200\n    value: 'bar'\n    hosttech_username: foo\n    hosttech_password: bar\n\n- name: Remove the TXT record\n  community.dns.hosttech_dns_record_set:\n    state: absent\n    zone_name: foo.com\n    record: localhost.foo.com\n    type: TXT\n    ttl: 7200\n    value: 'bar'\n    hosttech_username: foo\n    hosttech_password: bar\n\n- name: Add a CAA record\n  community.dns.hosttech_dns_record_set:\n    state: present\n    zone_name: foo.com\n    record: foo.com\n    type: CAA\n    ttl: 3600\n    value:\n    - \"128 issue letsencrypt.org\"\n    - \"128 iodef mailto:webmaster@foo.com\"\n    hosttech_token: access_token\n\n- name: Add an MX record\n  community.dns.hosttech_dns_record_set:\n    state: present\n    zone_name: foo.com\n    record: foo.com\n    type: MX\n    ttl: 3600\n    value:\n    - \"10 mail.foo.com\"\n    hosttech_token: access_token\n\n- name: Add a CNAME record\n  community.dns.hosttech_dns_record_set:\n    state: present\n    zone_name: bla.foo.com\n    record: foo.com\n    type: CNAME\n    ttl: 3600\n    value:\n    - foo.foo.com\n    hosttech_username: foo\n    hosttech_password: bar\n\n- name: Add a PTR record\n  community.dns.hosttech_dns_record_set:\n    state: present\n    zone_name: foo.foo.com\n    record: foo.com\n    type: PTR\n    ttl: 3600\n    value:\n    - foo.foo.com\n    hosttech_token: access_token\n\n- name: Add an SPF record\n  community.dns.hosttech_dns_record_set:\n    state: present\n    zone_name: foo.com\n    record: foo.com\n    type: SPF\n    ttl: 3600\n    value:\n    - \"v=spf1 a mx ~all\"\n    hosttech_username: foo\n    hosttech_password: bar\n\n- name: Add a PTR record\n  community.dns.hosttech_dns_record_set:\n    state: present\n    zone_name: foo.com\n    record: foo.com\n    type: PTR\n    ttl: 3600\n    value:\n    - \"10 100 3333 service.foo.com\"\n    hosttech_token: access_token\n"
+  },
+  "community.dns.hosttech_dns_record_set_info": {
+    "doc": {
+      "description": "Retrieves DNS record sets in Hosttech DNS service.\nThis module was renamed from C(community.dns.hosttech_dns_record_info) to C(community.dns.hosttech_dns_record_set_info) in community.dns 2.0.0.",
+      "has_action": false,
+      "notes": "Supports C(check_mode).",
+      "options": {
+        "hosttech_password": {
+          "aliases": [],
+          "description": "The password for the Hosttech API user.\nIf provided, I(hosttech_username) must also be provided.\nMutually exclusive with I(hosttech_token).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hosttech_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "The password for the Hosttech API user.\nMutually exclusive with I(hosttech_username) and I(hosttech_password).\nSince community.dns 1.2.0, the alias I(api_token) can be used.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "hosttech_username": {
+          "aliases": [],
+          "description": "The username for the Hosttech API user.\nIf provided, I(hosttech_password) must also be provided.\nMutually exclusive with I(hosttech_token).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "prefix": {
+          "aliases": [],
+          "description": "The prefix of the DNS record.\nThis is the part of I(record) before I(zone_name). For example, if the record to be modified is C(www.example.com) for the zone C(example.com), the prefix is C(www). If the record in this example would be C(example.com), the prefix would be C('') (empty string).\nIf I(what) is C(single_record) or C(all_types_for_record), exactly one of I(record) and I(prefix) is required.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "record": {
+          "aliases": [],
+          "description": "The full DNS record to retrieve.\nIf I(what) is C(single_record) or C(all_types_for_record), exactly one of I(record) and I(prefix) is required.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "txt_transformation": {
+          "aliases": [],
+          "description": "Determines how TXT entry values are converted between the API and this module's input and output.\nThe value C(api) means that values are returned from this module as they are returned from the API, and pushed to the API as they have been passed to this module. For idempotency checks, the input string will be compared to the strings returned by the API. The API might automatically transform some values, like splitting long values or adding quotes, which can cause problems with idempotency.\nThe value C(unquoted) automatically transforms values so that you can pass in unquoted values, and the module will return unquoted values. If you pass in quoted values, they will be double-quoted.\nThe value C(quoted) automatically transforms values so that you must use quoting for values that contain spaces, characters such as quotation marks and backslashes, and that are longer than 255 bytes. It also makes sure to return values from the API in a normalized encoding.\nThe default value, C(unquoted), ensures that you can work with values without having to care about how to correctly quote for DNS. Most users should use one of C(unquoted) or C(quoted), but not C(api).\nB(Note:) the conversion code assumes UTF-8 encoding for values. If you need another encoding use I(txt_transformation=api) and handle the encoding yourself.",
+          "default": "unquoted",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "api",
+            "quoted",
+            "unquoted"
+          ],
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "The type of DNS record to retrieve.\nRequired if I(what) is C(single_record).",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "A",
+            "AAAA",
+            "CAA",
+            "CNAME",
+            "MX",
+            "NS",
+            "PTR",
+            "SPF",
+            "SRV",
+            "TXT"
+          ],
+          "suboptions": {}
+        },
+        "what": {
+          "aliases": [],
+          "description": "Describes whether to fetch a single record and type combination, all types for a record, or all records. By default, a single record and type combination is fetched.\nNote that the return value structure depends on this option.",
+          "default": "single_record",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "single_record",
+            "all_types_for_record",
+            "all_records"
+          ],
+          "suboptions": {}
+        },
+        "zone_id": {
+          "aliases": [],
+          "description": "The ID of the DNS zone to modify.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "int",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "zone_name": {
+          "aliases": [
+            "zone"
+          ],
+          "description": "The DNS zone to modify.\nExactly one of I(zone) and I(zone_id) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "lxml"
+      ],
+      "short_description": "Retrieve record sets in Hosttech DNS service",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Retrieve the details for the A records of new.foo.com\n  community.dns.hosttech_dns_record_set_info:\n    zone_name: foo.com\n    record: new.foo.com\n    type: A\n    hosttech_token: access_token\n  register: rec\n\n- name: Print the A record set\n  ansible.builtin.debug:\n    msg: \"{{ rec.set }}\"\n"
+  },
+  "community.dns.hosttech_dns_record_sets": {
+    "doc": {
+      "description": "Bulk synchronize DNS record sets in Hosttech DNS service.\nIt is possible to ignore certain record sets by specifying I(ignore: true) for that record set.\nThe module allows to set, modify and delete multiple DNS record sets at once.\nThis module replaces C(hosttech_dns_records) from community.dns before 2.0.0.\nWith the I(purge) option, it is also possible to delete existing record sets that are not mentioned in the module parameters. With this, it is possible to synchronize the expected state of a DNS zone with the expected state.",
+      "has_action": false,
+      "notes": "Supports C(check_mode) and C(--diff).",
+      "options": {
+        "hosttech_password": {
+          "aliases": [],
+          "description": "The password for the Hosttech API user.\nIf provided, I(hosttech_username) must also be provided.\nMutually exclusive with I(hosttech_token).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hosttech_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "The password for the Hosttech API user.\nMutually exclusive with I(hosttech_username) and I(hosttech_password).\nSince community.dns 1.2.0, the alias I(api_token) can be used.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "hosttech_username": {
+          "aliases": [],
+          "description": "The username for the Hosttech API user.\nIf provided, I(hosttech_password) must also be provided.\nMutually exclusive with I(hosttech_token).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "prune": {
+          "aliases": [],
+          "description": "If set to C(true), will remove all existing records in the zone that are not listed in I(records).",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "record_sets": {
+          "aliases": [
+            "records"
+          ],
+          "description": "The records that should be present in the zone.",
+          "type": "list",
+          "required": true,
+          "elements": "dict",
+          "suboptions": {
+            "ignore": {
+              "aliases": [],
+              "description": "If set to C(true), I(value) will be ignored.\nThis is useful when I(prune=true), but you do not want certain entries to be removed without having to know their current value.",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "prefix": {
+              "aliases": [],
+              "description": "The prefix of the DNS record.\nThis is the part of I(record) before I(zone_name). For example, if the record to be modified is C(www.example.com) for the zone C(example.com), the prefix is C(www). If the record in this example would be C(example.com), the prefix would be C('') (empty string).\nExactly one of I(record) and I(prefix) must be specified.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "record": {
+              "aliases": [],
+              "description": "The full DNS record to create or delete.\nExactly one of I(record) and I(prefix) must be specified.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "ttl": {
+              "aliases": [],
+              "description": "The TTL to give the new record, in seconds.",
+              "default": "3600",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "type": {
+              "aliases": [],
+              "description": "The type of DNS record to create or delete.",
+              "type": "str",
+              "required": true,
+              "choices": [
+                "A",
+                "AAAA",
+                "CAA",
+                "CNAME",
+                "MX",
+                "NS",
+                "PTR",
+                "SPF",
+                "SRV",
+                "TXT"
+              ],
+              "suboptions": {}
+            },
+            "value": {
+              "aliases": [],
+              "description": "The new value when creating a DNS record.\nYAML lists or multiple comma-spaced values are allowed.\nWhen deleting a record all values for the record must be specified or it will not be deleted.\nMust be specified if I(ignore=false).",
+              "type": "list",
+              "required": false,
+              "elements": "str",
+              "suboptions": {}
+            }
+          }
+        },
+        "txt_transformation": {
+          "aliases": [],
+          "description": "Determines how TXT entry values are converted between the API and this module's input and output.\nThe value C(api) means that values are returned from this module as they are returned from the API, and pushed to the API as they have been passed to this module. For idempotency checks, the input string will be compared to the strings returned by the API. The API might automatically transform some values, like splitting long values or adding quotes, which can cause problems with idempotency.\nThe value C(unquoted) automatically transforms values so that you can pass in unquoted values, and the module will return unquoted values. If you pass in quoted values, they will be double-quoted.\nThe value C(quoted) automatically transforms values so that you must use quoting for values that contain spaces, characters such as quotation marks and backslashes, and that are longer than 255 bytes. It also makes sure to return values from the API in a normalized encoding.\nThe default value, C(unquoted), ensures that you can work with values without having to care about how to correctly quote for DNS. Most users should use one of C(unquoted) or C(quoted), but not C(api).\nB(Note:) the conversion code assumes UTF-8 encoding for values. If you need another encoding use I(txt_transformation=api) and handle the encoding yourself.",
+          "default": "unquoted",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "api",
+            "quoted",
+            "unquoted"
+          ],
+          "suboptions": {}
+        },
+        "zone_id": {
+          "aliases": [],
+          "description": "The ID of the DNS zone to modify.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "zone_name": {
+          "aliases": [
+            "zone"
+          ],
+          "description": "The DNS zone to modify.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "lxml"
+      ],
+      "short_description": "Bulk synchronize DNS record sets in Hosttech DNS service",
+      "version_added": "2.0.0"
+    },
+    "examples": "\n- name: Make sure some records exist and have the expected values\n  community.dns.hosttech_dns_record_sets:\n    zone_name: foo.com\n    records:\n      - prefix: new\n        type: A\n        ttl: 7200\n        value:\n          - 1.1.1.1\n          - 2.2.2.2\n      - prefix: new\n        type: AAAA\n        ttl: 7200\n        value:\n          - \"::1\"\n      - record: foo.com\n        type: TXT\n        value:\n          - test\n    hosttech_token: access_token\n\n- name: Synchronize DNS zone with a fixed set of records\n  # If a record exists that is not mentioned here, it will be deleted\n  community.dns.hosttech_dns_record_sets:\n    zone_id: 23\n    purge: true\n    records:\n      - prefix: ''\n        type: A\n        value: 127.0.0.1\n      - prefix: ''\n        type: AAAA\n        value: \"::1\"\n      - prefix: ''\n        type: NS\n        value:\n          - ns-1.hoster.com\n          - ns-2.hoster.com\n          - ns-3.hoster.com\n    hosttech_token: access_token\n"
+  },
+  "community.dns.hosttech_dns_records": {
+    "doc": {
+      "description": "Bulk synchronize DNS record sets in Hosttech DNS service.\nIt is possible to ignore certain record sets by specifying I(ignore: true) for that record set.\nThe module allows to set, modify and delete multiple DNS record sets at once.\nThis module replaces C(hosttech_dns_records) from community.dns before 2.0.0.\nWith the I(purge) option, it is also possible to delete existing record sets that are not mentioned in the module parameters. With this, it is possible to synchronize the expected state of a DNS zone with the expected state.",
+      "has_action": false,
+      "notes": "Supports C(check_mode) and C(--diff).",
+      "options": {
+        "hosttech_password": {
+          "aliases": [],
+          "description": "The password for the Hosttech API user.\nIf provided, I(hosttech_username) must also be provided.\nMutually exclusive with I(hosttech_token).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hosttech_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "The password for the Hosttech API user.\nMutually exclusive with I(hosttech_username) and I(hosttech_password).\nSince community.dns 1.2.0, the alias I(api_token) can be used.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "hosttech_username": {
+          "aliases": [],
+          "description": "The username for the Hosttech API user.\nIf provided, I(hosttech_password) must also be provided.\nMutually exclusive with I(hosttech_token).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "prune": {
+          "aliases": [],
+          "description": "If set to C(true), will remove all existing records in the zone that are not listed in I(records).",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "record_sets": {
+          "aliases": [
+            "records"
+          ],
+          "description": "The records that should be present in the zone.",
+          "type": "list",
+          "required": true,
+          "elements": "dict",
+          "suboptions": {
+            "ignore": {
+              "aliases": [],
+              "description": "If set to C(true), I(value) will be ignored.\nThis is useful when I(prune=true), but you do not want certain entries to be removed without having to know their current value.",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "prefix": {
+              "aliases": [],
+              "description": "The prefix of the DNS record.\nThis is the part of I(record) before I(zone_name). For example, if the record to be modified is C(www.example.com) for the zone C(example.com), the prefix is C(www). If the record in this example would be C(example.com), the prefix would be C('') (empty string).\nExactly one of I(record) and I(prefix) must be specified.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "record": {
+              "aliases": [],
+              "description": "The full DNS record to create or delete.\nExactly one of I(record) and I(prefix) must be specified.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "ttl": {
+              "aliases": [],
+              "description": "The TTL to give the new record, in seconds.",
+              "default": "3600",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "type": {
+              "aliases": [],
+              "description": "The type of DNS record to create or delete.",
+              "type": "str",
+              "required": true,
+              "choices": [
+                "A",
+                "AAAA",
+                "CAA",
+                "CNAME",
+                "MX",
+                "NS",
+                "PTR",
+                "SPF",
+                "SRV",
+                "TXT"
+              ],
+              "suboptions": {}
+            },
+            "value": {
+              "aliases": [],
+              "description": "The new value when creating a DNS record.\nYAML lists or multiple comma-spaced values are allowed.\nWhen deleting a record all values for the record must be specified or it will not be deleted.\nMust be specified if I(ignore=false).",
+              "type": "list",
+              "required": false,
+              "elements": "str",
+              "suboptions": {}
+            }
+          }
+        },
+        "txt_transformation": {
+          "aliases": [],
+          "description": "Determines how TXT entry values are converted between the API and this module's input and output.\nThe value C(api) means that values are returned from this module as they are returned from the API, and pushed to the API as they have been passed to this module. For idempotency checks, the input string will be compared to the strings returned by the API. The API might automatically transform some values, like splitting long values or adding quotes, which can cause problems with idempotency.\nThe value C(unquoted) automatically transforms values so that you can pass in unquoted values, and the module will return unquoted values. If you pass in quoted values, they will be double-quoted.\nThe value C(quoted) automatically transforms values so that you must use quoting for values that contain spaces, characters such as quotation marks and backslashes, and that are longer than 255 bytes. It also makes sure to return values from the API in a normalized encoding.\nThe default value, C(unquoted), ensures that you can work with values without having to care about how to correctly quote for DNS. Most users should use one of C(unquoted) or C(quoted), but not C(api).\nB(Note:) the conversion code assumes UTF-8 encoding for values. If you need another encoding use I(txt_transformation=api) and handle the encoding yourself.",
+          "default": "unquoted",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "api",
+            "quoted",
+            "unquoted"
+          ],
+          "suboptions": {}
+        },
+        "zone_id": {
+          "aliases": [],
+          "description": "The ID of the DNS zone to modify.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "zone_name": {
+          "aliases": [
+            "zone"
+          ],
+          "description": "The DNS zone to modify.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "lxml"
+      ],
+      "short_description": "Bulk synchronize DNS record sets in Hosttech DNS service",
+      "version_added": "2.0.0"
+    },
+    "examples": "\n- name: Make sure some records exist and have the expected values\n  community.dns.hosttech_dns_record_sets:\n    zone_name: foo.com\n    records:\n      - prefix: new\n        type: A\n        ttl: 7200\n        value:\n          - 1.1.1.1\n          - 2.2.2.2\n      - prefix: new\n        type: AAAA\n        ttl: 7200\n        value:\n          - \"::1\"\n      - record: foo.com\n        type: TXT\n        value:\n          - test\n    hosttech_token: access_token\n\n- name: Synchronize DNS zone with a fixed set of records\n  # If a record exists that is not mentioned here, it will be deleted\n  community.dns.hosttech_dns_record_sets:\n    zone_id: 23\n    purge: true\n    records:\n      - prefix: ''\n        type: A\n        value: 127.0.0.1\n      - prefix: ''\n        type: AAAA\n        value: \"::1\"\n      - prefix: ''\n        type: NS\n        value:\n          - ns-1.hoster.com\n          - ns-2.hoster.com\n          - ns-3.hoster.com\n    hosttech_token: access_token\n"
+  },
+  "community.dns.hosttech_dns_zone_info": {
+    "doc": {
+      "description": "Retrieves zone information in Hosttech DNS service.",
+      "has_action": false,
+      "notes": "Supports C(check_mode).",
+      "options": {
+        "hosttech_password": {
+          "aliases": [],
+          "description": "The password for the Hosttech API user.\nIf provided, I(hosttech_username) must also be provided.\nMutually exclusive with I(hosttech_token).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hosttech_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "The password for the Hosttech API user.\nMutually exclusive with I(hosttech_username) and I(hosttech_password).\nSince community.dns 1.2.0, the alias I(api_token) can be used.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "hosttech_username": {
+          "aliases": [],
+          "description": "The username for the Hosttech API user.\nIf provided, I(hosttech_password) must also be provided.\nMutually exclusive with I(hosttech_token).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "zone_id": {
+          "aliases": [],
+          "description": "The ID of the DNS zone to query.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "int",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "zone_name": {
+          "aliases": [
+            "zone"
+          ],
+          "description": "The DNS zone to query.\nExactly one of I(zone_name) and I(zone_id) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "lxml"
+      ],
+      "short_description": "Retrieve zone information in Hosttech DNS service",
+      "version_added": "0.2.0"
+    },
+    "examples": "\n- name: Retrieve details for foo.com zone\n  community.dns.hosttech_dns_zone_info:\n    zone_name: foo.com\n    hosttech_username: foo\n    hosttech_password: bar\n  register: rec\n\n- name: Retrieve details for zone 23\n  community.dns.hosttech_dns_record:\n    state: absent\n    zone_id: 23\n    hosttech_token: access_token\n"
+  },
+  "community.dns.wait_for_txt": {
+    "doc": {
+      "description": "Wait for TXT entries with specific values to show up on B(all) authoritative nameservers for the DNS name.",
+      "has_action": false,
+      "options": {
+        "always_ask_default_resolver": {
+          "aliases": [],
+          "description": "When set to C(true) (default), will use the default resolver to find the authoritative nameservers of a subzone.\nWhen set to C(false), will use the authoritative nameservers of the parent zone to find the authoritative nameservers of a subzone. This only makes sense when the nameservers were recently changed and haven't propagated.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "max_sleep": {
+          "aliases": [],
+          "description": "Maximal amount of seconds to sleep between two rounds of probing the TXT records.",
+          "default": "10",
+          "type": "float",
+          "required": false,
+          "suboptions": {}
+        },
+        "query_retry": {
+          "aliases": [],
+          "description": "Number of retries for DNS query timeouts.",
+          "default": "3",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "query_timeout": {
+          "aliases": [],
+          "description": "Timeout per DNS query in seconds.",
+          "default": "10",
+          "type": "float",
+          "required": false,
+          "suboptions": {}
+        },
+        "records": {
+          "aliases": [],
+          "description": "A list of DNS names with TXT entries to look out for.",
+          "type": "list",
+          "required": true,
+          "elements": "dict",
+          "suboptions": {
+            "mode": {
+              "aliases": [],
+              "description": "Comparison modes for the values in I(values).\nIf C(subset), I(values) should be a (not necessarily proper) subset of the TXT values set for the DNS name.\nIf C(superset), I(values) should be a (not necessarily proper) superset of the TXT values set for the DNS name. This includes the case that no TXT entries are set.\nIf C(superset_not_empty), I(values) should be a (not necessarily proper) superset of the TXT values set for the DNS name, assuming at least one TXT record is present.\nIf C(equals), I(values) should be the same set of strings as the TXT values for the DNS name (up to order).\nIf C(equals_ordered), I(values) should be the same ordered list of strings as the TXT values for the DNS name.",
+              "default": "subset",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "subset",
+                "superset",
+                "superset_not_empty",
+                "equals",
+                "equals_ordered"
+              ],
+              "suboptions": {}
+            },
+            "name": {
+              "aliases": [],
+              "description": "A DNS name, like C(www.example.com).",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "values": {
+              "aliases": [],
+              "description": "The TXT values to look for.",
+              "type": "list",
+              "required": true,
+              "elements": "str",
+              "suboptions": {}
+            }
+          }
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "Global timeout for waiting for all records in seconds.\nIf not set, will wait indefinitely.",
+          "type": "float",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "dnspython >= 1.15.0 (maybe older versions also work)"
+      ],
+      "short_description": "Wait for TXT entries to be available on all authoritative nameservers",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Wait for a TXT entry to appear\n  community.dns.wait_for_txt:\n    records:\n      # We want that www.example.com has a single TXT record with value 'Hello world!'.\n      # There should not be any other TXT record for www.example.com.\n      - name: www.example.com\n        values: \"Hello world!\"\n        mode: equals\n      # We want that example.com has a specific SPF record set.\n      # We do not care about other TXT records.\n      - name: www.example.com\n        values: \"v=spf1 a mx -all\"\n        mode: subset\n"
+  }
+}

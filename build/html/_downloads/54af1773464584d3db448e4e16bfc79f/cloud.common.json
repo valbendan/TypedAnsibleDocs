@@ -1,0 +1,29 @@
+{
+  "cloud.common.turbo_demo": {
+    "doc": {
+      "description": "This module is an example of an ansible_module.turbo integration.",
+      "has_action": false,
+      "short_description": "A demo module for ansible_module.turbo",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Run the module\n  cloud.common.turbo_demo:\n"
+  },
+  "cloud.common.turbo_fail": {
+    "doc": {
+      "description": "This module aims to test fail_json method on Ansible.turbo module",
+      "has_action": false,
+      "options": {
+        "params": {
+          "aliases": [],
+          "description": "parameter to display in task output",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "A short module which honor additional args when calling fail_json",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Fail without additional arguments\n  cloud.common.turbo_fail:\n\n- name: Fail with additional arguments\n  cloud.common.turbo_fail:\n    params:\n        test: \"ansible\"\n"
+  }
+}

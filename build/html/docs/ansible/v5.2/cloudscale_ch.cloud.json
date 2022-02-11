@@ -1,0 +1,925 @@
+{
+  "cloudscale_ch.cloud.custom_image": {
+    "doc": {
+      "description": "Import, modify and delete custom images.",
+      "has_action": false,
+      "notes": "To import a new custom-image the I(url) and I(name) options are required.\nAll operations are performed using the cloudscale.ch public API v1.\nFor details consult the full API documentation: U(https://www.cloudscale.ch/en/api/v1).\nA valid API token is required for all operations. You can create as many tokens as you like using the cloudscale.ch control panel at U(https://control.cloudscale.ch).",
+      "options": {
+        "api_timeout": {
+          "aliases": [],
+          "description": "Timeout in seconds for calls to the cloudscale.ch API.\nThis can also be passed in the C(CLOUDSCALE_API_TIMEOUT) environment variable.",
+          "default": "45",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "cloudscale.ch API token.\nThis can also be passed in the C(CLOUDSCALE_API_TOKEN) environment variable.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_url": {
+          "aliases": [],
+          "description": "cloudscale.ch API URL.\nThis can also be passed in the C(CLOUDSCALE_API_URL) environment variable.",
+          "default": "https://api.cloudscale.ch/v1",
+          "type": "str",
+          "required": false,
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "force_retry": {
+          "aliases": [],
+          "description": "Retry the image import even if a failed import using the same name and URL already exists. This is necessary to recover from download errors.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The human readable name of the custom image. Either name or UUID must be present to change an existing image.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "slug": {
+          "aliases": [],
+          "description": "A string identifying the custom image for use within the API.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "source_format": {
+          "aliases": [],
+          "description": "The file format of the image referenced in the url. Currently only raw is supported.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the coustom image.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "The tags assigned to the custom image.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "url": {
+          "aliases": [],
+          "description": "The URL used to download the image.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "user_data_handling": {
+          "aliases": [],
+          "description": "How user_data will be handled when creating a server. There are currently two options, \"pass-through\" and \"extend-cloud-config\".",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "pass-through",
+            "extend-cloud-config"
+          ],
+          "suboptions": {}
+        },
+        "uuid": {
+          "aliases": [],
+          "description": "The unique identifier of the custom image import. Either name or UUID must be present to change an existing image.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "zones": {
+          "aliases": [],
+          "description": "Specify zones in which the custom image will be available (e.g. C(lpg1) or C(rma1)).",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage custom images on the cloudscale.ch IaaS service",
+      "version_added": "2.2.0"
+    },
+    "examples": "\n- name: Import custom image\n  cloudscale_ch.cloud.custom_image:\n    name: \"My Custom Image\"\n    url: https://ubuntu.com/downloads/hirsute.img\n    slug: my-custom-image\n    user_data_handling: extend-cloud-config\n    zones: lpg1\n    tags:\n      project: luna\n    state: present\n  register: my_custom_image\n\n- name: Wait until import succeeded\n  cloudscale_ch.cloud.custom_image:\n    uuid: \"{{ my_custom_image.uuid }}\"\n  retries: 15\n  delay: 5\n  register: image\n  until: image.import_status == 'success'\n  failed_when: image.import_status == 'failed'\n\n- name: Import custom image and wait until import succeeded\n  cloudscale_ch.cloud.custom_image:\n    name: \"My Custom Image\"\n    url: https://ubuntu.com/downloads/hirsute.img\n    slug: my-custom-image\n    user_data_handling: extend-cloud-config\n    zones: lpg1\n    tags:\n      project: luna\n    state: present\n  retries: 15\n  delay: 5\n  register: image\n  until: image.import_status == 'success'\n  failed_when: image.import_status == 'failed'\n\n- name: Update custom image\n  cloudscale_ch.cloud.custom_image:\n    name: \"My Custom Image\"\n    slug: my-custom-image\n    user_data_handling: extend-cloud-config\n    tags:\n      project: luna\n    state: present\n\n- name: Delete custom image\n  cloudscale_ch.cloud.custom_image:\n    uuid: '{{ my_custom_image.uuid }}'\n    state: absent\n\n- name: List all custom images\n  uri:\n    url: 'https://api.cloudscale.ch/v1/custom-images'\n    headers:\n      Authorization: 'Bearer {{ query(\"env\", \"CLOUDSCALE_API_TOKEN\") }}'\n    status_code: 200\n  register: image_list\n- name: Search the image list for all images with name 'My Custom Image'\n  set_fact:\n    my_custom_images: '{{ image_list.json | selectattr(\"name\",\"search\", \"My Custom Image\" ) }}'\n"
+  },
+  "cloudscale_ch.cloud.floating_ip": {
+    "doc": {
+      "description": "Create, assign and delete floating IPs on the cloudscale.ch IaaS service.",
+      "has_action": false,
+      "notes": "Once a floating_ip is created, all parameters except C(server), C(reverse_ptr) and C(tags) are read-only.\nAll operations are performed using the cloudscale.ch public API v1.\nFor details consult the full API documentation: U(https://www.cloudscale.ch/en/api/v1).\nA valid API token is required for all operations. You can create as many tokens as you like using the cloudscale.ch control panel at U(https://control.cloudscale.ch).",
+      "options": {
+        "api_timeout": {
+          "aliases": [],
+          "description": "Timeout in seconds for calls to the cloudscale.ch API.\nThis can also be passed in the C(CLOUDSCALE_API_TIMEOUT) environment variable.",
+          "default": "45",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "cloudscale.ch API token.\nThis can also be passed in the C(CLOUDSCALE_API_TOKEN) environment variable.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_url": {
+          "aliases": [],
+          "description": "cloudscale.ch API URL.\nThis can also be passed in the C(CLOUDSCALE_API_URL) environment variable.",
+          "default": "https://api.cloudscale.ch/v1",
+          "type": "str",
+          "required": false,
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "ip_version": {
+          "aliases": [],
+          "description": "IP protocol version of the floating IP.\nRequired when assigning a new floating IP.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "4",
+            "6"
+          ],
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name to identifiy the floating IP address for idempotency.\nOne of I(network) or I(name) is required to identify the floating IP.\nRequired for assigning a new floating IP.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "network": {
+          "aliases": [
+            "ip"
+          ],
+          "description": "Floating IP address to change.\nOne of I(network) or I(name) is required to identify the floating IP.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "prefix_length": {
+          "aliases": [],
+          "description": "Only valid if I(ip_version) is 6.\nPrefix length for the IPv6 network. Currently only a prefix of /56 can be requested. If no I(prefix_length) is present, a single address is created.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "56"
+          ],
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [],
+          "description": "Region in which the floating IP resides (e.g. C(lgp) or C(rma)). If omitted, the region of the project default zone is used. This parameter must be omitted if I(type) is set to C(global).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "reverse_ptr": {
+          "aliases": [],
+          "description": "Reverse PTR entry for this address.\nYou cannot set a reverse PTR entry for IPv6 floating networks. Reverse PTR entries are only allowed for single addresses.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "server": {
+          "aliases": [],
+          "description": "UUID of the server assigned to this floating IP.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the floating IP.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "Tags associated with the floating IP. Set this to C({}) to clear any tags.",
+          "type": "dict",
+          "required": false,
+          "version_added": "1.1.0",
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "The type of the floating IP.",
+          "default": "regional",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "regional",
+            "global"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manages floating IPs on the cloudscale.ch IaaS service",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Request a new floating IP without assignment to a server\n- name: Request a floating IP\n  cloudscale_ch.cloud.floating_ip:\n    name: IP to my server\n    ip_version: 4\n    reverse_ptr: my-server.example.com\n    api_token: xxxxxx\n\n# Request a new floating IP with assignment\n- name: Request a floating IP\n  cloudscale_ch.cloud.floating_ip:\n    name: web\n    ip_version: 4\n    server: 47cec963-fcd2-482f-bdb6-24461b2d47b1\n    reverse_ptr: my-server.example.com\n    api_token: xxxxxx\n\n# Assign an existing floating IP to a different server by its IP address\n- name: Move floating IP to backup server\n  cloudscale_ch.cloud.floating_ip:\n    ip: 192.0.2.123\n    server: ea3b39a3-77a8-4d0b-881d-0bb00a1e7f48\n    api_token: xxxxxx\n\n# Assign an existing floating IP to a different server by name\n- name: Move floating IP to backup server\n  cloudscale_ch.cloud.floating_ip:\n    name: IP to my server\n    server: ea3b39a3-77a8-4d0b-881d-0bb00a1e7f48\n    api_token: xxxxxx\n\n# Request a new floating IPv6 network\n- name: Request a floating IP\n  cloudscale_ch.cloud.floating_ip:\n    name: IPv6 to my server\n    ip_version: 6\n    prefix_length: 56\n    server: 47cec963-fcd2-482f-bdb6-24461b2d47b1\n    api_token: xxxxxx\n    region: lpg1\n\n# Assign an existing floating network to a different server\n- name: Move floating IP to backup server\n  cloudscale_ch.cloud.floating_ip:\n    ip: '{{ floating_ip.ip }}'\n    server: ea3b39a3-77a8-4d0b-881d-0bb00a1e7f48\n    api_token: xxxxxx\n\n# Remove a floating IP\n- name: Release floating IP\n  cloudscale_ch.cloud.floating_ip:\n    ip: 192.0.2.123\n    state: absent\n    api_token: xxxxxx\n\n# Remove a floating IP by name\n- name: Release floating IP\n  cloudscale_ch.cloud.floating_ip:\n    name: IP to my server\n    state: absent\n    api_token: xxxxxx\n"
+  },
+  "cloudscale_ch.cloud.network": {
+    "doc": {
+      "description": "Create, update and remove networks.",
+      "has_action": false,
+      "notes": "All operations are performed using the cloudscale.ch public API v1.\nFor details consult the full API documentation: U(https://www.cloudscale.ch/en/api/v1).\nA valid API token is required for all operations. You can create as many tokens as you like using the cloudscale.ch control panel at U(https://control.cloudscale.ch).",
+      "options": {
+        "api_timeout": {
+          "aliases": [],
+          "description": "Timeout in seconds for calls to the cloudscale.ch API.\nThis can also be passed in the C(CLOUDSCALE_API_TIMEOUT) environment variable.",
+          "default": "45",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "cloudscale.ch API token.\nThis can also be passed in the C(CLOUDSCALE_API_TOKEN) environment variable.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_url": {
+          "aliases": [],
+          "description": "cloudscale.ch API URL.\nThis can also be passed in the C(CLOUDSCALE_API_URL) environment variable.",
+          "default": "https://api.cloudscale.ch/v1",
+          "type": "str",
+          "required": false,
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "auto_create_ipv4_subnet": {
+          "aliases": [],
+          "description": "Whether to automatically create an IPv4 subnet in the network or not.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "mtu": {
+          "aliases": [],
+          "description": "The MTU of the network.",
+          "default": "9000",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the network.\nEither I(name) or I(uuid) is required.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the network.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "Tags assosiated with the networks. Set this to C({}) to clear any tags.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "uuid": {
+          "aliases": [],
+          "description": "UUID of the network.\nEither I(name) or I(uuid) is required.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "zone": {
+          "aliases": [],
+          "description": "Zone slug of the network (e.g. C(lgp1) or C(rma1)).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manages networks on the cloudscale.ch IaaS service",
+      "version_added": "1.2.0"
+    },
+    "examples": "\n---\n- name: Ensure network exists\n  cloudscale_ch.cloud.network:\n    name: my network\n    api_token: xxxxxx\n\n- name: Ensure network in a specific zone\n  cloudscale_ch.cloud.network:\n    name: my network\n    zone: lpg1\n    api_token: xxxxxx\n\n- name: Ensure a network is absent\n  cloudscale_ch.cloud.network:\n    name: my network\n    state: absent\n    api_token: xxxxxx\n"
+  },
+  "cloudscale_ch.cloud.objects_user": {
+    "doc": {
+      "description": "Create, update and remove objects users cloudscale.ch IaaS service.",
+      "has_action": false,
+      "notes": "All operations are performed using the cloudscale.ch public API v1.\nFor details consult the full API documentation: U(https://www.cloudscale.ch/en/api/v1).\nA valid API token is required for all operations. You can create as many tokens as you like using the cloudscale.ch control panel at U(https://control.cloudscale.ch).",
+      "options": {
+        "api_timeout": {
+          "aliases": [],
+          "description": "Timeout in seconds for calls to the cloudscale.ch API.\nThis can also be passed in the C(CLOUDSCALE_API_TIMEOUT) environment variable.",
+          "default": "45",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "cloudscale.ch API token.\nThis can also be passed in the C(CLOUDSCALE_API_TOKEN) environment variable.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_url": {
+          "aliases": [],
+          "description": "cloudscale.ch API URL.\nThis can also be passed in the C(CLOUDSCALE_API_URL) environment variable.",
+          "default": "https://api.cloudscale.ch/v1",
+          "type": "str",
+          "required": false,
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "display_name": {
+          "aliases": [
+            "name"
+          ],
+          "description": "Display name of the objects user.\nEither I(display_name) or I(id) is required.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "Name of the objects user.\nEither I(display_name) or I(id) is required.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the objects user.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "Tags associated with the objects user. Set this to C({}) to clear any tags.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manages objects users on the cloudscale.ch IaaS service",
+      "version_added": "1.1.0"
+    },
+    "examples": "\n- name: Create an objects user\n  cloudscale_ch.cloud.objects_user:\n    display_name: alan\n    tags:\n      project: luna\n    api_token: xxxxxx\n  register: object_user\n\n- name: print keys\n  debug:\n    var: object_user.keys\n\n- name: Update an objects user\n  cloudscale_ch.cloud.objects_user:\n    display_name: alan\n    tags:\n      project: gemini\n    api_token: xxxxxx\n\n- name: Remove an objects user\n  cloudscale_ch.cloud.objects_user:\n    display_name: alan\n    state: absent\n    api_token: xxxxxx\n"
+  },
+  "cloudscale_ch.cloud.server": {
+    "doc": {
+      "description": "Create, update, start, stop and delete servers on the cloudscale.ch IaaS service.",
+      "has_action": false,
+      "notes": "If I(uuid) option is provided, it takes precedence over I(name) for server selection. This allows to update the server's name.\nIf no I(uuid) option is provided, I(name) is used for server selection. If more than one server with this name exists, execution is aborted.\nOnly the I(name) and I(flavor) are evaluated for the update.\nThe option I(force=true) must be given to allow the reboot of existing running servers for applying the changes.\nAll operations are performed using the cloudscale.ch public API v1.\nFor details consult the full API documentation: U(https://www.cloudscale.ch/en/api/v1).\nA valid API token is required for all operations. You can create as many tokens as you like using the cloudscale.ch control panel at U(https://control.cloudscale.ch).",
+      "options": {
+        "api_timeout": {
+          "aliases": [],
+          "description": "Timeout in seconds for calls to the cloudscale.ch API.\nThis can also be passed in the C(CLOUDSCALE_API_TIMEOUT) environment variable.",
+          "default": "45",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "cloudscale.ch API token.\nThis can also be passed in the C(CLOUDSCALE_API_TOKEN) environment variable.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_url": {
+          "aliases": [],
+          "description": "cloudscale.ch API URL.\nThis can also be passed in the C(CLOUDSCALE_API_URL) environment variable.",
+          "default": "https://api.cloudscale.ch/v1",
+          "type": "str",
+          "required": false,
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "bulk_volume_size_gb": {
+          "aliases": [],
+          "description": "Size of the bulk storage volume in GB.\nNo bulk storage volume if not set.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "flavor": {
+          "aliases": [],
+          "description": "Flavor of the server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Allow to stop the running server for updating if necessary.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "image": {
+          "aliases": [],
+          "description": "Image used to create the server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "interfaces": {
+          "aliases": [],
+          "description": "List of network interface objects specifying the interfaces to be attached to the server. See U(https://www.cloudscale.ch/en/api/v1/#interfaces-attribute-specification) for more details.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "version_added": "1.4.0",
+          "suboptions": {
+            "addresses": {
+              "aliases": [],
+              "description": "Attach a private network interface and configure a subnet and/or an IP address.",
+              "type": "list",
+              "required": false,
+              "elements": "dict",
+              "suboptions": {
+                "address": {
+                  "aliases": [],
+                  "description": "The static IP address of the interface. Use '[]' to avoid assigning an IP address via DHCP.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "subnet": {
+                  "aliases": [],
+                  "description": "UUID of the subnet from which an address will be assigned.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                }
+              }
+            },
+            "network": {
+              "aliases": [],
+              "description": "Create a network interface on the network identified by UUID. Use 'public' instead of an UUID to attach a public network interface. Can be omitted if a subnet is provided under addresses.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the Server.\nEither I(name) or I(uuid) are required.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for the server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_groups": {
+          "aliases": [],
+          "description": "List of UUID or names of server groups.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "ssh_keys": {
+          "aliases": [],
+          "description": "List of SSH public keys.\nUse the full content of your .pub file here.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the server.",
+          "default": "running",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "running",
+            "stopped",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "Tags assosiated with the servers. Set this to C({}) to clear any tags.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ipv6": {
+          "aliases": [],
+          "description": "Enable IPv6 on the public network interface.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_private_network": {
+          "aliases": [],
+          "description": "Attach a private network interface to the server.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_public_network": {
+          "aliases": [],
+          "description": "Attach a public network interface to the server.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "user_data": {
+          "aliases": [],
+          "description": "Cloud-init configuration (cloud-config) data to use for the server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "uuid": {
+          "aliases": [],
+          "description": "UUID of the server.\nEither I(name) or I(uuid) are required.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "volume_size_gb": {
+          "aliases": [],
+          "description": "Size of the root volume in GB.",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "zone": {
+          "aliases": [],
+          "description": "Zone in which the server resides (e.g. C(lgp1) or C(rma1)).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manages servers on the cloudscale.ch IaaS service",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Create and start a server with an existing server group (shiny-group)\n- name: Start cloudscale.ch server\n  cloudscale_ch.cloud.server:\n    name: my-shiny-cloudscale-server\n    image: debian-10\n    flavor: flex-4\n    ssh_keys: ssh-rsa XXXXXXXXXX...XXXX ansible@cloudscale\n    server_groups: shiny-group\n    zone: lpg1\n    use_private_network: True\n    bulk_volume_size_gb: 100\n    api_token: xxxxxx\n\n# Start another server in anti-affinity (server group shiny-group)\n- name: Start second cloudscale.ch server\n  cloudscale_ch.cloud.server:\n    name: my-other-shiny-server\n    image: ubuntu-16.04\n    flavor: flex-8\n    ssh_keys: ssh-rsa XXXXXXXXXXX ansible@cloudscale\n    server_groups: shiny-group\n    zone: lpg1\n    api_token: xxxxxx\n\n# Force to update the flavor of a running server\n- name: Start cloudscale.ch server\n  cloudscale_ch.cloud.server:\n    name: my-shiny-cloudscale-server\n    image: debian-10\n    flavor: flex-8\n    force: yes\n    ssh_keys: ssh-rsa XXXXXXXXXX...XXXX ansible@cloudscale\n    use_private_network: True\n    bulk_volume_size_gb: 100\n    api_token: xxxxxx\n  register: server1\n\n# Stop the first server\n- name: Stop my first server\n  cloudscale_ch.cloud.server:\n    uuid: '{{ server1.uuid }}'\n    state: stopped\n    api_token: xxxxxx\n\n# Delete my second server\n- name: Delete my second server\n  cloudscale_ch.cloud.server:\n    name: my-other-shiny-server\n    state: absent\n    api_token: xxxxxx\n\n# Start a server and wait for the SSH host keys to be generated\n- name: Start server and wait for SSH host keys\n  cloudscale_ch.cloud.server:\n    name: my-cloudscale-server-with-ssh-key\n    image: debian-10\n    flavor: flex-4\n    ssh_keys: ssh-rsa XXXXXXXXXXX ansible@cloudscale\n    api_token: xxxxxx\n  register: server\n  until: server is not failed\n  retries: 5\n  delay: 2\n\n# Start a server with two network interfaces:\n#\n#    A public interface with IPv4/IPv6\n#    A private interface on a specific private network with an IPv4 address\n\n- name: Start a server with a public and private network interface\n  cloudscale_ch.cloud.server:\n    name: my-cloudscale-server-with-two-network-interfaces\n    image: debian-10\n    flavor: flex-4\n    ssh_keys: ssh-rsa XXXXXXXXXXX ansible@cloudscale\n    api_token: xxxxxx\n    interfaces:\n      - network: 'public'\n      - addresses:\n        - subnet: UUID_of_private_subnet\n\n# Start a server with a specific IPv4 address from subnet range\n- name: Start a server with a specific IPv4 address from subnet range\n  cloudscale_ch.cloud.server:\n    name: my-cloudscale-server-with-specific-address\n    image: debian-10\n    flavor: flex-4\n    ssh_keys: ssh-rsa XXXXXXXXXXX ansible@cloudscale\n    api_token: xxxxxx\n    interfaces:\n      - addresses:\n        - subnet: UUID_of_private_subnet\n          address: 'A.B.C.D'\n\n# Start a server with two network interfaces:\n#\n#    A public interface with IPv4/IPv6\n#    A private interface on a specific private network with no IPv4 address\n\n- name: Start a server with a private network interface and no IP address\n  cloudscale_ch.cloud.server:\n    name: my-cloudscale-server-with-specific-address\n    image: debian-10\n    flavor: flex-4\n    ssh_keys: ssh-rsa XXXXXXXXXXX ansible@cloudscale\n    api_token: xxxxxx\n    interfaces:\n      - network: 'public'\n      - network: UUID_of_private_network\n        addresses: []\n"
+  },
+  "cloudscale_ch.cloud.server_group": {
+    "doc": {
+      "description": "Create, update and remove server groups.",
+      "has_action": false,
+      "notes": "All operations are performed using the cloudscale.ch public API v1.\nFor details consult the full API documentation: U(https://www.cloudscale.ch/en/api/v1).\nA valid API token is required for all operations. You can create as many tokens as you like using the cloudscale.ch control panel at U(https://control.cloudscale.ch).",
+      "options": {
+        "api_timeout": {
+          "aliases": [],
+          "description": "Timeout in seconds for calls to the cloudscale.ch API.\nThis can also be passed in the C(CLOUDSCALE_API_TIMEOUT) environment variable.",
+          "default": "45",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "cloudscale.ch API token.\nThis can also be passed in the C(CLOUDSCALE_API_TOKEN) environment variable.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_url": {
+          "aliases": [],
+          "description": "cloudscale.ch API URL.\nThis can also be passed in the C(CLOUDSCALE_API_URL) environment variable.",
+          "default": "https://api.cloudscale.ch/v1",
+          "type": "str",
+          "required": false,
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the server group.\nEither I(name) or I(uuid) is required. These options are mutually exclusive.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the server group.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "Tags assosiated with the server groups. Set this to C({}) to clear any tags.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "Type of the server group.",
+          "default": "anti-affinity",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "uuid": {
+          "aliases": [],
+          "description": "UUID of the server group.\nEither I(name) or I(uuid) is required. These options are mutually exclusive.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "zone": {
+          "aliases": [],
+          "description": "Zone slug of the server group (e.g. C(lgp1) or C(rma1)).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manages server groups on the cloudscale.ch IaaS service",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n---\n- name: Ensure server group exists\n  cloudscale_ch.cloud.server_group:\n    name: my-name\n    type: anti-affinity\n    api_token: xxxxxx\n\n- name: Ensure server group in a specific zone\n  cloudscale_ch.cloud.server_group:\n    name: my-rma-group\n    type: anti-affinity\n    zone: lpg1\n    api_token: xxxxxx\n\n- name: Ensure a server group is absent\n  cloudscale_ch.cloud.server_group:\n    name: my-name\n    state: absent\n    api_token: xxxxxx\n"
+  },
+  "cloudscale_ch.cloud.subnet": {
+    "doc": {
+      "description": "Create, update and remove subnets.",
+      "has_action": false,
+      "notes": "All operations are performed using the cloudscale.ch public API v1.\nFor details consult the full API documentation: U(https://www.cloudscale.ch/en/api/v1).\nA valid API token is required for all operations. You can create as many tokens as you like using the cloudscale.ch control panel at U(https://control.cloudscale.ch).",
+      "options": {
+        "api_timeout": {
+          "aliases": [],
+          "description": "Timeout in seconds for calls to the cloudscale.ch API.\nThis can also be passed in the C(CLOUDSCALE_API_TIMEOUT) environment variable.",
+          "default": "45",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "cloudscale.ch API token.\nThis can also be passed in the C(CLOUDSCALE_API_TOKEN) environment variable.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_url": {
+          "aliases": [],
+          "description": "cloudscale.ch API URL.\nThis can also be passed in the C(CLOUDSCALE_API_URL) environment variable.",
+          "default": "https://api.cloudscale.ch/v1",
+          "type": "str",
+          "required": false,
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "cidr": {
+          "aliases": [],
+          "description": "The cidr of the subnet.\nRequired if I(state=present).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "dns_servers": {
+          "aliases": [],
+          "description": "A list of DNS resolver IP addresses, that act as DNS servers.\nIf not set, the cloudscale.ch default resolvers are used.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "gateway_address": {
+          "aliases": [],
+          "description": "The gateway address of the subnet. If not set, no gateway is used.\nCannot be within the DHCP range, which is the lowest .101-.254 in the subnet.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "network": {
+          "aliases": [],
+          "description": "The name of the network the subnet is related to.\nRequired if I(state=present).",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "name": {
+              "aliases": [],
+              "description": "The uuid of the network.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "uuid": {
+              "aliases": [],
+              "description": "The uuid of the network.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "zone": {
+              "aliases": [],
+              "description": "The zone the network allocated in.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "reset": {
+          "aliases": [],
+          "description": "Resets I(gateway_address) and I(dns_servers) to default values by the API.\nNote: Idempotency is not given.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the subnet.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "Tags associated with the subnet. Set this to C({}) to clear any tags.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "uuid": {
+          "aliases": [],
+          "description": "UUID of the subnet.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manages subnets on the cloudscale.ch IaaS service",
+      "version_added": "1.3.0"
+    },
+    "examples": "\n---\n- name: Ensure subnet exists\n  cloudscale_ch.cloud.subnet:\n    cidr: 172.16.0.0/24\n    network:\n      uuid: 2db69ba3-1864-4608-853a-0771b6885a3a\n    api_token: xxxxxx\n\n- name: Ensure subnet exists\n  cloudscale_ch.cloud.subnet:\n    cidr: 192.168.1.0/24\n    gateway_address: 192.168.1.1\n    dns_servers:\n      - 192.168.1.10\n      - 192.168.1.11\n    network:\n      name: private\n      zone: lpg1\n    api_token: xxxxxx\n\n- name: Ensure a subnet is absent\n  cloudscale_ch.cloud.subnet:\n    cidr: 172.16.0.0/24\n    network:\n      name: private\n      zone: lpg1\n    state: absent\n    api_token: xxxxxx\n"
+  },
+  "cloudscale_ch.cloud.volume": {
+    "doc": {
+      "description": "Create, attach/detach, update and delete volumes on the cloudscale.ch IaaS service.",
+      "has_action": false,
+      "notes": "To create a new volume at least the I(name) and I(size_gb) options are required.\nA volume can be created and attached to a server in the same task.\nAll operations are performed using the cloudscale.ch public API v1.\nFor details consult the full API documentation: U(https://www.cloudscale.ch/en/api/v1).\nA valid API token is required for all operations. You can create as many tokens as you like using the cloudscale.ch control panel at U(https://control.cloudscale.ch).",
+      "options": {
+        "api_timeout": {
+          "aliases": [],
+          "description": "Timeout in seconds for calls to the cloudscale.ch API.\nThis can also be passed in the C(CLOUDSCALE_API_TIMEOUT) environment variable.",
+          "default": "45",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "cloudscale.ch API token.\nThis can also be passed in the C(CLOUDSCALE_API_TOKEN) environment variable.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_url": {
+          "aliases": [],
+          "description": "cloudscale.ch API URL.\nThis can also be passed in the C(CLOUDSCALE_API_URL) environment variable.",
+          "default": "https://api.cloudscale.ch/v1",
+          "type": "str",
+          "required": false,
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the volume. Either name or UUID must be present to change an existing volume.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "servers": {
+          "aliases": [
+            "server_uuids",
+            "server_uuid"
+          ],
+          "description": "UUIDs of the servers this volume is attached to. Set this to C([]) to detach the volume. Currently a volume can only be attached to a single server.\nThe aliases C(server_uuids) and C(server_uuid) are deprecated and will be removed in version 3.0.0 of this collection.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "size_gb": {
+          "aliases": [],
+          "description": "Size of the volume in GB.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the volume.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "Tags associated with the volume. Set this to C({}) to clear any tags.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "Type of the volume. Cannot be changed after creating the volume. Defaults to C(ssd) on volume creation.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "ssd",
+            "bulk"
+          ],
+          "suboptions": {}
+        },
+        "uuid": {
+          "aliases": [],
+          "description": "UUID of the volume. Either name or UUID must be present to change an existing volume.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "zone": {
+          "aliases": [],
+          "description": "Zone in which the volume resides (e.g. C(lgp1) or C(rma1)). Cannot be changed after creating the volume. Defaults to the project default zone.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manages volumes on the cloudscale.ch IaaS service.",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# Create a new SSD volume\n- name: Create an SSD volume\n  cloudscale_ch.cloud.volume:\n    name: my_ssd_volume\n    zone: 'lpg1'\n    size_gb: 50\n    api_token: xxxxxx\n  register: my_ssd_volume\n\n# Attach an existing volume to a server\n- name: Attach volume to server\n  cloudscale_ch.cloud.volume:\n    uuid: \"{{ my_ssd_volume.uuid }}\"\n    servers:\n      - ea3b39a3-77a8-4d0b-881d-0bb00a1e7f48\n    api_token: xxxxxx\n\n# Create and attach a volume to a server\n- name: Create and attach volume to server\n  cloudscale_ch.cloud.volume:\n    name: my_ssd_volume\n    zone: 'lpg1'\n    size_gb: 50\n    servers:\n      - ea3b39a3-77a8-4d0b-881d-0bb00a1e7f48\n    api_token: xxxxxx\n\n# Detach volume from server\n- name: Detach volume from server\n  cloudscale_ch.cloud.volume:\n    uuid: \"{{ my_ssd_volume.uuid }}\"\n    servers: []\n    api_token: xxxxxx\n\n# Delete a volume\n- name: Delete volume\n  cloudscale_ch.cloud.volume:\n    name: my_ssd_volume\n    state: absent\n    api_token: xxxxxx\n"
+  }
+}

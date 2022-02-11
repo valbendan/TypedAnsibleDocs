@@ -1,0 +1,1422 @@
+{
+  "community.mysql.mysql_db": {
+    "doc": {
+      "description": "Add or remove MySQL databases from a remote host.",
+      "has_action": false,
+      "notes": "Supports C(check_mode).\nRequires the mysql and mysqldump binaries on the remote host.\nThis module is B(not idempotent) when I(state) is C(import), and will import the dump file each time if run more than once.\nRequires the PyMySQL (Python 2.7 and Python 3.X) or MySQL-python (Python 2.X) package installed on the remote host. The Python package may be installed with apt-get install python-pymysql (Ubuntu; see M(ansible.builtin.apt)) or yum install python2-PyMySQL (RHEL/CentOS/Fedora; see M(ansible.builtin.yum)). You can also use dnf install python2-PyMySQL for newer versions of Fedora; see M(ansible.builtin.dnf).\nBe sure you have PyMySQL or MySQLdb library installed on the target machine for the Python interpreter Ansible uses, for example, if it is Python 3, you must install the library for Python 3. You can also change the interpreter. For more information, see U(https://docs.ansible.com/ansible/latest/reference_appendices/interpreter_discovery.html).\nBoth C(login_password) and C(login_user) are required when you are passing credentials. If none are present, the module will attempt to read the credentials from C(~/.my.cnf), and finally fall back to using the MySQL default login of 'root' with no password.\nIf there are problems with local connections, using I(login_unix_socket=/path/to/mysqld/socket) instead of I(login_host=localhost) might help. As an example, the default MariaDB installation of version 10.4 and later uses the unix_socket authentication plugin by default that without using I(login_unix_socket=/var/run/mysqld/mysqld.sock) (the default path) causes the error ``Host '127.0.0.1' is not allowed to connect to this MariaDB server``.\nAlternatively, you can use the mysqlclient library instead of MySQL-python (MySQLdb) which supports both Python 2.X and Python >=3.5. See U(https://pypi.org/project/mysqlclient/) how to install it.",
+      "options": {
+        "ca_cert": {
+          "aliases": [
+            "ssl_ca"
+          ],
+          "description": "The path to a Certificate Authority (CA) certificate. This option, if used, must specify the same certificate as used by the server.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "check_hostname": {
+          "aliases": [],
+          "description": "Whether to validate the server host name when an SSL connection is required. Corresponds to MySQL CLIs C(--ssl) switch.\nSetting this to C(false) disables hostname verification. Use with caution.\nRequires pymysql >= 0.7.11.\nThis option has no effect on MySQLdb.",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.1.0",
+          "suboptions": {}
+        },
+        "check_implicit_admin": {
+          "aliases": [],
+          "description": "Check if mysql allows login as root/nopassword before trying supplied credentials.\nIf success, passed I(login_user)/I(login_password) will be ignored.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "client_cert": {
+          "aliases": [
+            "ssl_cert"
+          ],
+          "description": "The path to a client public key certificate.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_key": {
+          "aliases": [
+            "ssl_key"
+          ],
+          "description": "The path to the client private key.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "collation": {
+          "aliases": [],
+          "description": "Collation mode (sorting). This only applies to new table/databases and does not update existing ones, this is a limitation of MySQL.",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "config_file": {
+          "aliases": [],
+          "description": "Specify a config file from which user and password are to be read.",
+          "default": "~/.my.cnf",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "config_overrides_defaults": {
+          "aliases": [],
+          "description": "If C(yes), connection parameters from I(config_file) will override the default values of I(login_host) and I(login_port) parameters.\nUsed when I(stat) is C(present) or C(absent), ignored otherwise.\nIt needs Python 3.5+ as the default interpreter on a target host.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "connect_timeout": {
+          "aliases": [],
+          "description": "The connection timeout when connecting to the MySQL server.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "dump_extra_args": {
+          "aliases": [],
+          "description": "Provide additional arguments for mysqldump. Used when I(state=dump) only, ignored otherwise.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "encoding": {
+          "aliases": [],
+          "description": "Encoding mode to use, examples include C(utf8) or C(latin1_swedish_ci), at creation of database, dump or importation of sql script.",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Continue dump or import even if we get an SQL error.\nUsed only when I(state) is C(dump) or C(import).",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "hex_blob": {
+          "aliases": [],
+          "description": "Dump binary columns using hexadecimal notation.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "ignore_tables": {
+          "aliases": [],
+          "description": "A list of table names that will be ignored in the dump of the form database_name.table_name.",
+          "default": "[]",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "login_host": {
+          "aliases": [],
+          "description": "Host running the database.\nIn some cases for local connections the I(login_unix_socket=/path/to/mysqld/socket), that is usually C(/var/run/mysqld/mysqld.sock), needs to be used instead of I(login_host=localhost).",
+          "default": "localhost",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "The password used to authenticate with.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_port": {
+          "aliases": [],
+          "description": "Port of the MySQL server. Requires I(login_host) be defined as other than localhost if login_port is used.",
+          "default": "3306",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_unix_socket": {
+          "aliases": [],
+          "description": "The path to a Unix domain socket for local connections.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "The username used to authenticate with.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "master_data": {
+          "aliases": [],
+          "description": "Option to dump a master replication server to produce a dump file that can be used to set up another server as a slave of the master.\nC(0) to not include master data.\nC(1) to generate a 'CHANGE MASTER TO' statement required on the slave to start the replication process.\nC(2) to generate a commented 'CHANGE MASTER TO'.\nCan be used when I(state=dump).",
+          "default": "0",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1",
+            "2"
+          ],
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [
+            "db"
+          ],
+          "description": "Name of the database to add or remove.\nI(name=all) may only be provided if I(state) is C(dump) or C(import).\nList of databases is provided with I(state=dump), I(state=present) and I(state=absent).\nIf I(name=all) it works like --all-databases option for mysqldump (Added in 2.0).",
+          "type": "list",
+          "required": true,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "quick": {
+          "aliases": [],
+          "description": "Option used for dumping large tables.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "restrict_config_file": {
+          "aliases": [],
+          "description": "Read only passed I(config_file).\nWhen I(state) is C(dump) or C(import), by default the module passes I(config_file) parameter using C(--defaults-extra-file) command-line argument to C(mysql/mysqldump) utilities under the hood that read named option file in addition to usual option files.\nIf this behavior is undesirable, use C(yes) to read only named option file.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "single_transaction": {
+          "aliases": [],
+          "description": "Execute the dump in a single transaction.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "skip_lock_tables": {
+          "aliases": [],
+          "description": "Skip locking tables for read. Used when I(state=dump), ignored otherwise.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The database state.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "dump",
+            "import",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "target": {
+          "aliases": [],
+          "description": "Location, on the remote host, of the dump file to read from or write to.\nUncompressed SQL files (C(.sql)) as well as bzip2 (C(.bz2)), gzip (C(.gz)) and xz (Added in 2.0) compressed files are supported.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "unsafe_login_password": {
+          "aliases": [],
+          "description": "If C(no), the module will safely use a shell-escaped version of the I(login_password) value.\nIt makes sense to use C(yes) only if there are special symbols in the value and errors C(Access denied) occur.\nUsed only when I(state) is C(import) or C(dump) and I(login_password) is passed, ignored otherwise.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "use_shell": {
+          "aliases": [],
+          "description": "Used to prevent C(Broken pipe) errors when the imported I(target) file is compressed.\nIf C(yes), the module will internally execute commands via a shell.\nUsed when I(state=import), ignored otherwise.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.1.0",
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "MySQLdb (Python 2.x)",
+        "PyMySQL (Python 2.7 and Python 3.X), or",
+        "mysql (command line binary)",
+        "mysqldump (command line binary)"
+      ],
+      "short_description": "Add or remove MySQL databases from a remote host"
+    },
+    "examples": "\n- name: Create a new database with name 'bobdata'\n  community.mysql.mysql_db:\n    name: bobdata\n    state: present\n\n- name: Create new databases with names 'foo' and 'bar'\n  community.mysql.mysql_db:\n    name:\n      - foo\n      - bar\n    state: present\n\n# Copy database dump file to remote host and restore it to database 'my_db'\n- name: Copy database dump file\n  copy:\n    src: dump.sql.bz2\n    dest: /tmp\n\n- name: Restore database\n  community.mysql.mysql_db:\n    name: my_db\n    state: import\n    target: /tmp/dump.sql.bz2\n\n- name: Restore database ignoring errors\n  community.mysql.mysql_db:\n    name: my_db\n    state: import\n    target: /tmp/dump.sql.bz2\n    force: yes\n\n- name: Dump multiple databases\n  community.mysql.mysql_db:\n    state: dump\n    name: db_1,db_2\n    target: /tmp/dump.sql\n\n- name: Dump multiple databases\n  community.mysql.mysql_db:\n    state: dump\n    name:\n      - db_1\n      - db_2\n    target: /tmp/dump.sql\n\n- name: Dump all databases to hostname.sql\n  community.mysql.mysql_db:\n    state: dump\n    name: all\n    target: /tmp/dump.sql\n\n- name: Dump all databases to hostname.sql including master data\n  community.mysql.mysql_db:\n    state: dump\n    name: all\n    target: /tmp/dump.sql\n    master_data: 1\n\n# Import of sql script with encoding option\n- name: >\n    Import dump.sql with specific latin1 encoding,\n    similar to mysql -u <username> --default-character-set=latin1 -p <password> < dump.sql\n  community.mysql.mysql_db:\n    state: import\n    name: all\n    encoding: latin1\n    target: /tmp/dump.sql\n\n# Dump of database with encoding option\n- name: >\n    Dump of Databse with specific latin1 encoding,\n    similar to mysqldump -u <username> --default-character-set=latin1 -p <password> <database>\n  community.mysql.mysql_db:\n    state: dump\n    name: db_1\n    encoding: latin1\n    target: /tmp/dump.sql\n\n- name: Delete database with name 'bobdata'\n  community.mysql.mysql_db:\n    name: bobdata\n    state: absent\n\n- name: Make sure there is neither a database with name 'foo', nor one with name 'bar'\n  community.mysql.mysql_db:\n    name:\n      - foo\n      - bar\n    state: absent\n\n# Dump database with argument not directly supported by this module\n# using dump_extra_args parameter\n- name: Dump databases without including triggers\n  community.mysql.mysql_db:\n    state: dump\n    name: foo\n    target: /tmp/dump.sql\n    dump_extra_args: --skip-triggers\n\n- name: Try to create database as root/nopassword first. If not allowed, pass the credentials\n  community.mysql.mysql_db:\n    check_implicit_admin: yes\n    login_user: bob\n    login_password: 123456\n    name: bobdata\n    state: present\n"
+  },
+  "community.mysql.mysql_info": {
+    "doc": {
+      "description": "Gathers information about MySQL servers.",
+      "has_action": false,
+      "notes": "Calculating the size of a database might be slow, depending on the number and size of tables in it. To avoid this, use I(exclude_fields=db_size).\nSupports C(check_mode).\nRequires the PyMySQL (Python 2.7 and Python 3.X) or MySQL-python (Python 2.X) package installed on the remote host. The Python package may be installed with apt-get install python-pymysql (Ubuntu; see M(ansible.builtin.apt)) or yum install python2-PyMySQL (RHEL/CentOS/Fedora; see M(ansible.builtin.yum)). You can also use dnf install python2-PyMySQL for newer versions of Fedora; see M(ansible.builtin.dnf).\nBe sure you have PyMySQL or MySQLdb library installed on the target machine for the Python interpreter Ansible uses, for example, if it is Python 3, you must install the library for Python 3. You can also change the interpreter. For more information, see U(https://docs.ansible.com/ansible/latest/reference_appendices/interpreter_discovery.html).\nBoth C(login_password) and C(login_user) are required when you are passing credentials. If none are present, the module will attempt to read the credentials from C(~/.my.cnf), and finally fall back to using the MySQL default login of 'root' with no password.\nIf there are problems with local connections, using I(login_unix_socket=/path/to/mysqld/socket) instead of I(login_host=localhost) might help. As an example, the default MariaDB installation of version 10.4 and later uses the unix_socket authentication plugin by default that without using I(login_unix_socket=/var/run/mysqld/mysqld.sock) (the default path) causes the error ``Host '127.0.0.1' is not allowed to connect to this MariaDB server``.\nAlternatively, you can use the mysqlclient library instead of MySQL-python (MySQLdb) which supports both Python 2.X and Python >=3.5. See U(https://pypi.org/project/mysqlclient/) how to install it.",
+      "options": {
+        "ca_cert": {
+          "aliases": [
+            "ssl_ca"
+          ],
+          "description": "The path to a Certificate Authority (CA) certificate. This option, if used, must specify the same certificate as used by the server.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "check_hostname": {
+          "aliases": [],
+          "description": "Whether to validate the server host name when an SSL connection is required. Corresponds to MySQL CLIs C(--ssl) switch.\nSetting this to C(false) disables hostname verification. Use with caution.\nRequires pymysql >= 0.7.11.\nThis option has no effect on MySQLdb.",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.1.0",
+          "suboptions": {}
+        },
+        "client_cert": {
+          "aliases": [
+            "ssl_cert"
+          ],
+          "description": "The path to a client public key certificate.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_key": {
+          "aliases": [
+            "ssl_key"
+          ],
+          "description": "The path to the client private key.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "config_file": {
+          "aliases": [],
+          "description": "Specify a config file from which user and password are to be read.",
+          "default": "~/.my.cnf",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "connect_timeout": {
+          "aliases": [],
+          "description": "The connection timeout when connecting to the MySQL server.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "exclude_fields": {
+          "aliases": [],
+          "description": "List of fields which are not needed to collect.\nSupports elements: C(db_size). Unsupported elements will be ignored.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "filter": {
+          "aliases": [],
+          "description": "Limit the collected information by comma separated string or YAML list.\nAllowable values are C(version), C(databases), C(settings), C(global_status), C(users), C(engines), C(master_status), C(slave_status), C(slave_hosts).\nBy default, collects all subsets.\nYou can use '!' before value (for example, C(!settings)) to exclude it from the information.\nIf you pass including and excluding values to the filter, for example, I(filter=!settings,version), the excluding values, C(!settings) in this case, will be ignored.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "login_db": {
+          "aliases": [],
+          "description": "Database name to connect to.\nIt makes sense if I(login_user) is allowed to connect to a specific database only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_host": {
+          "aliases": [],
+          "description": "Host running the database.\nIn some cases for local connections the I(login_unix_socket=/path/to/mysqld/socket), that is usually C(/var/run/mysqld/mysqld.sock), needs to be used instead of I(login_host=localhost).",
+          "default": "localhost",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "The password used to authenticate with.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_port": {
+          "aliases": [],
+          "description": "Port of the MySQL server. Requires I(login_host) be defined as other than localhost if login_port is used.",
+          "default": "3306",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_unix_socket": {
+          "aliases": [],
+          "description": "The path to a Unix domain socket for local connections.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "The username used to authenticate with.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "return_empty_dbs": {
+          "aliases": [],
+          "description": "Includes names of empty databases to returned dictionary.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "PyMySQL (Python 2.7 and Python 3.X), or",
+        "MySQLdb (Python 2.x)"
+      ],
+      "short_description": "Gather information about MySQL servers"
+    },
+    "examples": "\n# Display info from mysql-hosts group (using creds from ~/.my.cnf to connect):\n# ansible mysql-hosts -m mysql_info\n\n# Display only databases and users info:\n# ansible mysql-hosts -m mysql_info -a 'filter=databases,users'\n\n# Display only slave status:\n# ansible standby -m mysql_info -a 'filter=slave_status'\n\n# Display all info from databases group except settings:\n# ansible databases -m mysql_info -a 'filter=!settings'\n\n- name: Collect all possible information using passwordless root access\n  community.mysql.mysql_info:\n    login_user: root\n\n- name: Get MySQL version with non-default credentials\n  community.mysql.mysql_info:\n    login_user: mysuperuser\n    login_password: mysuperpass\n    filter: version\n\n- name: Collect all info except settings and users by root\n  community.mysql.mysql_info:\n    login_user: root\n    login_password: rootpass\n    filter: \"!settings,!users\"\n\n- name: Collect info about databases and version using ~/.my.cnf as a credential file\n  become: yes\n  community.mysql.mysql_info:\n    filter:\n    - databases\n    - version\n\n- name: Collect info about databases and version using ~alice/.my.cnf as a credential file\n  become: yes\n  community.mysql.mysql_info:\n    config_file: /home/alice/.my.cnf\n    filter:\n    - databases\n    - version\n\n- name: Collect info about databases including empty and excluding their sizes\n  become: yes\n  community.mysql.mysql_info:\n    config_file: /home/alice/.my.cnf\n    filter:\n    - databases\n    exclude_fields: db_size\n    return_empty_dbs: yes\n"
+  },
+  "community.mysql.mysql_query": {
+    "doc": {
+      "description": "Runs arbitrary MySQL queries.\nPay attention, the module does not support check mode! All queries will be executed in autocommit mode.\nTo run SQL queries from a file, use M(community.mysql.mysql_db) module.",
+      "has_action": false,
+      "notes": "Requires the PyMySQL (Python 2.7 and Python 3.X) or MySQL-python (Python 2.X) package installed on the remote host. The Python package may be installed with apt-get install python-pymysql (Ubuntu; see M(ansible.builtin.apt)) or yum install python2-PyMySQL (RHEL/CentOS/Fedora; see M(ansible.builtin.yum)). You can also use dnf install python2-PyMySQL for newer versions of Fedora; see M(ansible.builtin.dnf).\nBe sure you have PyMySQL or MySQLdb library installed on the target machine for the Python interpreter Ansible uses, for example, if it is Python 3, you must install the library for Python 3. You can also change the interpreter. For more information, see U(https://docs.ansible.com/ansible/latest/reference_appendices/interpreter_discovery.html).\nBoth C(login_password) and C(login_user) are required when you are passing credentials. If none are present, the module will attempt to read the credentials from C(~/.my.cnf), and finally fall back to using the MySQL default login of 'root' with no password.\nIf there are problems with local connections, using I(login_unix_socket=/path/to/mysqld/socket) instead of I(login_host=localhost) might help. As an example, the default MariaDB installation of version 10.4 and later uses the unix_socket authentication plugin by default that without using I(login_unix_socket=/var/run/mysqld/mysqld.sock) (the default path) causes the error ``Host '127.0.0.1' is not allowed to connect to this MariaDB server``.\nAlternatively, you can use the mysqlclient library instead of MySQL-python (MySQLdb) which supports both Python 2.X and Python >=3.5. See U(https://pypi.org/project/mysqlclient/) how to install it.",
+      "options": {
+        "ca_cert": {
+          "aliases": [
+            "ssl_ca"
+          ],
+          "description": "The path to a Certificate Authority (CA) certificate. This option, if used, must specify the same certificate as used by the server.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "check_hostname": {
+          "aliases": [],
+          "description": "Whether to validate the server host name when an SSL connection is required. Corresponds to MySQL CLIs C(--ssl) switch.\nSetting this to C(false) disables hostname verification. Use with caution.\nRequires pymysql >= 0.7.11.\nThis option has no effect on MySQLdb.",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.1.0",
+          "suboptions": {}
+        },
+        "client_cert": {
+          "aliases": [
+            "ssl_cert"
+          ],
+          "description": "The path to a client public key certificate.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_key": {
+          "aliases": [
+            "ssl_key"
+          ],
+          "description": "The path to the client private key.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "config_file": {
+          "aliases": [],
+          "description": "Specify a config file from which user and password are to be read.",
+          "default": "~/.my.cnf",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "connect_timeout": {
+          "aliases": [],
+          "description": "The connection timeout when connecting to the MySQL server.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_db": {
+          "aliases": [],
+          "description": "Name of database to connect to and run queries against.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_host": {
+          "aliases": [],
+          "description": "Host running the database.\nIn some cases for local connections the I(login_unix_socket=/path/to/mysqld/socket), that is usually C(/var/run/mysqld/mysqld.sock), needs to be used instead of I(login_host=localhost).",
+          "default": "localhost",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "The password used to authenticate with.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_port": {
+          "aliases": [],
+          "description": "Port of the MySQL server. Requires I(login_host) be defined as other than localhost if login_port is used.",
+          "default": "3306",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_unix_socket": {
+          "aliases": [],
+          "description": "The path to a Unix domain socket for local connections.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "The username used to authenticate with.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "named_args": {
+          "aliases": [],
+          "description": "Dictionary of key-value arguments to pass to the query.\nMutually exclusive with I(positional_args).",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "positional_args": {
+          "aliases": [],
+          "description": "List of values to be passed as positional arguments to the query.\nMutually exclusive with I(named_args).",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "query": {
+          "aliases": [],
+          "description": "SQL query to run. Multiple queries can be passed using YAML list syntax.\nMust be a string or YAML list containing strings.",
+          "type": "raw",
+          "required": true,
+          "suboptions": {}
+        },
+        "single_transaction": {
+          "aliases": [],
+          "description": "Where passed queries run in a single transaction (C(yes)) or commit them one-by-one (C(no)).",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "PyMySQL (Python 2.7 and Python 3.X), or",
+        "MySQLdb (Python 2.x)"
+      ],
+      "short_description": "Run MySQL queries",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Simple select query to acme db\n  community.mysql.mysql_query:\n    login_db: acme\n    query: SELECT * FROM orders\n\n- name: Select query to db acme with positional arguments\n  community.mysql.mysql_query:\n    login_db: acme\n    query: SELECT * FROM acme WHERE id = %s AND story = %s\n    positional_args:\n    - 1\n    - test\n\n- name: Select query to test_db with named_args\n  community.mysql.mysql_query:\n    login_db: test_db\n    query: SELECT * FROM test WHERE id = %(id_val)s AND story = %(story_val)s\n    named_args:\n      id_val: 1\n      story_val: test\n\n- name: Run several insert queries against db test_db in single transaction\n  community.mysql.mysql_query:\n    login_db: test_db\n    query:\n    - INSERT INTO articles (id, story) VALUES (2, 'my_long_story')\n    - INSERT INTO prices (id, price) VALUES (123, '100.00')\n    single_transaction: yes\n"
+  },
+  "community.mysql.mysql_replication": {
+    "doc": {
+      "description": "Manages MySQL server replication, replica, primary status, get and change primary host.",
+      "has_action": false,
+      "notes": "If an empty value for the parameter of string type is needed, use an empty string.\nRequires the PyMySQL (Python 2.7 and Python 3.X) or MySQL-python (Python 2.X) package installed on the remote host. The Python package may be installed with apt-get install python-pymysql (Ubuntu; see M(ansible.builtin.apt)) or yum install python2-PyMySQL (RHEL/CentOS/Fedora; see M(ansible.builtin.yum)). You can also use dnf install python2-PyMySQL for newer versions of Fedora; see M(ansible.builtin.dnf).\nBe sure you have PyMySQL or MySQLdb library installed on the target machine for the Python interpreter Ansible uses, for example, if it is Python 3, you must install the library for Python 3. You can also change the interpreter. For more information, see U(https://docs.ansible.com/ansible/latest/reference_appendices/interpreter_discovery.html).\nBoth C(login_password) and C(login_user) are required when you are passing credentials. If none are present, the module will attempt to read the credentials from C(~/.my.cnf), and finally fall back to using the MySQL default login of 'root' with no password.\nIf there are problems with local connections, using I(login_unix_socket=/path/to/mysqld/socket) instead of I(login_host=localhost) might help. As an example, the default MariaDB installation of version 10.4 and later uses the unix_socket authentication plugin by default that without using I(login_unix_socket=/var/run/mysqld/mysqld.sock) (the default path) causes the error ``Host '127.0.0.1' is not allowed to connect to this MariaDB server``.\nAlternatively, you can use the mysqlclient library instead of MySQL-python (MySQLdb) which supports both Python 2.X and Python >=3.5. See U(https://pypi.org/project/mysqlclient/) how to install it.",
+      "options": {
+        "ca_cert": {
+          "aliases": [
+            "ssl_ca"
+          ],
+          "description": "The path to a Certificate Authority (CA) certificate. This option, if used, must specify the same certificate as used by the server.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "channel": {
+          "aliases": [],
+          "description": "Name of replication channel.\nMulti-source replication is supported from MySQL 5.7.\nMutually exclusive with I(connection_name).\nFor more information see U(https://dev.mysql.com/doc/refman/8.0/en/replication-multi-source.html).",
+          "type": "str",
+          "required": false,
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "check_hostname": {
+          "aliases": [],
+          "description": "Whether to validate the server host name when an SSL connection is required. Corresponds to MySQL CLIs C(--ssl) switch.\nSetting this to C(false) disables hostname verification. Use with caution.\nRequires pymysql >= 0.7.11.\nThis option has no effect on MySQLdb.",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.1.0",
+          "suboptions": {}
+        },
+        "client_cert": {
+          "aliases": [
+            "ssl_cert"
+          ],
+          "description": "The path to a client public key certificate.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_key": {
+          "aliases": [
+            "ssl_key"
+          ],
+          "description": "The path to the client private key.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "config_file": {
+          "aliases": [],
+          "description": "Specify a config file from which user and password are to be read.",
+          "default": "~/.my.cnf",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "connect_timeout": {
+          "aliases": [],
+          "description": "The connection timeout when connecting to the MySQL server.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "connection_name": {
+          "aliases": [],
+          "description": "Name of the primary connection.\nSupported from MariaDB 10.0.1.\nMutually exclusive with I(channel).\nFor more information see U(https://mariadb.com/kb/en/library/multi-source-replication/).",
+          "type": "str",
+          "required": false,
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "fail_on_error": {
+          "aliases": [],
+          "description": "Fails on error when calling mysql.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "login_host": {
+          "aliases": [],
+          "description": "Host running the database.\nIn some cases for local connections the I(login_unix_socket=/path/to/mysqld/socket), that is usually C(/var/run/mysqld/mysqld.sock), needs to be used instead of I(login_host=localhost).",
+          "default": "localhost",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "The password used to authenticate with.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_port": {
+          "aliases": [],
+          "description": "Port of the MySQL server. Requires I(login_host) be defined as other than localhost if login_port is used.",
+          "default": "3306",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_unix_socket": {
+          "aliases": [],
+          "description": "The path to a Unix domain socket for local connections.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "The username used to authenticate with.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "mode": {
+          "aliases": [],
+          "description": "Module operating mode. Could be C(changeprimary | changemaster) (CHANGE PRIMARY | MASTER TO), C(getprimary | getmaster) (SHOW PRIMARY | MASTER STATUS), C(getreplica | getslave) (SHOW REPLICA | SLAVE STATUS), C(startreplica | startslave) (START REPLICA | SLAVE), C(stopreplica | stopslave) (STOP REPLICA | SLAVE), C(resetprimary | resetmaster) (RESET PRIMARY | MASTER) - supported since community.mysql 0.1.0, C(resetreplica, resetslave) (RESET REPLICA | SLAVE), C(resetreplicaall, resetslave) (RESET REPLICA | SLAVE ALL).",
+          "default": "getreplica",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "changeprimary",
+            "changemaster",
+            "getprimary",
+            "getmaster",
+            "getreplica",
+            "getslave",
+            "startreplica",
+            "startslave",
+            "stopreplica",
+            "stopslave",
+            "resetprimary",
+            "resetmaster",
+            "resetreplica",
+            "resetslave",
+            "resetreplicaall",
+            "resetslaveall"
+          ],
+          "suboptions": {}
+        },
+        "primary_auto_position": {
+          "aliases": [
+            "master_auto_position"
+          ],
+          "description": "Whether the host uses GTID based replication or not.\nSame as the C(MASTER_AUTO_POSITION) mysql variable.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "primary_connect_retry": {
+          "aliases": [
+            "master_connect_retry"
+          ],
+          "description": "Same as the C(MASTER_CONNECT_RETRY) mysql variable.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "primary_delay": {
+          "aliases": [
+            "master_delay"
+          ],
+          "description": "Time lag behind the primary's state (in seconds).\nSame as the C(MASTER_DELAY) mysql variable.\nAvailable from MySQL 5.6.\nFor more information see U(https://dev.mysql.com/doc/refman/8.0/en/replication-delayed.html).",
+          "type": "int",
+          "required": false,
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "primary_host": {
+          "aliases": [
+            "master_host"
+          ],
+          "description": "Same as the C(MASTER_HOST) mysql variable.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "primary_log_file": {
+          "aliases": [
+            "master_log_file"
+          ],
+          "description": "Same as the C(MASTER_LOG_FILE) mysql variable.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "primary_log_pos": {
+          "aliases": [
+            "master_log_pos"
+          ],
+          "description": "Same as the C(MASTER_LOG_POS) mysql variable.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "primary_password": {
+          "aliases": [
+            "master_password"
+          ],
+          "description": "Same as the C(MASTER_PASSWORD) mysql variable.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "primary_port": {
+          "aliases": [
+            "master_port"
+          ],
+          "description": "Same as the C(MASTER_PORT) mysql variable.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "primary_ssl": {
+          "aliases": [
+            "master_ssl"
+          ],
+          "description": "Same as the C(MASTER_SSL) mysql variable.\nWhen setting it to C(yes), the connection attempt only succeeds if an encrypted connection can be established.\nFor details, refer to L(MySQL encrypted replication documentation,https://dev.mysql.com/doc/refman/8.0/en/replication-solutions-encrypted-connections.html).",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "primary_ssl_ca": {
+          "aliases": [
+            "master_ssl_ca"
+          ],
+          "description": "Same as the C(MASTER_SSL_CA) mysql variable.\nFor details, refer to L(MySQL encrypted replication documentation,https://dev.mysql.com/doc/refman/8.0/en/replication-solutions-encrypted-connections.html).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "primary_ssl_capath": {
+          "aliases": [
+            "master_ssl_capath"
+          ],
+          "description": "Same as the C(MASTER_SSL_CAPATH) mysql variable.\nFor details, refer to L(MySQL encrypted replication documentation,https://dev.mysql.com/doc/refman/8.0/en/replication-solutions-encrypted-connections.html).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "primary_ssl_cert": {
+          "aliases": [
+            "master_ssl_cert"
+          ],
+          "description": "Same as the C(MASTER_SSL_CERT) mysql variable.\nFor details, refer to L(MySQL encrypted replication documentation,https://dev.mysql.com/doc/refman/8.0/en/replication-solutions-encrypted-connections.html).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "primary_ssl_cipher": {
+          "aliases": [
+            "master_ssl_cipher"
+          ],
+          "description": "Same as the C(MASTER_SSL_CIPHER) mysql variable.\nSpecifies a colon-separated list of one or more ciphers permitted by the replica for the replication connection.\nFor details, refer to L(MySQL encrypted replication documentation,https://dev.mysql.com/doc/refman/8.0/en/replication-solutions-encrypted-connections.html).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "primary_ssl_key": {
+          "aliases": [
+            "master_ssl_key"
+          ],
+          "description": "Same as the C(MASTER_SSL_KEY) mysql variable.\nFor details, refer to L(MySQL encrypted replication documentation,https://dev.mysql.com/doc/refman/8.0/en/replication-solutions-encrypted-connections.html).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "primary_use_gtid": {
+          "aliases": [
+            "master_use_gtid"
+          ],
+          "description": "Configures the replica to use the MariaDB Global Transaction ID.\nC(disabled) equals MASTER_USE_GTID=no command.\nTo find information about available values see U(https://mariadb.com/kb/en/library/change-master-to/#master_use_gtid).\nAvailable since MariaDB 10.0.2.\nC(replica_pos) has been introduced in MariaDB 10.5.1 and it is an alias for C(slave_pos).",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "current_pos",
+            "replica_pos",
+            "slave_pos",
+            "disabled"
+          ],
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "primary_user": {
+          "aliases": [
+            "master_user"
+          ],
+          "description": "Same as the C(MASTER_USER) mysql variable.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "relay_log_file": {
+          "aliases": [],
+          "description": "Same as mysql variable.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "relay_log_pos": {
+          "aliases": [],
+          "description": "Same as mysql variable.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "PyMySQL (Python 2.7 and Python 3.X), or",
+        "MySQLdb (Python 2.x)"
+      ],
+      "short_description": "Manage MySQL replication"
+    },
+    "examples": "\n- name: Stop mysql replica thread\n  community.mysql.mysql_replication:\n    mode: stopreplica\n\n- name: Get primary binlog file name and binlog position\n  community.mysql.mysql_replication:\n    mode: getprimary\n\n- name: Change primary to primary server 192.0.2.1 and use binary log 'mysql-bin.000009' with position 4578\n  community.mysql.mysql_replication:\n    mode: changeprimary\n    primary_host: 192.0.2.1\n    primary_log_file: mysql-bin.000009\n    primary_log_pos: 4578\n\n- name: Check replica status using port 3308\n  community.mysql.mysql_replication:\n    mode: getreplica\n    login_host: ansible.example.com\n    login_port: 3308\n\n- name: On MariaDB change primary to use GTID current_pos\n  community.mysql.mysql_replication:\n    mode: changeprimary\n    primary_use_gtid: current_pos\n\n- name: Change primary to use replication delay 3600 seconds\n  community.mysql.mysql_replication:\n    mode: changeprimary\n    primary_host: 192.0.2.1\n    primary_delay: 3600\n\n- name: Start MariaDB replica with connection name primary-1\n  community.mysql.mysql_replication:\n    mode: startreplica\n    connection_name: primary-1\n\n- name: Stop replication in channel primary-1\n  community.mysql.mysql_replication:\n    mode: stopreplica\n    channel: primary-1\n\n- name: >\n    Run RESET MASTER command which will delete all existing binary log files\n    and reset the binary log index file on the primary\n  community.mysql.mysql_replication:\n    mode: resetprimary\n\n- name: Run start replica and fail the task on errors\n  community.mysql.mysql_replication:\n    mode: startreplica\n    connection_name: primary-1\n    fail_on_error: yes\n\n- name: Change primary and fail on error (like when replica thread is running)\n  community.mysql.mysql_replication:\n    mode: changeprimary\n    fail_on_error: yes\n\n"
+  },
+  "community.mysql.mysql_role": {
+    "doc": {
+      "description": "Adds, removes, or updates a MySQL role.\nRoles are supported since MySQL 8.0.0 and MariaDB 10.0.5.",
+      "has_action": false,
+      "notes": "Pay attention that the module runs C(SET DEFAULT ROLE ALL TO) all the I(members) passed by default when the state has changed. If you want to avoid this behavior, set I(set_default_role_all) to C(no).\nSupports C(check_mode).\nRequires the PyMySQL (Python 2.7 and Python 3.X) or MySQL-python (Python 2.X) package installed on the remote host. The Python package may be installed with apt-get install python-pymysql (Ubuntu; see M(ansible.builtin.apt)) or yum install python2-PyMySQL (RHEL/CentOS/Fedora; see M(ansible.builtin.yum)). You can also use dnf install python2-PyMySQL for newer versions of Fedora; see M(ansible.builtin.dnf).\nBe sure you have PyMySQL or MySQLdb library installed on the target machine for the Python interpreter Ansible uses, for example, if it is Python 3, you must install the library for Python 3. You can also change the interpreter. For more information, see U(https://docs.ansible.com/ansible/latest/reference_appendices/interpreter_discovery.html).\nBoth C(login_password) and C(login_user) are required when you are passing credentials. If none are present, the module will attempt to read the credentials from C(~/.my.cnf), and finally fall back to using the MySQL default login of 'root' with no password.\nIf there are problems with local connections, using I(login_unix_socket=/path/to/mysqld/socket) instead of I(login_host=localhost) might help. As an example, the default MariaDB installation of version 10.4 and later uses the unix_socket authentication plugin by default that without using I(login_unix_socket=/var/run/mysqld/mysqld.sock) (the default path) causes the error ``Host '127.0.0.1' is not allowed to connect to this MariaDB server``.\nAlternatively, you can use the mysqlclient library instead of MySQL-python (MySQLdb) which supports both Python 2.X and Python >=3.5. See U(https://pypi.org/project/mysqlclient/) how to install it.",
+      "options": {
+        "admin": {
+          "aliases": [],
+          "description": "Supported by B(MariaDB).\nName of the admin user of the role (the I(login_user), by default).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "append_members": {
+          "aliases": [],
+          "description": "Add members defined by the I(members) option to the existing ones for this role instead of overwriting them.\nMutually exclusive with the I(detach_members) and I(admin) option.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "append_privs": {
+          "aliases": [],
+          "description": "Append the privileges defined by the I(priv) option to the existing ones for this role instead of overwriting them.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "ca_cert": {
+          "aliases": [
+            "ssl_ca"
+          ],
+          "description": "The path to a Certificate Authority (CA) certificate. This option, if used, must specify the same certificate as used by the server.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "check_hostname": {
+          "aliases": [],
+          "description": "Whether to validate the server host name when an SSL connection is required. Corresponds to MySQL CLIs C(--ssl) switch.\nSetting this to C(false) disables hostname verification. Use with caution.\nRequires pymysql >= 0.7.11.\nThis option has no effect on MySQLdb.",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.1.0",
+          "suboptions": {}
+        },
+        "check_implicit_admin": {
+          "aliases": [],
+          "description": "Check if mysql allows login as root/nopassword before trying supplied credentials.\nIf success, passed I(login_user)/I(login_password) will be ignored.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_cert": {
+          "aliases": [
+            "ssl_cert"
+          ],
+          "description": "The path to a client public key certificate.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_key": {
+          "aliases": [
+            "ssl_key"
+          ],
+          "description": "The path to the client private key.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "config_file": {
+          "aliases": [],
+          "description": "Specify a config file from which user and password are to be read.",
+          "default": "~/.my.cnf",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "connect_timeout": {
+          "aliases": [],
+          "description": "The connection timeout when connecting to the MySQL server.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "detach_members": {
+          "aliases": [],
+          "description": "Detaches members defined by the I(members) option from the role instead of overwriting all the current members.\nMutually exclusive with the I(append_members) and I(admin) option.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_host": {
+          "aliases": [],
+          "description": "Host running the database.\nIn some cases for local connections the I(login_unix_socket=/path/to/mysqld/socket), that is usually C(/var/run/mysqld/mysqld.sock), needs to be used instead of I(login_host=localhost).",
+          "default": "localhost",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "The password used to authenticate with.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_port": {
+          "aliases": [],
+          "description": "Port of the MySQL server. Requires I(login_host) be defined as other than localhost if login_port is used.",
+          "default": "3306",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_unix_socket": {
+          "aliases": [],
+          "description": "The path to a Unix domain socket for local connections.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "The username used to authenticate with.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "members": {
+          "aliases": [],
+          "description": "List of members of the role.\nFor users, use the format C(username@hostname). Always specify the hostname part explicitly.\nFor roles, use the format C(rolename).\nMutually exclusive with I(admin).",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the role to add or remove.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "priv": {
+          "aliases": [],
+          "description": "MySQL privileges string in the format: C(db.table:priv1,priv2).\nYou can specify multiple privileges by separating each one using a forward slash: C(db.table:priv/db.table:priv).\nThe format is based on MySQL C(GRANT) statement.\nDatabase and table names can be quoted, MySQL-style.\nIf column privileges are used, the C(priv1,priv2) part must be exactly as returned by a C(SHOW GRANT) statement. If not followed, the module will always report changes. It includes grouping columns by permission (C(SELECT(col1,col2)) instead of C(SELECT(col1),SELECT(col2))).\nCan be passed as a dictionary (see the examples).\nSupports GRANTs for procedures and functions (see the examples for the M(community.mysql.mysql_user) module).",
+          "type": "raw",
+          "required": false,
+          "suboptions": {}
+        },
+        "set_default_role_all": {
+          "aliases": [],
+          "description": "Is not supported by MariaDB and is silently ignored when working with MariaDB.\nIf C(yes), runs B(SET DEFAULT ROLE ALL TO) each of the I(members) when changed.\nIf you want to avoid this behavior, set this option to C(no) explicitly.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present) and the role does not exist, creates the role.\nIf C(present) and the role exists, does nothing or updates its attributes.\nIf C(absent), removes the role.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "PyMySQL (Python 2.7 and Python 3.X), or",
+        "MySQLdb (Python 2.x)"
+      ],
+      "short_description": "Adds, removes, or updates a MySQL role",
+      "version_added": "2.2.0"
+    },
+    "examples": "\n# Example of a .my.cnf file content for setting a root password\n# [client]\n# user=root\n# password=n<_665{vS43y\n#\n# Example of a privileges dictionary passed through the priv option\n# priv:\n#   'mydb.*': 'INSERT,UPDATE'\n#   'anotherdb.*': 'SELECT'\n#   'yetanotherdb.*': 'ALL'\n#\n# You can also use the string format like in the community.mysql.mysql_user module, for example\n# mydb.*:INSERT,UPDATE/anotherdb.*:SELECT/yetanotherdb.*:ALL\n#\n# For more examples on how to specify privileges, refer to the community.mysql.mysql_user module\n\n# Create a role developers with all database privileges\n# and add alice and bob as members.\n# The statement 'SET DEFAULT ROLE ALL' to them will be run.\n- name: Create role developers, add members\n  community.mysql.mysql_role:\n    name: developers\n    state: present\n    priv: '*.*:ALL'\n    members:\n    - 'alice@%'\n    - 'bob@%'\n\n- name: Same as above but do not run SET DEFAULT ROLE ALL TO each member\n  community.mysql.mysql_role:\n    name: developers\n    state: present\n    priv: '*.*:ALL'\n    members:\n    - 'alice@%'\n    - 'bob@%'\n    set_default_role_all: no\n\n# Assuming that the role developers exists,\n# add john to the current members\n- name: Add members to an existing role\n  community.mysql.mysql_role:\n    name: developers\n    state: present\n    append_members: yes\n    members:\n    - 'joe@localhost'\n\n# Create role readers with the SELECT privilege\n# on all tables in the fiction database\n- name: Create role developers, add members\n  community.mysql.mysql_role:\n    name: readers\n    state: present\n    priv: 'fiction.*:SELECT'\n\n# Assuming that the role readers exists,\n# add the UPDATE privilege to the role on all tables in the fiction database\n- name: Create role developers, add members\n  community.mysql.mysql_role:\n    name: readers\n    state: present\n    priv: 'fiction.*:UPDATE'\n    append_privs: yes\n\n- name: Create role with the 'SELECT' and 'UPDATE' privileges in db1 and db2\n  community.mysql.mysql_role:\n    state: present\n    name: foo\n    priv:\n      'db1.*': 'SELECT,UPDATE'\n      'db2.*': 'SELECT,UPDATE'\n\n- name: Remove joe from readers\n  community.mysql.mysql_role:\n    state: present\n    name: readers\n    members:\n    - 'joe@localhost'\n    detach_members: yes\n\n- name: Remove the role readers if exists\n  community.mysql.mysql_role:\n    state: absent\n    name: readers\n\n- name: Example of using login_unix_socket to connect to the server\n  community.mysql.mysql_role:\n    name: readers\n    state: present\n    login_unix_socket: /var/run/mysqld/mysqld.sock\n\n# Pay attention that the admin cannot be changed later\n# and will be ignored if a role currently exists.\n# To change members, you need to run a separate task using the admin\n# of the role as the login_user.\n- name: On MariaDB, create the role readers with alice as its admin\n  community.mysql.mysql_role:\n    state: present\n    name: readers\n    admin: 'alice@%'\n\n- name: Create the role business, add the role marketing to members\n  community.mysql.mysql_role:\n    state: present\n    name: business\n    members:\n    - marketing\n"
+  },
+  "community.mysql.mysql_user": {
+    "doc": {
+      "description": "Adds or removes a user from a MySQL database.",
+      "has_action": false,
+      "notes": "MySQL server installs with default I(login_user) of C(root) and no password. To secure this user as part of an idempotent playbook, you must create at least two tasks: 1) change the root user's password, without providing any I(login_user)/I(login_password) details, 2) drop a C(~/.my.cnf) file containing the new root credentials. Subsequent runs of the playbook will then succeed by reading the new credentials from the file.\nCurrently, there is only support for the C(mysql_native_password) encrypted password hash module.\nSupports (check_mode).\nRequires the PyMySQL (Python 2.7 and Python 3.X) or MySQL-python (Python 2.X) package installed on the remote host. The Python package may be installed with apt-get install python-pymysql (Ubuntu; see M(ansible.builtin.apt)) or yum install python2-PyMySQL (RHEL/CentOS/Fedora; see M(ansible.builtin.yum)). You can also use dnf install python2-PyMySQL for newer versions of Fedora; see M(ansible.builtin.dnf).\nBe sure you have PyMySQL or MySQLdb library installed on the target machine for the Python interpreter Ansible uses, for example, if it is Python 3, you must install the library for Python 3. You can also change the interpreter. For more information, see U(https://docs.ansible.com/ansible/latest/reference_appendices/interpreter_discovery.html).\nBoth C(login_password) and C(login_user) are required when you are passing credentials. If none are present, the module will attempt to read the credentials from C(~/.my.cnf), and finally fall back to using the MySQL default login of 'root' with no password.\nIf there are problems with local connections, using I(login_unix_socket=/path/to/mysqld/socket) instead of I(login_host=localhost) might help. As an example, the default MariaDB installation of version 10.4 and later uses the unix_socket authentication plugin by default that without using I(login_unix_socket=/var/run/mysqld/mysqld.sock) (the default path) causes the error ``Host '127.0.0.1' is not allowed to connect to this MariaDB server``.\nAlternatively, you can use the mysqlclient library instead of MySQL-python (MySQLdb) which supports both Python 2.X and Python >=3.5. See U(https://pypi.org/project/mysqlclient/) how to install it.",
+      "options": {
+        "append_privs": {
+          "aliases": [],
+          "description": "Append the privileges defined by priv to the existing ones for this user instead of overwriting existing ones.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "ca_cert": {
+          "aliases": [
+            "ssl_ca"
+          ],
+          "description": "The path to a Certificate Authority (CA) certificate. This option, if used, must specify the same certificate as used by the server.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "check_hostname": {
+          "aliases": [],
+          "description": "Whether to validate the server host name when an SSL connection is required. Corresponds to MySQL CLIs C(--ssl) switch.\nSetting this to C(false) disables hostname verification. Use with caution.\nRequires pymysql >= 0.7.11.\nThis option has no effect on MySQLdb.",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.1.0",
+          "suboptions": {}
+        },
+        "check_implicit_admin": {
+          "aliases": [],
+          "description": "Check if mysql allows login as root/nopassword before trying supplied credentials.\nIf success, passed I(login_user)/I(login_password) will be ignored.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_cert": {
+          "aliases": [
+            "ssl_cert"
+          ],
+          "description": "The path to a client public key certificate.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_key": {
+          "aliases": [
+            "ssl_key"
+          ],
+          "description": "The path to the client private key.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "config_file": {
+          "aliases": [],
+          "description": "Specify a config file from which user and password are to be read.",
+          "default": "~/.my.cnf",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "connect_timeout": {
+          "aliases": [],
+          "description": "The connection timeout when connecting to the MySQL server.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "encrypted": {
+          "aliases": [],
+          "description": "Indicate that the 'password' field is a `mysql_native_password` hash.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "The 'host' part of the MySQL username.",
+          "default": "localhost",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "host_all": {
+          "aliases": [],
+          "description": "Override the host option, making ansible apply changes to all hostnames for a given user.\nThis option cannot be used when creating users.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_host": {
+          "aliases": [],
+          "description": "Host running the database.\nIn some cases for local connections the I(login_unix_socket=/path/to/mysqld/socket), that is usually C(/var/run/mysqld/mysqld.sock), needs to be used instead of I(login_host=localhost).",
+          "default": "localhost",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "The password used to authenticate with.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_port": {
+          "aliases": [],
+          "description": "Port of the MySQL server. Requires I(login_host) be defined as other than localhost if login_port is used.",
+          "default": "3306",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_unix_socket": {
+          "aliases": [],
+          "description": "The path to a Unix domain socket for local connections.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "The username used to authenticate with.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the user (role) to add or remove.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Set the user's password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "plugin": {
+          "aliases": [],
+          "description": "User's plugin to authenticate (``CREATE USER user IDENTIFIED WITH plugin``).",
+          "type": "str",
+          "required": false,
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "plugin_auth_string": {
+          "aliases": [],
+          "description": "User's plugin auth_string (``CREATE USER user IDENTIFIED WITH plugin BY plugin_auth_string``).",
+          "type": "str",
+          "required": false,
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "plugin_hash_string": {
+          "aliases": [],
+          "description": "User's plugin hash string (``CREATE USER user IDENTIFIED WITH plugin AS plugin_hash_string``).",
+          "type": "str",
+          "required": false,
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "priv": {
+          "aliases": [],
+          "description": "MySQL privileges string in the format: C(db.table:priv1,priv2).\nMultiple privileges can be specified by separating each one using a forward slash: C(db.table:priv/db.table:priv).\nThe format is based on MySQL C(GRANT) statement.\nDatabase and table names can be quoted, MySQL-style.\nIf column privileges are used, the C(priv1,priv2) part must be exactly as returned by a C(SHOW GRANT) statement. If not followed, the module will always report changes. It includes grouping columns by permission (C(SELECT(col1,col2)) instead of C(SELECT(col1),SELECT(col2))).\nCan be passed as a dictionary (see the examples).\nSupports GRANTs for procedures and functions (see the examples).",
+          "type": "raw",
+          "required": false,
+          "suboptions": {}
+        },
+        "resource_limits": {
+          "aliases": [],
+          "description": "Limit the user for certain server resources. Provided since MySQL 5.6 / MariaDB 10.2.\nAvailable options are C(MAX_QUERIES_PER_HOUR: num), C(MAX_UPDATES_PER_HOUR: num), C(MAX_CONNECTIONS_PER_HOUR: num), C(MAX_USER_CONNECTIONS: num).\nUsed when I(state=present), ignored otherwise.",
+          "type": "dict",
+          "required": false,
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "sql_log_bin": {
+          "aliases": [],
+          "description": "Whether binary logging should be enabled or disabled for the connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the user should exist.\nWhen C(absent), removes the user.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "tls_requires": {
+          "aliases": [],
+          "description": "Set requirement for secure transport as a dictionary of requirements (see the examples).\nValid requirements are SSL, X509, SUBJECT, ISSUER, CIPHER.\nSUBJECT, ISSUER and CIPHER are complementary, and mutually exclusive with SSL and X509.\nU(https://mariadb.com/kb/en/securing-connections-for-client-and-server/#requiring-tls).",
+          "type": "dict",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "update_password": {
+          "aliases": [],
+          "description": "C(always) will update passwords if they differ.\nC(on_create) will only set the password for newly created users.",
+          "default": "always",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "always",
+            "on_create"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "PyMySQL (Python 2.7 and Python 3.X), or",
+        "MySQLdb (Python 2.x)"
+      ],
+      "short_description": "Adds or removes a user from a MySQL database"
+    },
+    "examples": "\n- name: Removes anonymous user account for localhost\n  community.mysql.mysql_user:\n    name: ''\n    host: localhost\n    state: absent\n\n- name: Removes all anonymous user accounts\n  community.mysql.mysql_user:\n    name: ''\n    host_all: yes\n    state: absent\n\n- name: Create database user with name 'bob' and password '12345' with all database privileges\n  community.mysql.mysql_user:\n    name: bob\n    password: 12345\n    priv: '*.*:ALL'\n    state: present\n\n- name: Create database user using hashed password with all database privileges\n  community.mysql.mysql_user:\n    name: bob\n    password: '*EE0D72C1085C46C5278932678FBE2C6A782821B4'\n    encrypted: yes\n    priv: '*.*:ALL'\n    state: present\n\n- name: Create database user with password and all database privileges and 'WITH GRANT OPTION'\n  community.mysql.mysql_user:\n    name: bob\n    password: 12345\n    priv: '*.*:ALL,GRANT'\n    state: present\n\n- name: Create user with password, all database privileges and 'WITH GRANT OPTION' in db1 and db2\n  community.mysql.mysql_user:\n    state: present\n    name: bob\n    password: 12345dd\n    priv:\n      'db1.*': 'ALL,GRANT'\n      'db2.*': 'ALL,GRANT'\n\n# Use 'PROCEDURE' instead of 'FUNCTION' to apply GRANTs for a MySQL procedure instead.\n- name: Grant a user the right to execute a function\n  community.mysql.mysql_user:\n    name: readonly\n    password: 12345\n    priv:\n      FUNCTION my_db.my_function: EXECUTE\n    state: present\n\n# Note that REQUIRESSL is a special privilege that should only apply to *.* by itself.\n# Setting this privilege in this manner is deprecated.\n# Use 'tls_requires' instead.\n- name: Modify user to require SSL connections\n  community.mysql.mysql_user:\n    name: bob\n    append_privs: yes\n    priv: '*.*:REQUIRESSL'\n    state: present\n\n- name: Modify user to require TLS connection with a valid client certificate\n  community.mysql.mysql_user:\n    name: bob\n    tls_requires:\n      x509:\n    state: present\n\n- name: Modify user to require TLS connection with a specific client certificate and cipher\n  community.mysql.mysql_user:\n    name: bob\n    tls_requires:\n      subject: '/CN=alice/O=MyDom, Inc./C=US/ST=Oregon/L=Portland'\n      cipher: 'ECDHE-ECDSA-AES256-SHA384'\n\n- name: Modify user to no longer require SSL\n  community.mysql.mysql_user:\n    name: bob\n    tls_requires:\n\n- name: Ensure no user named 'sally'@'localhost' exists, also passing in the auth credentials\n  community.mysql.mysql_user:\n    login_user: root\n    login_password: 123456\n    name: sally\n    state: absent\n\n# check_implicit_admin example\n- name: >\n    Ensure no user named 'sally'@'localhost' exists, also passing in the auth credentials.\n    If mysql allows root/nopassword login, try it without the credentials first.\n    If it's not allowed, pass the credentials\n  community.mysql.mysql_user:\n    check_implicit_admin: yes\n    login_user: root\n    login_password: 123456\n    name: sally\n    state: absent\n\n- name: Ensure no user named 'sally' exists at all\n  community.mysql.mysql_user:\n    name: sally\n    host_all: yes\n    state: absent\n\n- name: Specify grants composed of more than one word\n  community.mysql.mysql_user:\n    name: replication\n    password: 12345\n    priv: \"*.*:REPLICATION CLIENT\"\n    state: present\n\n- name: Revoke all privileges for user 'bob' and password '12345'\n  community.mysql.mysql_user:\n    name: bob\n    password: 12345\n    priv: \"*.*:USAGE\"\n    state: present\n\n# Example privileges string format\n# mydb.*:INSERT,UPDATE/anotherdb.*:SELECT/yetanotherdb.*:ALL\n\n- name: Example using login_unix_socket to connect to server\n  community.mysql.mysql_user:\n    name: root\n    password: abc123\n    login_unix_socket: /var/run/mysqld/mysqld.sock\n\n- name: Example of skipping binary logging while adding user 'bob'\n  community.mysql.mysql_user:\n    name: bob\n    password: 12345\n    priv: \"*.*:USAGE\"\n    state: present\n    sql_log_bin: no\n\n- name: Create user 'bob' authenticated with plugin 'AWSAuthenticationPlugin'\n  community.mysql.mysql_user:\n    name: bob\n    plugin: AWSAuthenticationPlugin\n    plugin_hash_string: RDS\n    priv: '*.*:ALL'\n    state: present\n\n- name: Limit bob's resources to 10 queries per hour and 5 connections per hour\n  community.mysql.mysql_user:\n    name: bob\n    resource_limits:\n      MAX_QUERIES_PER_HOUR: 10\n      MAX_CONNECTIONS_PER_HOUR: 5\n\n# Example .my.cnf file for setting the root password\n# [client]\n# user=root\n# password=n<_665{vS43y\n"
+  },
+  "community.mysql.mysql_variables": {
+    "doc": {
+      "description": "Query / Set MySQL variables.",
+      "has_action": false,
+      "notes": "Does not support C(check_mode).\nRequires the PyMySQL (Python 2.7 and Python 3.X) or MySQL-python (Python 2.X) package installed on the remote host. The Python package may be installed with apt-get install python-pymysql (Ubuntu; see M(ansible.builtin.apt)) or yum install python2-PyMySQL (RHEL/CentOS/Fedora; see M(ansible.builtin.yum)). You can also use dnf install python2-PyMySQL for newer versions of Fedora; see M(ansible.builtin.dnf).\nBe sure you have PyMySQL or MySQLdb library installed on the target machine for the Python interpreter Ansible uses, for example, if it is Python 3, you must install the library for Python 3. You can also change the interpreter. For more information, see U(https://docs.ansible.com/ansible/latest/reference_appendices/interpreter_discovery.html).\nBoth C(login_password) and C(login_user) are required when you are passing credentials. If none are present, the module will attempt to read the credentials from C(~/.my.cnf), and finally fall back to using the MySQL default login of 'root' with no password.\nIf there are problems with local connections, using I(login_unix_socket=/path/to/mysqld/socket) instead of I(login_host=localhost) might help. As an example, the default MariaDB installation of version 10.4 and later uses the unix_socket authentication plugin by default that without using I(login_unix_socket=/var/run/mysqld/mysqld.sock) (the default path) causes the error ``Host '127.0.0.1' is not allowed to connect to this MariaDB server``.\nAlternatively, you can use the mysqlclient library instead of MySQL-python (MySQLdb) which supports both Python 2.X and Python >=3.5. See U(https://pypi.org/project/mysqlclient/) how to install it.",
+      "options": {
+        "ca_cert": {
+          "aliases": [
+            "ssl_ca"
+          ],
+          "description": "The path to a Certificate Authority (CA) certificate. This option, if used, must specify the same certificate as used by the server.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "check_hostname": {
+          "aliases": [],
+          "description": "Whether to validate the server host name when an SSL connection is required. Corresponds to MySQL CLIs C(--ssl) switch.\nSetting this to C(false) disables hostname verification. Use with caution.\nRequires pymysql >= 0.7.11.\nThis option has no effect on MySQLdb.",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.1.0",
+          "suboptions": {}
+        },
+        "client_cert": {
+          "aliases": [
+            "ssl_cert"
+          ],
+          "description": "The path to a client public key certificate.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_key": {
+          "aliases": [
+            "ssl_key"
+          ],
+          "description": "The path to the client private key.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "config_file": {
+          "aliases": [],
+          "description": "Specify a config file from which user and password are to be read.",
+          "default": "~/.my.cnf",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "connect_timeout": {
+          "aliases": [],
+          "description": "The connection timeout when connecting to the MySQL server.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_host": {
+          "aliases": [],
+          "description": "Host running the database.\nIn some cases for local connections the I(login_unix_socket=/path/to/mysqld/socket), that is usually C(/var/run/mysqld/mysqld.sock), needs to be used instead of I(login_host=localhost).",
+          "default": "localhost",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "The password used to authenticate with.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_port": {
+          "aliases": [],
+          "description": "Port of the MySQL server. Requires I(login_host) be defined as other than localhost if login_port is used.",
+          "default": "3306",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_unix_socket": {
+          "aliases": [],
+          "description": "The path to a Unix domain socket for local connections.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "The username used to authenticate with.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "mode": {
+          "aliases": [],
+          "description": "C(global) assigns C(value) to a global system variable which will be changed at runtime but won't persist across server restarts.\nC(persist) assigns C(value) to a global system variable and persists it to the mysqld-auto.cnf option file in the data directory (the variable will survive service restarts).\nC(persist_only) persists C(value) to the mysqld-auto.cnf option file in the data directory but without setting the global variable runtime value (the value will be changed after the next service restart).\nSupported by MySQL 8.0 or later.\nFor more information see U(https://dev.mysql.com/doc/refman/8.0/en/set-variable.html).",
+          "default": "global",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "global",
+            "persist",
+            "persist_only"
+          ],
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "value": {
+          "aliases": [],
+          "description": "If set, then sets variable value to this.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "variable": {
+          "aliases": [],
+          "description": "Variable name to operate.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "PyMySQL (Python 2.7 and Python 3.X), or",
+        "MySQLdb (Python 2.x)"
+      ],
+      "short_description": "Manage MySQL global variables"
+    },
+    "examples": "\n- name: Check for sync_binlog setting\n  community.mysql.mysql_variables:\n    variable: sync_binlog\n\n- name: Set read_only variable to 1 persistently\n  community.mysql.mysql_variables:\n    variable: read_only\n    value: 1\n    mode: persist\n"
+  }
+}
