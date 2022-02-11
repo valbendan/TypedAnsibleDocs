@@ -8,7 +8,9 @@ Ansible Collection {{ name }} Docs
 
    * - Version
      - Download
+     - Permalink
 {% for version in version_list %}
    * - {{ version }}
      - :download:`{{ name }} {{ version }} <../../docs/{{ name }}/{{ version }}/{{ name }}.json>`
+     - `{{ name }} {{ version }} <../../docs/{{ name }}/{{ version }}/{{ name }}.json>`_
 {% endfor %}
