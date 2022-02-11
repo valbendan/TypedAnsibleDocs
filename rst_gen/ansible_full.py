@@ -3,12 +3,12 @@ import sys
 
 from .j2_utils import render_jinja2_file
 
-__all__ = ["gen_ansible_full"]
+__all__ = ["do_gen_ansible_full"]
 
 p_dir = os.path.dirname(__file__)
 
 
-def gen_ansible_full(version: str):
+def do_gen_ansible_full(version: str):
     doc_dir = os.path.join(p_dir, f"../docs/ansible/{version}")
     if not os.path.isdir(doc_dir):
         sys.stderr.write(f"{doc_dir=} 不是有效的目录")
