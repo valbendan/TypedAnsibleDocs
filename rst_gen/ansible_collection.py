@@ -26,7 +26,9 @@ def do_gen_ansible_collection(name: str):
         os.path.join(p_dir, "ansible_collection.jinja2"), context
     )
 
-    with open(
-        os.path.join(p_dir, "../source/collections/{name}.rst".format(name=name)), "w"
-    ) as fp:
+    index_dir = os.path.join(p_dir, f"../source/collections/{name}")
+    if not os.path.isdir(index_dir):
+        os.mkdir(index_dir, 0o775)
+
+    with open(os.path.join(index_dir, "index.rst"), "w") as fp:
         fp.write(rst_content)
