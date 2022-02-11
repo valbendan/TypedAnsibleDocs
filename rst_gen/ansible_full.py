@@ -14,7 +14,7 @@ def do_gen_ansible_full(version: str):
         sys.stderr.write(f"{doc_dir=} 不是有效的目录")
         sys.exit(2)
 
-    doc_files = os.listdir(doc_dir)
+    doc_files = sorted(os.listdir(doc_dir))
 
     context = dict(version=version, doc_files=doc_files)
 
