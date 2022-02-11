@@ -7,11 +7,7 @@ Welcome to Typed Ansible's documentation!
 =========================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-
-.. toctree::
+   :maxdepth: 1
 
    ansible/v5.1
    ansible/v5.2
