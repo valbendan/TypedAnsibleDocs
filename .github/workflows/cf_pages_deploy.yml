@@ -27,7 +27,7 @@ jobs:
         run: make fast-build
 
       - name: Show Files
-        run: ls build/html
+        run: tree build/html
 
       - name: Publish HTML
         uses: peter-evans/create-pull-request@v3.12.1
@@ -37,5 +37,5 @@ jobs:
           add-paths: |
             build/html
 
-      - name: 部署到 Clouflare Pages
-        run: curl -XPOST ${{ secrets.CF_DEPLOY_URL }}
+      #- name: 部署到 Clouflare Pages
+      #  run: curl -XPOST ${{ secrets.CF_DEPLOY_URL }}
