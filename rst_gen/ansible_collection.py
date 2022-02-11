@@ -14,7 +14,7 @@ def do_gen_ansible_collection(name: str):
         sys.stderr.write(f"{collection_dir=} is not valid directory")
         sys.exit(2)
 
-    version_list = os.listdir(collection_dir)
+    version_list = reversed(sorted(os.listdir(collection_dir)))
 
     context = dict(name=name, version_list=version_list)
 

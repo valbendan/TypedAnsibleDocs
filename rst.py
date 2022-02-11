@@ -3,6 +3,7 @@ import typer
 app = typer.Typer()
 
 from rst_gen.ansible_full import do_gen_ansible_full
+from rst_gen.ansible_collection import do_gen_ansible_collection
 
 
 @app.command()
@@ -22,7 +23,7 @@ def gen_collection(name: str = typer.Argument(..., help="Ansible Collections 名
 
     name 目录应该存在: docs/{name}/
     """
-    pass
+    do_gen_ansible_collection(name=name)
 
 
 if __name__ == "__main__":
