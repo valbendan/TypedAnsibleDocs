@@ -23,6 +23,9 @@ help:
 format:
 	poetry run black .
 
+.PHONY: build
+build:
+	make html
 
 gen-all-ansible-full:
 	poetry run python rst.py gen-ansible-full v5.1
