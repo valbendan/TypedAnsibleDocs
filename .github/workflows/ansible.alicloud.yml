@@ -1,0 +1,51 @@
+name: linode.cloud
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ansible.alicloud.yml'
+
+env:
+  ANSIBLE_VERSION: 5.3
+  GALAXY_COLLECTION: ansible.alicloud
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        pypi_version:
+          - 1.18.0
+          - 1.19.0
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: install dependency
+        run: pip install -r requirements.txt
+
+      - name: Install Ansible ${{ env.ANSIBLE_VERSION }}
+        run: pip install ansible==${{ env.ANSIBLE_VERSION }}
+
+      - name: Pip Install Collection ${{ matrix.pypi_version }}
+        run: pip install ansible_alicloud==${{ matrix.pypi_version }}
+
+      - name: Generate Doc
+        run: |
+          mkdir -p docs/${{ env.GALAXY_COLLECTION }}/${{ matrix.pypi_version }}
+          python gen_ansible_doc.py docs/${{ env.GALAXY_COLLECTION }}/${{ matrix.pypi_version }}  --collection ${{ env.GALAXY_COLLECTION }}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3.12.1
+        with:
+          title: Doc for ${{ env.GALAXY_COLLECTION }} ${{ matrix.pypi_version }}
+          branch: doc/${{ env.GALAXY_COLLECTION }}/${{ matrix.pypi_version }}
+          add-paths: |
+            docs/${{ env.GALAXY_COLLECTION }}/${{ matrix.pypi_version }}
+
