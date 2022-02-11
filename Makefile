@@ -33,6 +33,7 @@ fast-build: gen-all-ansible-collections gen-all-ansible-full
 
 gen-all-ansible-full:
 	poetry run python rst.py gen-ansible-full v5.1
+	poetry run python rst.py gen-ansible-full v5.2
 	poetry run python rst.py gen-ansible-full v5.3
 
 

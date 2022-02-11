@@ -14,5 +14,6 @@ Welcome to Typed Ansible's documentation!
 .. toctree::
 
    ansible/v5.1.rst
+   ansible/v5.2.rst
    ansible/v5.3.rst
    collections/linode.cloud.rst
