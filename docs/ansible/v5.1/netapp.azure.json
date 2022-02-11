@@ -1,0 +1,980 @@
+{
+  "netapp.azure.azure_rm_netapp_account": {
+    "doc": {
+      "description": "Create and delete NetApp Azure account. Provide the Resource group name for the NetApp account to be created.",
+      "has_action": false,
+      "notes": "For authentication with Azure you can pass parameters, set environment variables, use a profile stored in ~/.azure/credentials, or log in before you run your tasks or playbook with C(az login).\nAuthentication is also possible using a service principal or Active Directory user.\nTo authenticate via service principal, pass subscription_id, client_id, secret and tenant or set environment variables AZURE_SUBSCRIPTION_ID, AZURE_CLIENT_ID, AZURE_SECRET and AZURE_TENANT.\nTo authenticate via Active Directory user, pass ad_user and password, or set AZURE_AD_USER and AZURE_PASSWORD in the environment.\nAlternatively, credentials can be stored in ~/.azure/credentials. This is an ini file containing a [default] section and the following keys: subscription_id, client_id, secret and tenant or subscription_id, ad_user and password. It is also possible to add additional profiles. Specify the profile by passing profile or setting AZURE_PROFILE in the environment.\nThe modules prefixed with azure_rm_netapp are built to support the Cloud Volume Services for Azure NetApp Files.",
+      "options": {
+        "active_directories": {
+          "aliases": [],
+          "description": "list of active directory dictionaries.\nThe list is currently limited to a single active directory (ANF or Azure limit of one AD per subscription).",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "version_added": "21.2.0",
+          "suboptions": {
+            "active_directory_id": {
+              "aliases": [],
+              "description": "not used for create.  Not needed for join.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "ad_name": {
+              "aliases": [],
+              "description": "Name of the active directory machine.  Used only while creating kerberos volume.",
+              "type": "str",
+              "required": false,
+              "version_added": "21.3.0",
+              "suboptions": {}
+            },
+            "aes_encryption": {
+              "aliases": [],
+              "description": "If enabled, AES encryption will be enabled for SMB communication.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "dns": {
+              "aliases": [],
+              "description": "list of DNS addresses.  Required for create or join.",
+              "type": "list",
+              "required": false,
+              "elements": "str",
+              "suboptions": {}
+            },
+            "domain": {
+              "aliases": [],
+              "description": "Fully Qualified Active Directory DNS Domain Name.  Required for create or join.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "kdc_ip": {
+              "aliases": [],
+              "description": "kdc server IP addresses for the active directory machine.  Used only while creating kerberos volume.",
+              "type": "str",
+              "required": false,
+              "version_added": "21.3.0",
+              "suboptions": {}
+            },
+            "ldap_signing": {
+              "aliases": [],
+              "description": "Specifies whether or not the LDAP traffic needs to be signed.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "organizational_unit": {
+              "aliases": [],
+              "description": "LDAP Path for the Organization Unit where SMB Server machine accounts will be created (i.e. OU=SecondLevel,OU=FirstLevel).",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "password": {
+              "aliases": [],
+              "description": "see username.  If password is present, the module is not idempotent, as we cannot check the current value.  Required for create or join.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "server_root_ca_certificate": {
+              "aliases": [],
+              "description": "When LDAP over SSL/TLS is enabled, the LDAP client is required to have base64 encoded Active Directory Certificate Service's self-signed root CA certificate, this optional parameter is used only for dual protocol with LDAP user-mapping volumes.",
+              "type": "str",
+              "required": false,
+              "version_added": "21.3.0",
+              "suboptions": {}
+            },
+            "site": {
+              "aliases": [],
+              "description": "The Active Directory site the service will limit Domain Controller discovery to.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "smb_server_name": {
+              "aliases": [],
+              "description": "Prefix for creating the SMB server's computer account name in the Active Directory domain.  Required for create or join.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "username": {
+              "aliases": [],
+              "description": "Credentials that have permissions to create SMB server machine account in the AD domain.  Required for create or join.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "ad_user": {
+          "aliases": [],
+          "description": "Active Directory username. Use when authenticating with an Active Directory user rather than service principal.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "adfs_authority_url": {
+          "aliases": [],
+          "description": "Azure AD authority url. Use when authenticating with Username/password, and has your own ADFS authority.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.0.1",
+          "suboptions": {}
+        },
+        "api_profile": {
+          "aliases": [],
+          "description": "Selects an API profile to use when communicating with Azure services. Default value of C(latest) is appropriate for public clouds; future values will allow use with Azure Stack.",
+          "default": "latest",
+          "type": "str",
+          "required": false,
+          "version_added": "0.0.1",
+          "suboptions": {}
+        },
+        "append_tags": {
+          "aliases": [],
+          "description": "Use to control if tags field is canonical or just appends to existing tags.\nWhen canonical, any tags not found in the tags parameter will be removed from the object's metadata.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "auth_source": {
+          "aliases": [],
+          "description": "Controls the source of the credentials to use for authentication.\nCan also be set via the C(ANSIBLE_AZURE_AUTH_SOURCE) environment variable.\nWhen set to C(auto) (the default) the precedence is module parameters -> C(env) -> C(credential_file) -> C(cli).\nWhen set to C(env), the credentials will be read from the environment variables\nWhen set to C(credential_file), it will read the profile from C(~/.azure/credentials).\nWhen set to C(cli), the credentials will be sources from the Azure CLI profile. C(subscription_id) or the environment variable C(AZURE_SUBSCRIPTION_ID) can be used to identify the subscription ID if more than one is present otherwise the default az cli subscription is used.\nWhen set to C(msi), the host machine must be an azure resource with an enabled MSI extension. C(subscription_id) or the environment variable C(AZURE_SUBSCRIPTION_ID) can be used to identify the subscription ID if the resource is granted access to more than one subscription, otherwise the first subscription is chosen.\nThe C(msi) was added in Ansible 2.6.",
+          "default": "auto",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "auto",
+            "cli",
+            "credential_file",
+            "env",
+            "msi"
+          ],
+          "version_added": "0.0.1",
+          "suboptions": {}
+        },
+        "cert_validation_mode": {
+          "aliases": [],
+          "description": "Controls the certificate validation behavior for Azure endpoints. By default, all modules will validate the server certificate, but when an HTTPS proxy is in use, or against Azure Stack, it may be necessary to disable this behavior by passing C(ignore). Can also be set via credential file profile or the C(AZURE_CERT_VALIDATION) environment variable.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "ignore",
+            "validate"
+          ],
+          "version_added": "0.0.1",
+          "suboptions": {}
+        },
+        "client_id": {
+          "aliases": [],
+          "description": "Azure client ID. Use when authenticating with a Service Principal.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cloud_environment": {
+          "aliases": [],
+          "description": "For cloud environments other than the US public cloud, the environment name (as defined by Azure Python SDK, eg, C(AzureChinaCloud), C(AzureUSGovernment)), or a metadata discovery endpoint URL (required for Azure Stack). Can also be set via credential file profile or the C(AZURE_CLOUD_ENVIRONMENT) environment variable.",
+          "default": "AzureCloud",
+          "type": "str",
+          "required": false,
+          "version_added": "0.0.1",
+          "suboptions": {}
+        },
+        "debug": {
+          "aliases": [],
+          "description": "output details about current account if it exists.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "location": {
+          "aliases": [],
+          "description": "Resource location.\nRequired for create.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "log_mode": {
+          "aliases": [],
+          "description": "Parent argument.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "log_path": {
+          "aliases": [],
+          "description": "Parent argument.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the NetApp account.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Active Directory user password. Use when authenticating with an Active Directory user rather than service principal.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "profile": {
+          "aliases": [],
+          "description": "Security profile found in ~/.azure/credentials file.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "resource_group": {
+          "aliases": [],
+          "description": "Name of the resource group.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "secret": {
+          "aliases": [],
+          "description": "Azure client secret. Use when authenticating with a Service Principal.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State C(present) will check that the NetApp account exists with the requested configuration.\nState C(absent) will delete the NetApp account.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "subscription_id": {
+          "aliases": [],
+          "description": "Your Azure subscription Id.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "Dictionary of string:string pairs to assign as metadata to the object.\nMetadata tags on the object will be updated with any provided values.\nTo remove tags set append_tags option to false.\nCurrently, Azure DNS zones and Traffic Manager services also don't allow the use of spaces in the tag.\nAzure Front Door doesn't support the use of\nAzure Automation and Azure CDN only support 15 tags on resources.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "tenant": {
+          "aliases": [],
+          "description": "Azure tenant ID. Use when authenticating with a Service Principal.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "All python packages listed in collection's requirements-azure.txt must be installed via pip on the host that executes modules from azure.azcollection",
+        "For authentication with Azure NetApp log in before you run your tasks or playbook with C(az login).",
+        "Full installation instructions may be found https://galaxy.ansible.com/azure/azcollection",
+        "Python azure-mgmt-netapp. Install using 'pip install azure-mgmt-netapp'",
+        "Python azure-mgmt. Install using 'pip install azure-mgmt'",
+        "The host that executes this module must have the azure.azcollection collection installed via galaxy",
+        "azure >= 2.0.0",
+        "python >= 2.7"
+      ],
+      "short_description": "Manage NetApp Azure Files Account",
+      "version_added": "19.10.0"
+    },
+    "examples": "\n\n- name: Create NetApp Azure Account\n  netapp.azure.azure_rm_netapp_account:\n    resource_group: myResourceGroup\n    name: testaccount\n    location: eastus\n    tags: {'abc': 'xyz', 'cba': 'zyx'}\n\n- name: Modify Azure NetApp account (Join AD)\n  netapp.azure.azure_rm_netapp_account:\n    resource_group: myResourceGroup\n    name: testaccount\n    location: eastus\n    active_directories:\n      - site: ln\n        dns: 10.10.10.10\n        domain: domain.com\n        smb_server_name: dummy\n        password: xxxxxx\n        username: laurentn\n\n- name: Delete NetApp Azure Account\n  netapp.azure.azure_rm_netapp_account:\n    state: absent\n    resource_group: myResourceGroup\n    name: testaccount\n    location: eastus\n\n- name: Create Azure NetApp account (with AD)\n  netapp.azure.azure_rm_netapp_account:\n    resource_group: laurentngroupnodash\n    name: tests-netapp11\n    location: eastus\n    tags:\n      creator: laurentn\n      use: Ansible\n    active_directories:\n      - site: ln\n        dns: 10.10.10.10\n        domain: domain.com\n        smb_server_name: dummy\n        password: xxxxxx\n        username: laurentn\n"
+  },
+  "netapp.azure.azure_rm_netapp_capacity_pool": {
+    "doc": {
+      "description": "Create and delete NetApp Azure capacity pool. Provide the Resource group name for the capacity pool to be created.\nResize NetApp Azure capacity pool",
+      "has_action": false,
+      "notes": "For authentication with Azure you can pass parameters, set environment variables, use a profile stored in ~/.azure/credentials, or log in before you run your tasks or playbook with C(az login).\nAuthentication is also possible using a service principal or Active Directory user.\nTo authenticate via service principal, pass subscription_id, client_id, secret and tenant or set environment variables AZURE_SUBSCRIPTION_ID, AZURE_CLIENT_ID, AZURE_SECRET and AZURE_TENANT.\nTo authenticate via Active Directory user, pass ad_user and password, or set AZURE_AD_USER and AZURE_PASSWORD in the environment.\nAlternatively, credentials can be stored in ~/.azure/credentials. This is an ini file containing a [default] section and the following keys: subscription_id, client_id, secret and tenant or subscription_id, ad_user and password. It is also possible to add additional profiles. Specify the profile by passing profile or setting AZURE_PROFILE in the environment.\nThe modules prefixed with azure_rm_netapp are built to support the Cloud Volume Services for Azure NetApp Files.",
+      "options": {
+        "account_name": {
+          "aliases": [],
+          "description": "The name of the NetApp account.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "ad_user": {
+          "aliases": [],
+          "description": "Active Directory username. Use when authenticating with an Active Directory user rather than service principal.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "adfs_authority_url": {
+          "aliases": [],
+          "description": "Azure AD authority url. Use when authenticating with Username/password, and has your own ADFS authority.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.0.1",
+          "suboptions": {}
+        },
+        "api_profile": {
+          "aliases": [],
+          "description": "Selects an API profile to use when communicating with Azure services. Default value of C(latest) is appropriate for public clouds; future values will allow use with Azure Stack.",
+          "default": "latest",
+          "type": "str",
+          "required": false,
+          "version_added": "0.0.1",
+          "suboptions": {}
+        },
+        "append_tags": {
+          "aliases": [],
+          "description": "Use to control if tags field is canonical or just appends to existing tags.\nWhen canonical, any tags not found in the tags parameter will be removed from the object's metadata.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "auth_source": {
+          "aliases": [],
+          "description": "Controls the source of the credentials to use for authentication.\nCan also be set via the C(ANSIBLE_AZURE_AUTH_SOURCE) environment variable.\nWhen set to C(auto) (the default) the precedence is module parameters -> C(env) -> C(credential_file) -> C(cli).\nWhen set to C(env), the credentials will be read from the environment variables\nWhen set to C(credential_file), it will read the profile from C(~/.azure/credentials).\nWhen set to C(cli), the credentials will be sources from the Azure CLI profile. C(subscription_id) or the environment variable C(AZURE_SUBSCRIPTION_ID) can be used to identify the subscription ID if more than one is present otherwise the default az cli subscription is used.\nWhen set to C(msi), the host machine must be an azure resource with an enabled MSI extension. C(subscription_id) or the environment variable C(AZURE_SUBSCRIPTION_ID) can be used to identify the subscription ID if the resource is granted access to more than one subscription, otherwise the first subscription is chosen.\nThe C(msi) was added in Ansible 2.6.",
+          "default": "auto",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "auto",
+            "cli",
+            "credential_file",
+            "env",
+            "msi"
+          ],
+          "version_added": "0.0.1",
+          "suboptions": {}
+        },
+        "cert_validation_mode": {
+          "aliases": [],
+          "description": "Controls the certificate validation behavior for Azure endpoints. By default, all modules will validate the server certificate, but when an HTTPS proxy is in use, or against Azure Stack, it may be necessary to disable this behavior by passing C(ignore). Can also be set via credential file profile or the C(AZURE_CERT_VALIDATION) environment variable.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "ignore",
+            "validate"
+          ],
+          "version_added": "0.0.1",
+          "suboptions": {}
+        },
+        "client_id": {
+          "aliases": [],
+          "description": "Azure client ID. Use when authenticating with a Service Principal.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cloud_environment": {
+          "aliases": [],
+          "description": "For cloud environments other than the US public cloud, the environment name (as defined by Azure Python SDK, eg, C(AzureChinaCloud), C(AzureUSGovernment)), or a metadata discovery endpoint URL (required for Azure Stack). Can also be set via credential file profile or the C(AZURE_CLOUD_ENVIRONMENT) environment variable.",
+          "default": "AzureCloud",
+          "type": "str",
+          "required": false,
+          "version_added": "0.0.1",
+          "suboptions": {}
+        },
+        "location": {
+          "aliases": [],
+          "description": "Resource location.\nRequired for create.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "log_mode": {
+          "aliases": [],
+          "description": "Parent argument.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "log_path": {
+          "aliases": [],
+          "description": "Parent argument.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the capacity pool.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Active Directory user password. Use when authenticating with an Active Directory user rather than service principal.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "profile": {
+          "aliases": [],
+          "description": "Security profile found in ~/.azure/credentials file.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "resource_group": {
+          "aliases": [],
+          "description": "Name of the resource group.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "secret": {
+          "aliases": [],
+          "description": "Azure client secret. Use when authenticating with a Service Principal.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "service_level": {
+          "aliases": [],
+          "description": "The service level of the file system.\nRequired for create.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "Standard",
+            "Premium",
+            "Ultra"
+          ],
+          "version_added": "20.5.0",
+          "suboptions": {}
+        },
+        "size": {
+          "aliases": [],
+          "description": "Provisioned size of the pool (in chunks). Allowed values are in 4TiB chunks.\nProvide number to be multiplied to 4TiB.\nRequired for create.",
+          "default": "1",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State C(present) will check that the capacity pool exists with the requested configuration.\nState C(absent) will delete the capacity pool.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "subscription_id": {
+          "aliases": [],
+          "description": "Your Azure subscription Id.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "Dictionary of string:string pairs to assign as metadata to the object.\nMetadata tags on the object will be updated with any provided values.\nTo remove tags set append_tags option to false.\nCurrently, Azure DNS zones and Traffic Manager services also don't allow the use of spaces in the tag.\nAzure Front Door doesn't support the use of\nAzure Automation and Azure CDN only support 15 tags on resources.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "tenant": {
+          "aliases": [],
+          "description": "Azure tenant ID. Use when authenticating with a Service Principal.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "All python packages listed in collection's requirements-azure.txt must be installed via pip on the host that executes modules from azure.azcollection",
+        "For authentication with Azure NetApp log in before you run your tasks or playbook with C(az login).",
+        "Full installation instructions may be found https://galaxy.ansible.com/azure/azcollection",
+        "Python azure-mgmt-netapp. Install using 'pip install azure-mgmt-netapp'",
+        "Python azure-mgmt. Install using 'pip install azure-mgmt'",
+        "The host that executes this module must have the azure.azcollection collection installed via galaxy",
+        "azure >= 2.0.0",
+        "python >= 2.7"
+      ],
+      "short_description": "Manage NetApp Azure Files capacity pool",
+      "version_added": "19.10.0"
+    },
+    "examples": "\n\n- name: Create Azure NetApp capacity pool\n  netapp.azure.azure_rm_netapp_capacity_pool:\n    resource_group: myResourceGroup\n    account_name: tests-netapp\n    name: tests-pool\n    location: eastus\n    size: 2\n    service_level: Standard\n\n- name: Resize Azure NetApp capacity pool\n  netapp.azure.azure_rm_netapp_capacity_pool:\n    resource_group: myResourceGroup\n    account_name: tests-netapp\n    name: tests-pool\n    location: eastus\n    size: 3\n    service_level: Standard\n\n- name: Delete Azure NetApp capacity pool\n  netapp.azure.azure_rm_netapp_capacity_pool:\n    state: absent\n    resource_group: myResourceGroup\n    account_name: tests-netapp\n    name: tests-pool\n\n"
+  },
+  "netapp.azure.azure_rm_netapp_snapshot": {
+    "doc": {
+      "description": "Create and delete NetApp Azure Snapshot.",
+      "has_action": false,
+      "notes": "For authentication with Azure you can pass parameters, set environment variables, use a profile stored in ~/.azure/credentials, or log in before you run your tasks or playbook with C(az login).\nAuthentication is also possible using a service principal or Active Directory user.\nTo authenticate via service principal, pass subscription_id, client_id, secret and tenant or set environment variables AZURE_SUBSCRIPTION_ID, AZURE_CLIENT_ID, AZURE_SECRET and AZURE_TENANT.\nTo authenticate via Active Directory user, pass ad_user and password, or set AZURE_AD_USER and AZURE_PASSWORD in the environment.\nAlternatively, credentials can be stored in ~/.azure/credentials. This is an ini file containing a [default] section and the following keys: subscription_id, client_id, secret and tenant or subscription_id, ad_user and password. It is also possible to add additional profiles. Specify the profile by passing profile or setting AZURE_PROFILE in the environment.\nThe modules prefixed with azure_rm_netapp are built to support the Cloud Volume Services for Azure NetApp Files.",
+      "options": {
+        "account_name": {
+          "aliases": [],
+          "description": "The name of the NetApp account.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "ad_user": {
+          "aliases": [],
+          "description": "Active Directory username. Use when authenticating with an Active Directory user rather than service principal.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "adfs_authority_url": {
+          "aliases": [],
+          "description": "Azure AD authority url. Use when authenticating with Username/password, and has your own ADFS authority.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.0.1",
+          "suboptions": {}
+        },
+        "api_profile": {
+          "aliases": [],
+          "description": "Selects an API profile to use when communicating with Azure services. Default value of C(latest) is appropriate for public clouds; future values will allow use with Azure Stack.",
+          "default": "latest",
+          "type": "str",
+          "required": false,
+          "version_added": "0.0.1",
+          "suboptions": {}
+        },
+        "auth_source": {
+          "aliases": [],
+          "description": "Controls the source of the credentials to use for authentication.\nCan also be set via the C(ANSIBLE_AZURE_AUTH_SOURCE) environment variable.\nWhen set to C(auto) (the default) the precedence is module parameters -> C(env) -> C(credential_file) -> C(cli).\nWhen set to C(env), the credentials will be read from the environment variables\nWhen set to C(credential_file), it will read the profile from C(~/.azure/credentials).\nWhen set to C(cli), the credentials will be sources from the Azure CLI profile. C(subscription_id) or the environment variable C(AZURE_SUBSCRIPTION_ID) can be used to identify the subscription ID if more than one is present otherwise the default az cli subscription is used.\nWhen set to C(msi), the host machine must be an azure resource with an enabled MSI extension. C(subscription_id) or the environment variable C(AZURE_SUBSCRIPTION_ID) can be used to identify the subscription ID if the resource is granted access to more than one subscription, otherwise the first subscription is chosen.\nThe C(msi) was added in Ansible 2.6.",
+          "default": "auto",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "auto",
+            "cli",
+            "credential_file",
+            "env",
+            "msi"
+          ],
+          "version_added": "0.0.1",
+          "suboptions": {}
+        },
+        "cert_validation_mode": {
+          "aliases": [],
+          "description": "Controls the certificate validation behavior for Azure endpoints. By default, all modules will validate the server certificate, but when an HTTPS proxy is in use, or against Azure Stack, it may be necessary to disable this behavior by passing C(ignore). Can also be set via credential file profile or the C(AZURE_CERT_VALIDATION) environment variable.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "ignore",
+            "validate"
+          ],
+          "version_added": "0.0.1",
+          "suboptions": {}
+        },
+        "client_id": {
+          "aliases": [],
+          "description": "Azure client ID. Use when authenticating with a Service Principal.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cloud_environment": {
+          "aliases": [],
+          "description": "For cloud environments other than the US public cloud, the environment name (as defined by Azure Python SDK, eg, C(AzureChinaCloud), C(AzureUSGovernment)), or a metadata discovery endpoint URL (required for Azure Stack). Can also be set via credential file profile or the C(AZURE_CLOUD_ENVIRONMENT) environment variable.",
+          "default": "AzureCloud",
+          "type": "str",
+          "required": false,
+          "version_added": "0.0.1",
+          "suboptions": {}
+        },
+        "location": {
+          "aliases": [],
+          "description": "Resource location.\nRequired for create.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "log_mode": {
+          "aliases": [],
+          "description": "Parent argument.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "log_path": {
+          "aliases": [],
+          "description": "Parent argument.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the snapshot.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Active Directory user password. Use when authenticating with an Active Directory user rather than service principal.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "pool_name": {
+          "aliases": [],
+          "description": "The name of the capacity pool.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "profile": {
+          "aliases": [],
+          "description": "Security profile found in ~/.azure/credentials file.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "resource_group": {
+          "aliases": [],
+          "description": "Name of the resource group.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "secret": {
+          "aliases": [],
+          "description": "Azure client secret. Use when authenticating with a Service Principal.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State C(present) will check that the snapshot exists with the requested configuration.\nState C(absent) will delete the snapshot.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "subscription_id": {
+          "aliases": [],
+          "description": "Your Azure subscription Id.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tenant": {
+          "aliases": [],
+          "description": "Azure tenant ID. Use when authenticating with a Service Principal.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "volume_name": {
+          "aliases": [],
+          "description": "The name of the volume.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "All python packages listed in collection's requirements-azure.txt must be installed via pip on the host that executes modules from azure.azcollection",
+        "For authentication with Azure NetApp log in before you run your tasks or playbook with C(az login).",
+        "Full installation instructions may be found https://galaxy.ansible.com/azure/azcollection",
+        "Python azure-mgmt-netapp. Install using 'pip install azure-mgmt-netapp'",
+        "Python azure-mgmt. Install using 'pip install azure-mgmt'",
+        "The host that executes this module must have the azure.azcollection collection installed via galaxy",
+        "azure >= 2.0.0",
+        "python >= 2.7"
+      ],
+      "short_description": "Manage NetApp Azure Files Snapshot",
+      "version_added": "19.10.0"
+    },
+    "examples": "\n\n- name: Create Azure NetApp Snapshot\n  netapp.azure.azure_rm_netapp_snapshot:\n    resource_group: myResourceGroup\n    account_name: tests-netapp\n    pool_name: tests-pool\n    volume_name: tests-volume2\n    name: tests-snapshot\n    location: eastus\n\n- name: Delete Azure NetApp Snapshot\n  netapp.azure.azure_rm_netapp_snapshot:\n    state: absent\n    resource_group: myResourceGroup\n    account_name: tests-netapp\n    pool_name: tests-pool\n    volume_name: tests-volume2\n    name: tests-snapshot\n\n"
+  },
+  "netapp.azure.azure_rm_netapp_volume": {
+    "doc": {
+      "description": "Create and delete NetApp Azure volume.",
+      "has_action": false,
+      "notes": "feature_flags is setting ignore_change_ownership_mode to true by default to bypass a 'change ownership mode' issue with azure-mgmt-netapp 4.0.0.\nFor authentication with Azure you can pass parameters, set environment variables, use a profile stored in ~/.azure/credentials, or log in before you run your tasks or playbook with C(az login).\nAuthentication is also possible using a service principal or Active Directory user.\nTo authenticate via service principal, pass subscription_id, client_id, secret and tenant or set environment variables AZURE_SUBSCRIPTION_ID, AZURE_CLIENT_ID, AZURE_SECRET and AZURE_TENANT.\nTo authenticate via Active Directory user, pass ad_user and password, or set AZURE_AD_USER and AZURE_PASSWORD in the environment.\nAlternatively, credentials can be stored in ~/.azure/credentials. This is an ini file containing a [default] section and the following keys: subscription_id, client_id, secret and tenant or subscription_id, ad_user and password. It is also possible to add additional profiles. Specify the profile by passing profile or setting AZURE_PROFILE in the environment.\nThe modules prefixed with azure_rm_netapp are built to support the Cloud Volume Services for Azure NetApp Files.",
+      "options": {
+        "account_name": {
+          "aliases": [],
+          "description": "The name of the NetApp account.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "ad_user": {
+          "aliases": [],
+          "description": "Active Directory username. Use when authenticating with an Active Directory user rather than service principal.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "adfs_authority_url": {
+          "aliases": [],
+          "description": "Azure AD authority url. Use when authenticating with Username/password, and has your own ADFS authority.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.0.1",
+          "suboptions": {}
+        },
+        "api_profile": {
+          "aliases": [],
+          "description": "Selects an API profile to use when communicating with Azure services. Default value of C(latest) is appropriate for public clouds; future values will allow use with Azure Stack.",
+          "default": "latest",
+          "type": "str",
+          "required": false,
+          "version_added": "0.0.1",
+          "suboptions": {}
+        },
+        "append_tags": {
+          "aliases": [],
+          "description": "Use to control if tags field is canonical or just appends to existing tags.\nWhen canonical, any tags not found in the tags parameter will be removed from the object's metadata.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "auth_source": {
+          "aliases": [],
+          "description": "Controls the source of the credentials to use for authentication.\nCan also be set via the C(ANSIBLE_AZURE_AUTH_SOURCE) environment variable.\nWhen set to C(auto) (the default) the precedence is module parameters -> C(env) -> C(credential_file) -> C(cli).\nWhen set to C(env), the credentials will be read from the environment variables\nWhen set to C(credential_file), it will read the profile from C(~/.azure/credentials).\nWhen set to C(cli), the credentials will be sources from the Azure CLI profile. C(subscription_id) or the environment variable C(AZURE_SUBSCRIPTION_ID) can be used to identify the subscription ID if more than one is present otherwise the default az cli subscription is used.\nWhen set to C(msi), the host machine must be an azure resource with an enabled MSI extension. C(subscription_id) or the environment variable C(AZURE_SUBSCRIPTION_ID) can be used to identify the subscription ID if the resource is granted access to more than one subscription, otherwise the first subscription is chosen.\nThe C(msi) was added in Ansible 2.6.",
+          "default": "auto",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "auto",
+            "cli",
+            "credential_file",
+            "env",
+            "msi"
+          ],
+          "version_added": "0.0.1",
+          "suboptions": {}
+        },
+        "cert_validation_mode": {
+          "aliases": [],
+          "description": "Controls the certificate validation behavior for Azure endpoints. By default, all modules will validate the server certificate, but when an HTTPS proxy is in use, or against Azure Stack, it may be necessary to disable this behavior by passing C(ignore). Can also be set via credential file profile or the C(AZURE_CERT_VALIDATION) environment variable.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "ignore",
+            "validate"
+          ],
+          "version_added": "0.0.1",
+          "suboptions": {}
+        },
+        "client_id": {
+          "aliases": [],
+          "description": "Azure client ID. Use when authenticating with a Service Principal.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cloud_environment": {
+          "aliases": [],
+          "description": "For cloud environments other than the US public cloud, the environment name (as defined by Azure Python SDK, eg, C(AzureChinaCloud), C(AzureUSGovernment)), or a metadata discovery endpoint URL (required for Azure Stack). Can also be set via credential file profile or the C(AZURE_CLOUD_ENVIRONMENT) environment variable.",
+          "default": "AzureCloud",
+          "type": "str",
+          "required": false,
+          "version_added": "0.0.1",
+          "suboptions": {}
+        },
+        "feature_flags": {
+          "aliases": [],
+          "description": "Enable or disable a new feature.\nThis can be used to enable an experimental feature or disable a new feature that breaks backward compatibility.\nSupported keys and values are subject to change without notice.  Unknown keys are ignored.",
+          "type": "dict",
+          "required": false,
+          "version_added": "21.9.0",
+          "suboptions": {}
+        },
+        "file_path": {
+          "aliases": [],
+          "description": "A unique file path for the volume. Used when creating mount targets.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "location": {
+          "aliases": [],
+          "description": "Resource location.\nRequired for create.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "log_mode": {
+          "aliases": [],
+          "description": "Parent argument.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "log_path": {
+          "aliases": [],
+          "description": "Parent argument.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the volume.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Active Directory user password. Use when authenticating with an Active Directory user rather than service principal.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "pool_name": {
+          "aliases": [],
+          "description": "The name of the capacity pool.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "profile": {
+          "aliases": [],
+          "description": "Security profile found in ~/.azure/credentials file.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "protocol_types": {
+          "aliases": [],
+          "description": "Protocol types - NFSv3, NFSv4.1, CIFS (for SMB).",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "version_added": "21.2.0",
+          "suboptions": {}
+        },
+        "resource_group": {
+          "aliases": [],
+          "description": "Name of the resource group.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "secret": {
+          "aliases": [],
+          "description": "Azure client secret. Use when authenticating with a Service Principal.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "service_level": {
+          "aliases": [],
+          "description": "The service level of the file system.\ndefault is Premium.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "Premium",
+            "Standard",
+            "Ultra"
+          ],
+          "suboptions": {}
+        },
+        "size": {
+          "aliases": [],
+          "description": "Provisioned size of the volume (in GiB).\nMinimum size is 100 GiB. Upper limit is 100TiB\ndefault is 100GiB.",
+          "type": "int",
+          "required": false,
+          "version_added": "20.5.0",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State C(present) will check that the volume exists with the requested configuration.\nState C(absent) will delete the volume.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "subnet_name": {
+          "aliases": [
+            "subnet_id"
+          ],
+          "description": "Azure resource name for a delegated subnet. Must have the delegation Microsoft.NetApp/volumes.\nProvide name of the subnet ID.\nRequired for create.",
+          "type": "str",
+          "required": false,
+          "version_added": "21.1.0",
+          "suboptions": {}
+        },
+        "subscription_id": {
+          "aliases": [],
+          "description": "Your Azure subscription Id.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "Dictionary of string:string pairs to assign as metadata to the object.\nMetadata tags on the object will be updated with any provided values.\nTo remove tags set append_tags option to false.\nCurrently, Azure DNS zones and Traffic Manager services also don't allow the use of spaces in the tag.\nAzure Front Door doesn't support the use of\nAzure Automation and Azure CDN only support 15 tags on resources.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "tenant": {
+          "aliases": [],
+          "description": "Azure tenant ID. Use when authenticating with a Service Principal.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "virtual_network": {
+          "aliases": [],
+          "description": "The name of the virtual network required for the subnet to create a volume.\nRequired for create.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vnet_resource_group_for_subnet": {
+          "aliases": [],
+          "description": "Only required if virtual_network to be used is of different resource_group.\nName of the resource group for virtual_network and subnet_name to be used.",
+          "type": "str",
+          "required": false,
+          "version_added": "20.5.0",
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "All python packages listed in collection's requirements-azure.txt must be installed via pip on the host that executes modules from azure.azcollection",
+        "For authentication with Azure NetApp log in before you run your tasks or playbook with C(az login).",
+        "Full installation instructions may be found https://galaxy.ansible.com/azure/azcollection",
+        "Python azure-mgmt-netapp. Install using 'pip install azure-mgmt-netapp'",
+        "Python azure-mgmt. Install using 'pip install azure-mgmt'",
+        "The host that executes this module must have the azure.azcollection collection installed via galaxy",
+        "azure >= 2.0.0",
+        "python >= 2.7"
+      ],
+      "short_description": "Manage NetApp Azure Files Volume",
+      "version_added": "19.10.0"
+    },
+    "examples": "\n\n- name: Create Azure NetApp volume\n  netapp.azure.azure_rm_netapp_volume:\n    resource_group: myResourceGroup\n    account_name: tests-netapp\n    pool_name: tests-pool\n    name: tests-volume2\n    location: eastus\n    file_path: tests-volume2\n    virtual_network: myVirtualNetwork\n    vnet_resource_group_for_subnet: myVirtualNetworkResourceGroup\n    subnet_name: test\n    service_level: Ultra\n    size: 100\n\n- name: Delete Azure NetApp volume\n  netapp.azure.azure_rm_netapp_volume:\n    state: absent\n    resource_group: myResourceGroup\n    account_name: tests-netapp\n    pool_name: tests-pool\n    name: tests-volume2\n\n"
+  }
+}
