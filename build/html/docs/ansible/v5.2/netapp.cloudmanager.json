@@ -1,0 +1,2971 @@
+{
+  "netapp.cloudmanager.na_cloudmanager_aggregate": {
+    "doc": {
+      "description": "Create, Modify or Delete Aggregate on Cloud Manager.",
+      "has_action": false,
+      "notes": "Support check_mode.\nThe modules prefixed with na_cloudmanager are built to manage CloudManager and CVO deployments in AWS/GCP/Azure clouds.\nIf sa_client_id and sa_secret_key are provided, service account will be used in operations. refresh_token will be ignored.",
+      "options": {
+        "capacity_tier": {
+          "aliases": [],
+          "description": "The aggregate's capacity tier for tiering cold data to object storage.\nIf the value is NONE, the capacity_tier will not be set on aggregate creation.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "NONE",
+            "S3",
+            "Blob",
+            "cloudStorage"
+          ],
+          "suboptions": {}
+        },
+        "client_id": {
+          "aliases": [],
+          "description": "The client ID of the Cloud Manager Connector.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "disk_size_size": {
+          "aliases": [],
+          "description": "The required size of the disks.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "disk_size_unit": {
+          "aliases": [],
+          "description": "The disk size unit ['GB' or 'TB']. The default is 'TB'.",
+          "default": "TB",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "GB",
+            "TB"
+          ],
+          "suboptions": {}
+        },
+        "environment": {
+          "aliases": [],
+          "description": "The environment for NetApp Cloud Manager API operations.",
+          "default": "prod",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "prod",
+            "stage"
+          ],
+          "version_added": "21.8.0",
+          "suboptions": {}
+        },
+        "feature_flags": {
+          "aliases": [],
+          "description": "Enable or disable a new feature.\nThis can be used to enable an experimental feature or disable a new feature that breaks backward compatibility.\nSupported keys and values are subject to change without notice.  Unknown keys are ignored.",
+          "type": "dict",
+          "required": false,
+          "version_added": "21.11.0",
+          "suboptions": {}
+        },
+        "home_node": {
+          "aliases": [],
+          "description": "The home node that the new aggregate should belong to.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "iops": {
+          "aliases": [],
+          "description": "Provisioned IOPS. Needed only when providerVolumeType is \"io1\".",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the new aggregate.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "number_of_disks": {
+          "aliases": [],
+          "description": "The required number of disks in the new aggregate.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "provider_volume_type": {
+          "aliases": [],
+          "description": "The cloud provider volume type.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "refresh_token": {
+          "aliases": [],
+          "description": "The refresh token for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_client_id": {
+          "aliases": [],
+          "description": "The service account secret client ID for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_secret_key": {
+          "aliases": [],
+          "description": "The service account secret key for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified aggregate should exist or not.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "throughput": {
+          "aliases": [],
+          "description": "Unit is Mb/s. Valid range 125-1000.\nRequired only when provider_volume_type is 'gp3'.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "working_environment_id": {
+          "aliases": [],
+          "description": "The public ID of the working environment where the aggregate will be created.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "working_environment_name": {
+          "aliases": [],
+          "description": "The working environment name where the aggregate will be created.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp Cloud Manager Aggregate",
+      "version_added": "21.3.0"
+    },
+    "examples": "\n- name: Create Aggregate\n  netapp.cloudmanager.na_cloudmanager_aggregate:\n    state: present\n    name: AnsibleAggregate\n    working_environment_name: testAWS\n    client_id: \"{{ client_id }}\"\n    number_of_disks: 2\n    refresh_token: xxx\n\n- name: Delete Volume\n  netapp.cloudmanager.na_cloudmanager_aggregate:\n    state: absent\n    name: AnsibleAggregate\n    working_environment_name: testAWS\n    client_id: \"{{ client_id }}\"\n    refresh_token: xxx\n"
+  },
+  "netapp.cloudmanager.na_cloudmanager_cifs_server": {
+    "doc": {
+      "description": "Create or Delete a CIFS server on the Cloud Volume ONTAP system to support CIFS volumes, based on an Active Directory or Workgroup.",
+      "has_action": false,
+      "notes": "Support check_mode.\nThe modules prefixed with na_cloudmanager are built to manage CloudManager and CVO deployments in AWS/GCP/Azure clouds.\nIf sa_client_id and sa_secret_key are provided, service account will be used in operations. refresh_token will be ignored.",
+      "options": {
+        "client_id": {
+          "aliases": [],
+          "description": "The client ID of the Cloud Manager Connector.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "dns_domain": {
+          "aliases": [],
+          "description": "The DNS domain name. For CIFS AD only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "domain": {
+          "aliases": [],
+          "description": "The active directory domain name. For CIFS AD only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "environment": {
+          "aliases": [],
+          "description": "The environment for NetApp Cloud Manager API operations.",
+          "default": "prod",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "prod",
+            "stage"
+          ],
+          "version_added": "21.8.0",
+          "suboptions": {}
+        },
+        "feature_flags": {
+          "aliases": [],
+          "description": "Enable or disable a new feature.\nThis can be used to enable an experimental feature or disable a new feature that breaks backward compatibility.\nSupported keys and values are subject to change without notice.  Unknown keys are ignored.",
+          "type": "dict",
+          "required": false,
+          "version_added": "21.11.0",
+          "suboptions": {}
+        },
+        "ip_addresses": {
+          "aliases": [],
+          "description": "The DNS server IP addresses. For CIFS AD only.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "is_workgroup": {
+          "aliases": [],
+          "description": "For CIFS workgroup operations, set to true.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "netbios": {
+          "aliases": [],
+          "description": "The CIFS server NetBIOS name. For CIFS AD only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "organizational_unit": {
+          "aliases": [],
+          "description": "The organizational unit in which to register the CIFS server. For CIFS AD only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "The active directory admin password. For CIFS AD only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "refresh_token": {
+          "aliases": [],
+          "description": "The refresh token for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_client_id": {
+          "aliases": [],
+          "description": "The service account secret client ID for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_secret_key": {
+          "aliases": [],
+          "description": "The service account secret key for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_name": {
+          "aliases": [],
+          "description": "The server name. For CIFS workgroup only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified cifs server should exist or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "The active directory admin user name. For CIFS AD only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "workgroup_name": {
+          "aliases": [],
+          "description": "The workgroup name. For CIFS workgroup only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "working_environment_id": {
+          "aliases": [],
+          "description": "The public ID of the working environment where the cifs server will be created.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "working_environment_name": {
+          "aliases": [],
+          "description": "The working environment name where the cifs server will be created.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp Cloud Manager cifs server",
+      "version_added": "21.3.0"
+    },
+    "examples": "\n- name: Create cifs server with working_environment_id\n  netapp.cloudmanager.na_cloudmanager_cifs_server:\n    state: present\n    working_environment_id: VsaWorkingEnvironment-abcdefgh\n    client_id: your_client_id\n    refresh_token: your_refresh_token\n    domain: example.com\n    username: admin\n    password: pass\n    dns_domain: example.com\n    ip_addresses: [\"1.0.0.0\"]\n    netbios: cvoname\n    organizational_unit: CN=Computers\n"
+  },
+  "netapp.cloudmanager.na_cloudmanager_connector_aws": {
+    "doc": {
+      "description": "Create or delete Cloud Manager connector for AWS.",
+      "has_action": false,
+      "notes": "Support check_mode.\nThe modules prefixed with na_cloudmanager are built to manage CloudManager and CVO deployments in AWS/GCP/Azure clouds.\nIf sa_client_id and sa_secret_key are provided, service account will be used in operations. refresh_token will be ignored.",
+      "options": {
+        "account_id": {
+          "aliases": [],
+          "description": "The NetApp tenancy account ID.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ami": {
+          "aliases": [],
+          "description": "The image ID.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "associate_public_ip_address": {
+          "aliases": [],
+          "description": "Indicates whether to associate a public IP address to the instance. If not provided, the association will be done based on the subnet's configuration.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "aws_tag": {
+          "aliases": [],
+          "description": "Additional tags for the AWS EC2 instance.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "tag_key": {
+              "aliases": [],
+              "description": "The key of the tag.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "tag_value": {
+              "aliases": [],
+              "description": "The tag value.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "client_id": {
+          "aliases": [],
+          "description": "The unique client ID of the Connector.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "company": {
+          "aliases": [],
+          "description": "The name of the company of the user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "enable_termination_protection": {
+          "aliases": [],
+          "description": "Indicates whether to enable termination protection on the instance.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "environment": {
+          "aliases": [],
+          "description": "The environment for NetApp Cloud Manager API operations.",
+          "default": "prod",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "prod",
+            "stage"
+          ],
+          "version_added": "21.8.0",
+          "suboptions": {}
+        },
+        "feature_flags": {
+          "aliases": [],
+          "description": "Enable or disable a new feature.\nThis can be used to enable an experimental feature or disable a new feature that breaks backward compatibility.\nSupported keys and values are subject to change without notice.  Unknown keys are ignored.",
+          "type": "dict",
+          "required": false,
+          "version_added": "21.11.0",
+          "suboptions": {}
+        },
+        "iam_instance_profile_name": {
+          "aliases": [],
+          "description": "The name of the instance profile for the Connector.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "instance_id": {
+          "aliases": [],
+          "description": "The ID of the EC2 instance used for delete.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "instance_type": {
+          "aliases": [],
+          "description": "The type of instance (for example, t3.xlarge). At least 4 CPU and 16 GB of memory are required.",
+          "default": "t3.xlarge",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "key_name": {
+          "aliases": [],
+          "description": "The name of the key pair to use for the Connector instance.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the Cloud Manager connector for AWS to manage.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "proxy_certificates": {
+          "aliases": [],
+          "description": "The proxy certificates, a list of certificate file names.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "version_added": "21.5.0",
+          "suboptions": {}
+        },
+        "proxy_password": {
+          "aliases": [],
+          "description": "The proxy password, if using a proxy to connect to the internet.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy_url": {
+          "aliases": [],
+          "description": "The proxy URL, if using a proxy to connect to the internet.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy_user_name": {
+          "aliases": [],
+          "description": "The proxy user name, if using a proxy to connect to the internet.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "refresh_token": {
+          "aliases": [],
+          "description": "The refresh token for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [],
+          "description": "The region where the Cloud Manager Connector will be created.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "sa_client_id": {
+          "aliases": [],
+          "description": "The service account secret client ID for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_secret_key": {
+          "aliases": [],
+          "description": "The service account secret key for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "security_group_ids": {
+          "aliases": [],
+          "description": "The IDs of the security groups for the instance, multiple security groups can be provided separated by ','.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified Cloud Manager connector for AWS should exist or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "subnet_id": {
+          "aliases": [],
+          "description": "The ID of the subnet for the instance.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp Cloud Manager connector for AWS",
+      "version_added": "21.3.0"
+    },
+    "examples": "\n- name: Create NetApp Cloud Manager connector for AWS\n  netapp.cloudmanager.na_cloudmanager_connector_aws:\n    state: present\n    refresh_token: \"{{ xxxxxxxxxxxxxxx }}\"\n    name: bsuhas_ansible_occm\n    region: us-west-1\n    key_name: dev_automation\n    subnet_id: subnet-xxxxx\n    security_group_ids: [sg-xxxxxxxxxxx]\n    iam_instance_profile_name: OCCM_AUTOMATION\n    account_id: \"{{ account-xxxxxxx }}\"\n    company: NetApp\n    proxy_url: abc.com\n    proxy_user_name: xyz\n    proxy_password: abcxyz\n    proxy_certificates: [abc.crt.txt, xyz.crt.txt]\n    aws_tag: [\n        {tag_key: abc,\n        tag_value: a123}]\n\n- name: Delete NetApp Cloud Manager connector for AWS\n  netapp.cloudmanager.na_cloudmanager_connector_aws:\n    state: absent\n    name: ansible\n    region: us-west-1\n    account_id: \"{{ account-xxxxxxx }}\"\n    instance_id: i-xxxxxxxxxxxxx\n    client_id: xxxxxxxxxxxxxxxxxxx\n"
+  },
+  "netapp.cloudmanager.na_cloudmanager_connector_azure": {
+    "doc": {
+      "description": "Create or delete Cloud Manager connector for Azure.",
+      "has_action": false,
+      "notes": "The modules prefixed with na_cloudmanager are built to manage CloudManager and CVO deployments in AWS/GCP/Azure clouds.\nIf sa_client_id and sa_secret_key are provided, service account will be used in operations. refresh_token will be ignored.",
+      "options": {
+        "account_id": {
+          "aliases": [],
+          "description": "The NetApp tenancy account ID.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "admin_password": {
+          "aliases": [],
+          "description": "The password for the Connector.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "admin_username": {
+          "aliases": [],
+          "description": "The user name for the Connector.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "associate_public_ip_address": {
+          "aliases": [],
+          "description": "Indicates whether to associate the public IP address to the virtual machine.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_id": {
+          "aliases": [],
+          "description": "The unique client ID of the Connector.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "company": {
+          "aliases": [],
+          "description": "The name of the company of the user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "environment": {
+          "aliases": [],
+          "description": "The environment for NetApp Cloud Manager API operations.",
+          "default": "prod",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "prod",
+            "stage"
+          ],
+          "version_added": "21.8.0",
+          "suboptions": {}
+        },
+        "feature_flags": {
+          "aliases": [],
+          "description": "Enable or disable a new feature.\nThis can be used to enable an experimental feature or disable a new feature that breaks backward compatibility.\nSupported keys and values are subject to change without notice.  Unknown keys are ignored.",
+          "type": "dict",
+          "required": false,
+          "version_added": "21.11.0",
+          "suboptions": {}
+        },
+        "location": {
+          "aliases": [],
+          "description": "The location where the Cloud Manager Connector will be created.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the Cloud Manager connector for Azure to manage.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "network_security_group_name": {
+          "aliases": [],
+          "description": "The name of the security group for the deployment.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "network_security_resource_group": {
+          "aliases": [],
+          "description": "The resource group in Azure associated with the security group.\nIf not provided, its assumed that the security group is within the previously specified resource group.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy_certificates": {
+          "aliases": [],
+          "description": "The proxy certificates, a list of certificate file names.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "proxy_password": {
+          "aliases": [],
+          "description": "The proxy password, if using a proxy to connect to the internet.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy_url": {
+          "aliases": [],
+          "description": "The proxy URL, if using a proxy to connect to the internet.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy_user_name": {
+          "aliases": [],
+          "description": "The proxy user name, if using a proxy to connect to the internet.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "refresh_token": {
+          "aliases": [],
+          "description": "The refresh token for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "resource_group": {
+          "aliases": [],
+          "description": "The resource group in Azure where the resources will be created.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "sa_client_id": {
+          "aliases": [],
+          "description": "The service account secret client ID for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_secret_key": {
+          "aliases": [],
+          "description": "The service account secret key for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified Cloud Manager connector for Azure should exist or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "subnet_name": {
+          "aliases": [
+            "subnet_id"
+          ],
+          "description": "The name of the subnet for the virtual machine.\nFor example, in /subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.Network/virtualNetworks/xxx/subnets/default, only default is needed.",
+          "type": "str",
+          "required": true,
+          "version_added": "21.7.0",
+          "suboptions": {}
+        },
+        "subscription_id": {
+          "aliases": [],
+          "description": "The ID of the Azure subscription.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "virtual_machine_size": {
+          "aliases": [],
+          "description": "The virtual machine type. (for example, Standard_DS3_v2).\nAt least 4 CPU and 16 GB of memory are required.",
+          "default": "Standard_DS3_v2",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vnet_name": {
+          "aliases": [
+            "vnet_id"
+          ],
+          "description": "The name of the virtual network.\nfor example, in /subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.Network/virtualNetworks/default, only default is needed.",
+          "type": "str",
+          "required": true,
+          "version_added": "21.7.0",
+          "suboptions": {}
+        },
+        "vnet_resource_group": {
+          "aliases": [],
+          "description": "The resource group in Azure associated with the virtual network.\nIf not provided, its assumed that the VNet is within the previously specified resource group.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp Cloud Manager connector for Azure.",
+      "version_added": "21.4.0"
+    },
+    "examples": "\n- name: Create NetApp Cloud Manager connector for Azure.\n  netapp.cloudmanager.na_cloudmanager_connector_azure:\n    state: present\n    refresh_token: \"{{ xxxxxxxxxxxxxxx }}\"\n    name: bsuhas_ansible_occm\n    location: westus\n    resource_group: occm_group_westus\n    subnet_name: subnetxxxxx\n    vnet_name: Vnetxxxxx\n    subscription_id: \"{{ xxxxxxxxxxxxxxxxx }}\"\n    account_id: \"{{ account-xxxxxxx }}\"\n    company: NetApp\n    admin_password: Netapp123456\n    admin_username: bsuhas\n    network_security_group_name: OCCM_SG\n    proxy_url: abc.com\n    proxy_user_name: xyz\n    proxy_password: abcxyz\n    proxy_certificates: [abc.crt.txt, xyz.crt.txt]\n\n- name: Delete NetApp Cloud Manager connector for Azure.\n  netapp.cloudmanager.na_cloudmanager_connector_azure:\n    state: absent\n    name: ansible\n    location: westus\n    resource_group: occm_group_westus\n    network_security_group_name: OCCM_SG\n    subnet_name: subnetxxxxx\n    company: NetApp\n    admin_password: Netapp123456\n    admin_username: bsuhas\n    vnet_name: Vnetxxxxx\n    subscription_id: \"{{ xxxxxxxxxxxxxxxxx }}\"\n    account_id: \"{{ account-xxxxxxx }}\"\n    refresh_token: \"{{ xxxxxxxxxxxxxxx }}\"\n    client_id: xxxxxxxxxxxxxxxxxxx\n"
+  },
+  "netapp.cloudmanager.na_cloudmanager_connector_gcp": {
+    "doc": {
+      "description": "Create or delete Cloud Manager connector for GCP.",
+      "has_action": false,
+      "notes": "The modules prefixed with na_cloudmanager are built to manage CloudManager and CVO deployments in AWS/GCP/Azure clouds.\nIf sa_client_id and sa_secret_key are provided, service account will be used in operations. refresh_token will be ignored.",
+      "options": {
+        "account_id": {
+          "aliases": [],
+          "description": "The NetApp account ID that the Connector will be associated with.\nIf not provided, Cloud Manager uses the first account. If no account exists, Cloud Manager creates a new account.\nYou can find the account ID in the account tab of Cloud Manager at [https://cloudmanager.netapp.com](https://cloudmanager.netapp.com).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "associate_public_ip": {
+          "aliases": [],
+          "description": "Indicates whether to associate a public IP address to the virtual machine.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_id": {
+          "aliases": [],
+          "description": "The client ID of the Cloud Manager Connector.\nIf state is absent, the client id is used to identify the agent and delete it.\nIf state is absent and this parameter is not set, all agents associated with C(name) are deleted.\nIgnored when state is present.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "company": {
+          "aliases": [],
+          "description": "The name of the company of the user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "environment": {
+          "aliases": [],
+          "description": "The environment for NetApp Cloud Manager API operations.",
+          "default": "prod",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "prod",
+            "stage"
+          ],
+          "version_added": "21.8.0",
+          "suboptions": {}
+        },
+        "feature_flags": {
+          "aliases": [],
+          "description": "Enable or disable a new feature.\nThis can be used to enable an experimental feature or disable a new feature that breaks backward compatibility.\nSupported keys and values are subject to change without notice.  Unknown keys are ignored.",
+          "type": "dict",
+          "required": false,
+          "version_added": "21.11.0",
+          "suboptions": {}
+        },
+        "firewall_tags": {
+          "aliases": [],
+          "description": "Indicates whether to add firewall_tags to the connector VM (HTTP and HTTP).",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "gcp_service_account_email": {
+          "aliases": [
+            "service_account_email"
+          ],
+          "description": "The email of the service_account for the connector instance. This service account is used to allow the Connector to create Cloud Volume ONTAP.",
+          "type": "str",
+          "required": true,
+          "version_added": "21.7.0",
+          "suboptions": {}
+        },
+        "gcp_service_account_path": {
+          "aliases": [
+            "service_account_path"
+          ],
+          "description": "The local path of the service_account JSON file for GCP authorization purposes. This service account is used to create the Connector in GCP.",
+          "type": "str",
+          "required": true,
+          "version_added": "21.7.0",
+          "suboptions": {}
+        },
+        "machine_type": {
+          "aliases": [],
+          "description": "The machine_type for the Connector VM.",
+          "default": "n1-standard-4",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the Cloud Manager connector for GCP to manage.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "network_project_id": {
+          "aliases": [],
+          "description": "The project id in GCP associated with the Subnet. If not provided, it is assumed that the Subnet is within the previously specified project id.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "project_id": {
+          "aliases": [],
+          "description": "The GCP project_id where the connector will be created.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "proxy_certificates": {
+          "aliases": [],
+          "description": "The proxy certificates. A list of certificate file names.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "proxy_password": {
+          "aliases": [],
+          "description": "The proxy password, if using a proxy to connect to the internet.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy_url": {
+          "aliases": [],
+          "description": "The proxy URL, if using a proxy to connect to the internet.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy_user_name": {
+          "aliases": [],
+          "description": "The proxy user name, if using a proxy to connect to the internet.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "refresh_token": {
+          "aliases": [],
+          "description": "The refresh token for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_client_id": {
+          "aliases": [],
+          "description": "The service account secret client ID for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_secret_key": {
+          "aliases": [],
+          "description": "The service account secret key for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified Cloud Manager connector for GCP should exist or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "subnet_id": {
+          "aliases": [],
+          "description": "The name of the subnet for the virtual machine.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "zone": {
+          "aliases": [],
+          "description": "The GCP zone where the Connector will be created.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp Cloud Manager connector for GCP.",
+      "version_added": "21.4.0"
+    },
+    "examples": "\n- name: Create NetApp Cloud Manager connector for GCP\n  netapp.cloudmanager.na_cloudmanager_connector_gcp:\n    state: present\n    name: ansible-occm-gcp\n    project_id: xxxxxxx-support\n    zone: us-east4-b\n    company: NetApp\n    gcp_service_account_email: xxxxxxxx@xxxxxxx-support.iam.gserviceaccount.com\n    gcp_service_account_path: gcp_creds.json\n    proxy_user_name: test\n    proxy_password: test\n    proxy_url: http://abcdefg.com\n    proxy_certificates: [\"D-TRUST_Root_Class_3_CA_2_2009.crt\", \"DigiCertGlobalRootCA.crt\", \"DigiCertGlobalRootG2.crt\"]\n    account_id: account-xxxxXXXX\n    refresh_token: \"{{ xxxxxxxxxxxxxxx }}\"\n\n- name: Delete NetApp Cloud Manager connector for GCP\n  netapp.cloudmanager.na_cloudmanager_connector_gcp:\n    state: absent\n    name: ansible-occm-gcp\n    refresh_token: \"{{ xxxxxxxxxxxxxxx }}\"\n    client_id: \"{{ wwwwwwwwww }}\"\n    project_id: xxxxxxx-support\n    zone: us-east4-b\n    company: NetApp\n    gcp_service_account_email: xxxxxxxx@xxxxxxx-support.iam.gserviceaccount.com\n    gcp_service_account_path: gcp_creds.json\n    account_id: account-xxxxXXXX\n"
+  },
+  "netapp.cloudmanager.na_cloudmanager_cvo_aws": {
+    "doc": {
+      "description": "Create, delete, or manage Cloud Manager CVO for AWS.",
+      "has_action": false,
+      "notes": "Support check_mode.\nThe modules prefixed with na_cloudmanager are built to manage CloudManager and CVO deployments in AWS/GCP/Azure clouds.\nIf sa_client_id and sa_secret_key are provided, service account will be used in operations. refresh_token will be ignored.",
+      "options": {
+        "aws_tag": {
+          "aliases": [],
+          "description": "Additional tags for the AWS CVO working environment.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "tag_key": {
+              "aliases": [],
+              "description": "The key of the tag.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "tag_value": {
+              "aliases": [],
+              "description": "The tag value.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "backup_volumes_to_cbs": {
+          "aliases": [],
+          "description": "Automatically enable back up of all volumes to S3.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "capacity_package_name": {
+          "aliases": [],
+          "description": "Capacity package name is required when selecting a capacity based license.\nEssential only available with Bring Your Own License Capacity-Based.\nProfessional available as an annual contract from AWS marketplace or Bring Your Own License Capacity-Based.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "Professional",
+            "Essential",
+            "Freemium"
+          ],
+          "version_added": "21.12.0",
+          "suboptions": {}
+        },
+        "capacity_tier": {
+          "aliases": [],
+          "description": "Whether to enable data tiering for the first data aggregate.",
+          "default": "S3",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "S3",
+            "NONE"
+          ],
+          "suboptions": {}
+        },
+        "client_id": {
+          "aliases": [],
+          "description": "The client ID of the Cloud Manager Connector.\nYou can find the ID from the Connector tab on U(https://cloudmanager.netapp.com).",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cloud_provider_account": {
+          "aliases": [],
+          "description": "The cloud provider credentials id to use when deploying the Cloud Volumes ONTAP system.\nYou can find the ID in Cloud Manager from the Settings > Credentials page.\nIf not specified, Cloud Manager uses the instance profile of the Connector.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cluster_floating_ip": {
+          "aliases": [],
+          "description": "For HA FloatingIP, the cluster management floating IP address.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "data_encryption_type": {
+          "aliases": [],
+          "description": "The type of encryption to use for the working environment.",
+          "default": "AWS",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "AWS",
+            "NONE"
+          ],
+          "suboptions": {}
+        },
+        "data_floating_ip": {
+          "aliases": [],
+          "description": "For HA FloatingIP, the data floating IP address.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "data_floating_ip2": {
+          "aliases": [],
+          "description": "For HA FloatingIP, the data floating IP address.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ebs_volume_size": {
+          "aliases": [],
+          "description": "EBS volume size for the first data aggregate.\nFor GB, the value can be [100 or 500].\nFor TB, the value can be [1,2,4,8,16].",
+          "default": "1",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "ebs_volume_size_unit": {
+          "aliases": [],
+          "description": "The unit for ebs volume size.",
+          "default": "TB",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "GB",
+            "TB"
+          ],
+          "suboptions": {}
+        },
+        "ebs_volume_type": {
+          "aliases": [],
+          "description": "The EBS volume type for the first data aggregate.",
+          "default": "gp2",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "gp3",
+            "gp2",
+            "io1",
+            "sc1",
+            "st1"
+          ],
+          "suboptions": {}
+        },
+        "enable_compliance": {
+          "aliases": [],
+          "description": "Enable the Cloud Compliance service on the working environment.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "enable_monitoring": {
+          "aliases": [],
+          "description": "Enable the Monitoring service on the working environment.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "environment": {
+          "aliases": [],
+          "description": "The environment for NetApp Cloud Manager API operations.",
+          "default": "prod",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "prod",
+            "stage"
+          ],
+          "version_added": "21.8.0",
+          "suboptions": {}
+        },
+        "failover_mode": {
+          "aliases": [],
+          "description": "For HA, the failover mode for the HA pair. 'PrivateIP' is for a single availability zone and 'FloatingIP' is for multiple availability zones.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "PrivateIP",
+            "FloatingIP"
+          ],
+          "suboptions": {}
+        },
+        "feature_flags": {
+          "aliases": [],
+          "description": "Enable or disable a new feature.\nThis can be used to enable an experimental feature or disable a new feature that breaks backward compatibility.\nSupported keys and values are subject to change without notice.  Unknown keys are ignored.",
+          "type": "dict",
+          "required": false,
+          "version_added": "21.11.0",
+          "suboptions": {}
+        },
+        "instance_profile_name": {
+          "aliases": [],
+          "description": "The instance profile name for the working environment. If not provided, Cloud Manager creates the instance profile.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "instance_tenancy": {
+          "aliases": [],
+          "description": "The EC2 instance tenancy.",
+          "default": "default",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "default",
+            "dedicated"
+          ],
+          "suboptions": {}
+        },
+        "instance_type": {
+          "aliases": [],
+          "description": "The instance type to use, which depends on the license type.\nExplore ['m5.xlarge'].\nStandard ['m5.2xlarge','r5.xlarge'].\nPremium ['m5.4xlarge','r5.2xlarge','c4.8xlarge'].\nFor more supported instance types, refer to Cloud Volumes ONTAP Release Notes.",
+          "default": "m5.2xlarge",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "iops": {
+          "aliases": [],
+          "description": "Provisioned IOPS. Required only when provider_volume_type is 'io1' or 'gp3'.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "is_ha": {
+          "aliases": [],
+          "description": "Indicate whether the working environment is an HA pair or not.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "kms_key_arn": {
+          "aliases": [],
+          "description": "AWS encryption parameters. It is required if using aws encryption. Only one of KMS key id or KMS arn should be specified.",
+          "type": "str",
+          "required": false,
+          "version_added": "21.10.0",
+          "suboptions": {}
+        },
+        "kms_key_id": {
+          "aliases": [],
+          "description": "Aws Encryption parameters. It is required if using aws encryption. Only one of KMS key id or KMS arn should be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "license_type": {
+          "aliases": [],
+          "description": "The type of license to use.\nFor single node ['cot-explore-paygo','cot-standard-paygo', 'cot-premium-paygo', 'cot-premium-byol',      'capacity-paygo'].\nFor HA ['ha-cot-explore-paygo','ha-cot-standard-paygo','ha-cot-premium-paygo','ha-cot-premium-byol',      'ha-capacity-paygo'].\nUse capacity-paygo or ha-capacity-paygo for HA on selecting Bring Your Own License type Capacity-Based or Freemium.\nUse cot-premium-boyl or ha-cot-permium-boyl for HA on selecting Bring Your Own License type Node-Based.",
+          "default": "cot-standard-paygo",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "cot-standard-paygo",
+            "cot-premium-paygo",
+            "cot-explore-paygo",
+            "cot-premium-byol",
+            "ha-cot-standard-paygo",
+            "ha-cot-premium-paygo",
+            "ha-cot-premium-byol",
+            "ha-cot-explore-paygo",
+            "capacity-paygo",
+            "ha-capacity-paygo"
+          ],
+          "suboptions": {}
+        },
+        "mediator_assign_public_ip": {
+          "aliases": [],
+          "description": "Boolean option to assign public IP.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "mediator_key_pair_name": {
+          "aliases": [],
+          "description": "For HA, the key pair name for the mediator instance.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "mediator_subnet_id": {
+          "aliases": [],
+          "description": "For HA, the subnet ID of the mediator.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the Cloud Manager CVO for AWS to manage.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "node1_subnet_id": {
+          "aliases": [],
+          "description": "For HA, the subnet ID of the first node.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "node2_subnet_id": {
+          "aliases": [],
+          "description": "For HA, the subnet ID of the second node.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "nss_account": {
+          "aliases": [],
+          "description": "The NetApp Support Site account ID to use with this Cloud Volumes ONTAP system.\nIf the license type is BYOL and an NSS account is not provided, Cloud Manager tries to use the first existing NSS account.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ontap_version": {
+          "aliases": [],
+          "description": "The required ONTAP version. Ignored if 'use_latest_version' is set to true.",
+          "default": "latest",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "optimized_network_utilization": {
+          "aliases": [],
+          "description": "Use optimized network utilization.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "platform_serial_number": {
+          "aliases": [],
+          "description": "The serial number for the cluster. This is required when using 'cot-premium-byol'.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "platform_serial_number_node1": {
+          "aliases": [],
+          "description": "For HA BYOL, the serial number for the first node. This is required when using 'ha-cot-premium-byol'.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "platform_serial_number_node2": {
+          "aliases": [],
+          "description": "For HA BYOL, the serial number for the second node. This is required when using 'ha-cot-premium-byol'.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "provided_license": {
+          "aliases": [],
+          "description": "Using a NLF license file for BYOL deployment.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "refresh_token": {
+          "aliases": [],
+          "description": "The refresh token for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [],
+          "description": "The region where the working environment will be created.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "route_table_ids": {
+          "aliases": [],
+          "description": "For HA FloatingIP, the list of route table IDs that will be updated with the floating IPs.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "sa_client_id": {
+          "aliases": [],
+          "description": "The service account secret client ID for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_secret_key": {
+          "aliases": [],
+          "description": "The service account secret key for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "security_group_id": {
+          "aliases": [],
+          "description": "The ID of the security group for the working environment. If not provided, Cloud Manager creates the security group.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified Cloud Manager CVO for AWS should exist or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "subnet_id": {
+          "aliases": [],
+          "description": "The subnet id where the working environment will be created. Required when single node only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "svm_floating_ip": {
+          "aliases": [],
+          "description": "For HA FloatingIP, the SVM management floating IP address.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "svm_password": {
+          "aliases": [],
+          "description": "The admin password for Cloud Volumes ONTAP.\nIt will be updated on each run.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "throughput": {
+          "aliases": [],
+          "description": "Unit is Mb/s. Valid range 125-1000.\nRequired only when provider_volume_type is 'gp3'.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "tier_level": {
+          "aliases": [],
+          "description": "The tiering level when 'capacity_tier' is set to 'S3'.",
+          "default": "normal",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "normal",
+            "ia",
+            "ia-single",
+            "intelligent"
+          ],
+          "suboptions": {}
+        },
+        "use_latest_version": {
+          "aliases": [],
+          "description": "Indicates whether to use the latest available ONTAP version.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "vpc_id": {
+          "aliases": [],
+          "description": "The VPC ID where the working environment will be created.\nIf this argument is not provided, the VPC will be calculated by using the provided subnet ID.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "workspace_id": {
+          "aliases": [],
+          "description": "The ID of the Cloud Manager workspace where you want to deploy Cloud Volumes ONTAP.\nIf not provided, Cloud Manager uses the first workspace.\nYou can find the ID from the Workspace tab on U(https://cloudmanager.netapp.com).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "writing_speed_state": {
+          "aliases": [],
+          "description": "The write speed setting for Cloud Volumes ONTAP ['NORMAL','HIGH'].\nThis argument is not relevant for HA pairs.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp Cloud Manager CVO for AWS",
+      "version_added": "21.3.0"
+    },
+    "examples": "\n- name: Create NetApp Cloud Manager CVO for AWS single\n  netapp.cloudmanager.na_cloudmanager_cvo_aws:\n    state: present\n    refresh_token: \"{{ xxxxxxxxxxxxxxx }}\"\n    name: AnsibleCVO\n    region: us-west-1\n    subnet_id: subnet-xxxxxxx\n    vpc_id: vpc-xxxxxxxx\n    svm_password: P@assword!\n    client_id: \"{{ xxxxxxxxxxxxxxx }}\"\n    writing_speed_state: NORMAL\n    aws_tag: [\n        {tag_key: abc,\n        tag_value: a123}]\n\n- name: Create NetApp Cloud Manager CVO for AWS HA\n  netapp.cloudmanager.na_cloudmanager_cvo_aws:\n    state: present\n    refresh_token: \"{{ xxxxxxxxxxxxxxx }}\"\n    name: AnsibleCVO\n    region: us-west-1\n    subnet_id: subnet-xxxxxxx\n    vpc_id: vpc-xxxxxxxx\n    svm_password: P@assword!\n    client_id: \"{{ xxxxxxxxxxxxxxx }}\"\n    writing_speed_state: NORMAL\n    aws_tag: [\n        {tag_key: abc,\n        tag_value: a123}]\n    is_ha: true\n    failover_mode: FloatingIP\n    node1_subnet_id: subnet-1\n    node2_subnet_id: subnet-1\n    mediator_subnet_id: subnet-1\n    mediator_key_pair_name: key1\n    cluster_floating_ip: 2.1.1.1\n    data_floating_ip: 2.1.1.2\n    data_floating_ip2: 2.1.1.3\n    svm_floating_ip: 2.1.1.4\n    route_table_ids: [rt-1,rt-2]\n\n- name: Delete NetApp Cloud Manager cvo for AWS\n  netapp.cloudmanager.na_cloudmanager_cvo_aws:\n    state: absent\n    name: ansible\n    region: us-west-1\n    refresh_token: \"{{ xxxxxxxxxxxxxxx }}\"\n    subnet_id: subnet-xxxxxxx\n    vpc_id: vpc-xxxxxxxx\n    svm_password: P@assword!\n    client_id: \"{{ xxxxxxxxxxxxxxx }}\"\n"
+  },
+  "netapp.cloudmanager.na_cloudmanager_cvo_azure": {
+    "doc": {
+      "description": "Create, delete, or manage Cloud Manager CVO/working environment in single or HA mode for Azure.",
+      "has_action": false,
+      "notes": "The modules prefixed with na_cloudmanager are built to manage CloudManager and CVO deployments in AWS/GCP/Azure clouds.\nIf sa_client_id and sa_secret_key are provided, service account will be used in operations. refresh_token will be ignored.",
+      "options": {
+        "allow_deploy_in_existing_rg": {
+          "aliases": [],
+          "description": "Indicates if to allow creation in existing resource group",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "azure_encryption_parameters": {
+          "aliases": [],
+          "description": "AZURE encryption parameters. It is required if using AZURE encryption.",
+          "type": "str",
+          "required": false,
+          "version_added": "21.10.0",
+          "suboptions": {}
+        },
+        "azure_tag": {
+          "aliases": [],
+          "description": "Additional tags for the AZURE CVO working environment.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "tag_key": {
+              "aliases": [],
+              "description": "The key of the tag.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "tag_value": {
+              "aliases": [],
+              "description": "The tag value.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "backup_volumes_to_cbs": {
+          "aliases": [],
+          "description": "Automatically enable back up of all volumes to S3.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "capacity_package_name": {
+          "aliases": [],
+          "description": "Capacity package name is required when selecting a capacity based license.\nEssential only available with Bring Your Own License Capacity-Based.\nProfessional available as an annual contract from a cloud provider or Bring Your Own License Capacity-Based.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "Professional",
+            "Essential",
+            "Freemium"
+          ],
+          "version_added": "21.12.0",
+          "suboptions": {}
+        },
+        "capacity_tier": {
+          "aliases": [],
+          "description": "Whether to enable data tiering for the first data aggregate",
+          "default": "Blob",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "Blob",
+            "NONE"
+          ],
+          "suboptions": {}
+        },
+        "cidr": {
+          "aliases": [],
+          "description": "The CIDR of the VNET.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "client_id": {
+          "aliases": [],
+          "description": "The client ID of the Cloud Manager Connector.\nYou can find the ID from the Connector tab on [https://cloudmanager.netapp.com].",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cloud_provider_account": {
+          "aliases": [],
+          "description": "The cloud provider credentials id to use when deploying the Cloud Volumes ONTAP system.\nYou can find the ID in Cloud Manager from the Settings > Credentials page.\nIf not specified, Cloud Manager uses the instance profile of the Connector.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "data_encryption_type": {
+          "aliases": [],
+          "description": "The type of encryption to use for the working environment.",
+          "default": "AZURE",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "AZURE",
+            "NONE"
+          ],
+          "suboptions": {}
+        },
+        "disk_size": {
+          "aliases": [],
+          "description": "Azure volume size for the first data aggregate.\nFor GB, the value can be [100, 500].\nFor TB, the value can be [1,2,4,8,16].",
+          "default": "1",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "disk_size_unit": {
+          "aliases": [],
+          "description": "The unit for disk size.",
+          "default": "TB",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "GB",
+            "TB"
+          ],
+          "suboptions": {}
+        },
+        "enable_compliance": {
+          "aliases": [],
+          "description": "Enable the Cloud Compliance service on the working environment.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "enable_monitoring": {
+          "aliases": [],
+          "description": "Enable the Monitoring service on the working environment.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "environment": {
+          "aliases": [],
+          "description": "The environment for NetApp Cloud Manager API operations.",
+          "default": "prod",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "prod",
+            "stage"
+          ],
+          "version_added": "21.8.0",
+          "suboptions": {}
+        },
+        "feature_flags": {
+          "aliases": [],
+          "description": "Enable or disable a new feature.\nThis can be used to enable an experimental feature or disable a new feature that breaks backward compatibility.\nSupported keys and values are subject to change without notice.  Unknown keys are ignored.",
+          "type": "dict",
+          "required": false,
+          "version_added": "21.11.0",
+          "suboptions": {}
+        },
+        "ha_enable_https": {
+          "aliases": [],
+          "description": "For HA, enable the HTTPS connection from CVO to storage accounts. This can impact write performance. The default is false.",
+          "type": "bool",
+          "required": false,
+          "version_added": "21.10.0",
+          "suboptions": {}
+        },
+        "instance_type": {
+          "aliases": [],
+          "description": "The type of instance to use, which depends on the license type you chose.\nExplore ['Standard_DS3_v2']\nStandard ['Standard_DS4_v2, Standard_DS13_v2,Standard_L8s_v2']\nPremium ['Standard_DS5_v2', 'Standard_DS14_v2']\nFor more supported instance types, refer to Cloud Volumes ONTAP Release Notes.",
+          "default": "Standard_DS4_v2",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "is_ha": {
+          "aliases": [],
+          "description": "Indicate whether the working environment is an HA pair or not.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "license_type": {
+          "aliases": [],
+          "description": "The type of license to use.\nFor single node ['azure-cot-explore-paygo', 'azure-cot-standard-paygo', 'azure-cot-premium-paygo',      'azure-cot-premium-byol', 'capacity-paygo']\nFor HA ['azure-ha-cot-standard-paygo', 'azure-ha-cot-premium-paygo', 'azure-ha-cot-premium-byol',      'ha-capacity-paygo']\nUse capacity-paygo or ha-capacity-paygo for HA on selecting Bring Your Own License type Capacity-Based or Freemium.\nUse azure-cot-premium-boyl or azure-ha-cot-permium-boyl for HA on selecting Bring Your Own License type Node-Based.",
+          "default": "azure-cot-standard-paygo",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "azure-cot-standard-paygo",
+            "azure-cot-premium-paygo",
+            "azure-cot-premium-byol",
+            "azure-cot-explore-paygo",
+            "azure-ha-cot-standard-paygo",
+            "azure-ha-cot-premium-paygo",
+            "azure-ha-cot-premium-byol",
+            "capacity-paygo",
+            "ha-capacity-paygo"
+          ],
+          "suboptions": {}
+        },
+        "location": {
+          "aliases": [],
+          "description": "The location where the working environment will be created.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the Cloud Manager CVO for AZURE to manage.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "nss_account": {
+          "aliases": [],
+          "description": "The NetApp Support Site account ID to use with this Cloud Volumes ONTAP system.\nIf the license type is BYOL and an NSS account isn't provided, Cloud Manager tries to use the first existing NSS account.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ontap_version": {
+          "aliases": [],
+          "description": "The required ONTAP version. Ignored if 'use_latest_version' is set to true",
+          "default": "latest",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "platform_serial_number_node1": {
+          "aliases": [],
+          "description": "For HA BYOL, the serial number for the first node.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "platform_serial_number_node2": {
+          "aliases": [],
+          "description": "For HA BYOL, the serial number for the second node.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "provided_license": {
+          "aliases": [],
+          "description": "Using a NLF license file for BYOL deployment.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "refresh_token": {
+          "aliases": [],
+          "description": "The refresh token for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "resource_group": {
+          "aliases": [],
+          "description": "The resource_group where Cloud Volumes ONTAP will be created.\nIf not provided, Cloud Manager generates the resource group name (name of the working environment/CVO with suffix '-rg').\nIf the resource group does not exist, it is created.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_client_id": {
+          "aliases": [],
+          "description": "The service account secret client ID for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_secret_key": {
+          "aliases": [],
+          "description": "The service account secret key for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "security_group_id": {
+          "aliases": [],
+          "description": "The ID of the security group for the working environment. If not provided, Cloud Manager creates the security group.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "serial_number": {
+          "aliases": [],
+          "description": "The serial number for the cluster\nRequired when using one of these, 'azure-cot-premium-byol' or 'azure-ha-cot-premium-byol'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified Cloud Manager CVO for AZURE should exist or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "storage_type": {
+          "aliases": [],
+          "description": "The type of storage for the first data aggregate.",
+          "default": "Premium_LRS",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "Premium_LRS",
+            "Standard_LRS",
+            "StandardSSD_LRS"
+          ],
+          "suboptions": {}
+        },
+        "subnet_id": {
+          "aliases": [],
+          "description": "The name of the subnet for the Cloud Volumes ONTAP system.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "subscription_id": {
+          "aliases": [],
+          "description": "The ID of the Azure subscription.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "svm_password": {
+          "aliases": [],
+          "description": "The admin password for Cloud Volumes ONTAP.\nIt will be updated on each run.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "tier_level": {
+          "aliases": [],
+          "description": "If capacity_tier is Blob, this argument indicates the tiering level.",
+          "default": "normal",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "normal",
+            "cool"
+          ],
+          "suboptions": {}
+        },
+        "use_latest_version": {
+          "aliases": [],
+          "description": "Indicates whether to use the latest available ONTAP version.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "vnet_id": {
+          "aliases": [],
+          "description": "The name of the virtual network.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "vnet_resource_group": {
+          "aliases": [],
+          "description": "The resource group in Azure associated to the virtual network.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "workspace_id": {
+          "aliases": [],
+          "description": "The ID of the Cloud Manager workspace where you want to deploy Cloud Volumes ONTAP.\nIf not provided, Cloud Manager uses the first workspace.\nYou can find the ID from the Workspace tab on [https://cloudmanager.netapp.com].",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "writing_speed_state": {
+          "aliases": [],
+          "description": "The write speed setting for Cloud Volumes ONTAP ['NORMAL','HIGH'].\nThis argument is not relevant for HA pairs.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp Cloud Manager CVO/working environment in single or HA mode for Azure.",
+      "version_added": "21.4.0"
+    },
+    "examples": "\n- name: create NetApp Cloud Manager CVO for Azure single\n  netapp.cloudmanager.na_cloudmanager_cvo_azure:\n    state: present\n    refresh_token: \"{{ xxxxxxxxxxxxxxx }}\"\n    name: AnsibleCVO\n    location: westus\n    subnet_id: subnet-xxxxxxx\n    vnet_id: vnetxxxxxxxx\n    svm_password: P@assword!\n    client_id: \"{{ xxxxxxxxxxxxxxx }}\"\n    writing_speed_state: NORMAL\n    azure_tag: [\n        {tag_key: abc,\n        tag_value: a123}]\n\n- name: create NetApp Cloud Manager CVO for Azure HA\n  netapp.cloudmanager.na_cloudmanager_cvo_azure:\n    state: present\n    refresh_token: \"{{ xxxxxxxxxxxxxxx }}\"\n    name: AnsibleCVO\n    location: westus\n    subnet_id: subnet-xxxxxxx\n    vnet_id: vnetxxxxxxxx\n    svm_password: P@assword!\n    client_id: \"{{ xxxxxxxxxxxxxxx }}\"\n    writing_speed_state: NORMAL\n    azure_tag: [\n        {tag_key: abc,\n        tag_value: a123}]\n    is_ha: true\n\n- name: delete NetApp Cloud Manager cvo for Azure\n  netapp.cloudmanager.na_cloudmanager_cvo_azure:\n    state: absent\n    name: ansible\n    refresh_token: \"{{ xxxxxxxxxxxxxxx }}\"\n    location: westus\n    subnet_id: subnet-xxxxxxx\n    vnet_id: vnetxxxxxxxx\n    svm_password: P@assword!\n    client_id: \"{{ xxxxxxxxxxxxxxx }}\"\n"
+  },
+  "netapp.cloudmanager.na_cloudmanager_cvo_gcp": {
+    "doc": {
+      "description": "Create, delete, or manage Cloud Manager CVO for GCP.",
+      "has_action": false,
+      "notes": "Support check_mode.\nThe modules prefixed with na_cloudmanager are built to manage CloudManager and CVO deployments in AWS/GCP/Azure clouds.\nIf sa_client_id and sa_secret_key are provided, service account will be used in operations. refresh_token will be ignored.",
+      "options": {
+        "backup_volumes_to_cbs": {
+          "aliases": [],
+          "description": "Automatically backup all volumes to cloud.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "capacity_package_name": {
+          "aliases": [],
+          "description": "Capacity package name is required when selecting a capacity based license.\nEssential only available with Bring Your Own License Capacity-Based.\nProfessional available as an annual contract from a cloud provider or Bring Your Own License Capacity-Based.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "Professional",
+            "Essential",
+            "Freemium"
+          ],
+          "version_added": "21.12.0",
+          "suboptions": {}
+        },
+        "capacity_tier": {
+          "aliases": [],
+          "description": "Whether to enable data tiering for the first data aggregate.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "cloudStorage"
+          ],
+          "suboptions": {}
+        },
+        "client_id": {
+          "aliases": [],
+          "description": "The client ID of the Cloud Manager Connector.\nYou can find the ID from the Connector tab on U(https://cloudmanager.netapp.com).",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "data_encryption_type": {
+          "aliases": [],
+          "description": "Type of encryption to use for this working environment.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "GCP"
+          ],
+          "suboptions": {}
+        },
+        "enable_compliance": {
+          "aliases": [],
+          "description": "Enable the Cloud Compliance service on the working environment.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "environment": {
+          "aliases": [],
+          "description": "The environment for NetApp Cloud Manager API operations.",
+          "default": "prod",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "prod",
+            "stage"
+          ],
+          "version_added": "21.8.0",
+          "suboptions": {}
+        },
+        "feature_flags": {
+          "aliases": [],
+          "description": "Enable or disable a new feature.\nThis can be used to enable an experimental feature or disable a new feature that breaks backward compatibility.\nSupported keys and values are subject to change without notice.  Unknown keys are ignored.",
+          "type": "dict",
+          "required": false,
+          "version_added": "21.11.0",
+          "suboptions": {}
+        },
+        "firewall_rule": {
+          "aliases": [],
+          "description": "Firewall name for a single node cluster.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "gcp_encryption_parameters": {
+          "aliases": [],
+          "description": "The GCP encryption parameters.",
+          "type": "str",
+          "required": false,
+          "version_added": "21.10.0",
+          "suboptions": {}
+        },
+        "gcp_labels": {
+          "aliases": [],
+          "description": "Optionally provide up to four key-value pairs with which to all GCP entities created by Cloud Manager.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "label_key": {
+              "aliases": [],
+              "description": "The key of the label.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "label_value": {
+              "aliases": [],
+              "description": "The label value.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "gcp_service_account": {
+          "aliases": [],
+          "description": "The gcp_service_account email in order to enable tiering of cold data to Google Cloud Storage.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "gcp_volume_size": {
+          "aliases": [],
+          "description": "GCP volume size.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "gcp_volume_size_unit": {
+          "aliases": [],
+          "description": "GCP volume size unit.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "GB",
+            "TB"
+          ],
+          "suboptions": {}
+        },
+        "gcp_volume_type": {
+          "aliases": [],
+          "description": "GCP volume type.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "pd-balanced",
+            "pd-standard",
+            "pd-ssd"
+          ],
+          "suboptions": {}
+        },
+        "instance_type": {
+          "aliases": [],
+          "description": "The type of instance to use, which depends on the license type you choose.\nExplore ['custom-4-16384'].\nStandard ['n1-standard-8'].\nPremium ['n1-standard-32'].\nBYOL all instance types defined for PayGo.\nFor more supported instance types, refer to Cloud Volumes ONTAP Release Notes.",
+          "default": "n1-standard-8",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "is_ha": {
+          "aliases": [],
+          "description": "Indicate whether the working environment is an HA pair or not.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "license_type": {
+          "aliases": [],
+          "description": "The type of license to use.\nSingle node ['gcp-cot-explore-paygo', 'gcp-cot-standard-paygo', 'gcp-cot-premium-paygo', 'gcp-cot-premium-byol',      'capacity-paygo'].\nHA ['gcp-ha-cot-explore-paygo', 'gcp-ha-cot-standard-paygo', 'gcp-ha-cot-premium-paygo', 'gcp-cot-premium-byol',      'ha-capacity-paygo'].\nUse capacity-paygo or ha-capacity-paygo for HA on selecting Bring Your Own License type Capacity-Based or Freemium.\nUse gcp-cot-premium-boyl or gcp-ha-cot-permium-boyl for HA on selecting Bring Your Own License type Node-Based.",
+          "default": "gcp-cot-standard-paygo",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "gcp-cot-standard-paygo",
+            "gcp-cot-explore-paygo",
+            "gcp-cot-premium-paygo",
+            "gcp-cot-premium-byol",
+            "gcp-ha-cot-standard-paygo",
+            "gcp-ha-cot-premium-paygo",
+            "gcp-ha-cot-explore-paygo",
+            "gcp-ha-cot-premium-byol",
+            "capacity-paygo",
+            "ha-capacity-paygo"
+          ],
+          "suboptions": {}
+        },
+        "mediator_zone": {
+          "aliases": [],
+          "description": "The zone for mediator.\nOption for HA pair only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the Cloud Manager CVO for GCP to manage.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "network_project_id": {
+          "aliases": [],
+          "description": "The project id in GCP associated with the Subnet.\nIf not provided, it is assumed that the Subnet is within the previously specified project id.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "node1_zone": {
+          "aliases": [],
+          "description": "Zone for node 1.\nOption for HA pair only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "node2_zone": {
+          "aliases": [],
+          "description": "Zone for node 2.\nOption for HA pair only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "nss_account": {
+          "aliases": [],
+          "description": "The NetApp Support Site account ID to use with this Cloud Volumes ONTAP system.\nIf the license type is BYOL and an NSS account isn't provided, Cloud Manager tries to use the first existing NSS account.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ontap_version": {
+          "aliases": [],
+          "description": "The required ONTAP version. Ignored if 'use_latest_version' is set to true.",
+          "default": "latest",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "platform_serial_number": {
+          "aliases": [],
+          "description": "The serial number for the system. Required when using 'gcp-cot-premium-byol'.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "platform_serial_number_node1": {
+          "aliases": [],
+          "description": "For HA BYOL, the serial number for the first node.\nOption for HA pair only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "platform_serial_number_node2": {
+          "aliases": [],
+          "description": "For HA BYOL, the serial number for the second node.\nOption for HA pair only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "project_id": {
+          "aliases": [],
+          "description": "The ID of the GCP project.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "provided_license": {
+          "aliases": [],
+          "description": "Using a NLF license file for BYOL deployment",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "refresh_token": {
+          "aliases": [],
+          "description": "The refresh token for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_client_id": {
+          "aliases": [],
+          "description": "The service account secret client ID for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_secret_key": {
+          "aliases": [],
+          "description": "The service account secret key for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified Cloud Manager CVO for GCP should exist or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "subnet0_node_and_data_connectivity": {
+          "aliases": [],
+          "description": "Subnet path for nic1, required for node and data connectivity.\nIf using shared VPC, network_project_id must be provided.\nOption for HA pair only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "subnet1_cluster_connectivity": {
+          "aliases": [],
+          "description": "Subnet path for nic2, required for cluster connectivity.\nOption for HA pair only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "subnet2_ha_connectivity": {
+          "aliases": [],
+          "description": "Subnet path for nic3, required for HA connectivity.\nOption for HA pair only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "subnet3_data_replication": {
+          "aliases": [],
+          "description": "Subnet path for nic4, required for HA connectivity.\nOption for HA pair only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "subnet_id": {
+          "aliases": [],
+          "description": "The name of the subnet for Cloud Volumes ONTAP.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "svm_password": {
+          "aliases": [],
+          "description": "The admin password for Cloud Volumes ONTAP.\nIt will be updated on each run.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tier_level": {
+          "aliases": [],
+          "description": "The tiering level when 'capacity_tier' is set to 'cloudStorage'.",
+          "default": "standard",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "standard",
+            "nearline",
+            "coldline"
+          ],
+          "suboptions": {}
+        },
+        "use_latest_version": {
+          "aliases": [],
+          "description": "Indicates whether to use the latest available ONTAP version.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "vpc0_firewall_rule_name": {
+          "aliases": [],
+          "description": "Firewall rule name for vpc1.\nOption for HA pair only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vpc0_node_and_data_connectivity": {
+          "aliases": [],
+          "description": "VPC path for nic1, required for node and data connectivity.\nIf using shared VPC, network_project_id must be provided.\nOption for HA pair only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vpc1_cluster_connectivity": {
+          "aliases": [],
+          "description": "VPC path for nic2, required for cluster connectivity.\nOption for HA pair only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vpc1_firewall_rule_name": {
+          "aliases": [],
+          "description": "Firewall rule name for vpc2.\nOption for HA pair only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vpc2_firewall_rule_name": {
+          "aliases": [],
+          "description": "Firewall rule name for vpc3.\nOption for HA pair only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vpc2_ha_connectivity": {
+          "aliases": [],
+          "description": "VPC path for nic3, required for HA connectivity.\nOption for HA pair only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vpc3_data_replication": {
+          "aliases": [],
+          "description": "VPC path for nic4, required for data replication.\nOption for HA pair only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vpc3_firewall_rule_name": {
+          "aliases": [],
+          "description": "Firewall rule name for vpc4.\nOption for HA pair only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vpc_id": {
+          "aliases": [],
+          "description": "The name of the VPC.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "workspace_id": {
+          "aliases": [],
+          "description": "The ID of the Cloud Manager workspace where you want to deploy Cloud Volumes ONTAP.\nIf not provided, Cloud Manager uses the first workspace.\nYou can find the ID from the Workspace tab on [https://cloudmanager.netapp.com].",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "writing_speed_state": {
+          "aliases": [],
+          "description": "The write speed setting for Cloud Volumes ONTAP ['NORMAL','HIGH'].\nDefault value is 'NORMAL' for non-HA GCP CVO\nThis argument is not relevant for HA pairs.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "zone": {
+          "aliases": [],
+          "description": "The zone of the region where the working environment will be created.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp Cloud Manager CVO for GCP",
+      "version_added": "21.4.0"
+    },
+    "examples": "\n\n- name: Create NetApp Cloud Manager cvo for GCP\n  netapp.cloudmanager.na_cloudmanager_cvo_gcp:\n    state: present\n    name: ansiblecvogcp\n    project_id: default-project\n    zone: us-east4-b\n    subnet_id: default\n    gcp_volume_type: pd-ssd\n    gcp_volume_size: 500\n    gcp_volume_size_unit: GB\n    gcp_service_account: \"{{ xxxxxxxxxxxxxxx }}\"\n    data_encryption_type: GCP\n    svm_password: \"{{ xxxxxxxxxxxxxxx }}\"\n    ontap_version: latest\n    use_latest_version: true\n    license_type: gcp-cot-standard-paygo\n    instance_type: n1-standard-8\n    client_id: \"{{ xxxxxxxxxxxxxxx }}\"\n    workspace_id: \"{{ xxxxxxxxxxxxxxx }}\"\n    capacity_tier: cloudStorage\n    writing_speed_state: NORMAL\n    refresh_token: \"{{ xxxxxxxxxxxxxxx }}\"\n    vpc_id: default\n    gcp_labels:\n      - label_key: key1\n        label_value: value1\n      - label_key: key2\n        label_value: value2\n\n- name: Create NetApp Cloud Manager cvo ha for GCP\n  netapp.cloudmanager.na_cloudmanager_cvo_gcp:\n    state: present\n    name: ansiblecvogcpha\n    project_id: \"default-project\"\n    zone: us-east1-b\n    gcp_volume_type: pd-ssd\n    gcp_volume_size: 500\n    gcp_volume_size_unit: GB\n    gcp_service_account: \"{{ xxxxxxxxxxxxxxx }}\"\n    data_encryption_type: GCP\n    svm_password: \"{{ xxxxxxxxxxxxxxx }}\"\n    ontap_version: ONTAP-9.9.0.T1.gcpha\n    use_latest_version: false\n    license_type: gcp-ha-cot-explore-paygo\n    instance_type: custom-4-16384\n    client_id: \"{{ xxxxxxxxxxxxxxx }}\"\n    workspace_id:  \"{{ xxxxxxxxxxxxxxx }}\"\n    capacity_tier: cloudStorage\n    writing_speed_state: NORMAL\n    refresh_token: \"{{ xxxxxxxxxxxxxxx }}\"\n    is_ha: true\n    mediator_zone: us-east1-b\n    node1_zone: us-east1-b\n    node2_zone: us-east1-b\n    subnet0_node_and_data_connectivity: default\n    subnet1_cluster_connectivity: subnet2\n    subnet2_ha_connectivity: subnet3\n    subnet3_data_replication: subnet1\n    vpc0_node_and_data_connectivity: default\n    vpc1_cluster_connectivity: vpc2\n    vpc2_ha_connectivity: vpc3\n    vpc3_data_replication: vpc1\n    vpc_id: default\n    subnet_id: default\n\n"
+  },
+  "netapp.cloudmanager.na_cloudmanager_info": {
+    "doc": {
+      "description": "This module allows you to gather various information about cloudmanager using REST APIs.",
+      "has_action": false,
+      "notes": "Support check_mode\nThe modules prefixed with na_cloudmanager are built to manage CloudManager and CVO deployments in AWS/GCP/Azure clouds.\nIf sa_client_id and sa_secret_key are provided, service account will be used in operations. refresh_token will be ignored.",
+      "options": {
+        "client_id": {
+          "aliases": [],
+          "description": "The client ID of the Cloud Manager Connector.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "environment": {
+          "aliases": [],
+          "description": "The environment for NetApp Cloud Manager API operations.",
+          "default": "prod",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "prod",
+            "stage"
+          ],
+          "version_added": "21.8.0",
+          "suboptions": {}
+        },
+        "feature_flags": {
+          "aliases": [],
+          "description": "Enable or disable a new feature.\nThis can be used to enable an experimental feature or disable a new feature that breaks backward compatibility.\nSupported keys and values are subject to change without notice.  Unknown keys are ignored.",
+          "type": "dict",
+          "required": false,
+          "version_added": "21.11.0",
+          "suboptions": {}
+        },
+        "gather_subsets": {
+          "aliases": [],
+          "description": "When supplied, this argument will restrict the information collected to a given subset.\nPossible values for this argument include\nworking_environments_info\naggregates_info\naccounts_info",
+          "default": "all",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "refresh_token": {
+          "aliases": [],
+          "description": "The refresh token for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_client_id": {
+          "aliases": [],
+          "description": "The service account secret client ID for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_secret_key": {
+          "aliases": [],
+          "description": "The service account secret key for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp Cloud Manager info",
+      "version_added": "21.4.0"
+    },
+    "examples": "\n- name: Get all available subsets\n  netapp.cloudmanager.na_cloudmanager_info:\n    client_id: \"{{ client_id }}\"\n    refresh_token: \"{{ refresh_token }}\"\n    gather_subsets:\n      - all\n\n- name: Collect data for cloud manager with indicated subsets\n  netapp.cloudmanager.na_cloudmanager_info:\n    client_id: \"{{ client_id }}\"\n    refresh_token: \"{{ refresh_token }}\"\n    gather_subsets:\n      - aggregates_info\n      - working_environments_info\n"
+  },
+  "netapp.cloudmanager.na_cloudmanager_nss_account": {
+    "doc": {
+      "description": "Create and Delete nss account.",
+      "has_action": false,
+      "notes": "Support check_mode.\nThe modules prefixed with na_cloudmanager are built to manage CloudManager and CVO deployments in AWS/GCP/Azure clouds.\nIf sa_client_id and sa_secret_key are provided, service account will be used in operations. refresh_token will be ignored.",
+      "options": {
+        "client_id": {
+          "aliases": [],
+          "description": "The client ID of the Cloud Manager Connector.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "environment": {
+          "aliases": [],
+          "description": "The environment for NetApp Cloud Manager API operations.",
+          "default": "prod",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "prod",
+            "stage"
+          ],
+          "version_added": "21.8.0",
+          "suboptions": {}
+        },
+        "feature_flags": {
+          "aliases": [],
+          "description": "Enable or disable a new feature.\nThis can be used to enable an experimental feature or disable a new feature that breaks backward compatibility.\nSupported keys and values are subject to change without notice.  Unknown keys are ignored.",
+          "type": "dict",
+          "required": false,
+          "version_added": "21.11.0",
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the NSS account.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "The NSS password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "public_id": {
+          "aliases": [],
+          "description": "The ID of the NSS account.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "refresh_token": {
+          "aliases": [],
+          "description": "The refresh token for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_client_id": {
+          "aliases": [],
+          "description": "The service account secret client ID for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_secret_key": {
+          "aliases": [],
+          "description": "The service account secret key for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified nss account should exist or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "The NSS username.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "vsa_list": {
+          "aliases": [],
+          "description": "The working environment list.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp Cloud Manager nss account",
+      "version_added": "21.3.0"
+    },
+    "examples": "\n- name: Create nss account\n  netapp.cloudmanager.na_cloudmanager_nss_account:\n    state: present\n    name: test_cloud\n    username: test_cloud\n    password: password\n    client_id: your_client_id\n    refresh_token: your_refresh_token\n"
+  },
+  "netapp.cloudmanager.na_cloudmanager_snapmirror": {
+    "doc": {
+      "description": "Create or Delete SnapMirror relationship on Cloud Manager.",
+      "has_action": false,
+      "notes": "Support check_mode.\nThe modules prefixed with na_cloudmanager are built to manage CloudManager and CVO deployments in AWS/GCP/Azure clouds.\nIf sa_client_id and sa_secret_key are provided, service account will be used in operations. refresh_token will be ignored.",
+      "options": {
+        "capacity_tier": {
+          "aliases": [],
+          "description": "The volume capacity tier for tiering cold data to object storage.\nThe default values for each cloud provider are as follows, Amazon 'S3', Azure 'Blob', GCP 'cloudStorage'.\nIf NONE, the capacity tier will not be set on volume creation.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "S3",
+            "Blob",
+            "cloudStorage",
+            "NONE"
+          ],
+          "suboptions": {}
+        },
+        "client_id": {
+          "aliases": [],
+          "description": "The client ID of the Cloud Manager Connector.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "destination_aggregate_name": {
+          "aliases": [],
+          "description": "The aggregate in which the volume will be created.\nIf not provided, Cloud Manager chooses the best aggregate for you.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "destination_svm_name": {
+          "aliases": [],
+          "description": "The name of the destination SVM.\nThe default SVM name is used, if a name is not provided.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "destination_volume_name": {
+          "aliases": [],
+          "description": "The name of the destination volume to be created for snapmirror relationship.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "destination_working_environment_id": {
+          "aliases": [],
+          "description": "The public ID of the working environment of the destination volume.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "destination_working_environment_name": {
+          "aliases": [],
+          "description": "The working environment name of the destination volume.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "environment": {
+          "aliases": [],
+          "description": "The environment for NetApp Cloud Manager API operations.",
+          "default": "prod",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "prod",
+            "stage"
+          ],
+          "version_added": "21.8.0",
+          "suboptions": {}
+        },
+        "feature_flags": {
+          "aliases": [],
+          "description": "Enable or disable a new feature.\nThis can be used to enable an experimental feature or disable a new feature that breaks backward compatibility.\nSupported keys and values are subject to change without notice.  Unknown keys are ignored.",
+          "type": "dict",
+          "required": false,
+          "version_added": "21.11.0",
+          "suboptions": {}
+        },
+        "max_transfer_rate": {
+          "aliases": [],
+          "description": "Maximum transfer rate limit KB/s.\nUse 0 for no limit, otherwise use number between 1024 and 2,147,482,624.",
+          "default": "100000",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "policy": {
+          "aliases": [],
+          "description": "The SnapMirror policy name.",
+          "default": "MirrorAllSnapshots",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "provider_volume_type": {
+          "aliases": [],
+          "description": "The underlying cloud provider volume type.\nFor AWS ['gp3', 'gp2', 'io1', 'st1', 'sc1'].\nFor Azure ['Premium_LRS','Standard_LRS','StandardSSD_LRS'].\nFor GCP ['pd-balanced','pd-ssd','pd-standard'].",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "refresh_token": {
+          "aliases": [],
+          "description": "The refresh token for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_client_id": {
+          "aliases": [],
+          "description": "The service account secret client ID for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_secret_key": {
+          "aliases": [],
+          "description": "The service account secret key for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "schedule": {
+          "aliases": [],
+          "description": "The name of the Schedule.",
+          "default": "1hour",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "source_svm_name": {
+          "aliases": [],
+          "description": "The name of the source SVM.\nThe default SVM name is used, if a name is not provided.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "source_volume_name": {
+          "aliases": [],
+          "description": "The name of the source volume.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "source_working_environment_id": {
+          "aliases": [],
+          "description": "The public ID of the working environment of the source volume.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "source_working_environment_name": {
+          "aliases": [],
+          "description": "The working environment name of the source volume.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified snapmirror relationship should exist or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp Cloud Manager SnapMirror",
+      "version_added": "21.6.0"
+    },
+    "examples": "\n- name: Create snapmirror with working_environment_name\n  netapp.cloudmanager.na_cloudmanager_snapmirror:\n    state: present\n    source_working_environment_name: source\n    destination_working_environment_name: dest\n    source_volume_name: source\n    destination_volume_name: source_copy\n    policy: MirrorAllSnapshots\n    schedule: 5min\n    max_transfer_rate: 102400\n    client_id: client_id\n    refresh_token: refresh_token\n\n- name: Delete snapmirror\n  netapp.cloudmanager.na_cloudmanager_snapmirror:\n    state: absent\n    source_working_environment_name: source\n    destination_working_environment_name: dest\n    source_volume_name: source\n    destination_volume_name: source_copy\n    client_id: client_id\n    refresh_token: refresh_token\n"
+  },
+  "netapp.cloudmanager.na_cloudmanager_volume": {
+    "doc": {
+      "description": "Create, Modify or Delete volume on Cloud Manager.",
+      "has_action": false,
+      "notes": "Support check_mode.\nThe modules prefixed with na_cloudmanager are built to manage CloudManager and CVO deployments in AWS/GCP/Azure clouds.\nIf sa_client_id and sa_secret_key are provided, service account will be used in operations. refresh_token will be ignored.",
+      "options": {
+        "aggregate_name": {
+          "aliases": [],
+          "description": "The aggregate in which the volume will be created. If not provided, Cloud Manager chooses the best aggregate.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "capacity_tier": {
+          "aliases": [],
+          "description": "The volume's capacity tier for tiering cold data to object storage.\nThe default values for each cloud provider are as follows. Amazon as 'S3', Azure as 'Blob', GCP as 'cloudStorage'.\nIf 'NONE', the capacity tier will not be set on volume creation.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "NONE",
+            "S3",
+            "Blob",
+            "cloudStorage"
+          ],
+          "suboptions": {}
+        },
+        "client_id": {
+          "aliases": [],
+          "description": "The client ID of the Cloud Manager Connector.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "enable_compression": {
+          "aliases": [],
+          "description": "Enabling cpmpression.\nDefault to true if not specified.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "enable_deduplication": {
+          "aliases": [],
+          "description": "Enabling deduplication.\nDefault to true if not specified.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "enable_thin_provisioning": {
+          "aliases": [],
+          "description": "Enabling thin provisioning.\nDefault to true if not specified.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "environment": {
+          "aliases": [],
+          "description": "The environment for NetApp Cloud Manager API operations.",
+          "default": "prod",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "prod",
+            "stage"
+          ],
+          "version_added": "21.8.0",
+          "suboptions": {}
+        },
+        "export_policy_ip": {
+          "aliases": [],
+          "description": "Custom export policy list of IPs (NFS protocol parameters).",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "export_policy_nfs_version": {
+          "aliases": [],
+          "description": "Export policy protocol (NFS protocol parameters).",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "export_policy_type": {
+          "aliases": [],
+          "description": "The export policy type (NFS protocol parameters).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "feature_flags": {
+          "aliases": [],
+          "description": "Enable or disable a new feature.\nThis can be used to enable an experimental feature or disable a new feature that breaks backward compatibility.\nSupported keys and values are subject to change without notice.  Unknown keys are ignored.",
+          "type": "dict",
+          "required": false,
+          "version_added": "21.11.0",
+          "suboptions": {}
+        },
+        "igroups": {
+          "aliases": [],
+          "description": "List of igroups (iSCSI protocol parameters).",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "initiators": {
+          "aliases": [],
+          "description": "Set of attributes of Initiators (iSCSI protocol parameters).",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "alias": {
+              "aliases": [],
+              "description": "The alias which associates with the node.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "iqn": {
+              "aliases": [],
+              "description": "The initiator node name.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        },
+        "iops": {
+          "aliases": [],
+          "description": "Provisioned IOPS. Needed only when provider_volume_type is \"io1\".",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the volume.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "os_name": {
+          "aliases": [],
+          "description": "Operating system (iSCSI protocol parameters).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "permission": {
+          "aliases": [],
+          "description": "CIFS share permission type (CIFS protocol parameters).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "provider_volume_type": {
+          "aliases": [],
+          "description": "The underlying cloud provider volume type.\nFor AWS is [\"gp3\", \"gp2\", \"io1\", \"st1\", \"sc1\"].\nFor Azure is ['Premium_LRS','Standard_LRS','StandardSSD_LRS'].\nFor GCP is ['pd-balanced','pd-ssd','pd-standard'].",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "refresh_token": {
+          "aliases": [],
+          "description": "The refresh token for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_client_id": {
+          "aliases": [],
+          "description": "The service account secret client ID for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sa_secret_key": {
+          "aliases": [],
+          "description": "The service account secret key for NetApp Cloud Manager API operations.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "share_name": {
+          "aliases": [],
+          "description": "Share name (CIFS protocol parameters).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "size": {
+          "aliases": [],
+          "description": "The size of the volume.",
+          "type": "float",
+          "required": false,
+          "suboptions": {}
+        },
+        "size_unit": {
+          "aliases": [],
+          "description": "The size unit of volume.",
+          "default": "GB",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "GB"
+          ],
+          "suboptions": {}
+        },
+        "snapshot_policy_name": {
+          "aliases": [],
+          "description": "The snapshot policy name.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the specified volume should exist or not.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "svm_name": {
+          "aliases": [],
+          "description": "The name of the SVM. The default SVM name is used, if a name is not provided.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "throughput": {
+          "aliases": [],
+          "description": "Unit is Mb/s. Valid range 125-1000.\nRequired only when provider_volume_type is 'gp3'.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "tiering_policy": {
+          "aliases": [],
+          "description": "The tiering policy.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "none",
+            "snapshot_only",
+            "auto",
+            "all"
+          ],
+          "suboptions": {}
+        },
+        "users": {
+          "aliases": [],
+          "description": "List of users with the permission (CIFS protocol parameters).",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "volume_protocol": {
+          "aliases": [],
+          "description": "The protocol for the volume. This affects the provided parameters.",
+          "default": "nfs",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "nfs",
+            "cifs",
+            "iscsi"
+          ],
+          "suboptions": {}
+        },
+        "working_environment_id": {
+          "aliases": [],
+          "description": "The public ID of the working environment where the volume will be created.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "working_environment_name": {
+          "aliases": [],
+          "description": "The working environment name where the volume will be created.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NetApp Cloud Manager volume",
+      "version_added": "21.3.0"
+    },
+    "examples": "\n- name: Create nfs volume with working_environment_name\n  netapp.cloudmanager.na_cloudmanager_volume:\n    state: present\n    name: test_vol\n    size: 15\n    size_unit: GB\n    working_environment_name: working_environment_1\n    client_id: client_id\n    refresh_token: refresh_token\n    svm_name: svm_1\n    snapshot_policy_name: default\n    export_policy_type: custom\n    export_policy_ip: [\"10.0.0.1/16\"]\n    export_policy_nfs_version: [\"nfs3\",\"nfs4\"]\n\n- name: Delete volume\n  netapp.cloudmanager.na_cloudmanager_volume:\n    state: absent\n    name: test_vol\n    working_environment_name: working_environment_1\n    client_id: client_id\n    refresh_token: refresh_token\n    svm_name: svm_1\n"
+  }
+}

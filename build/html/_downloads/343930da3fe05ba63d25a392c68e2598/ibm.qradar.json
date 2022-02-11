@@ -1,0 +1,726 @@
+{
+  "ibm.qradar.deploy": {
+    "doc": {
+      "description": "This module allows for INCREMENTAL or FULL deployments",
+      "has_action": false,
+      "notes": "This module does not support check mode because the QRadar REST API does not offer stateful inspection of configuration deployments",
+      "options": {
+        "type": {
+          "aliases": [],
+          "description": "Type of deployment",
+          "default": "INCREMENTAL",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "INCREMENTAL",
+            "FULL"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Trigger a qradar configuration deployment",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: run an incremental deploy\n  ibm.qradar.deploy:\n    type: INCREMENTAL\n"
+  },
+  "ibm.qradar.log_source_management": {
+    "doc": {
+      "description": "This module allows for addition, deletion, or modification of Log Sources in QRadar",
+      "has_action": false,
+      "notes": "Either C(type) or C(type_id) is required",
+      "options": {
+        "description": {
+          "aliases": [],
+          "description": "Description of log source",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "identifier": {
+          "aliases": [],
+          "description": "Log Source Identifier (Typically IP Address or Hostname of log source)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of Log Source",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "protocol_type_id": {
+          "aliases": [],
+          "description": "Type of protocol by id, as defined in QRadar Log Source Types Documentation",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Add or remove a log source.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "type_id": {
+          "aliases": [],
+          "description": "Type of resource by id, as defined in QRadar Log Source Types Documentation",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "type_name": {
+          "aliases": [],
+          "description": "Type of resource by name",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage Log Sources in QRadar",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Add a snort log source to IBM QRadar\n  ibm.qradar.log_source_management:\n    name: \"Snort logs\"\n    type_name: \"Snort Open Source IDS\"\n    state: present\n    description: \"Snort IDS remote logs from rsyslog\"\n    identifier: \"192.168.1.101\"\n"
+  },
+  "ibm.qradar.offense_action": {
+    "doc": {
+      "description": "This module allows to assign, protect, follow up, set status, and assign closing reason to QRadar Offenses",
+      "has_action": false,
+      "notes": "Requires one of C(name) or C(id) be provided\nOnly one of C(closing_reason) or C(closing_reason_id) can be provided",
+      "options": {
+        "assigned_to": {
+          "aliases": [],
+          "description": "Assign to an user, the QRadar username should be provided",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "closing_reason": {
+          "aliases": [],
+          "description": "Assign a predefined closing reason here, by name.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "closing_reason_id": {
+          "aliases": [],
+          "description": "Assign a predefined closing reason here, by id.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "follow_up": {
+          "aliases": [],
+          "description": "Set or unset the flag to follow up on a QRadar Offense",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "ID of Offense",
+          "type": "int",
+          "required": true,
+          "suboptions": {}
+        },
+        "protected": {
+          "aliases": [],
+          "description": "Set or unset the flag to protect a QRadar Offense",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "status": {
+          "aliases": [],
+          "description": "One of \"open\", \"hidden\" or \"closed\". (Either all lower case or all caps)",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "open",
+            "OPEN",
+            "hidden",
+            "HIDDEN",
+            "closed",
+            "CLOSED"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Take action on a QRadar Offense",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n"
+  },
+  "ibm.qradar.offense_info": {
+    "doc": {
+      "description": "This module allows to obtain information about one or many QRadar Offenses, with filter options",
+      "has_action": false,
+      "notes": "You may provide many filters and they will all be applied, except for C(id) as that will return only",
+      "options": {
+        "assigned_to": {
+          "aliases": [],
+          "description": "Obtain only information of Offenses assigned to a certain user",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "closing_reason": {
+          "aliases": [],
+          "description": "Obtain only information of Offenses that were closed by a specific closing reason",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "closing_reason_id": {
+          "aliases": [],
+          "description": "Obtain only information of Offenses that were closed by a specific closing reason ID",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "follow_up": {
+          "aliases": [],
+          "description": "Obtain only information of Offenses that are marked with the follow up flag",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "Obtain only information of the Offense with provided ID",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Obtain only information of the Offense that matches the provided name",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "protected": {
+          "aliases": [],
+          "description": "Obtain only information of Offenses that are protected",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "status": {
+          "aliases": [],
+          "description": "Obtain only information of Offenses of a certain status",
+          "default": "open",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "open",
+            "OPEN",
+            "hidden",
+            "HIDDEN",
+            "closed",
+            "CLOSED"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Obtain information about one or many QRadar Offenses, with filter options",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Get list of all currently OPEN IBM QRadar Offenses\n  ibm.qradar.offense_info:\n    status: OPEN\n  register: offense_list\n\n- name: display offense information for debug purposes\n  debug:\n    var: offense_list\n"
+  },
+  "ibm.qradar.offense_note": {
+    "doc": {
+      "description": "This module allows to create a QRadar Offense note",
+      "has_action": false,
+      "options": {
+        "id": {
+          "aliases": [],
+          "description": "Offense ID to operate on",
+          "type": "int",
+          "required": true,
+          "suboptions": {}
+        },
+        "note_text": {
+          "aliases": [],
+          "description": "The note's text contents",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Create or update a QRadar Offense Note",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Add a note to QRadar Offense ID 1\n  ibm.qradar.offense_note:\n    id: 1\n    note_text: This an example note entry that should be made on offense id 1\n"
+  },
+  "ibm.qradar.qradar_deploy": {
+    "doc": {
+      "description": "This module allows for INCREMENTAL or FULL deployments",
+      "has_action": false,
+      "notes": "This module does not support check mode because the QRadar REST API does not offer stateful inspection of configuration deployments",
+      "options": {
+        "type": {
+          "aliases": [],
+          "description": "Type of deployment",
+          "default": "INCREMENTAL",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "INCREMENTAL",
+            "FULL"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Trigger a qradar configuration deployment",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: run an incremental deploy\n  ibm.qradar.deploy:\n    type: INCREMENTAL\n"
+  },
+  "ibm.qradar.qradar_log_source_management": {
+    "doc": {
+      "description": "This module allows for addition, deletion, or modification of Log Sources in QRadar",
+      "has_action": false,
+      "notes": "Either C(type) or C(type_id) is required",
+      "options": {
+        "description": {
+          "aliases": [],
+          "description": "Description of log source",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "identifier": {
+          "aliases": [],
+          "description": "Log Source Identifier (Typically IP Address or Hostname of log source)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of Log Source",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "protocol_type_id": {
+          "aliases": [],
+          "description": "Type of protocol by id, as defined in QRadar Log Source Types Documentation",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Add or remove a log source.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "type_id": {
+          "aliases": [],
+          "description": "Type of resource by id, as defined in QRadar Log Source Types Documentation",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "type_name": {
+          "aliases": [],
+          "description": "Type of resource by name",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage Log Sources in QRadar",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Add a snort log source to IBM QRadar\n  ibm.qradar.log_source_management:\n    name: \"Snort logs\"\n    type_name: \"Snort Open Source IDS\"\n    state: present\n    description: \"Snort IDS remote logs from rsyslog\"\n    identifier: \"192.168.1.101\"\n"
+  },
+  "ibm.qradar.qradar_offense_action": {
+    "doc": {
+      "description": "This module allows to assign, protect, follow up, set status, and assign closing reason to QRadar Offenses",
+      "has_action": false,
+      "notes": "Requires one of C(name) or C(id) be provided\nOnly one of C(closing_reason) or C(closing_reason_id) can be provided",
+      "options": {
+        "assigned_to": {
+          "aliases": [],
+          "description": "Assign to an user, the QRadar username should be provided",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "closing_reason": {
+          "aliases": [],
+          "description": "Assign a predefined closing reason here, by name.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "closing_reason_id": {
+          "aliases": [],
+          "description": "Assign a predefined closing reason here, by id.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "follow_up": {
+          "aliases": [],
+          "description": "Set or unset the flag to follow up on a QRadar Offense",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "ID of Offense",
+          "type": "int",
+          "required": true,
+          "suboptions": {}
+        },
+        "protected": {
+          "aliases": [],
+          "description": "Set or unset the flag to protect a QRadar Offense",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "status": {
+          "aliases": [],
+          "description": "One of \"open\", \"hidden\" or \"closed\". (Either all lower case or all caps)",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "open",
+            "OPEN",
+            "hidden",
+            "HIDDEN",
+            "closed",
+            "CLOSED"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Take action on a QRadar Offense",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n"
+  },
+  "ibm.qradar.qradar_offense_info": {
+    "doc": {
+      "description": "This module allows to obtain information about one or many QRadar Offenses, with filter options",
+      "has_action": false,
+      "notes": "You may provide many filters and they will all be applied, except for C(id) as that will return only",
+      "options": {
+        "assigned_to": {
+          "aliases": [],
+          "description": "Obtain only information of Offenses assigned to a certain user",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "closing_reason": {
+          "aliases": [],
+          "description": "Obtain only information of Offenses that were closed by a specific closing reason",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "closing_reason_id": {
+          "aliases": [],
+          "description": "Obtain only information of Offenses that were closed by a specific closing reason ID",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "follow_up": {
+          "aliases": [],
+          "description": "Obtain only information of Offenses that are marked with the follow up flag",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "Obtain only information of the Offense with provided ID",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Obtain only information of the Offense that matches the provided name",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "protected": {
+          "aliases": [],
+          "description": "Obtain only information of Offenses that are protected",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "status": {
+          "aliases": [],
+          "description": "Obtain only information of Offenses of a certain status",
+          "default": "open",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "open",
+            "OPEN",
+            "hidden",
+            "HIDDEN",
+            "closed",
+            "CLOSED"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Obtain information about one or many QRadar Offenses, with filter options",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Get list of all currently OPEN IBM QRadar Offenses\n  ibm.qradar.offense_info:\n    status: OPEN\n  register: offense_list\n\n- name: display offense information for debug purposes\n  debug:\n    var: offense_list\n"
+  },
+  "ibm.qradar.qradar_offense_note": {
+    "doc": {
+      "description": "This module allows to create a QRadar Offense note",
+      "has_action": false,
+      "options": {
+        "id": {
+          "aliases": [],
+          "description": "Offense ID to operate on",
+          "type": "int",
+          "required": true,
+          "suboptions": {}
+        },
+        "note_text": {
+          "aliases": [],
+          "description": "The note's text contents",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Create or update a QRadar Offense Note",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Add a note to QRadar Offense ID 1\n  ibm.qradar.offense_note:\n    id: 1\n    note_text: This an example note entry that should be made on offense id 1\n"
+  },
+  "ibm.qradar.qradar_rule": {
+    "doc": {
+      "description": "Manage state of QRadar Rules, with filter options",
+      "has_action": false,
+      "options": {
+        "id": {
+          "aliases": [],
+          "description": "Manage state of a QRadar Rule by ID",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Manage state of a QRadar Rule by name",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "owner": {
+          "aliases": [],
+          "description": "Manage ownership of a QRadar Rule",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Manage state of a QRadar Rule",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "enabled",
+            "disabled",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage state of QRadar Rules, with filter options",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Enable Rule 'Ansible Example DDoS Rule'\n  qradar_rule:\n    name: 'Ansible Example DDOS Rule'\n    state: enabled\n"
+  },
+  "ibm.qradar.qradar_rule_info": {
+    "doc": {
+      "description": "This module obtains information about one or many QRadar Rules, with filter options",
+      "has_action": false,
+      "notes": "You may provide many filters and they will all be applied, except for C(id) as that will return only the Rule identified by the unique ID provided.",
+      "options": {
+        "id": {
+          "aliases": [],
+          "description": "Obtain only information of the Rule with provided ID",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Obtain only information of the Rule that matches the provided name",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "origin": {
+          "aliases": [],
+          "description": "Obtain only information of Rules that are of a certain origin",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "SYSTEM",
+            "OVERRIDE",
+            "USER"
+          ],
+          "suboptions": {}
+        },
+        "owner": {
+          "aliases": [],
+          "description": "Obtain only information of Rules owned by a certain user",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "Obtain only information for the Rules of a certain type",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "EVENT",
+            "FLOW",
+            "COMMON",
+            "USER"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Obtain information about one or many QRadar Rules, with filter options",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Get information about the Rule named \"Custom Company DDoS Rule\"\n  ibm.qradar.rule_info:\n    name: \"Custom Company DDoS Rule\"\n  register: custom_ddos_rule_info\n\n- name: debugging output of the custom_ddos_rule_info registered variable\n  debug:\n    var: custom_ddos_rule_info\n"
+  },
+  "ibm.qradar.rule": {
+    "doc": {
+      "description": "Manage state of QRadar Rules, with filter options",
+      "has_action": false,
+      "options": {
+        "id": {
+          "aliases": [],
+          "description": "Manage state of a QRadar Rule by ID",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Manage state of a QRadar Rule by name",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "owner": {
+          "aliases": [],
+          "description": "Manage ownership of a QRadar Rule",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Manage state of a QRadar Rule",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "enabled",
+            "disabled",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage state of QRadar Rules, with filter options",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Enable Rule 'Ansible Example DDoS Rule'\n  qradar_rule:\n    name: 'Ansible Example DDOS Rule'\n    state: enabled\n"
+  },
+  "ibm.qradar.rule_info": {
+    "doc": {
+      "description": "This module obtains information about one or many QRadar Rules, with filter options",
+      "has_action": false,
+      "notes": "You may provide many filters and they will all be applied, except for C(id) as that will return only the Rule identified by the unique ID provided.",
+      "options": {
+        "id": {
+          "aliases": [],
+          "description": "Obtain only information of the Rule with provided ID",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Obtain only information of the Rule that matches the provided name",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "origin": {
+          "aliases": [],
+          "description": "Obtain only information of Rules that are of a certain origin",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "SYSTEM",
+            "OVERRIDE",
+            "USER"
+          ],
+          "suboptions": {}
+        },
+        "owner": {
+          "aliases": [],
+          "description": "Obtain only information of Rules owned by a certain user",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "Obtain only information for the Rules of a certain type",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "EVENT",
+            "FLOW",
+            "COMMON",
+            "USER"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Obtain information about one or many QRadar Rules, with filter options",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Get information about the Rule named \"Custom Company DDoS Rule\"\n  ibm.qradar.rule_info:\n    name: \"Custom Company DDoS Rule\"\n  register: custom_ddos_rule_info\n\n- name: debugging output of the custom_ddos_rule_info registered variable\n  debug:\n    var: custom_ddos_rule_info\n"
+  }
+}

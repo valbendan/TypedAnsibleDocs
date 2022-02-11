@@ -1,0 +1,567 @@
+{
+  "dellemc.os10.base_xml_to_dict": {
+    "doc": {
+      "description": "Get the show system inforamtion of a Leaf-Spine.",
+      "has_action": false,
+      "options": {
+        "cli_responses": {
+          "aliases": [],
+          "description": "show command xml output",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Operations for show command output convertion from xml to json format."
+    },
+    "examples": "\nCopy below YAML into a playbook (e.g. play.yml) and run as follows:\n\n#$ ansible-playbook -i inv play.yml\nname: setup the plabook to get show command output in dict format\nhosts: localhost\nconnection: local\ngather_facts: False\nvars:\n  cli:\n    username: admin\n    password: admin\ntasks:\n- name: \"Get Dell EMC OS10 Show output in dict format\"\n  os10_command:\n    commands: \"{{ command_list }}\"\n  register: show\n- debug: var=show\n- name: call to lib to get output in dict\n  base_xml_to_dict:\n    cli_responses: \"{{ item }}\"\n  loop: \"{{ show.stdout }}\"\n"
+  },
+  "dellemc.os10.bgp_validate": {
+    "doc": {
+      "description": "Troubleshoot the bgp neighor state info using show ip bgp summary and show ip interface brief.",
+      "has_action": false,
+      "options": {
+        "bgp_neighbors": {
+          "aliases": [],
+          "description": "planned neighbours input from group_var to compare actual",
+          "type": "list",
+          "required": true,
+          "suboptions": {}
+        },
+        "show_ip_bgp": {
+          "aliases": [],
+          "description": "show ip bgp summary output",
+          "type": "list",
+          "required": true,
+          "suboptions": {}
+        },
+        "show_ip_intf_brief": {
+          "aliases": [],
+          "description": "show ip interface brief output",
+          "type": "list",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Validate the bgp neighbor state,raise error if it is not in established state"
+    },
+    "examples": "\nCopy below YAML into a playbook (e.g. play.yml) and run as follows:\n\n#$ ansible-playbook -i inv play.yml\nname: Validate BGP configuration\nhosts: localhost\nconnection: local\ngather_facts: False\ntasks:\n  - name: \"Get Dell EMC OS10 Show ip bgp summary\"\n    os10_command:\n      commands:\n        - command: \"show ip bgp summary | display-xml\"\n        - command: \"show ip interface brief | display-xml\"\n      provider: \"{{ hostvars[item].cli }}\"\n    with_items: \"{{ groups['all'] }}\"\n    register: show_bgp\n  - set_fact:\n       output_bgp:  \"{{ output_bgp|default([])+ [{'host': item.invocation.module_args.provider.host, 'inv_name': item.item,\n                                                  'stdout_show_bgp': item.stdout.0, 'stdout_show_ip': item.stdout.1}] }}\"\n    loop: \"{{ show_bgp.results }}\"\n  - debug: var=output_bgp\n  - local_action: copy content={{ output_bgp }} dest=show\n  - name: call lib to convert bgp info from xml to dict format\n    base_xml_to_dict:\n       cli_responses: \"{{ item.stdout_show_bgp }}\"\n    with_items:\n      - \"{{ output_bgp }}\"\n    register: show_bgp_list\n  - name: call lib to convert ip interface info from xml to dict format\n    base_xml_to_dict:\n       cli_responses: \"{{ item.stdout_show_ip }}\"\n    with_items:\n      - \"{{ output_bgp }}\"\n    register: show_ip_intf_list\n  - name: call lib for bgp validation\n    bgp_validate:\n      show_ip_bgp: \"{{ show_bgp_list.results  }}\"\n      show_ip_intf_brief: \"{{ show_ip_intf_list.results  }}\"\n      bgp_neighbors: \"{{ intended_bgp_neighbors }}\"\n"
+  },
+  "dellemc.os10.mtu_validate": {
+    "doc": {
+      "description": "Get the wiring info using lldp output and show system network summary.",
+      "has_action": false,
+      "options": {
+        "show_ip_intf_brief": {
+          "aliases": [],
+          "description": "show ip intf brief",
+          "type": "list",
+          "required": true,
+          "suboptions": {}
+        },
+        "show_lldp_neighbors_list": {
+          "aliases": [],
+          "description": "show lldp neighbor output",
+          "type": "list",
+          "required": true,
+          "suboptions": {}
+        },
+        "show_system_network_summary": {
+          "aliases": [],
+          "description": "show system network summary output",
+          "type": "list",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Validate the MTU value for lldp neighbors"
+    },
+    "examples": "\nCopy below YAML into a playbook (e.g. play.yml) and run follows:\n\n#$ ansible-playbook -i inv play.yml\nname: show mtu mismatch info\nhosts: localhost\nconnection: local\ngather_facts: False\ntasks:\n - name: \"Get Dell EMC OS10 MTU mismatch info\"\n   os10_command:\n     commands:\n       - command: \"show lldp neighbors\"\n       - command: \"show ip interface brief | display-xml\"\n     provider: \"{{ hostvars[item].cli }}\"\n   with_items: \"{{ groups['all'] }}\"\n   register: show_lldp\n - set_fact:\n      output:  \"{{ output|default([])+ [{'host': item.invocation.module_args.provider.host, 'inv_name': item.item,\n                                         'stdout_show_lldp': item.stdout.0, 'stdout_show_ip': item.stdout.1 }] }}\"\n   loop: \"{{ show_lldp.results }}\"\n - debug: var=output\n - local_action: copy content={{ output }} dest=show1\n - name: call lib to convert ip interface info from xml to dict format\n   base_xml_to_dict:\n      cli_responses: \"{{ item.stdout_show_ip }}\"\n   with_items: \"{{ output }}\"\n   register: show_ip_intf_list\n - local_action: copy content={{ show_ip_intf_list }} dest=show_ip\n\n - name: \"Get Dell EMC OS10 Show system\"\n   import_role:\n     name: os10_fabric_summary\n   register: show_system_network_summary\n - debug: var=show_system_network_summary\n - name: call lib to process\n   mtu_validate:\n     show_lldp_neighbors_list: \"{{ output }}\"\n     show_system_network_summary: \"{{ show_system_network_summary.msg.results }}\"\n     show_ip_intf_brief: \"{{ show_ip_intf_list.results }}\"\n"
+  },
+  "dellemc.os10.os10_command": {
+    "doc": {
+      "description": "Sends arbitrary commands to a OS10 device and returns the results read from the device. This module includes an argument that will cause the module to wait for a specific condition before returning or timing out if the condition is not met.\nThis module does not support running commands in configuration mode. Please use M(dellemc.os10.os10_config) to configure OS10 devices.",
+      "has_action": true,
+      "notes": "For more information on using Ansible to manage Dell EMC Network devices see U(https://www.ansible.com/ansible-dell-networking).",
+      "options": {
+        "commands": {
+          "aliases": [],
+          "description": "List of commands to send to the remote OS10 device over the configured provider. The resulting output from the command is returned. If the I(wait_for) argument is provided, the module is not returned until the condition is satisfied or the number of retries has expired.",
+          "type": "list",
+          "required": true,
+          "suboptions": {}
+        },
+        "interval": {
+          "aliases": [],
+          "description": "Configures the interval in seconds to wait between retries of the command. If the command does not pass the specified conditions, the interval indicates how long to wait before trying the command again.",
+          "default": "1",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "match": {
+          "aliases": [],
+          "description": "The I(match) argument is used in conjunction with the I(wait_for) argument to specify the match policy.  Valid values are C(all) or C(any).  If the value is set to C(all) then all conditionals in the wait_for must be satisfied.  If the value is set to C(any) then only one of the values must be satisfied.",
+          "default": "all",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "all",
+            "any"
+          ],
+          "suboptions": {}
+        },
+        "provider": {
+          "aliases": [],
+          "description": "A dict object containing connection details.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "auth_pass": {
+              "aliases": [],
+              "description": "Specifies the password to use if required to enter privileged mode on the remote device.  If I(authorize) is false, then this argument does nothing. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_AUTH_PASS) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "authorize": {
+              "aliases": [],
+              "description": "Instructs the module to enter privileged mode on the remote device before sending any commands.  If not specified, the device will attempt to execute all commands in non-privileged mode. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_AUTHORIZE) will be used instead.",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "host": {
+              "aliases": [],
+              "description": "Specifies the DNS host name or address for connecting to the remote device over the specified transport.  The value of host is used as the destination address for the transport.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "password": {
+              "aliases": [],
+              "description": "Password to authenticate the SSH session to the remote device. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_PASSWORD) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "port": {
+              "aliases": [],
+              "description": "Specifies the port to use when building the connection to the remote device.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "ssh_keyfile": {
+              "aliases": [],
+              "description": "Path to an ssh key used to authenticate the SSH session to the remote device.  If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_SSH_KEYFILE) will be used instead.",
+              "type": "path",
+              "required": false,
+              "suboptions": {}
+            },
+            "timeout": {
+              "aliases": [],
+              "description": "Specifies idle timeout (in seconds) for the connection. Useful if the console freezes before continuing. For example when saving configurations.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "username": {
+              "aliases": [],
+              "description": "User to authenticate the SSH session to the remote device. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_USERNAME) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "retries": {
+          "aliases": [],
+          "description": "Specifies the number of retries a command should be tried before it is considered failed. The command is run on the target device every retry and evaluated against the I(wait_for) conditions.",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_for": {
+          "aliases": [],
+          "description": "List of conditions to evaluate against the output of the command. The task will wait for each condition to be true before moving forward. If the conditional is not true within the configured number of I(retries), the task fails. See examples.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        }
+      },
+      "short_description": "Run commands on devices running Dell EMC SmartFabric OS10"
+    },
+    "examples": "\ntasks:\n  - name: run show version on remote devices\n    os10_command:\n      commands: show version\n\n  - name: run show version and check to see if output contains OS10\n    os10_command:\n      commands: show version\n      wait_for: result[0] contains OS10\n\n  - name: run multiple commands on remote nodes\n    os10_command:\n      commands:\n        - show version\n        - show interface\n\n  - name: run multiple commands and evaluate the output\n    os10_command:\n      commands:\n        - show version\n        - show interface\n      wait_for:\n        - result[0] contains OS10\n        - result[1] contains Ethernet\n"
+  },
+  "dellemc.os10.os10_config": {
+    "doc": {
+      "description": "OS10 configurations use a simple block indent file syntax for segmenting configuration into sections.  This module provides an implementation for working with OS10 configuration sections in a deterministic way.",
+      "has_action": true,
+      "notes": "For more information on using Ansible to manage Dell EMC Network devices see U(https://www.ansible.com/ansible-dell-networking).",
+      "options": {
+        "after": {
+          "aliases": [],
+          "description": "The ordered set of commands to append to the end of the command stack if a change needs to be made.  Just like with I(before) this allows the playbook designer to append a set of commands to be executed after the command set.",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "backup": {
+          "aliases": [],
+          "description": "This argument will cause the module to create a full backup of the current C(running-config) from the remote device before any changes are made. If the C(backup_options) value is not given, the backup file is written to the C(backup) folder in the playbook root directory. If the directory does not exist, it is created.",
+          "default": "no",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "backup_options": {
+          "aliases": [],
+          "description": "This is a dict object containing configurable options related to backup file path. The value of this option is read only when C(backup) is set to I(yes), if C(backup) is set to I(no) this option will be silently ignored.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "dir_path": {
+              "aliases": [],
+              "description": "This option provides the path ending with directory name in which the backup configuration file will be stored. If the directory does not exist it will be first created and the filename is either the value of C(filename) or default filename as described in C(filename) options description. If the path value is not given in that case a I(backup) directory will be created in the current working directory and backup configuration will be copied in C(filename) within I(backup) directory.",
+              "type": "path",
+              "required": false,
+              "suboptions": {}
+            },
+            "filename": {
+              "aliases": [],
+              "description": "The filename to be used to store the backup configuration. If the the filename is not given it will be generated based on the hostname, current time and date in format defined by <hostname>_config.<current-date>@<current-time>",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "before": {
+          "aliases": [],
+          "description": "The ordered set of commands to push on to the command stack if a change needs to be made.  This allows the playbook designer the opportunity to perform configuration commands prior to pushing any changes without affecting how the set of commands are matched against the system.",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "config": {
+          "aliases": [],
+          "description": "The module, by default, will connect to the remote device and retrieve the current running-config to use as a base for comparing against the contents of source.  There are times when it is not desirable to have the task get the current running-config for every task in a playbook.  The I(config) argument allows the implementer to pass in the configuration to use as the base config for comparison.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "lines": {
+          "aliases": [
+            "commands"
+          ],
+          "description": "The ordered set of commands that should be configured in the section.  The commands must be the exact same commands as found in the device running-config. Be sure to note the configuration command syntax as some commands are automatically modified by the device config parser. This argument is mutually exclusive with I(src).",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "match": {
+          "aliases": [],
+          "description": "Instructs the module on the way to perform the matching of the set of commands against the current device config.  If match is set to I(line), commands are matched line by line.  If match is set to I(strict), command lines are matched with respect to position.  If match is set to I(exact), command lines must be an equal match.  Finally, if match is set to I(none), the module will not attempt to compare the source configuration with the running configuration on the remote device.",
+          "default": "line",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "line",
+            "strict",
+            "exact",
+            "none"
+          ],
+          "suboptions": {}
+        },
+        "parents": {
+          "aliases": [],
+          "description": "The ordered set of parents that uniquely identify the section or hierarchy the commands should be checked against.  If the parents argument is omitted, the commands are checked against the set of top level or global commands.",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "provider": {
+          "aliases": [],
+          "description": "A dict object containing connection details.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "auth_pass": {
+              "aliases": [],
+              "description": "Specifies the password to use if required to enter privileged mode on the remote device.  If I(authorize) is false, then this argument does nothing. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_AUTH_PASS) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "authorize": {
+              "aliases": [],
+              "description": "Instructs the module to enter privileged mode on the remote device before sending any commands.  If not specified, the device will attempt to execute all commands in non-privileged mode. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_AUTHORIZE) will be used instead.",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "host": {
+              "aliases": [],
+              "description": "Specifies the DNS host name or address for connecting to the remote device over the specified transport.  The value of host is used as the destination address for the transport.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "password": {
+              "aliases": [],
+              "description": "Password to authenticate the SSH session to the remote device. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_PASSWORD) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "port": {
+              "aliases": [],
+              "description": "Specifies the port to use when building the connection to the remote device.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "ssh_keyfile": {
+              "aliases": [],
+              "description": "Path to an ssh key used to authenticate the SSH session to the remote device.  If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_SSH_KEYFILE) will be used instead.",
+              "type": "path",
+              "required": false,
+              "suboptions": {}
+            },
+            "timeout": {
+              "aliases": [],
+              "description": "Specifies idle timeout (in seconds) for the connection. Useful if the console freezes before continuing. For example when saving configurations.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "username": {
+              "aliases": [],
+              "description": "User to authenticate the SSH session to the remote device. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_USERNAME) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "replace": {
+          "aliases": [],
+          "description": "Instructs the module on the way to perform the configuration on the device.  If the replace argument is set to I(line) then the modified lines are pushed to the device in configuration mode.  If the replace argument is set to I(block) then the entire command block is pushed to the device in configuration mode if any line is not correct.",
+          "default": "line",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "line",
+            "block"
+          ],
+          "suboptions": {}
+        },
+        "save": {
+          "aliases": [],
+          "description": "The C(save) argument instructs the module to save the running- config to the startup-config at the conclusion of the module running.  If check mode is specified, this argument is ignored.",
+          "default": "no",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "src": {
+          "aliases": [],
+          "description": "Specifies the source path to the file that contains the configuration or configuration template to load.  The path to the source file can either be the full path on the Ansible control host or a relative path from the playbook or role root directory. This argument is mutually exclusive with I(lines).",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "update": {
+          "aliases": [],
+          "description": "The I(update) argument controls how the configuration statements are processed on the remote device.  Valid choices for the I(update) argument are I(merge) and I(check).  When you set this argument to I(merge), the configuration changes merge with the current device running configuration.  When you set this argument to I(check) the configuration updates are determined but not actually configured on the remote device.",
+          "default": "merge",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "merge",
+            "check"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage Dell EMC SmartFabric OS10 configuration sections"
+    },
+    "examples": "\n- os10_config:\n    lines: ['hostname {{ inventory_hostname }}']\n\n- os10_config:\n    lines:\n      - 10 permit ip host 1.1.1.1 any log\n      - 20 permit ip host 2.2.2.2 any log\n      - 30 permit ip host 3.3.3.3 any log\n      - 40 permit ip host 4.4.4.4 any log\n      - 50 permit ip host 5.5.5.5 any log\n    parents: ['ip access-list test']\n    before: ['no ip access-list test']\n    match: exact\n\n- os10_config:\n    lines:\n      - 10 permit ip host 1.1.1.1 any log\n      - 20 permit ip host 2.2.2.2 any log\n      - 30 permit ip host 3.3.3.3 any log\n      - 40 permit ip host 4.4.4.4 any log\n    parents: ['ip access-list test']\n    before: ['no ip access-list test']\n    replace: block\n\n- os10_config:\n    lines: ['hostname {{ inventory_hostname }}']\n    backup: yes\n    backup_options:\n      filename: backup.cfg\n      dir_path: /home/user\n"
+  },
+  "dellemc.os10.os10_facts": {
+    "doc": {
+      "description": "Collects a base set of device facts from a remote device that is running OS10.  This module prepends all of the base network fact keys with C(ansible_net_<fact>).  The facts module will always collect a base set of facts from the device and can enable or disable collection of additional facts.",
+      "has_action": true,
+      "notes": "For more information on using Ansible to manage Dell EMC Network devices see U(https://www.ansible.com/ansible-dell-networking).",
+      "options": {
+        "gather_subset": {
+          "aliases": [],
+          "description": "When supplied, this argument will restrict the facts collected to a given subset.  Possible values for this argument include all, hardware, config, and interfaces.  Can specify a list of values to include a larger subset.  Values can also be used with an initial C(M(!)) to specify that a specific subset should not be collected.",
+          "default": "['!config']",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "provider": {
+          "aliases": [],
+          "description": "A dict object containing connection details.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "auth_pass": {
+              "aliases": [],
+              "description": "Specifies the password to use if required to enter privileged mode on the remote device.  If I(authorize) is false, then this argument does nothing. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_AUTH_PASS) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "authorize": {
+              "aliases": [],
+              "description": "Instructs the module to enter privileged mode on the remote device before sending any commands.  If not specified, the device will attempt to execute all commands in non-privileged mode. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_AUTHORIZE) will be used instead.",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "host": {
+              "aliases": [],
+              "description": "Specifies the DNS host name or address for connecting to the remote device over the specified transport.  The value of host is used as the destination address for the transport.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "password": {
+              "aliases": [],
+              "description": "Password to authenticate the SSH session to the remote device. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_PASSWORD) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "port": {
+              "aliases": [],
+              "description": "Specifies the port to use when building the connection to the remote device.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "ssh_keyfile": {
+              "aliases": [],
+              "description": "Path to an ssh key used to authenticate the SSH session to the remote device.  If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_SSH_KEYFILE) will be used instead.",
+              "type": "path",
+              "required": false,
+              "suboptions": {}
+            },
+            "timeout": {
+              "aliases": [],
+              "description": "Specifies idle timeout (in seconds) for the connection. Useful if the console freezes before continuing. For example when saving configurations.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "username": {
+              "aliases": [],
+              "description": "User to authenticate the SSH session to the remote device. If the value is not specified in the task, the value of environment variable C(ANSIBLE_NET_USERNAME) will be used instead.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        }
+      },
+      "short_description": "Collect facts from devices running Dell EMC SmartFabric OS10"
+    },
+    "examples": "\n# Collect all facts from the device\n- os10_facts:\n    gather_subset: all\n\n# Collect only the config and default facts\n- os10_facts:\n    gather_subset:\n      - config\n\n# Do not collect hardware facts\n- os10_facts:\n    gather_subset:\n      - \"!hardware\"\n"
+  },
+  "dellemc.os10.show_system_network_summary": {
+    "doc": {
+      "description": "Get the show system inforamtion of a Leaf-Spine.",
+      "has_action": false,
+      "options": {
+        "cli_responses": {
+          "aliases": [],
+          "description": "show system command xml output",
+          "type": "list",
+          "required": true,
+          "suboptions": {}
+        },
+        "output_type": {
+          "aliases": [],
+          "description": "json or yaml\nDefault value is json",
+          "default": "json",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Operations for show_system_network output in json/yaml format."
+    },
+    "examples": "\nCopy below YAML into a playbook (e.g. play.yml) and run as follows:\n\n#$ ansible-playbook -i inv show.yml\nname: show system Configuration\nhosts: localhost\nconnection: local\ngather_facts: False\nvars:\n  cli:\n    username: admin\n    password: admin\ntasks:\n- name: \"Get Dell EMC OS10 Show system summary\"\n  os10_command:\n    commands: ['show system | display-xml']\n    provider: \"{{ hostvars[item].cli }}\"\n  with_items: \"{{ groups['all'] }}\"\n  register: show_system\n- set_fact:\n     output:  \"{{ output|default([])+ [{'inv_name': item.item, 'host': item.invocation.module_args.provider.host, 'stdout_show_system': item.stdout}] }}\"\n  loop: \"{{ show_system.results }}\"\n- debug: var=output\n- name: \"show system network call to lib \"\n  show_system_network_summary:\n    cli_responses: \"{{ output}} \"\n    output_type: \"{{ output_method if output_method is defined else 'json' }}\"\n  register: show_system_network_summary\n- debug: var=show_system_network_summary\n"
+  },
+  "dellemc.os10.vlt_validate": {
+    "doc": {
+      "description": "Troubleshoot the show vlt info and raise an error if peer is not up.",
+      "has_action": false,
+      "options": {
+        "intended_vlt_pairs": {
+          "aliases": [],
+          "description": "intended vlt pair intput to verify with actual",
+          "type": "list",
+          "required": true,
+          "suboptions": {}
+        },
+        "show_system_network_summary": {
+          "aliases": [],
+          "description": "show system summary output",
+          "type": "list",
+          "required": true,
+          "suboptions": {}
+        },
+        "show_vlt": {
+          "aliases": [],
+          "description": "show vlt output",
+          "type": "list",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Validate the vlt info, raise an error if peer is not in up state"
+    },
+    "examples": "\nCopy below YAML into a playbook (e.g. play.yml) and run as follows:\n\n#$ ansible-playbook -i inv play.yml\nname: show system Configuration\nhosts: localhost\nconnection: local\ngather_facts: False\ntasks:\n - name: \"Get Dell EMC OS10 Show run vlt\"\n   os10_command:\n     commands:\n       - command: \"show running-configuration vlt | grep vlt-domain\"\n     provider: \"{{ hostvars[item].cli }}\"\n   with_items: \"{{ groups['all'] }}\"\n   register: show_run_vlt\n - set_fact:\n      output_vlt:  \"{{ output_vlt|default([])+ [{'host': item.invocation.module_args.provider.host, 'inv_name': item.item,\n                                                 'stdout_show_vlt': item.stdout.0}] }}\"\n   loop: \"{{ show_run_vlt.results }}\"\n - debug: var=output_vlt\n - name: \"Get Dell EMC OS10 Show vlt info\"\n   os10_command:\n     commands:\n       - command: \"show vlt {{ item.stdout_show_vlt.split()[1] }} | display-xml\"\n     provider: \"{{ hostvars[item.inv_name].cli }}\"\n   with_items: \"{{ output_vlt }}\"\n   register: show_vlt\n - set_fact:\n      vlt_out:  \"{{ vlt_out|default([])+ [{'host': item.invocation.module_args.provider.host, 'inv_name': item.item, 'show_vlt_stdout': item.stdout.0}] }}\"\n   loop: \"{{ show_vlt.results }}\"\n   register: vlt_output\n - name: call lib to convert vlt info from xml to dict format\n   base_xml_to_dict:\n      cli_responses: \"{{ item.show_vlt_stdout }}\"\n   with_items:\n     - \"{{ vlt_out }}\"\n   register: vlt_dict_output\n - name: \"Get Dell EMC OS10 Show system\"\n   import_role:\n     name: os10_fabric_summary\n   register: show_system_network_summary\n - name: call lib to process\n   vlt_validate:\n       show_vlt : \"{{ vlt_dict_output.results }}\"\n       show_system_network_summary: \"{{ show_system_network_summary.msg.results }}\"\n       intended_vlt_pairs: \"{{ intended_vlt_pairs }}\"\n   register: show_vlt_info\n\n"
+  },
+  "dellemc.os10.wiring_validate": {
+    "doc": {
+      "description": "Get the wiring info using lldp output and show system network summary.",
+      "has_action": false,
+      "options": {
+        "planned_neighbors": {
+          "aliases": [],
+          "description": "planned neighbours input from group_var to compare actual",
+          "type": "list",
+          "required": true,
+          "suboptions": {}
+        },
+        "show_lldp_neighbors_list": {
+          "aliases": [],
+          "description": "show lldp neighbor output",
+          "type": "list",
+          "required": true,
+          "suboptions": {}
+        },
+        "show_system_network_summary": {
+          "aliases": [],
+          "description": "show system network summary output",
+          "type": "list",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Validate the wiring based on the planned wiring details"
+    },
+    "examples": "\nCopy below YAML into a playbook (e.g. play.yml) and run as follows:\n\n#$ ansible-playbook -i inv play.yml\nname: show system Configuration\nhosts: localhost\nconnection: local\ngather_facts: False\ntasks:\n- name: \"Get Dell EMC OS10 Show lldp\"\n  os10_command:\n    commands:\n      - command: \"show lldp neighbors\"\n    provider: \"{{ hostvars[item].cli }}\"\n  with_items: \"{{ groups['all'] }}\"\n  register: show_lldp\n- local_action: copy content={{ show_lldp }} dest=show\n- set_fact:\n     output_lldp:  \"{{ output_lldp|default([])+ [{'host': item.invocation.module_args.provider.host, 'inv_name': item.item,\n                                                  'stdout_show_lldp': item.stdout}] }}\"\n  loop: \"{{ show_lldp.results }}\"\n- debug: var=output_lldp\n- name: \"Get Dell EMC OS10 Show system\"\n  import_role:\n    name: os10_fabric_summary\n  register: show_system_network_summary\n- debug: var=show_system_network_summary\n- name: call lib to process\n  wiring_validate:\n    show_lldp_neighbors_list: \"{{ output_lldp }}\"\n    show_system_network_summary: \"{{ show_system_network_summary.msg.results }}\"\n    planned_neighbors: \"{{ intended_neighbors }}\"\n"
+  }
+}
