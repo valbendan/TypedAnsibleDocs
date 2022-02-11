@@ -39,5 +39,5 @@ jobs:
           add-paths: |
             build/html
 
-      #- name: 部署到 Clouflare Pages
-      #  run: curl -XPOST ${{ secrets.CF_DEPLOY_URL }}
+      - name: 部署到 Clouflare Pages
+        run: curl -XPOST ${{ secrets.CF_DEPLOY_URL }}
