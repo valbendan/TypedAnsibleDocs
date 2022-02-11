@@ -1,0 +1,52 @@
+name: linode.cloud
+
+on:
+  push:
+    paths:
+      - '.github/workflows/azure.azcollection.yml'
+
+env:
+  ANSIBLE_VERSION: 5.3
+  GALAXY_COLLECTION: azure.azcollection
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        galaxy_version:
+          - 1.11.0
+          - 1.10.0
+          - 1.9.0
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: install dependency
+        run: pip install -r requirements.txt
+
+      - name: Install Ansible ${{ env.ANSIBLE_VERSION }}
+        run: pip install ansible==${{ env.ANSIBLE_VERSION }}
+
+      - name: Galaxy Install Collection ${{ env.GALAXY_COLLECTION }} ${{ matrix.galaxy_version }}
+        run: ansible-galaxy collection install ${{ env.GALAXY_COLLECTION }}:==${{ matrix.galaxy_version }}
+
+      - name: Generate Doc
+        run: |
+          mkdir -p docs/${{ env.GALAXY_COLLECTION }}/${{ matrix.galaxy_version }}
+          python gen_ansible_doc.py docs/${{ env.GALAXY_COLLECTION }}/${{ matrix.galaxy_version }}  --collection ${{ env.GALAXY_COLLECTION }}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3.12.1
+        with:
+          title: Doc for ${{ env.GALAXY_COLLECTION }} ${{ matrix.galaxy_version }}
+          branch: doc/${{ env.GALAXY_COLLECTION }}/${{ matrix.galaxy_version }}
+          add-paths: |
+            docs/${{ env.GALAXY_COLLECTION }}/${{ matrix.galaxy_version }}
+
