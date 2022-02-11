@@ -10,5 +10,5 @@ Ansible {{ version }} Docs
      - Download URL
 {% for doc in doc_files %}
    * - {{ doc[:-5] }}
-     - :download:`{{ doc }} <{{ doc }}>`_
+     - :download:`{{ doc }} </docs/ansible/{{ version }}/{{ doc }}>`_
 {% endfor %}
