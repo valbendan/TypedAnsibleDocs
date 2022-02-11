@@ -2,5 +2,5 @@
 
 This repo is for generate docs for Typed Ansible Plugin (not release currently)
 
-You can download artifacts from here [website](https://ta.2cc.net).
+You can download artifacts from [here](https://ta.2cc.net).
 
