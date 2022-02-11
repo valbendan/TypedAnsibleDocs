@@ -32,10 +32,10 @@ jobs:
       - name: Publish HTML
         uses: peter-evans/create-pull-request@v3.12.1
         with:
-          title: Publish to html branch
+          title: Publish to html branch (Never Merge This)
           branch: html
           add-paths: |
             build/html
 
-      #- name: 部署到 Clouflare Pages
-      #  run: curl -XPOST ${{ secrets.CF_DEPLOY_URL }}
+      - name: 部署到 Clouflare Pages
+        run: curl -XPOST ${{ secrets.CF_DEPLOY_URL }}
