@@ -38,4 +38,5 @@ gen-all-ansible-full:
 
 
 gen-all-ansible-collections:
+	poetry run python rst.py gen-collection azure.azcollection
 	poetry run python rst.py gen-collection linode.cloud
