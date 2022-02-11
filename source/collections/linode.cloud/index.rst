@@ -1,6 +1,6 @@
 
 
-linode.cloud Collection Docs
+linode.cloud Collection
 =========================================
 
 .. list-table:: linode.cloud Version
