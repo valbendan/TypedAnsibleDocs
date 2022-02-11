@@ -4,11 +4,11 @@ Ansible Collection {{ name }} Docs
 =========================================
 
 .. list-table:: Collections
-:header-rows: 1
+   :header-rows: 1
 
-* - Collection Name
-- Download URL
-{% for doc in doc_files %}
-    * - {{ doc[:-5] }}
-    - :download:`{{ doc }} <{{ doc }}>`_
+   * - Collection Name
+     - Download URL
+{% for version in version_list %}
+   * - {{ version }}
+     - :download:`{{ version }} <{{ name }}/{{ version }}/{{ name }}.json>`_
 {% endfor %}

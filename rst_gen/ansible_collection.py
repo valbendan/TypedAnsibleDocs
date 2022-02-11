@@ -11,7 +11,7 @@ p_dir = os.path.dirname(__file__)
 def do_gen_ansible_collection(name: str):
     collection_dir = os.path.join(p_dir, f"../docs/{name}")
     if not os.path.isdir(collection_dir):
-        sys.stderr.write(f'{collection_dir=} is not valid directory')
+        sys.stderr.write(f"{collection_dir=} is not valid directory")
         sys.exit(2)
 
     version_list = os.listdir(collection_dir)
