@@ -16,6 +16,6 @@ def gen_ansible_full(version: str):
 
     doc_files = os.listdir(doc_dir)
 
-    render_jinja2_file(
-        os.path.join(p_dir, "ansible_full.jinja2"), dict(doc_files=doc_files)
-    )
+    context = dict(version=version, doc_files=doc_files)
+
+    render_jinja2_file(os.path.join(p_dir, "ansible_full.jinja2"), context)
