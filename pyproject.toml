@@ -12,6 +12,12 @@ typer = ">=0.4,<1"
 pydantic = ">=1.9,<2.0"
 
 sphinx = ">=4.4,<5.0"
+jieba = "*"
+sphinx-sitemap = "*"
+sphinx-copybutton = "*"
+sphinx_rtd_theme = "*"
+# for custom 404 page
+sphinx-notfound-page = "*"
 
 [tool.poetry.dev-dependencies]
 black = "*"
