@@ -9,9 +9,13 @@ p_dir = os.path.dirname(__file__)
 
 
 def do_gen_ansible_collection(name: str):
-    collection_dir = os.path.join(p_dir, f"../docs/{name}")
+    collection_dir = os.path.join(p_dir, "../docs/{name}".format(name=name))
     if not os.path.isdir(collection_dir):
-        sys.stderr.write(f"{collection_dir=} is not valid directory")
+        sys.stderr.write(
+            "collection_dir={collection_dir} is not valid directory".format(
+                collection_dir=collection_dir
+            )
+        )
         sys.exit(2)
 
     version_list = reversed(sorted(os.listdir(collection_dir)))
@@ -22,5 +26,7 @@ def do_gen_ansible_collection(name: str):
         os.path.join(p_dir, "ansible_collection.jinja2"), context
     )
 
-    with open(os.path.join(p_dir, f"../source/collections/{name}.rst"), "w") as fp:
+    with open(
+        os.path.join(p_dir, "../source/collections/{name}.rst".format(name=name)), "w"
+    ) as fp:
         fp.write(rst_content)

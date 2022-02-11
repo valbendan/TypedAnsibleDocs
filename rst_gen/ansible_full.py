@@ -9,9 +9,9 @@ p_dir = os.path.dirname(__file__)
 
 
 def do_gen_ansible_full(version: str):
-    doc_dir = os.path.join(p_dir, f"../docs/ansible/{version}")
+    doc_dir = os.path.join(p_dir, "../docs/ansible/" + version)
     if not os.path.isdir(doc_dir):
-        sys.stderr.write(f"{doc_dir=} 不是有效的目录")
+        sys.stderr.write("doc_dir=" + doc_dir + " 不是有效的目录")
         sys.exit(2)
 
     doc_files = sorted(os.listdir(doc_dir))
@@ -22,5 +22,8 @@ def do_gen_ansible_full(version: str):
         os.path.join(p_dir, "ansible_full.jinja2"), context
     )
 
-    with open(os.path.join(p_dir, f"../source/ansible/{version}.rst"), "w") as fp:
+    with open(
+        os.path.join(p_dir, "../source/ansible/{version}.rst".format(version=version)),
+        "w",
+    ) as fp:
         fp.write(rst_content)
