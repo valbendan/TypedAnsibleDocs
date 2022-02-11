@@ -3,20 +3,20 @@
 Ansible Collection linode.cloud Docs
 =========================================
 
-.. list-table:: version
+.. list-table:: linode.cloud Version
    :header-rows: 1
 
    * - Version
-     - Download URL
+     - Download
 
    * - 0.5.0
-     - :download:`/docs/linode.cloud/0.5.0/linode.cloud.json </docs/linode.cloud/0.5.0/linode.cloud.json>`_
+     - :download:`linode.cloud 0.5.0 <../../docs/linode.cloud/0.5.0/linode.cloud.json>`
 
    * - 0.4.0
-     - :download:`/docs/linode.cloud/0.4.0/linode.cloud.json </docs/linode.cloud/0.4.0/linode.cloud.json>`_
+     - :download:`linode.cloud 0.4.0 <../../docs/linode.cloud/0.4.0/linode.cloud.json>`
 
    * - 0.3.2
-     - :download:`/docs/linode.cloud/0.3.2/linode.cloud.json </docs/linode.cloud/0.3.2/linode.cloud.json>`_
+     - :download:`linode.cloud 0.3.2 <../../docs/linode.cloud/0.3.2/linode.cloud.json>`
 
    * - 0.3.1
-     - :download:`/docs/linode.cloud/0.3.1/linode.cloud.json </docs/linode.cloud/0.3.1/linode.cloud.json>`_
+     - :download:`linode.cloud 0.3.1 <../../docs/linode.cloud/0.3.1/linode.cloud.json>`

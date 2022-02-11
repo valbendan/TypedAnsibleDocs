@@ -10,3 +10,9 @@ Welcome to Typed Ansible's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+
+.. toctree::
+
+   ansible/v5.1.rst
+   ansible/v5.3.rst
+   collections/linode.cloud.rst
