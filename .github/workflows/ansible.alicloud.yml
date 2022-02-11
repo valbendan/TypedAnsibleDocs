@@ -1,4 +1,4 @@
-name: linode.cloud
+name: ansible.alicloud
 
 on:
   push:
