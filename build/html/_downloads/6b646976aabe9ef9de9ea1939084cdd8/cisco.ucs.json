@@ -1,0 +1,4085 @@
+{
+  "cisco.ucs.ucs_disk_group_policy": {
+    "doc": {
+      "description": "Configures disk group policies on Cisco UCS Manager.",
+      "has_action": false,
+      "options": {
+        "configuration_mode": {
+          "aliases": [],
+          "description": "Disk group configuration mode. Choose one of the following:\nautomatic - Automatically configures the disks in the disk group.\nmanual - Enables you to manually configure the disks in the disk group.",
+          "default": "automatic",
+          "required": false,
+          "choices": [
+            "automatic",
+            "manual"
+          ],
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "The user-defined description of the storage profile.\nEnter up to 256 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).",
+          "required": false,
+          "suboptions": {}
+        },
+        "drive_type": {
+          "aliases": [],
+          "description": "Specify the drive type to use in the drive group.\nThis can be one of the following:\nunspecified — Selects the first available drive type, and applies that to all drives in the group.\nHDD — Hard disk drive\nSSD — Solid state drive\nOption only applies when configuration mode is automatic.",
+          "default": "unspecified",
+          "required": false,
+          "choices": [
+            "unspecified",
+            "HDD",
+            "SSD"
+          ],
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "manual_disks": {
+          "aliases": [],
+          "description": "List of manually configured disks.\nOptions are only used when you choose manual configuration_mode.",
+          "required": false,
+          "suboptions": {
+            "name": {
+              "aliases": [],
+              "description": "The name of the local LUN.",
+              "required": true,
+              "suboptions": {}
+            },
+            "role": {
+              "aliases": [],
+              "description": "The role of the disk. This can be one of the following:\nnormal - Normal\nded-hot-spare - Dedicated Hot Spare\nglob-hot-spare - Glob Hot Spare",
+              "required": false,
+              "suboptions": {}
+            },
+            "slot_num": {
+              "aliases": [],
+              "description": "The slot number of the specific disk.",
+              "required": false,
+              "suboptions": {}
+            },
+            "span_id": {
+              "aliases": [],
+              "description": "The Span ID of the specific disk.",
+              "default": "unspecified",
+              "required": false,
+              "suboptions": {}
+            },
+            "state": {
+              "aliases": [],
+              "description": "If C(present), will verify disk slot is configured within policy. If C(absent), will verify disk slot is absent from policy.",
+              "default": "present",
+              "required": false,
+              "choices": [
+                "present",
+                "absent"
+              ],
+              "suboptions": {}
+            }
+          }
+        },
+        "min_drive_size": {
+          "aliases": [],
+          "description": "Specify the minimum drive size or unspecified to allow all drive sizes.\nThis can be from 0 to 10240 GB.\nOption only applies when configuration mode is automatic.",
+          "default": "unspecified",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the disk group policy.\nThis name can be between 1 and 16 alphanumeric characters.\nYou cannot use spaces or any special characters other than - (hyphen), \"_\" (underscore), : (colon), and . (period).\nYou cannot change this name after the policy is created.",
+          "required": true,
+          "suboptions": {}
+        },
+        "num_ded_hot_spares": {
+          "aliases": [],
+          "description": "Specify the number of hot spares for the disk group.\nThis can be from 0 to 24.\nOption only applies when configuration mode is automatic.",
+          "default": "unspecified",
+          "required": false,
+          "suboptions": {}
+        },
+        "num_drives": {
+          "aliases": [],
+          "description": "Specify the number of drives for the disk group.\nThis can be from 0 to 24.\nOption only applies when configuration mode is automatic.",
+          "default": "1",
+          "required": false,
+          "suboptions": {}
+        },
+        "num_glob_hot_spares": {
+          "aliases": [],
+          "description": "Specify the number of global hot spares for the disk group.\nThis can be from 0 to 24.\nOption only applies when configuration mode is automatic.",
+          "default": "unspecified",
+          "required": false,
+          "suboptions": {}
+        },
+        "org_dn": {
+          "aliases": [],
+          "description": "The distinguished name (dn) of the organization where the resource is assigned.",
+          "default": "org-root",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "raid_level": {
+          "aliases": [],
+          "description": "The RAID level for the disk group policy. This can be one of the following:\nstripe - UCS Manager shows RAID 0 Striped\nmirror - RAID 1 Mirrored\nmirror-stripe - RAID 10 Mirrored and Striped\nstripe-parity - RAID 5 Striped Parity\nstripe-dual-parity - RAID 6 Striped Dual Parity\nstripe-parity-stripe - RAID 50 Striped Parity and Striped\nstripe-dual-parity-stripe - RAID 60 Striped Dual Parity and Striped",
+          "default": "stripe",
+          "required": false,
+          "choices": [
+            "stripe",
+            "mirror",
+            "mirror-stripe",
+            "stripe-parity",
+            "stripe-dual-parity",
+            "stripe-parity-stripe",
+            "stripe-dual-parity-stripe"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Desired state of the disk group policy.\nIf C(present), will verify that the disk group policy is present and will create if needed.\nIf C(absent), will verify that the disk group policy is absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_remaining_disks": {
+          "aliases": [],
+          "description": "Specifies whether you can use all the remaining disks in the disk group or not.\nOption only applies when configuration mode is automatic.",
+          "default": "no",
+          "required": false,
+          "choices": [
+            "yes",
+            "no"
+          ],
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "virtual_drive": {
+          "aliases": [],
+          "description": "Configuration of virtual drive options.",
+          "required": false,
+          "suboptions": {
+            "access_policy": {
+              "aliases": [],
+              "description": "Configure access policy to virtual drive.",
+              "default": "platform-default",
+              "required": false,
+              "choices": [
+                "blocked",
+                "hidden",
+                "platform-default",
+                "read-only",
+                "read-write",
+                "transport-ready"
+              ],
+              "suboptions": {}
+            },
+            "drive_cache": {
+              "aliases": [],
+              "description": "Configure drive caching.",
+              "default": "platform-default",
+              "required": false,
+              "choices": [
+                "disable",
+                "enable",
+                "no-change",
+                "platform-default"
+              ],
+              "suboptions": {}
+            },
+            "io_policy": {
+              "aliases": [],
+              "description": "Direct or Cached IO path.",
+              "default": "platform-default",
+              "required": false,
+              "choices": [
+                "cached",
+                "direct",
+                "platform-default"
+              ],
+              "suboptions": {}
+            },
+            "read_policy": {
+              "aliases": [],
+              "description": "Read access policy to virtual drive.",
+              "default": "platform-default",
+              "required": false,
+              "choices": [
+                "normal",
+                "platform-default",
+                "read-ahead"
+              ],
+              "suboptions": {}
+            },
+            "strip_size": {
+              "aliases": [],
+              "description": "Virtual drive strip size.",
+              "default": "platform-default",
+              "required": false,
+              "choices": [
+                "present",
+                "absent"
+              ],
+              "suboptions": {}
+            },
+            "write_cache_policy": {
+              "aliases": [],
+              "description": "Write back cache policy.",
+              "default": "platform-default",
+              "required": false,
+              "choices": [
+                "always-write-back",
+                "platform-default",
+                "write-back-good-bbu",
+                "write-through"
+              ],
+              "suboptions": {}
+            }
+          }
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configures disk group policies on Cisco UCS Manager",
+      "version_added": "2.8"
+    },
+    "examples": "\n- name: Configure Disk Group Policy\n  cisco.ucs.ucs_disk_group_policy:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: DEE-DG\n    raid_level: mirror\n    configuration_mode: manual\n    manual_disks:\n    - slot_num: '1'\n      role: normal\n    - slot_num: '2'\n      role: normal\n\n- name: Remove Disk Group Policy\n  cisco.ucs.ucs_disk_group_policy:\n    name: DEE-DG\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    state: absent\n\n- name: Remove Disk from Policy\n  cisco.ucs.ucs_disk_group_policy:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: DEE-DG\n    description: Testing Ansible\n    raid_level: stripe\n    configuration_mode: manual\n    manual_disks:\n    - slot_num: '1'\n      role: normal\n    - slot_num: '2'\n      role: normal\n      state: absent\n    virtual_drive:\n      access_policy: platform-default\n      io_policy: direct\n      strip_size: 64KB\n"
+  },
+  "cisco.ucs.ucs_dns_server": {
+    "doc": {
+      "description": "Configure DNS servers on Cisco UCS Manager.",
+      "has_action": false,
+      "options": {
+        "delegate_to": {
+          "aliases": [],
+          "description": "Where the module will be run",
+          "default": "localhost",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "A user-defined description of the DNS server.\nEnter up to 256 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "dns_server": {
+          "aliases": [
+            "name"
+          ],
+          "description": "DNS server IP address.\nEnter a valid IPV4 Address.\nUCS Manager supports up to 4 DNS Servers",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(absent), will remove a DNS server.\nIf C(present), will add or update a DNS server.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configure DNS servers on Cisco UCS Manager",
+      "version_added": "2.8"
+    },
+    "examples": "\n- name: Configure DNS server\n  cisco.ucs.ucs_dns_server:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    dns_server: 10.10.10.10\n    description: DNS Server IP address\n    state: present\n    delegate_to: localhost\n\n- name: Remove DNS server\n  cisco.ucs.ucs_dns_server:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    dns_server: 10.10.10.10\n    state: absent\n    delegate_to: localhost\n"
+  },
+  "cisco.ucs.ucs_graphics_card_policy": {
+    "doc": {
+      "description": "Manages UCS Graphics Card Policies on UCS Manager.",
+      "has_action": false,
+      "options": {
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "A user-defined description of the organization.\nEnter up to 256 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote)\n= (equal sign), > (greater than), < (less than), ' (single quote).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "graphics_card_mode": {
+          "aliases": [],
+          "description": "Set the Graphics Card Mode.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "any-configuration",
+            "compute",
+            "graphics"
+          ],
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the organization.\nEnter up to 16 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote)\n= (equal sign), > (greater than), < (less than), ' (single quote).",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "org_dn": {
+          "aliases": [],
+          "description": "Org dn (distinguished name)",
+          "default": "org-root",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(absent), will remove organization.\nIf C(present), will create or update organization.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Manages UCS Graphics Card Policies on UCS Manager",
+      "version_added": "2.9"
+    },
+    "examples": "\n- name: Add UCS Graphics Card Policy\n  cisco.ucs.ucs_graphics_card_policy:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    state: present\n    description: Any Graphics Mode Policy\n    name: any_graphics\n    graphics_card_mode: any-configuration\n  delegate_to: localhost\n\n- name: Add UCS Graphics Card Policy in an Organization\n  cisco.ucs.ucs_graphics_card_policy:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    state: present\n    org_dn: org-root/org-prod\n    description: Any Graphics Mode Policy\n    name: prod_graphics\n    graphics_card_mode: any-configuration\n  delegate_to: localhost\n\n- name: Update UCS Graphics Card Policy in an Organization\n  cisco.ucs.ucs_graphics_card_policy:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    state: present\n    org_dn: org-root/org-prod\n    description: Graphics Mode Policy\n    name: prod_graphics\n    graphics_card_mode: graphics\n  delegate_to: localhost\n\n- name: Update UCS Graphics Card Policy in an Organization\n  cisco.ucs.ucs_graphics_card_policy:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    state: present\n    org_dn: org-root/org-prod\n    description: Compute Mode Policy\n    name: prod_graphics\n    graphics_card_mode: compute\n  delegate_to: localhost\n\n- name: Delete UCS Graphics Card Policy in an Organization\n  cisco.ucs.ucs_graphics_card_policy:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    state: absent\n    org_dn: org-root/org-prod\n    name: prod_graphics\n  delegate_to: localhost\n\n- name: Delete UCS Graphics Card Policy\n  cisco.ucs.ucs_graphics_card_policy:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    state: absent\n    name: any_graphics\n  delegate_to: localhost\n"
+  },
+  "cisco.ucs.ucs_ip_pool": {
+    "doc": {
+      "description": "Configures IP address pools and blocks of IP addresses on Cisco UCS Manager.",
+      "has_action": false,
+      "options": {
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "The user-defined description of the IP address pool.\nEnter up to 256 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "ip_blocks": {
+          "aliases": [],
+          "description": "List of IPv4 blocks used by the IP Pool.",
+          "required": false,
+          "suboptions": {
+            "default_gw": {
+              "aliases": [],
+              "description": "The default gateway associated with the IPv4 addresses in the block.",
+              "default": "0.0.0.0",
+              "required": false,
+              "suboptions": {}
+            },
+            "first_addr": {
+              "aliases": [],
+              "description": "The first IPv4 address in the IPv4 addresses block.\nThis is the From field in the UCS Manager Add IPv4 Blocks menu.",
+              "required": false,
+              "suboptions": {}
+            },
+            "last_addr": {
+              "aliases": [],
+              "description": "The last IPv4 address in the IPv4 addresses block.\nThis is the To field in the UCS Manager Add IPv4 Blocks menu.",
+              "required": false,
+              "suboptions": {}
+            },
+            "primary_dns": {
+              "aliases": [],
+              "description": "The primary DNS server that this block of IPv4 addresses should access.",
+              "default": "0.0.0.0",
+              "required": false,
+              "suboptions": {}
+            },
+            "secondary_dns": {
+              "aliases": [],
+              "description": "The secondary DNS server that this block of IPv4 addresses should access.",
+              "default": "0.0.0.0",
+              "required": false,
+              "suboptions": {}
+            },
+            "subnet_mask": {
+              "aliases": [],
+              "description": "The subnet mask associated with the IPv4 addresses in the block.",
+              "default": "255.255.255.0",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "ipv6_blocks": {
+          "aliases": [],
+          "description": "List of IPv6 blocks used by the IP Pool.",
+          "required": false,
+          "suboptions": {
+            "ipv6_default_gw": {
+              "aliases": [],
+              "description": "The default gateway associated with the IPv6 addresses in the block.",
+              "default": "::",
+              "required": false,
+              "suboptions": {}
+            },
+            "ipv6_first_addr": {
+              "aliases": [],
+              "description": "The first IPv6 address in the IPv6 addresses block.\nThis is the From field in the UCS Manager Add IPv6 Blocks menu.",
+              "required": false,
+              "suboptions": {}
+            },
+            "ipv6_last_addr": {
+              "aliases": [],
+              "description": "The last IPv6 address in the IPv6 addresses block.\nThis is the To field in the UCS Manager Add IPv6 Blocks menu.",
+              "required": false,
+              "suboptions": {}
+            },
+            "ipv6_prefix": {
+              "aliases": [],
+              "description": "The network address prefix associated with the IPv6 addresses in the block.",
+              "default": "64",
+              "required": false,
+              "suboptions": {}
+            },
+            "ipv6_primary_dns": {
+              "aliases": [],
+              "description": "The primary DNS server that this block of IPv6 addresses should access.",
+              "default": "::",
+              "required": false,
+              "suboptions": {}
+            },
+            "ipv6_secondary_dns": {
+              "aliases": [],
+              "description": "The secondary DNS server that this block of IPv6 addresses should access.",
+              "default": "::",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the IP address pool.\nThis name can be between 1 and 32 alphanumeric characters.\nYou cannot use spaces or any special characters other than - (hyphen), \"_\" (underscore), : (colon), and . (period).\nYou cannot change this name after the IP address pool is created.",
+          "required": true,
+          "suboptions": {}
+        },
+        "order": {
+          "aliases": [],
+          "description": "The Assignment Order field.\nThis can be one of the following:\ndefault - Cisco UCS Manager selects a random identity from the pool.\nsequential - Cisco UCS Manager selects the lowest available identity from the pool.",
+          "default": "default",
+          "required": false,
+          "choices": [
+            "default",
+            "sequential"
+          ],
+          "suboptions": {}
+        },
+        "org_dn": {
+          "aliases": [],
+          "description": "Org dn (distinguished name)",
+          "default": "org-root",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify IP pool is present and will create if needed.\nIf C(absent), will verify IP pool is absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configures IP address pools on Cisco UCS Manager",
+      "version_added": "2.5"
+    },
+    "examples": "\n- name: Configure IPv4 and IPv6 address pool\n  cisco.ucs.ucs_ip_pool:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    name: ip-pool-01\n    org_dn: org-root/org-level1\n    ipv4_blocks:\n    - first_addr: 192.168.10.1\n      last_addr: 192.168.10.20\n      subnet_mask: 255.255.255.128\n      default_gw: 192.168.10.2\n    - first_addr: 192.168.11.1\n      last_addr: 192.168.11.20\n      subnet_mask: 255.255.255.128\n      default_gw: 192.168.11.2\n    ipv6_blocks:\n    - ipv6_first_addr: fe80::1cae:7992:d7a1:ed07\n      ipv6_last_addr: fe80::1cae:7992:d7a1:edfe\n      ipv6_default_gw: fe80::1cae:7992:d7a1:ecff\n    - ipv6_first_addr: fe80::1cae:7992:d7a1:ec07\n      ipv6_last_addr: fe80::1cae:7992:d7a1:ecfe\n      ipv6_default_gw: fe80::1cae:7992:d7a1:ecff\n\n- name: Delete IPv4 and IPv6 address pool blocks\n  cisco.ucs.ucs_ip_pool:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    name: ip-pool-01\n    org_dn: org-root/org-level1\n    ipv4_blocks:\n    - first_addr: 192.168.10.1\n      last_addr: 192.168.10.20\n      state: absent\n    ipv6_blocks:\n    - ipv6_first_addr: fe80::1cae:7992:d7a1:ec07\n      ipv6_last_addr: fe80::1cae:7992:d7a1:ecfe\n      state: absent\n\n- name: Remove IPv4 and IPv6 address pool\n  cisco.ucs.ucs_ip_pool:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    name: ip-pool-01\n    state: absent\n"
+  },
+  "cisco.ucs.ucs_lan_connectivity": {
+    "doc": {
+      "description": "Configures LAN Connectivity Policies on Cisco UCS Manager.",
+      "has_action": false,
+      "options": {
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "A description of the LAN Connectivity Policy.\nCisco recommends including information about where and when to use the policy.\nEnter up to 256 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "iscsi_vnic_list": {
+          "aliases": [],
+          "description": "List of iSCSI vNICs used by the LAN Connectivity Policy.",
+          "required": false,
+          "version_added": "2.8",
+          "suboptions": {
+            "iscsi_adapter_policy": {
+              "aliases": [],
+              "description": "The iSCSI adapter policy associated with this iSCSI vNIC.",
+              "required": false,
+              "suboptions": {}
+            },
+            "mac_address": {
+              "aliases": [],
+              "description": "The MAC address associated with this iSCSI vNIC.\nIf the MAC address is not set, Cisco UCS Manager uses a derived MAC address.",
+              "default": "derived",
+              "required": false,
+              "suboptions": {}
+            },
+            "name": {
+              "aliases": [],
+              "description": "The name of the iSCSI vNIC.",
+              "required": true,
+              "suboptions": {}
+            },
+            "overlay_vnic": {
+              "aliases": [],
+              "description": "The LAN vNIC associated with this iSCSI vNIC.",
+              "required": false,
+              "suboptions": {}
+            },
+            "state": {
+              "aliases": [],
+              "description": "If C(present), will verify iscsi vnic is configured within policy. If C(absent), will verify iscsi vnic is absent from policy.",
+              "default": "present",
+              "required": false,
+              "choices": [
+                "present",
+                "absent"
+              ],
+              "suboptions": {}
+            },
+            "vlan_name": {
+              "aliases": [],
+              "description": "The VLAN used for the iSCSI vNIC.",
+              "default": "default",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the LAN Connectivity Policy.\nThis name can be between 1 and 16 alphanumeric characters.\nYou cannot use spaces or any special characters other than - (hyphen), \"_\" (underscore), : (colon), and . (period).\nYou cannot change this name after the policy is created.",
+          "required": true,
+          "suboptions": {}
+        },
+        "org_dn": {
+          "aliases": [],
+          "description": "Org dn (distinguished name)",
+          "default": "org-root",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify LAN Connectivity Policies are present and will create if needed.\nIf C(absent), will verify LAN Connectivity Policies are absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vnic_list": {
+          "aliases": [],
+          "description": "List of vNICs used by the LAN Connectivity Policy.\nvNICs used by the LAN Connectivity Policy must be created from a vNIC template.",
+          "required": false,
+          "version_added": "2.8",
+          "suboptions": {
+            "adapter_policy": {
+              "aliases": [],
+              "description": "The name of the Ethernet adapter policy.\nA user defined policy can be used, or one of the system defined policies.",
+              "required": false,
+              "suboptions": {}
+            },
+            "name": {
+              "aliases": [],
+              "description": "The name of the vNIC.",
+              "required": true,
+              "suboptions": {}
+            },
+            "order": {
+              "aliases": [],
+              "description": "String specifying the vNIC assignment order (e.g., '1', '2').",
+              "default": "unspecified",
+              "required": false,
+              "suboptions": {}
+            },
+            "state": {
+              "aliases": [],
+              "description": "If C(present), will verify vnic is configured within policy. If C(absent), will verify vnic is absent from policy.",
+              "default": "present",
+              "required": false,
+              "choices": [
+                "present",
+                "absent"
+              ],
+              "suboptions": {}
+            },
+            "vnic_template": {
+              "aliases": [],
+              "description": "The name of the vNIC template.",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configures LAN Connectivity Policies on Cisco UCS Manager",
+      "version_added": "2.5"
+    },
+    "examples": "\n- name: Configure LAN Connectivity Policy\n  cisco.ucs.ucs_lan_connectivity:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: Cntr-FC-Boot\n    vnic_list:\n    - name: eno1\n      vnic_template: Cntr-Template\n      adapter_policy: Linux\n    - name: eno2\n      vnic_template: Container-NFS-A\n      adapter_policy: Linux\n    - name: eno3\n      vnic_template: Container-NFS-B\n      adapter_policy: Linux\n    iscsi_vnic_list:\n    - name: iSCSIa\n      overlay_vnic: eno1\n      iscsi_adapter_policy: default\n      vlan_name: Container-MGMT-VLAN\n    - name: iSCSIb\n      overlay_vnic: eno3\n      iscsi_adapter_policy: default\n      vlan_name: Container-TNT-A-NFS\n\n- name: Remove LAN Connectivity Policy\n  cisco.ucs.ucs_lan_connectivity:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: Cntr-FC-Boot\n    state: absent\n"
+  },
+  "cisco.ucs.ucs_mac_pool": {
+    "doc": {
+      "description": "Configures MAC address pools and MAC address blocks on Cisco UCS Manager.",
+      "has_action": false,
+      "options": {
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "A description of the MAC pool.\nEnter up to 256 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).",
+          "required": false,
+          "suboptions": {}
+        },
+        "first_addr": {
+          "aliases": [],
+          "description": "The first MAC address in the block of addresses.\nThis is the From field in the UCS Manager MAC Blocks menu.",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "last_addr": {
+          "aliases": [],
+          "description": "The last MAC address in the block of addresses.\nThis is the To field in the UCS Manager Add MAC Blocks menu.",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the MAC pool.\nThis name can be between 1 and 32 alphanumeric characters.\nYou cannot use spaces or any special characters other than - (hyphen), \"_\" (underscore), : (colon), and . (period).\nYou cannot change this name after the MAC pool is created.",
+          "required": true,
+          "suboptions": {}
+        },
+        "order": {
+          "aliases": [],
+          "description": "The Assignment Order field.\nThis can be one of the following:\ndefault - Cisco UCS Manager selects a random identity from the pool.\nsequential - Cisco UCS Manager selects the lowest available identity from the pool.",
+          "default": "default",
+          "required": false,
+          "choices": [
+            "default",
+            "sequential"
+          ],
+          "suboptions": {}
+        },
+        "org_dn": {
+          "aliases": [],
+          "description": "The distinguished name (dn) of the organization where the resource is assigned.",
+          "default": "org-root",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify MAC pool is present and will create if needed.\nIf C(absent), will verify MAC pool is absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configures MAC address pools on Cisco UCS Manager",
+      "version_added": "2.5"
+    },
+    "examples": "\n- name: Configure MAC address pool\n  cisco.ucs.ucs_mac_pool:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: mac-A\n    first_addr: 00:25:B5:00:66:00\n    last_addr: 00:25:B5:00:67:F3\n    order: sequential\n\n- name: Remove MAC address pool\n  cisco.ucs.ucs_mac_pool:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: mac-A\n    state: absent\n"
+  },
+  "cisco.ucs.ucs_managed_objects": {
+    "doc": {
+      "description": "Configures Managed Objects on Cisco UCS Manager.\nThe Python SDK module, Python class within the module (UCSM Class), and all properties must be directly specified.\nMore information on the UCSM Python SDK and how to directly configure Managed Objects is available at L(UCSM Python SDK,http://ucsmsdk.readthedocs.io/).",
+      "has_action": false,
+      "options": {
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "objects": {
+          "aliases": [],
+          "description": "List of managed objects to configure.  Each managed object has suboptions the specify the Python SDK module, class, and properties to configure.",
+          "required": true,
+          "suboptions": {
+            "children": {
+              "aliases": [],
+              "description": "Optional list of child objects.  Each child has its own module, class, and properties suboptions.\nThe parent_mo_or_dn property for child objects is automatically set as the list of children is configured.",
+              "required": false,
+              "suboptions": {}
+            },
+            "class_name": {
+              "aliases": [],
+              "description": "Name of the Python class that will be used to configure the Managed Object.",
+              "required": true,
+              "suboptions": {}
+            },
+            "module": {
+              "aliases": [],
+              "description": "Name of the Python SDK module implementing the required class.",
+              "required": true,
+              "suboptions": {}
+            },
+            "properties": {
+              "aliases": [],
+              "description": "List of properties to configure on the Managed Object.  See the UCSM Python SDK for information on properties for each class.",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify that the Managed Objects are present and will create if needed.\nIf C(absent), will verify that the Managed Objects are absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configures Managed Objects on Cisco UCS Manager",
+      "version_added": "2.8"
+    },
+    "examples": "\n- name: Configure Network Control Policy\n  cisco.ucs.ucs_managed_objects:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    objects:\n    - module: ucsmsdk.mometa.nwctrl.NwctrlDefinition\n      class: NwctrlDefinition\n      properties:\n        parent_mo_or_dn: org-root\n        cdp: enabled\n        descr: ''\n        lldp_receive: enabled\n        lldp_transmit: enabled\n        name: Enable-CDP-LLDP\n\n- name: Remove Network Control Policy\n  cisco.ucs.ucs_managed_objects:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    objects:\n    - module: ucsmsdk.mometa.nwctrl.NwctrlDefinition\n      class: NwctrlDefinition\n      properties:\n        parent_mo_or_dn: org-root\n        name: Enable-CDP-LLDP\n    state: absent\n\n- name: Configure Boot Policy Using JSON objects list with children\n  cisco.ucs.ucs_managed_objects:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    objects:\n    - {\n          \"module\": \"ucsmsdk.mometa.lsboot.LsbootPolicy\",\n          \"class\": \"LsbootPolicy\",\n          \"properties\": {\n              \"parent_mo_or_dn\": \"org-root\",\n              \"name\": \"Python_SDS\",\n              \"enforce_vnic_name\": \"yes\",\n              \"boot_mode\": \"legacy\",\n              \"reboot_on_update\": \"no\"\n          },\n          \"children\": [\n              {\n                  \"module\": \"ucsmsdk.mometa.lsboot.LsbootVirtualMedia\",\n                  \"class\": \"LsbootVirtualMedia\",\n                  \"properties\": {\n                      \"access\": \"read-only-local\",\n                      \"lun_id\": \"0\",\n                      \"order\": \"2\"\n                  }\n              },\n              {\n                  \"module\": \"ucsmsdk.mometa.lsboot.LsbootStorage\",\n                  \"class\": \"LsbootStorage\",\n                  \"properties\": {\n                      \"order\": \"1\"\n                  },\n                  \"children\": [\n                      {\n                          \"module\": \"ucsmsdk.mometa.lsboot.LsbootLocalStorage\",\n                          \"class\": \"LsbootLocalStorage\",\n                          \"properties\": {},\n                          \"children\": [\n                              {\n                                  \"module\": \"ucsmsdk.mometa.lsboot.LsbootDefaultLocalImage\",\n                                  \"class\": \"LsbootDefaultLocalImage\",\n                                  \"properties\": {\n                                      \"order\": \"1\"\n                                  }\n                              }\n                          ]\n                      }\n                  ]\n              }\n          ]\n      }\n\n- name: Remove Boot Policy Using JSON objects list\n  cisco.ucs.ucs_managed_objects:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    objects:\n    - {\n          \"module\": \"ucsmsdk.mometa.lsboot.LsbootPolicy\",\n          \"class\": \"LsbootPolicy\",\n          \"properties\": {\n              \"parent_mo_or_dn\": \"org-root\",\n              \"name\": \"Python_SDS\"\n          }\n      }\n    state: absent\n\n\n"
+  },
+  "cisco.ucs.ucs_ntp_server": {
+    "doc": {
+      "description": "Configures NTP server on Cisco UCS Manager.",
+      "has_action": false,
+      "options": {
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "A user-defined description of the NTP server.\nEnter up to 256 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).",
+          "default": "",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "ntp_server": {
+          "aliases": [
+            "name"
+          ],
+          "description": "NTP server IP address or hostname.\nEnter up to 63 characters that form a valid hostname.\nEnter a valid IPV4 Address.",
+          "default": "",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(absent), will remove an NTP server.\nIf C(present), will add or update an NTP server.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configures NTP server on Cisco UCS Manager",
+      "version_added": "2.7"
+    },
+    "examples": "\n- name: Configure NTP server\n  cisco.ucs.ucs_ntp_server:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    ntp_server: 10.10.10.10\n    description: Internal NTP Server by IP address\n    state: present\n\n- name: Configure NTP server\n  cisco.ucs.ucs_ntp_server:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    ntp_server: pool.ntp.org\n    description: External NTP Server by hostname\n    state: present\n\n- name: Remove NTP server\n  cisco.ucs.ucs_ntp_server:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    ntp_server: 10.10.10.10\n    state: absent\n\n- name: Remove NTP server\n  cisco.ucs.ucs_ntp_server:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    ntp_server: pool.ntp.org\n    state: absent\n"
+  },
+  "cisco.ucs.ucs_org": {
+    "doc": {
+      "description": "Manages UCS Organizations for UCS Manager.",
+      "has_action": false,
+      "options": {
+        "delegate_to": {
+          "aliases": [],
+          "description": "Where the module will be run",
+          "default": "localhost",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "A user-defined description of the organization.\nEnter up to 256 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "org_name": {
+          "aliases": [
+            "name"
+          ],
+          "description": "The name of the organization.\nEnter up to 16 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "parent_org_path": {
+          "aliases": [],
+          "description": "A forward slash / separated hierarchical path from the root organization to the parent of the organization to be added or updated.\nUCS Manager supports a hierarchical structure of organizations up to five levels deep not including the root organization.\nFor example the parent_org_path for an organization named level5 could be root/level1/level2/level3/level4",
+          "default": "root",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(absent), will remove organization.\nIf C(present), will create or update organization.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Manages UCS Organizations for UCS Manager",
+      "version_added": "2.8"
+    },
+    "examples": "\n- name: Add UCS Organization\n  cisco.ucs.ucs_org:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    org_name: test\n    description: testing org\n    state: present\n    delegate_to: localhost\n\n- name: Update UCS Organization\n  cisco.ucs.ucs_org:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    org_name: test\n    description: Testing org\n    state: present\n    delegate_to: localhost\n\n- name: Add UCS Organization\n  cisco.ucs.ucs_org:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    org_name: level1\n    parent_org_path: root\n    description: level1 org\n    state: present\n    delegate_to: localhost\n\n- name: Add UCS Organization\n  cisco.ucs.ucs_org:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    org_name: level2\n    parent_org_path: root/level1\n    description: level2 org\n    state: present\n\n- name: Add UCS Organization\n  cisco.ucs.ucs_org:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    org_name: level3\n    parent_org_path: root/level1/level2\n    description: level3 org\n    state: present\n\n- name: Remove UCS Organization\n  cisco.ucs.ucs_org:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    org_name: level2\n    parent_org_path: root/level1\n    state: absent\n"
+  },
+  "cisco.ucs.ucs_query": {
+    "doc": {
+      "description": "-Queries UCS Manager objects by class or distinguished name.",
+      "has_action": false,
+      "options": {
+        "class_ids": {
+          "aliases": [],
+          "description": "One or more UCS Manager Class IDs to query.\nAs a comma separated list",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "delegate_to": {
+          "aliases": [],
+          "description": "Where the module will be run",
+          "default": "localhost",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "distinguished_names": {
+          "aliases": [],
+          "description": "One or more UCS Manager Distinguished Names to query.\nAs a comma separated list",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Queries UCS Manager objects by class or distinguished name",
+      "version_added": "2.8"
+    },
+    "examples": "\n- name: Query UCS Class ID\n  cisco.ucs.ucs_query:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    class_ids: computeBlade\n    delegate_to: localhost\n\n- name: Query UCS Class IDs\n  cisco.ucs.ucs_query:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    class_ids: computeBlade, fabricVlan\n    delegate_to: localhost\n\n- name: Query UCS Distinguished Name\n  cisco.ucs.ucs_query:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    distinguished_names: org-root\n    delegate_to: localhost\n\n- name: Query UCS Distinguished Names\n  cisco.ucs.ucs_query:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    distinguished_names: org-root, sys/rack-unit-1, sys/chassis-1/blade-2\n    delegate_to: localhost\n"
+  },
+  "cisco.ucs.ucs_san_connectivity": {
+    "doc": {
+      "description": "Configures SAN Connectivity Policies on Cisco UCS Manager.",
+      "has_action": false,
+      "options": {
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "A description of the policy.\nCisco recommends including information about where and when to use the policy.\nEnter up to 256 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the SAN Connectivity Policy.\nThis name can be between 1 and 16 alphanumeric characters.\nYou cannot use spaces or any special characters other than - (hyphen), \"_\" (underscore), : (colon), and . (period).\nYou cannot change this name after the policy is created.",
+          "required": true,
+          "suboptions": {}
+        },
+        "org_dn": {
+          "aliases": [],
+          "description": "Org dn (distinguished name)",
+          "default": "org-root",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify SAN Connectivity Policies are present and will create if needed.\nIf C(absent), will verify SAN Connectivity Policies are absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vhba_list": {
+          "aliases": [],
+          "description": "List of vHBAs used by the SAN Connectivity Policy.\nvHBAs used by the SAN Connectivity Policy must be created from a vHBA template.\nEach list element has the following suboptions:\n= name\n  The name of the virtual HBA (required).\n= vhba_template\n  The name of the virtual HBA template (required).\n- adapter_policy\n  The name of the Fibre Channel adapter policy.\n  A user defined policy can be used, or one of the system defined policies (default, Linux, Solaris, VMware, Windows, WindowsBoot)\n  [Default: default]\n- order\n  String specifying the vHBA assignment order (e.g., '1', '2').\n  [Default: unspecified]",
+          "required": false,
+          "suboptions": {}
+        },
+        "wwnn_pool": {
+          "aliases": [],
+          "description": "Name of the WWNN pool to use for WWNN assignment.",
+          "default": "default",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configures SAN Connectivity Policies on Cisco UCS Manager",
+      "version_added": "2.5"
+    },
+    "examples": "\n- name: Configure SAN Connectivity Policy\n  cisco.ucs.ucs_san_connectivity:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: Cntr-FC-Boot\n    wwnn_pool: WWNN-Pool\n    vhba_list:\n    - name: Fabric-A\n      vhba_template: vHBA-Template-A\n      adapter_policy: Linux\n    - name: Fabric-B\n      vhba_template: vHBA-Template-B\n      adapter_policy: Linux\n\n- name: Remove SAN Connectivity Policy\n  cisco.ucs.ucs_san_connectivity:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: Cntr-FC-Boot\n    state: absent\n"
+  },
+  "cisco.ucs.ucs_scrub_policy": {
+    "doc": {
+      "description": "Manages UCS Scrub Policies on UCS Manager.",
+      "has_action": false,
+      "options": {
+        "bios_settings_scrub": {
+          "aliases": [],
+          "description": "Scrub the BIOS settings.\nIf the field is set to Yes, when a service profile containing this\nscrub policy is disassociated from a server, the BIOS settings for\nthat server are erased and reset to the defaults for that server\ntype and vendor. If this field is set to No, the BIOS settings are\npreserved.\nyes scrub the BIOS settings.\nno do not scrub the BIOS settings.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "True",
+            "False"
+          ],
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "A user-defined description of the organization.\nEnter up to 256 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote)\n= (equal sign), > (greater than), < (less than), ' (single quote).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "disk_scrub": {
+          "aliases": [],
+          "description": "Scrub the BIOS settings.\nIf this field is set to Yes, when a service profile containing this\nscrub policy is disassociated from a server, all data on the server\nlocal drives is completely erased. If this field is set to No, the\ndata on the local drives is preserved, including all local storage\nconfiguration.\nyes scrub the server disks.\nno do not scrub the server disks.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "True",
+            "False"
+          ],
+          "suboptions": {}
+        },
+        "flex_flash_scrub": {
+          "aliases": [],
+          "description": "Scrub the BIOS settings.\nIf the field is set to Yes, the HV partition on the SD card is\nformatted using the PNUOS formatting utility when the server is\nreacknowledged. If this field is set to No, the SD card is preserved.\nyes scrub the flex flash.\nno do not scrub the flex flash.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "True",
+            "False"
+          ],
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the organization.\nEnter up to 16 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote)\n= (equal sign), > (greater than), < (less than), ' (single quote).",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "org_dn": {
+          "aliases": [],
+          "description": "Org dn (distinguished name)",
+          "default": "org-root",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "persistent_memory_scrub": {
+          "aliases": [],
+          "description": "Scrub the BIOS settings.\nIf the field is set to Yes, when a service profile containing this\nscrub policy is disassociated from a server, all persistent memory\nmodules for that server are erased and reset to the defaults for that\nserver type and vendor. If this field is set to No, the persistent\nmemory modules are preserved.\nyes scrub the persistent memory.\nno do not scrub the persistent memory.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "True",
+            "False"
+          ],
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(absent), will remove organization.\nIf C(present), will create or update organization.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Manages UCS Scrub Policies on UCS Manager",
+      "version_added": "2.9"
+    },
+    "examples": "\n- name: Add UCS Scrub Policy\n  cisco.ucs.ucs_scrub_policy:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    state: present\n    description: Scrub All Policy\n    name: all_scrub\n    bios_settings_scrub: yes\n    disk_scrub: yes\n    flex_flash_scrub: yes\n    persistent_memory_scrub: yes\n  delegate_to: localhost\n\n- name: Add UCS Scrub Policy in an Organization\n  cisco.ucs.ucs_scrub_policy:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    state: present\n    org_dn: org-root/org-prod\n    name: all_scrub\n    description: Scrub All Policy Org Prod servers\n    bios_settings_scrub: yes\n    disk_scrub: yes\n    flex_flash_scrub: yes\n    persistent_memory_scrub: yes\n  delegate_to: localhost\n\n- name: Update UCS Scrub Policy\n  cisco.ucs.ucs_scrub_policy:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    state: present\n    org_dn: org-root/org-prod\n    name: BD_scrub\n    description: Scrub BIOS and Disk Policy Org Prod servers\n    bios_settings_scrub: yes\n    disk_scrub: yes\n    flex_flash_scrub: no\n    persistent_memory_scrub: no\n  delegate_to: localhost\n\n- name: Update UCS Scrub Policy\n  cisco.ucs.ucs_scrub_policy:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    state: present\n    org_dn: org-root/org-prod\n    name: BD_scrub\n    description: Scrub BIOS and Disk Policy Org Prod servers\n    bios_settings_scrub: yes\n    disk_scrub: yes\n    flex_flash_scrub: yes\n  delegate_to: localhost\n\n- name: Delete UCS Scrub Policy\n  cisco.ucs.ucs_scrub_policy:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    state: absent\n    org_dn: org-root/org-prod\n    name: BD_scrub\n  delegate_to: localhost\n\n- name: Delete UCS Scrub Policy\n  cisco.ucs.ucs_scrub_policy:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    state: absent\n    name: BD_scrub\n  delegate_to: localhost\n"
+  },
+  "cisco.ucs.ucs_serial_over_lan_policy": {
+    "doc": {
+      "description": "Manages UCS Serial Over Lan Policies on UCS Manager.",
+      "has_action": false,
+      "options": {
+        "admin_state": {
+          "aliases": [],
+          "description": "The administrative state of the serial over lan policy.\ndisable Serial over LAN access is blocked.\nenable Serial over LAN access is permitted.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "disable",
+            "enable"
+          ],
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "A user-defined description of the serial over lan policy.\nEnter up to 256 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote)\n= (equal sign), > (greater than), < (less than), ' (single quote).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the serial over lan policy.\nEnter up to 16 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote)\n= (equal sign), > (greater than), < (less than), ' (single quote).",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "org_dn": {
+          "aliases": [],
+          "description": "Org dn (distinguished name) of the serial over lan policy.",
+          "default": "org-root",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "speed": {
+          "aliases": [],
+          "description": "The transmission speed of the serial over lan policy.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "9600",
+            "19200",
+            "38400",
+            "57600",
+            "115200"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(absent), will remove Serial Over Lan Policy.\nIf C(present), will create or update Serial Over Lan Policy.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Manages UCS Serial Over Lan Policies on UCS Manager",
+      "version_added": "2.9"
+    },
+    "examples": "\n- name: Add UCS Serial Over Lan Policy\n  cisco.ucs.ucs_serial_over_lan:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    state: present\n    name: sol_org_root\n    description: Serial Over Lan for Org root servers\n    admin_state: enable\n    speed: 115200\n  delegate_to: localhost\n\n- name: Add UCS Serial Over Lan Policy in Organization\n  cisco.ucs.ucs_serial_over_lan:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    state: present\n    org_dn: org-root/org-prod\n    name: sol_org_prod\n    description: Serial Over Lan for Org Prod servers\n    admin_state: enable\n    speed: 115200\n  delegate_to: localhost\n\n- name: Update UCS Serial Over Lan Policy in Organization\n  cisco.ucs.ucs_serial_over_lan:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    state: present\n    org_dn: org-root/org-prod\n    name: sol_org_prod\n    description: Serial Over Lan for Org Prod servers\n    admin_state: enable\n    speed: 38400\n  delegate_to: localhost\n\n- name: Update UCS Serial Over Lan Policy in Organization\n  cisco.ucs.ucs_serial_over_lan:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    state: present\n    org_dn: org-root/org-prod\n    name: sol_org_prod\n    descr: Serial Over Lan for Org Prod servers\n    admin_state: enable\n    speed: 57600\n  delegate_to: localhost\n\n- name: Delete UCS Serial Over Lan Policy in Organization\n  cisco.ucs.ucs_serial_over_lan:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    state: absent\n    org_dn: org-root/org-prod\n    name: sol_org_prod\n  delegate_to: localhost\n\n- name: Delete UCS Serial Over Lan Policy\n  cisco.ucs.ucs_serial_over_lan:\n    hostname: \"{{ ucs_hostname }}\"\n    username: \"{{ ucs_username }}\"\n    password: \"{{ ucs_password }}\"\n    state: absent\n    name: sol_org_root\n  delegate_to: localhost\n"
+  },
+  "cisco.ucs.ucs_server_maintenance": {
+    "doc": {
+      "description": "Configures Server Maintenance Policy on Cisco UCS Manager.",
+      "has_action": false,
+      "options": {
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "A description of the Server Maintenance Package Policy.\nCisco recommends including information about where and when to use the policy.\nEnter up to 256 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name assigned to the Server Maintenance Policy.\nThe Server Maintenance Policy name is case sensitive.\nThis name can be between 1 and 16 alphanumeric characters.\nYou cannot use spaces or any special characters other than - (hyphen), \"_\" (underscore), : (colon), and . (period).\nYou cannot change this name after the Server Maintenance Policy is created.",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify Server Maintenance Policy is present and will create if needed.\nIf C(absent), will verify Server Maintenance Policy is absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "trigger_config": {
+          "aliases": [],
+          "description": "This option is used in combination with either User Ack (user-ack) or Timer Automatic (timer-automatic).\nWhen the On Next Boot option is enabled, the host OS reboot, shutdown, or server reset also triggers the associated FSM to apply the changes.\nNote that de-selecting the On Next Boot option disables the Maintenance Policy on the BMC.",
+          "required": false,
+          "choices": [
+            "on-next-boot"
+          ],
+          "suboptions": {}
+        },
+        "uptime_disr": {
+          "aliases": [],
+          "description": "When a Server profile is associated with a Server, or when changes are made to a Server profile that is already associated with a Server, you must reboot the Server to complete the process.\nThe Reboot Policy field determines when the reboot occurs for Server associated with any Server profiles that include this maintenance policy.",
+          "required": true,
+          "choices": [
+            "immediate",
+            "timer-automatic",
+            "user-ack"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Creates Server Maintenance Policy on Cisco UCS Manager",
+      "version_added": "2.1"
+    },
+    "examples": "\n- name: Add Server Maintenance Policy\n  cisco.ucs.ucs_server_maintenance:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: user-ack\n    uptime_disr: user-ack\n    trigger_config: on-next-boot\n"
+  },
+  "cisco.ucs.ucs_service_profile_association": {
+    "doc": {
+      "description": "Configures Service Profile Association (change association or disassociate) on Cisco UCS Manager.",
+      "has_action": false,
+      "options": {
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "org_dn": {
+          "aliases": [],
+          "description": "The distinguished name (dn) of the organization where the resource is assigned.",
+          "default": "org-root",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "restrict_migration": {
+          "aliases": [],
+          "description": "Restricts the migration of the service profile after it has been associated with a server.\nIf set to no, Cisco UCS Manager does not perform any compatibility checks on the new server before migrating the existing service profile.\nIf set to no and the hardware of both servers used in migration are not similar, the association might fail.",
+          "default": "no",
+          "required": false,
+          "choices": [
+            "yes",
+            "no"
+          ],
+          "suboptions": {}
+        },
+        "server_assignment": {
+          "aliases": [],
+          "description": "Specifies how to associate servers with this service profile using the following choices:\nserver - Use to pre-provision a slot or select an existing server.  Slot or server is specified by the server_dn option.\npool - Use to select from a server pool.  The server_pool option specifies the name of the server pool to use.\nOption is not valid if the service profile is bound to a template.\nOptional if the state is absent.",
+          "required": true,
+          "choices": [
+            "server",
+            "pool"
+          ],
+          "suboptions": {}
+        },
+        "server_dn": {
+          "aliases": [],
+          "description": "The Distinguished Name (dn) of the server object used for pre-provisioning or selecting an existing server.\nRequired if the server_assignment option is server.\nOptional if the state is absent.",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_pool_name": {
+          "aliases": [],
+          "description": "Name of the server pool used for server pool based assignment.\nRequired if the server_assignment option is pool.\nOptional if the state is absent.",
+          "required": false,
+          "suboptions": {}
+        },
+        "service_profile_name": {
+          "aliases": [],
+          "description": "The name of the Service Profile being associated or disassociated.",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify service profile association and associate with specified server or server pool if needed.\nIf C(absent), will verify service profile is not associated and will disassociate if needed.  This is the same as specifying Assign Later in the webUI.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configures Service Profile Association on Cisco UCS Manager",
+      "version_added": "2.1"
+    },
+    "examples": "\n- name: Change Service Profile Association to server pool Container-Pool and restrict migration\n  cisco.ucs.ucs_service_profile_association:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    service_profile_name: test-sp\n    server_assignment: pool\n    server_pool_name: Container-Pool\n    restrict_migration: 'yes'\n\n- name: Attempt to change association once a minute for up to 10 minutes\n  cisco.ucs.ucs_service_profile_association:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    service_profile_name: test-sp\n    server_assignment: server\n    server_dn: sys/chassis-2/blade-1\n  register: result\n  until: result.assign_state == 'assigned' and result.assoc_state == 'associated'\n  retries: 10\n  delay: 60\n\n- name: Disassociate Service Profile\n  cisco.ucs.ucs_service_profile_association:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    service_profile_name: test-sp\n    state: absent\n"
+  },
+  "cisco.ucs.ucs_service_profile_from_template": {
+    "doc": {
+      "description": "Configures Service Profile created from templates on Cisco UCS Manager.",
+      "has_action": false,
+      "options": {
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the service profile.\nThis name can be between 2 and 32 alphanumeric characters.\nYou cannot use spaces or any special characters other than - (hyphen), \"_\" (underscore), : (colon), and . (period).\nThis name must be unique across all service profiles and service profile templates within the same organization.",
+          "required": true,
+          "suboptions": {}
+        },
+        "org_dn": {
+          "aliases": [],
+          "description": "Org dn (distinguished name)",
+          "default": "org-root",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "power_state": {
+          "aliases": [],
+          "description": "The power state to be applied when this service profile is associated with a server.\nIf no value is provided, the power_state for the service profile will not be modified.",
+          "required": false,
+          "choices": [
+            "up",
+            "down"
+          ],
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "source_template": {
+          "aliases": [],
+          "description": "The name of the service profile template used to create this serivce profile.",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify Service Profiles are present and will create if needed.\nIf C(absent), will verify Service Profiles are absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "user_label": {
+          "aliases": [],
+          "description": "The User Label you want to assign to this service profile.",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configures Service Profiles from templates on Cisco UCS Manager",
+      "version_added": "2.5"
+    },
+    "examples": "\n- name: Configure Service Profile from Template\n  cisco.ucs.ucs_service_profile_from_template:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: test-sp-instance1\n    source_template: test-sp\n\n- name: Remove Service Profile\n  cisco.ucs.ucs_service_profile_from_template:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: test-sp-instance1\n    state: absent\n"
+  },
+  "cisco.ucs.ucs_service_profile_template": {
+    "doc": {
+      "description": "Configures Service Profile Templates on Cisco UCS Manager.",
+      "has_action": false,
+      "options": {
+        "bios_policy": {
+          "aliases": [],
+          "description": "The name of the BIOS policy you want to associate with service profiles created from this template.",
+          "required": false,
+          "suboptions": {}
+        },
+        "boot_policy": {
+          "aliases": [],
+          "description": "The name of the boot order policy you want to associate with service profiles created from this template.",
+          "default": "default",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "A user-defined description of the service profile template.\nEnter up to 256 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).",
+          "required": false,
+          "suboptions": {}
+        },
+        "graphics_card_policy": {
+          "aliases": [],
+          "description": "The name of the graphics card policy you want to associate with service profiles created from this template.",
+          "required": false,
+          "suboptions": {}
+        },
+        "host_firmware_package": {
+          "aliases": [],
+          "description": "The name of the host firmware package you want to associate with service profiles created from this template.",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "ipmi_access_profile": {
+          "aliases": [],
+          "description": "The name of the IPMI access profile you want to associate with service profiles created from this template.",
+          "required": false,
+          "suboptions": {}
+        },
+        "iqn_pool": {
+          "aliases": [],
+          "description": "The name of the IQN pool (initiator) you want to apply to all iSCSI vNICs for service profiles created from this template.",
+          "required": false,
+          "suboptions": {}
+        },
+        "kvm_mgmt_policy": {
+          "aliases": [],
+          "description": "The name of the KVM management policy you want to associate with service profiles created from this template.",
+          "required": false,
+          "suboptions": {}
+        },
+        "lan_connectivity_policy": {
+          "aliases": [],
+          "description": "The name of the LAN connectivity policy you want to associate with service profiles created from this template.",
+          "required": false,
+          "suboptions": {}
+        },
+        "local_disk_policy": {
+          "aliases": [],
+          "description": "The name of the local disk policy you want to associate with service profiles created from this template.",
+          "required": false,
+          "suboptions": {}
+        },
+        "maintenance_policy": {
+          "aliases": [],
+          "description": "The name of the maintenance policy you want to associate with service profiles created from this template.",
+          "required": false,
+          "suboptions": {}
+        },
+        "mgmt_inband_pool_name": {
+          "aliases": [],
+          "description": "How the inband management IPv4 address is derived for the server associated with this service profile.",
+          "required": false,
+          "suboptions": {}
+        },
+        "mgmt_interface_mode": {
+          "aliases": [],
+          "description": "The Management Interface you want to assign to service profiles created from this template.",
+          "required": false,
+          "choices": [
+            "in-band"
+          ],
+          "suboptions": {}
+        },
+        "mgmt_ip_pool": {
+          "aliases": [],
+          "description": "The name of the Outband Management IP pool you want to use with service profiles created from this template.",
+          "default": "ext-mgmt",
+          "required": false,
+          "suboptions": {}
+        },
+        "mgmt_ip_state": {
+          "aliases": [],
+          "description": "The state for the Outband Management IP pool you want to use with service profiles created from this template.",
+          "default": "pooled",
+          "required": false,
+          "choices": [
+            "none",
+            "pooled"
+          ],
+          "suboptions": {}
+        },
+        "mgmt_vnet_name": {
+          "aliases": [],
+          "description": "A VLAN selected from the associated VLAN group.",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the service profile template.\nThis name can be between 2 and 32 alphanumeric characters.\nYou cannot use spaces or any special characters other than - (hyphen), \"_\" (underscore), : (colon), and . (period).\nThis name must be unique across all service profiles and service profile templates within the same organization.",
+          "required": true,
+          "suboptions": {}
+        },
+        "org_dn": {
+          "aliases": [],
+          "description": "Org dn (distinguished name)",
+          "default": "org-root",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "power_control_policy": {
+          "aliases": [],
+          "description": "The name of the power control policy you want to associate with service profiles created from this template.",
+          "default": "default",
+          "required": false,
+          "suboptions": {}
+        },
+        "power_state": {
+          "aliases": [],
+          "description": "The power state to be applied when a service profile created from this template is associated with a server.",
+          "default": "up",
+          "required": false,
+          "choices": [
+            "up",
+            "down"
+          ],
+          "suboptions": {}
+        },
+        "power_sync_policy": {
+          "aliases": [],
+          "description": "The name of the power sync policy you want to associate with service profiles created from this template.",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "san_connectivity_policy": {
+          "aliases": [],
+          "description": "The name of the SAN connectivity policy you want to associate with service profiles created from this template.",
+          "required": false,
+          "suboptions": {}
+        },
+        "scrub_policy": {
+          "aliases": [],
+          "description": "The name of the scrub policy you want to associate with service profiles created from this template.",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_pool": {
+          "aliases": [],
+          "description": "The name of the server pool you want to associate with this service profile template.",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_pool_qualification": {
+          "aliases": [],
+          "description": "The name of the server pool policy qualificaiton you want to use for this service profile template.",
+          "required": false,
+          "suboptions": {}
+        },
+        "sol_policy": {
+          "aliases": [],
+          "description": "The name of the Serial over LAN (SoL) policy you want to associate with service profiles created from this template.",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify Service Profile Templates are present and will create if needed.\nIf C(absent), will verify Service Profile Templates are absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "storage_profile": {
+          "aliases": [],
+          "description": "The name of the storage profile you want to associate with service profiles created from this template",
+          "required": false,
+          "suboptions": {}
+        },
+        "template_type": {
+          "aliases": [],
+          "description": "The template type field which can be one of the following:\ninitial-template — Any service profiles created from this template are not updated if the template changes.\nupdating-template — Any service profiles created from this template are updated if the template changes.",
+          "default": "initial-template",
+          "required": false,
+          "choices": [
+            "initial-template",
+            "updating-template"
+          ],
+          "suboptions": {}
+        },
+        "threshold_policy": {
+          "aliases": [],
+          "description": "The name of the threshold policy you want to associate with service profiles created from this template.",
+          "default": "default",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "user_label": {
+          "aliases": [],
+          "description": "The User Label you want to assign to service profiles created from this template.",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "uuid_pool": {
+          "aliases": [],
+          "description": "Specifies how the UUID will be set on a server associated with a service profile created from this template.\nThe uuid_pool option can be the name of the UUID pool to use or '' (the empty string).\nAn empty string will use the UUID assigned to the server by the manufacturer, and the\nUUID remains unassigned until a service profile created from this template is associated with a server. At that point,\nthe UUID is set to the UUID value assigned to the server by the manufacturer. If the service profile is later moved to\na different server, the UUID is changed to match the new server.\"",
+          "default": "default",
+          "required": false,
+          "suboptions": {}
+        },
+        "vmedia_policy": {
+          "aliases": [],
+          "description": "The name of the vMedia policy you want to associate with service profiles created from this template.",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configures Service Profile Templates on Cisco UCS Manager",
+      "version_added": "2.8"
+    },
+    "examples": "\n- name: Configure Service Profile Template with LAN/SAN Connectivity and all other options defaulted\n  cisco.ucs.ucs_service_profile_template:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: DEE-Ctrl\n    template_type: updating-template\n    uuid_pool: UUID-Pool\n    storage_profile: DEE-StgProf\n    lan_connectivity_policy: Cntr-FC-Boot\n    iqn_pool: iSCSI-Boot-A\n    san_connectivity_policy: Cntr-FC-Boot\n    boot_policy: DEE-vMedia\n    maintenance_policy: default\n    server_pool: Container-Pool\n    host_firmware_package: 3.1.2b\n    bios_policy: Docker\n\n- name: Remove Service Profile Template\n  cisco.ucs.ucs_service_profile_template:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: DEE-Ctrl\n    state: absent\n"
+  },
+  "cisco.ucs.ucs_sp_vnic_order": {
+    "doc": {
+      "description": "Configures Configures vNIC order for service profiles and templates on Cisco UCS Manager",
+      "has_action": false,
+      "options": {
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "org_dn": {
+          "aliases": [],
+          "description": "root org dn",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sp_name": {
+          "aliases": [],
+          "description": "DN of the service profile",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vnics": {
+          "aliases": [],
+          "description": "List of vNIC order properties",
+          "required": false,
+          "suboptions": {
+            "admin_vcon": {
+              "aliases": [],
+              "description": "Name of the virtual connection",
+              "required": false,
+              "choices": [
+                "1",
+                "2",
+                "3",
+                "4",
+                "any"
+              ],
+              "suboptions": {}
+            },
+            "name": {
+              "aliases": [],
+              "description": "Name of the vNIC",
+              "required": true,
+              "suboptions": {}
+            },
+            "order": {
+              "aliases": [],
+              "description": "vNIC connection order",
+              "required": false,
+              "choices": [
+                "unspecified",
+                "0-256"
+              ],
+              "suboptions": {}
+            },
+            "state": {
+              "aliases": [],
+              "description": "Desired state of the vNIC.",
+              "default": "present",
+              "required": false,
+              "choices": [
+                "present",
+                "absent"
+              ],
+              "suboptions": {}
+            },
+            "transport": {
+              "aliases": [],
+              "description": "transport medium",
+              "required": true,
+              "choices": [
+                "ethernet",
+                "fc"
+              ],
+              "suboptions": {}
+            }
+          }
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configures vNIC order for service profiles and templates on Cisco UCS Manager",
+      "version_added": "2.1"
+    },
+    "examples": "\n- name: Configure vnic order\n  cisco.ucs.ucs_sp_vnic_order:\n    sp_name: my_sp\n    vnics:\n    - name: 'my_vnic'\n      admin_vcon: '1'\n      order: '1'\n      transport: 'ethernet'\n    hostname: 192.168.99.100\n    username: admin\n    password: password\n- name: Configure vhba order\n  cisco.ucs.ucs_sp_vnic_order:\n    sp_name: my_sp\n    vnics:\n    - name: 'my_vhba'\n      admin_vcon: '2'\n      order: '1'\n      transport: 'fc'\n    hostname: 192.168.99.100\n    username: admin\n    password: password\n- name: Configure vnic and vhba order\n  cisco.ucs.ucs_sp_vnic_order:\n    sp_name: my_sp\n    vnics:\n    - name: my_vhba\n      admin_vcon: '2'\n      order: '1'\n      transport: fc\n    - name: my_vnic\n      admin_vcon: '1'\n      order: '1'\n      transport: ethernet\n    hostname: 192.168.99.100\n    username: admin\n    password: password\n- name: Remove vnic order configuration from my_vnic\n  cisco.ucs.ucs_sp_vnic_order:\n    sp_name: my_sp\n    vnics:\n    - name: 'my_vnic'\n      transport: ethernet\n      state: absent\n    hostname: 192.168.99.100\n    username: admin\n    password: password\n\n"
+  },
+  "cisco.ucs.ucs_storage_profile": {
+    "doc": {
+      "description": "Configures storage profiles on Cisco UCS Manager.",
+      "has_action": false,
+      "options": {
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "The user-defined description of the storage profile.\nEnter up to 256 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "local_luns": {
+          "aliases": [],
+          "description": "List of Local LUNs used by the storage profile.",
+          "required": false,
+          "suboptions": {
+            "auto_deploy": {
+              "aliases": [],
+              "description": "Whether the local LUN should be automatically deployed or not.",
+              "default": "auto-deploy",
+              "required": false,
+              "choices": [
+                "auto-deploy",
+                "no-auto-deploy"
+              ],
+              "suboptions": {}
+            },
+            "disk_policy_name": {
+              "aliases": [],
+              "description": "The disk group configuration policy to be applied to this local LUN.",
+              "required": false,
+              "suboptions": {}
+            },
+            "expand_to_avail": {
+              "aliases": [],
+              "description": "Specifies that this LUN can be expanded to use the entire available disk group.\nFor each service profile, only one LUN can use this option.\nExpand To Available option is not supported for already deployed LUN.",
+              "default": "no",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "fractional_size": {
+              "aliases": [],
+              "description": "Fractional size of this LUN in MB.",
+              "default": "0",
+              "required": false,
+              "suboptions": {}
+            },
+            "name": {
+              "aliases": [],
+              "description": "The name of the local LUN.",
+              "required": true,
+              "suboptions": {}
+            },
+            "size": {
+              "aliases": [],
+              "description": "Size of this LUN in GB.\nThe size can range from 1 to 10240 GB.",
+              "default": "1",
+              "required": false,
+              "suboptions": {}
+            },
+            "state": {
+              "aliases": [],
+              "description": "If C(present), will verify local LUN is present on profile. If C(absent), will verify local LUN is absent on profile.",
+              "default": "present",
+              "required": false,
+              "choices": [
+                "absent",
+                "present"
+              ],
+              "suboptions": {}
+            }
+          }
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the storage profile.\nThis name can be between 1 and 16 alphanumeric characters.\nYou cannot use spaces or any special characters other than - (hyphen), \"_\" (underscore), : (colon), and . (period).\nYou cannot change this name after profile is created.",
+          "required": true,
+          "suboptions": {}
+        },
+        "org_dn": {
+          "aliases": [],
+          "description": "The distinguished name (dn) of the organization where the resource is assigned.",
+          "default": "org-root",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify that the storage profile is present and will create if needed.\nIf C(absent), will verify that the storage profile is absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configures storage profiles on Cisco UCS Manager",
+      "version_added": "2.7"
+    },
+    "examples": "\n- name: Configure Storage Profile\n  cisco.ucs.ucs_storage_profile:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: DEE-StgProf\n    local_luns:\n    - name: Boot-LUN\n      size: '60'\n      disk_policy_name: DEE-DG\n    - name: Data-LUN\n      size: '200'\n      disk_policy_name: DEE-DG\n\n- name: Remove Storage Profile\n  cisco.ucs.ucs_storage_profile:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: DEE-StgProf\n    state: absent\n\n- name: Remove Local LUN from Storage Profile\n  cisco.ucs.ucs_storage_profile:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: DEE-StgProf\n    local_luns:\n    - name: Data-LUN\n      state: absent\n"
+  },
+  "cisco.ucs.ucs_system_qos": {
+    "doc": {
+      "description": "Configures system QoS settings",
+      "has_action": false,
+      "options": {
+        "admin_state": {
+          "aliases": [],
+          "description": "Admin state of QoS Policy",
+          "default": "enabled",
+          "required": false,
+          "choices": [
+            "disabled",
+            "enabled"
+          ],
+          "suboptions": {}
+        },
+        "cos": {
+          "aliases": [],
+          "description": "CoS setting",
+          "required": true,
+          "choices": [
+            "any",
+            "0-6"
+          ],
+          "suboptions": {}
+        },
+        "drop": {
+          "aliases": [],
+          "description": "Set multicast optimization options",
+          "default": "drop",
+          "required": false,
+          "choices": [
+            "drop",
+            "no-drop"
+          ],
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "mtu": {
+          "aliases": [],
+          "description": "MTU size",
+          "default": "normal",
+          "required": false,
+          "choices": [
+            "fc",
+            "normal",
+            "0-4294967295"
+          ],
+          "suboptions": {}
+        },
+        "multicast_optimize": {
+          "aliases": [],
+          "description": "Set multicast optimization options",
+          "required": false,
+          "choices": [
+            "false",
+            "no",
+            "true",
+            "yes"
+          ],
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "priority": {
+          "aliases": [],
+          "description": "Priority to configure",
+          "required": true,
+          "choices": [
+            "best-effort",
+            "bronze",
+            "fc",
+            "gold",
+            "platinum",
+            "silver"
+          ],
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "weight": {
+          "aliases": [],
+          "description": "CoS profile weight",
+          "required": true,
+          "choices": [
+            "best-effort",
+            "none",
+            "0-10"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configures system QoS settings",
+      "version_added": "2.1"
+    },
+    "examples": "\n- name:\n  cisco.ucs.ucs_system_qos:\n    priority: platinum\n    admin_state: enabled\n    multicast_optimize: no\n    cos: '5'\n    weight: '10'\n    mtu: '9216'\n    hostname: 192.168.99.100\n    username: admin\n    password: password\n"
+  },
+  "cisco.ucs.ucs_timezone": {
+    "doc": {
+      "description": "Configures timezone on Cisco UCS Manager.",
+      "has_action": false,
+      "options": {
+        "admin_state": {
+          "aliases": [],
+          "description": "The admin_state setting\nThe enabled admin_state indicates the timezone configuration is utilized by UCS Manager.\nThe disabled admin_state indicates the timezone configuration is ignored by UCS Manager.",
+          "default": "enabled",
+          "required": false,
+          "choices": [
+            "disabled",
+            "enabled"
+          ],
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "A user-defined description of the timezone.\nEnter up to 256 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).",
+          "default": "",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(absent), will unset timezone.\nIf C(present), will set or update timezone.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "timezone": {
+          "aliases": [],
+          "description": "The timezone name.\nTime zone names are from the L(tz database,https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)\nThe timezone name is case sensitive.\nThe timezone name can be between 0 and 510 alphanumeric characters.\nYou cannot use spaces or any special characters other than\n\"-\" (hyphen), \"_\" (underscore), \"/\" (backslash).",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configures timezone on Cisco UCS Manager",
+      "version_added": "2.7"
+    },
+    "examples": "\n- name: Configure Time Zone\n  cisco.ucs.ucs_timezone:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    state: present\n    admin_state: enabled\n    timezone: America/Los_Angeles\n    description: 'Time Zone for Los Angeles'\n\n- name: Unconfigure Time Zone\n  cisco.ucs.ucs_timezone:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    state: absent\n    admin_state: disabled\n"
+  },
+  "cisco.ucs.ucs_uuid_pool": {
+    "doc": {
+      "description": "Configures server UUID pools and UUID blocks on Cisco UCS Manager.",
+      "has_action": false,
+      "options": {
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "The user-defined description of the UUID pool.\nEnter up to 256 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).",
+          "required": false,
+          "suboptions": {}
+        },
+        "first_uuid": {
+          "aliases": [],
+          "description": "The first UUID in the block of UUIDs.\nThis is the From field in the UCS Manager UUID Blocks menu.",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "last_uuid": {
+          "aliases": [],
+          "description": "The last UUID in the block of UUIDs.\nThis is the To field in the UCS Manager Add UUID Blocks menu.",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the UUID pool.\nThis name can be between 1 and 32 alphanumeric characters.\nYou cannot use spaces or any special characters other than - (hyphen), \"_\" (underscore), : (colon), and . (period).\nYou cannot change this name after the UUID pool is created.",
+          "required": true,
+          "suboptions": {}
+        },
+        "order": {
+          "aliases": [],
+          "description": "The Assignment Order field.\nThis can be one of the following:\ndefault - Cisco UCS Manager selects a random identity from the pool.\nsequential - Cisco UCS Manager selects the lowest available identity from the pool.",
+          "default": "default",
+          "required": false,
+          "choices": [
+            "default",
+            "sequential"
+          ],
+          "suboptions": {}
+        },
+        "org_dn": {
+          "aliases": [],
+          "description": "The distinguished name (dn) of the organization where the resource is assigned.",
+          "default": "org-root",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "prefix": {
+          "aliases": [],
+          "description": "UUID prefix used for the range of server UUIDs.\nIf no value is provided, the system derived prefix will be used (equivalent to selecting 'derived' option in UI).\nIf the user provides a value, the user provided prefix will be used (equivalent to selecting 'other' option in UI).\nA user provided value should be in the format XXXXXXXX-XXXX-XXXX.",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify UUID pool is present and will create if needed.\nIf C(absent), will verify UUID pool is absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configures server UUID pools on Cisco UCS Manager",
+      "version_added": "2.7"
+    },
+    "examples": "\n- name: Configure UUID address pool\n  cisco.ucs.ucs_uuid_pool:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: UUID-Pool\n    order: sequential\n    first_uuid: 0000-000000000001\n    last_uuid: 0000-000000000078\n\n- name: Remove UUID address pool\n  cisco.ucs.ucs_uuid_pool:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: UUID-Pool\n    state: absent\n"
+  },
+  "cisco.ucs.ucs_vhba_template": {
+    "doc": {
+      "description": "Configures vHBA templates on Cisco UCS Manager.",
+      "has_action": false,
+      "options": {
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "A user-defined description of the template.\nEnter up to 256 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).",
+          "required": false,
+          "suboptions": {}
+        },
+        "fabric": {
+          "aliases": [],
+          "description": "The Fabric ID field.\nThe name of the fabric interconnect that vHBAs created with this template are associated with.",
+          "default": "A",
+          "required": false,
+          "choices": [
+            "A",
+            "B"
+          ],
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "max_data": {
+          "aliases": [],
+          "description": "The Max Data Field Size field.\nThe maximum size of the Fibre Channel frame payload bytes that the vHBA supports.\nEnter an string between '256' and '2112'.",
+          "default": "2048",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the virtual HBA template.\nThis name can be between 1 and 16 alphanumeric characters.\nYou cannot use spaces or any special characters other than - (hyphen), \"_\" (underscore), : (colon), and . (period).\nYou cannot change this name after the template is created.",
+          "required": true,
+          "suboptions": {}
+        },
+        "org_dn": {
+          "aliases": [],
+          "description": "Org dn (distinguished name)",
+          "default": "org-root",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "pin_group": {
+          "aliases": [],
+          "description": "The SAN pin group that is associated with vHBAs created from this template.",
+          "required": false,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "qos_policy": {
+          "aliases": [],
+          "description": "The QoS policy that is associated with vHBAs created from this template.",
+          "required": false,
+          "suboptions": {}
+        },
+        "redundancy_type": {
+          "aliases": [],
+          "description": "The Redundancy Type used for template pairing from the Primary or Secondary redundancy template.\nprimary — Creates configurations that can be shared with the Secondary template.\nAny other shared changes on the Primary template are automatically synchronized to the Secondary template.\nsecondary — All shared configurations are inherited from the Primary template.\nnone - Legacy vHBA template behavior. Select this option if you do not want to use redundancy.",
+          "default": "none",
+          "required": false,
+          "choices": [
+            "none",
+            "primary",
+            "secondary"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify vHBA templates are present and will create if needed.\nIf C(absent), will verify vHBA templates are absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "stats_policy": {
+          "aliases": [],
+          "description": "The statistics collection policy that is associated with vHBAs created from this template.",
+          "default": "default",
+          "required": false,
+          "suboptions": {}
+        },
+        "template_type": {
+          "aliases": [],
+          "description": "The Template Type field.\nThis can be one of the following:\ninitial-template — vHBAs created from this template are not updated if the template changes.\nupdating-template - vHBAs created from this template are updated if the template changes.",
+          "default": "initial-template",
+          "required": false,
+          "choices": [
+            "initial-template",
+            "updating-template"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vsan": {
+          "aliases": [],
+          "description": "The VSAN to associate with vHBAs created from this template.",
+          "default": "default",
+          "required": false,
+          "suboptions": {}
+        },
+        "wwpn_pool": {
+          "aliases": [],
+          "description": "The WWPN pool that a vHBA created from this template uses to derive its WWPN address.",
+          "default": "default",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configures vHBA templates on Cisco UCS Manager",
+      "version_added": "2.5"
+    },
+    "examples": "\n- name: Configure vHBA template\n  cisco.ucs.ucs_vhba_template:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: vHBA-A\n    fabric: A\n    vsan: VSAN-A\n    wwpn_pool: WWPN-Pool-A\n\n- name: Remote vHBA template\n  cisco.ucs.ucs_vhba_template:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: vHBA-A\n    state: absent\n"
+  },
+  "cisco.ucs.ucs_vlan_find": {
+    "doc": {
+      "description": "Find VLANs on Cisco UCS Manager based on different criteria.",
+      "has_action": false,
+      "options": {
+        "fabric": {
+          "aliases": [],
+          "description": "The fabric configuration of the VLAN.  This can be one of the following:\ncommon - The VLAN applies to both fabrics and uses the same configuration parameters in both cases.\nA — The VLAN only applies to fabric A.\nB — The VLAN only applies to fabric B.",
+          "default": "common",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "common",
+            "A",
+            "B"
+          ],
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "pattern": {
+          "aliases": [],
+          "description": "Regex pattern to find within the name property of the fabricVlan class.\nThis is required if C(vlanid) parameter is not supplied.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vlanid": {
+          "aliases": [],
+          "description": "The unique string identifier assigned to the VLAN.\nA VLAN ID can be between '1' and '3967', or between '4048' and '4093'.\nThis is required if C(pattern) parameter is not supplied.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Find VLANs on Cisco UCS Manager",
+      "version_added": "2.9"
+    },
+    "examples": "\n- name: Get all vlans in fabric A\n  cisco.ucs.ucs_vlan_find:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    fabric: 'A'\n    pattern: '.'\n- name: Confirm if vlan 15 is present\n  cisco.ucs.ucs_vlan_find:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    vlanid: '15'\n"
+  },
+  "cisco.ucs.ucs_vlan_to_group": {
+    "doc": {
+      "description": "Add VLANs to VLAN Groups on Cisco UCS Manager.",
+      "has_action": false,
+      "options": {
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify VLANs are present and will create if needed.\nIf C(absent), will verify VLANs are absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vlangroup": {
+          "aliases": [],
+          "description": "The name assigned to the VLAN Group.\nThe VLAN Group name is case sensitive.\nThis name can be between 1 and 32 alphanumeric characters.\nYou cannot use spaces or any special characters other than - (hyphen), \"_\" (underscore), : (colon), and . (period).",
+          "required": true,
+          "suboptions": {}
+        },
+        "vlanname": {
+          "aliases": [],
+          "description": "The name assigned to the VLAN.\nThe VLAN name is case sensitive.\nThis name can be between 1 and 32 alphanumeric characters.\nYou cannot use spaces or any special characters other than - (hyphen), \"_\" (underscore), : (colon), and . (period).",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Add VLANs to a VLAN Group. Requires VLAN and VLAN Group to already be created on UCS prior to running module.",
+      "version_added": "2.10"
+    },
+    "examples": "\n- name: Configure VLAN\n  cisco.ucs.ucs_vlan_to_group:\n    hostname: 1.1.1.1\n    username: admin\n    password: password\n    vlangroup: VLANGROUP\n    vlanname: VLANNAME\n    state: present\n- name: Remove VLAN\n  cisco.ucs.ucs_vlan_to_group:\n    hostname: 1.1.1.1\n    username: admin\n    password: password\n    vlangroup: VLANGROUP\n    vlanname: VLANNAME\n    state: absent\n"
+  },
+  "cisco.ucs.ucs_vlans": {
+    "doc": {
+      "description": "Configures VLANs on Cisco UCS Manager.",
+      "has_action": false,
+      "options": {
+        "fabric": {
+          "aliases": [],
+          "description": "The fabric configuration of the VLAN.  This can be one of the following:\ncommon - The VLAN applies to both fabrics and uses the same configuration parameters in both cases.\nA — The VLAN only applies to fabric A.\nB — The VLAN only applies to fabric B.\nFor upstream disjoint L2 networks, Cisco recommends that you choose common to create VLANs that apply to both fabrics.",
+          "default": "common",
+          "required": false,
+          "choices": [
+            "common",
+            "A",
+            "B"
+          ],
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The unique string identifier assigned to the VLAN.\nA VLAN ID can be between '1' and '3967', or between '4048' and '4093'.\nYou cannot create VLANs with IDs from 4030 to 4047. This range of VLAN IDs is reserved.\nThe VLAN IDs you specify must also be supported on the switch that you are using.\nVLANs in the LAN cloud and FCoE VLANs in the SAN cloud must have different IDs.\nOptional if state is absent.",
+          "required": true,
+          "suboptions": {}
+        },
+        "multicast_policy": {
+          "aliases": [],
+          "description": "The multicast policy associated with this VLAN.\nThis option is only valid if the Sharing Type field is set to None or Primary.",
+          "default": "",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name assigned to the VLAN.\nThe VLAN name is case sensitive.\nThis name can be between 1 and 32 alphanumeric characters.\nYou cannot use spaces or any special characters other than - (hyphen), \"_\" (underscore), : (colon), and . (period).\nYou cannot change this name after the VLAN is created.",
+          "required": true,
+          "suboptions": {}
+        },
+        "native": {
+          "aliases": [],
+          "description": "Designates the VLAN as a native VLAN.",
+          "default": "no",
+          "required": false,
+          "choices": [
+            "yes",
+            "no"
+          ],
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sharing": {
+          "aliases": [],
+          "description": "The Sharing Type field.\nWhether this VLAN is subdivided into private or secondary VLANs. This can be one of the following:\nnone - This VLAN does not have any secondary or private VLANs. This is a regular VLAN.\nprimary - This VLAN can have one or more secondary VLANs, as shown in the Secondary VLANs area. This VLAN is a primary VLAN in the private VLAN domain.\nisolated - This is a private VLAN associated with a primary VLAN. This VLAN is an Isolated VLAN.\ncommunity - This VLAN can communicate with other ports on the same community VLAN as well as the promiscuous port. This VLAN is a Community VLAN.",
+          "default": "none",
+          "required": false,
+          "choices": [
+            "none",
+            "primary",
+            "isolated",
+            "community"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify VLANs are present and will create if needed.\nIf C(absent), will verify VLANs are absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configures VLANs on Cisco UCS Manager",
+      "version_added": "2.5"
+    },
+    "examples": "\n- name: Configure VLAN\n  cisco.ucs.ucs_vlans:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: vlan2\n    id: '2'\n    native: 'yes'\n\n- name: Remove VLAN\n  cisco.ucs.ucs_vlans:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: vlan2\n    state: absent\n"
+  },
+  "cisco.ucs.ucs_vnic_template": {
+    "doc": {
+      "description": "Configures vNIC templates on Cisco UCS Manager.",
+      "has_action": false,
+      "options": {
+        "cdn_name": {
+          "aliases": [],
+          "description": "CDN Name used when cdn_source is set to user-defined.",
+          "required": false,
+          "suboptions": {}
+        },
+        "cdn_source": {
+          "aliases": [],
+          "description": "CDN Source field.\nThis can be one of the following options:\nvnic-name - Uses the vNIC template name of the vNIC instance as the CDN name. This is the default option.\nuser-defined - Uses a user-defined CDN name for the vNIC template. If this option is chosen, cdn_name must also be provided.",
+          "default": "vnic-name",
+          "required": false,
+          "choices": [
+            "vnic-name",
+            "user-defined"
+          ],
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "A user-defined description of the vNIC template.\nEnter up to 256 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).",
+          "required": false,
+          "suboptions": {}
+        },
+        "fabric": {
+          "aliases": [],
+          "description": "The Fabric ID field specifying the fabric interconnect associated with vNICs created from this template.\nIf you want fabric failover enabled on vNICs created from this template, use of of the following:\"\nA-B to use Fabric A by default with failover enabled.\nB-A to use Fabric B by default with failover enabled.\nDo not enable vNIC fabric failover under the following circumstances:\n- If the Cisco UCS domain is running in Ethernet switch mode. vNIC fabric failover is not supported in that mode.\n- If you plan to associate one or more vNICs created from this template to a server with an adapter that does not support fabric failover.",
+          "default": "A",
+          "required": false,
+          "choices": [
+            "A",
+            "B",
+            "A-B",
+            "B-A"
+          ],
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "mac_pool": {
+          "aliases": [],
+          "description": "The MAC address pool that vNICs created from this vNIC template should use.",
+          "required": false,
+          "suboptions": {}
+        },
+        "mtu": {
+          "aliases": [],
+          "description": "The MTU field.\nThe maximum transmission unit, or packet size, that vNICs created from this vNIC template should use.\nEnter a string between '1500' and '9000'.\nIf the vNIC template has an associated QoS policy, the MTU specified here must be equal to or less than the MTU specified in the QoS system class.",
+          "default": "1500",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the vNIC template.\nThis name can be between 1 and 16 alphanumeric characters.\nYou cannot use spaces or any special characters other than - (hyphen), \"_\" (underscore), : (colon), and . (period).\nYou cannot change this name after the template is created.",
+          "required": true,
+          "suboptions": {}
+        },
+        "network_control_policy": {
+          "aliases": [],
+          "description": "The network control policy that vNICs created from this vNIC template should use.",
+          "required": false,
+          "suboptions": {}
+        },
+        "org_dn": {
+          "aliases": [],
+          "description": "Org dn (distinguished name)",
+          "default": "org-root",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "peer_redundancy_template": {
+          "aliases": [
+            "peer_redundancy_templ"
+          ],
+          "description": "The Peer Redundancy Template.\nThe name of the vNIC template sharing a configuration with this template.\nIf the redundancy_type is primary, the name of the secondary template should be provided.\nIf the redundancy_type is secondary, the name of the primary template should be provided.\nSecondary templates can only configure non-shared properties (name, description, and mac_pool).",
+          "required": false,
+          "suboptions": {}
+        },
+        "pin_group": {
+          "aliases": [],
+          "description": "The LAN pin group that vNICs created from this vNIC template should use.",
+          "required": false,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "qos_policy": {
+          "aliases": [],
+          "description": "The quality of service (QoS) policy that vNICs created from this vNIC template should use.",
+          "required": false,
+          "suboptions": {}
+        },
+        "redundancy_type": {
+          "aliases": [],
+          "description": "The Redundancy Type used for vNIC redundancy pairs during fabric failover.\nThis can be one of the following:\nprimary — Creates configurations that can be shared with the Secondary template.\nsecondary — All shared configurations are inherited from the Primary template.\nnone - Legacy vNIC template behavior. Select this option if you do not want to use redundancy.",
+          "default": "none",
+          "required": false,
+          "choices": [
+            "none",
+            "primary",
+            "secondary"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify vNIC templates are present and will create if needed.\nIf C(absent), will verify vNIC templates are absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "stats_policy": {
+          "aliases": [],
+          "description": "The statistics collection policy that vNICs created from this vNIC template should use.",
+          "default": "default",
+          "required": false,
+          "suboptions": {}
+        },
+        "target": {
+          "aliases": [],
+          "description": "The possible target for vNICs created from this template.\nThe target determines whether or not Cisco UCS Manager automatically creates a VM-FEX port profile with the appropriate settings for the vNIC template.\nThis can be one of the following:\nadapter — The vNICs apply to all adapters. No VM-FEX port profile is created if you choose this option.\nvm - The vNICs apply to all virtual machines. A VM-FEX port profile is created if you choose this option.",
+          "default": "adapter",
+          "required": false,
+          "suboptions": {}
+        },
+        "template_type": {
+          "aliases": [],
+          "description": "The Template Type field.\nThis can be one of the following:\ninitial-template — vNICs created from this template are not updated if the template changes.\nupdating-template - vNICs created from this template are updated if the template changes.",
+          "default": "initial-template",
+          "required": false,
+          "choices": [
+            "initial-template",
+            "updating-template"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vlans_list": {
+          "aliases": [],
+          "description": "List of VLANs used by the vNIC template.\nEach list element has the following suboptions:\n= name\n  The name of the VLAN (required).\n- native\n  Designates the VLAN as a native VLAN.  Only one VLAN in the list can be a native VLAN.\n  [choices: 'no', 'yes']\n  [Default: 'no']\n- state\n  If present, will verify VLAN is present on template.\n  If absent, will verify VLAN is absent on template.\n  choices: [present, absent]\n  default: present",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configures vNIC templates on Cisco UCS Manager",
+      "version_added": "2.5"
+    },
+    "examples": "\n- name: Configure vNIC template\n  cisco.ucs.ucs_vnic_template:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: vNIC-A\n    fabric: A\n    vlans_list:\n    - name: default\n      native: 'yes'\n\n- name: Configure vNIC template with failover\n  cisco.ucs.ucs_vnic_template:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: vNIC-A-B\n    fabric: A-B\n    vlans_list:\n    - name: default\n      native: 'yes'\n      state: present\n\n- name: Remove vNIC template\n  cisco.ucs.ucs_vnic_template:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: vNIC-A\n    state: absent\n\n- name: Remove another vNIC template\n  cisco.ucs.ucs_vnic_template:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: vNIC-A-B\n    state: absent\n\n- name: Remove VLAN from template\n  cisco.ucs.ucs_vnic_template:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: vNIC-A-B\n    fabric: A-B\n    vlans_list:\n    - name: default\n      native: 'yes'\n      state: absent\n"
+  },
+  "cisco.ucs.ucs_vsans": {
+    "doc": {
+      "description": "Configures VSANs on Cisco UCS Manager.",
+      "has_action": false,
+      "options": {
+        "fabric": {
+          "aliases": [],
+          "description": "The fabric configuration of the VSAN.  This can be one of the following:\ncommon - The VSAN maps to the same VSAN ID in all available fabrics.\nA - The VSAN maps to the a VSAN ID that exists only in fabric A.\nB - The VSAN maps to the a VSAN ID that exists only in fabric B.",
+          "default": "common",
+          "required": false,
+          "choices": [
+            "common",
+            "A",
+            "B"
+          ],
+          "suboptions": {}
+        },
+        "fc_zoning": {
+          "aliases": [],
+          "description": "Fibre Channel zoning configuration for the Cisco UCS domain.\nFibre Channel zoning can be set to one of the following values:\ndisabled — The upstream switch handles Fibre Channel zoning, or Fibre Channel zoning is not implemented for the Cisco UCS domain.\nenabled — Cisco UCS Manager configures and controls Fibre Channel zoning for the Cisco UCS domain.\nIf you enable Fibre Channel zoning, do not configure the upstream switch with any VSANs that are being used for Fibre Channel zoning.",
+          "default": "disabled",
+          "required": false,
+          "choices": [
+            "disabled",
+            "enabled"
+          ],
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name assigned to the VSAN.\nThis name can be between 1 and 32 alphanumeric characters.\nYou cannot use spaces or any special characters other than - (hyphen), \"_\" (underscore), : (colon), and . (period).\nYou cannot change this name after the VSAN is created.",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify VSANs are present and will create if needed.\nIf C(absent), will verify VSANs are absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vlan_id": {
+          "aliases": [],
+          "description": "The unique string identifier assigned to the VLAN used for Fibre Channel connections.\nNote that Cisco UCS Manager uses VLAN '4048'.  See the UCS Manager configuration guide if you want to assign '4048' to a VLAN.\nOptional if state is absent.",
+          "required": true,
+          "suboptions": {}
+        },
+        "vsan_id": {
+          "aliases": [],
+          "description": "The unique identifier assigned to the VSAN.\nThe ID can be a string between '1' and '4078', or between '4080' and '4093'. '4079' is a reserved VSAN ID.\nIn addition, if you plan to use FC end-host mode, the range between '3840' to '4079' is also a reserved VSAN ID range.\nOptional if state is absent.",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configures VSANs on Cisco UCS Manager",
+      "version_added": "2.5"
+    },
+    "examples": "\n- name: Configure VSAN\n  cisco.ucs.ucs_vsans:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: vsan110\n    fabric: common\n    vsan_id: '110'\n    vlan_id: '110'\n\n- name: Remove VSAN\n  cisco.ucs.ucs_vsans:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: vsan110\n    state: absent\n"
+  },
+  "cisco.ucs.ucs_wwn_pool": {
+    "doc": {
+      "description": "Configures WWNNs or WWPN pools on Cisco UCS Manager.",
+      "has_action": false,
+      "options": {
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "A description of the WWNN or WWPN pool.\nEnter up to 256 characters.\nYou can use any characters or spaces except the following:\n` (accent mark),  (backslash), ^ (carat), \" (double quote), = (equal sign), > (greater than), < (less than), or ' (single quote).",
+          "required": false,
+          "suboptions": {}
+        },
+        "first_addr": {
+          "aliases": [],
+          "description": "The first initiator in the World Wide Name (WWN) block.\nThis is the From field in the UCS Manager Add WWN Blocks menu.",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "IP address or hostname of Cisco UCS Manager.\nModules can be used with the UCS Platform Emulator U(https://cs.co/ucspe)",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "last_addr": {
+          "aliases": [],
+          "description": "The last initiator in the World Wide Name (WWN) block.\nThis is the To field in the UCS Manager Add WWN Blocks menu.\nFor WWxN pools, the pool size must be a multiple of ports-per-node + 1.\nFor example, if there are 7 ports per node, the pool size must be a multiple of 8.\nIf there are 63 ports per node, the pool size must be a multiple of 64.",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the World Wide Node Name (WWNN) or World Wide Port Name (WWPN) pool.\nThis name can be between 1 and 32 alphanumeric characters.\nYou cannot use spaces or any special characters other than - (hyphen), \"_\" (underscore), : (colon), and . (period).\nYou cannot change this name after the WWNN or WWPN pool is created.",
+          "required": true,
+          "suboptions": {}
+        },
+        "order": {
+          "aliases": [],
+          "description": "The Assignment Order field.\nThis can be one of the following:\ndefault - Cisco UCS Manager selects a random identity from the pool.\nsequential - Cisco UCS Manager selects the lowest available identity from the pool.",
+          "default": "default",
+          "required": false,
+          "choices": [
+            "default",
+            "sequential"
+          ],
+          "suboptions": {}
+        },
+        "org_dn": {
+          "aliases": [],
+          "description": "Org dn (distinguished name)",
+          "default": "org-root",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for Cisco UCS Manager authentication.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Port number to be used during connection (by default uses 443 for https and 80 for http connection).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy": {
+          "aliases": [],
+          "description": "If use_proxy is no, specfies proxy to be used for connection. e.g. 'http://proxy.xy.z:8080'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "purpose": {
+          "aliases": [],
+          "description": "Specify whether this is a node (WWNN) or port (WWPN) pool.\nOptional if state is absent.",
+          "required": true,
+          "choices": [
+            "node",
+            "port"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify WWNNs/WWPNs are present and will create if needed.\nIf C(absent), will verify WWNNs/WWPNs are absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), will not use the proxy as defined by system environment variable.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If C(no), an HTTP connection will be used instead of the default HTTPS connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for Cisco UCS Manager authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ucsmsdk"
+      ],
+      "short_description": "Configures WWNN or WWPN pools on Cisco UCS Manager",
+      "version_added": "2.5"
+    },
+    "examples": "\n- name: Configure WWNN/WWPN pools\n  cisco.ucs.ucs_wwn_pool:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: WWNN-Pool\n    purpose: node\n    first_addr: 20:00:00:25:B5:48:00:00\n    last_addr: 20:00:00:25:B5:48:00:0F\n- cisco.ucs.ucs_wwn_pool:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: WWPN-Pool-A\n    purpose: port\n    order: sequential\n    first_addr: 20:00:00:25:B5:48:0A:00\n    last_addr: 20:00:00:25:B5:48:0A:0F\n\n- name: Remove WWNN/WWPN pools\n  cisco.ucs.ucs_wwn_pool:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: WWNN-Pool\n    state: absent\n- cisco.ucs.ucs_wwn_pool:\n    hostname: 172.16.143.150\n    username: admin\n    password: password\n    name: WWPN-Pool-A\n    state: absent\n"
+  }
+}

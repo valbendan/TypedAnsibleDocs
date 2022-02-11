@@ -1,0 +1,634 @@
+{
+  "infinidat.infinibox.infini_cluster": {
+    "doc": {
+      "description": "This module creates, deletes or modifies host clusters on Infinibox.",
+      "has_action": false,
+      "notes": "This module requires infinisdk python library\nYou must set INFINIBOX_USER and INFINIBOX_PASSWORD environment variables if user and password arguments are not passed to the module directly\nAnsible uses the infinisdk configuration file C(~/.infinidat/infinisdk.ini) if no credentials are provided. See U(http://infinisdk.readthedocs.io/en/latest/getting_started.html)\nAll Infinidat modules support check mode (--check). However, a dryrun that creates resources may fail if the resource dependencies are not met for a task. For example, consider a task that creates a volume in a pool. If the pool does not exist, the volume creation task will fail. It will fail even if there was a previous task in the playbook that would have created the pool but did not because the pool creation was also part of the dry run.",
+      "options": {
+        "name": {
+          "aliases": [],
+          "description": "Cluster Name",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Infinibox User password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Creates/Modifies Cluster when present, removes when absent, or provides details of a cluster when stat.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "stat",
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "system": {
+          "aliases": [],
+          "description": "Infinibox Hostname or IPv4 Address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "user": {
+          "aliases": [],
+          "description": "Infinibox User username with sufficient priveledges ( see notes ).",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python2 >= 2.7 or python3 >= 3.6",
+        "infinisdk (https://infinisdk.readthedocs.io/en/latest/)"
+      ],
+      "short_description": "Create, Delete and Modify Host Cluster on Infinibox",
+      "version_added": "2.9"
+    },
+    "examples": "\n- name: Create new cluster\n  infini_cluster:\n    name: foo_cluster\n    user: admin\n    password: secret\n    system: ibox001\n"
+  },
+  "infinidat.infinibox.infini_export": {
+    "doc": {
+      "description": "This module creates, deletes or modifies NFS exports on Infinibox.",
+      "has_action": false,
+      "notes": "This module requires infinisdk python library\nYou must set INFINIBOX_USER and INFINIBOX_PASSWORD environment variables if user and password arguments are not passed to the module directly\nAnsible uses the infinisdk configuration file C(~/.infinidat/infinisdk.ini) if no credentials are provided. See U(http://infinisdk.readthedocs.io/en/latest/getting_started.html)\nAll Infinidat modules support check mode (--check). However, a dryrun that creates resources may fail if the resource dependencies are not met for a task. For example, consider a task that creates a volume in a pool. If the pool does not exist, the volume creation task will fail. It will fail even if there was a previous task in the playbook that would have created the pool but did not because the pool creation was also part of the dry run.",
+      "options": {
+        "client_list": {
+          "aliases": [],
+          "description": "List of dictionaries with client entries. See examples. Check infini_export_client module to modify individual NFS client entries for export.",
+          "default": "All Hosts(*), RW, no_root_squash: True",
+          "required": false,
+          "suboptions": {}
+        },
+        "filesystem": {
+          "aliases": [],
+          "description": "Name of exported file system.",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Export name. Must start with a forward slash, e.g. name=/data.",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Infinibox User password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Creates/Modifies export when present, removes when absent, or provides export details with stat.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "stat",
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "system": {
+          "aliases": [],
+          "description": "Infinibox Hostname or IPv4 Address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "user": {
+          "aliases": [],
+          "description": "Infinibox User username with sufficient priveledges ( see notes ).",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "infinisdk (https://infinisdk.readthedocs.io/en/latest/)",
+        "munch",
+        "python2 >= 2.7 or python3 >= 3.6"
+      ],
+      "short_description": "Create, Delete or Modify NFS Exports on Infinibox",
+      "version_added": "2.3"
+    },
+    "examples": "\n- name: Export bar filesystem under foo pool as /data\n  infini_export:\n    name: /data01\n    filesystem: foo\n    state: present  # Default\n    user: admin\n    password: secret\n    system: ibox001\n\n- name: Get status of export bar filesystem under foo pool as /data\n  infini_export:\n    name: /data01\n    filesystem: foo\n    state: stat\n    user: admin\n    password: secret\n    system: ibox001\n\n- name: Remove export bar filesystem under foo pool as /data\n  infini_export:\n    name: /data01\n    filesystem: foo\n    state: absent\n    user: admin\n    password: secret\n    system: ibox001\n\n- name: Export and specify client list explicitly\n  infini_export:\n    name: /data02\n    filesystem: foo\n    client_list:\n      - client: 192.168.0.2\n        access: RW\n        no_root_squash: True\n      - client: 192.168.0.100\n        access: RO\n        no_root_squash: False\n      - client: 192.168.0.10-192.168.0.20\n        access: RO\n        no_root_squash: False\n    system: ibox001\n    user: admin\n    password: secret\n"
+  },
+  "infinidat.infinibox.infini_export_client": {
+    "doc": {
+      "description": "This module creates, deletes or modifys NFS client(s) for existing exports on Infinibox.",
+      "has_action": false,
+      "notes": "This module requires infinisdk python library\nYou must set INFINIBOX_USER and INFINIBOX_PASSWORD environment variables if user and password arguments are not passed to the module directly\nAnsible uses the infinisdk configuration file C(~/.infinidat/infinisdk.ini) if no credentials are provided. See U(http://infinisdk.readthedocs.io/en/latest/getting_started.html)\nAll Infinidat modules support check mode (--check). However, a dryrun that creates resources may fail if the resource dependencies are not met for a task. For example, consider a task that creates a volume in a pool. If the pool does not exist, the volume creation task will fail. It will fail even if there was a previous task in the playbook that would have created the pool but did not because the pool creation was also part of the dry run.",
+      "options": {
+        "access_mode": {
+          "aliases": [],
+          "description": "Read Write or Read Only Access.",
+          "default": "RW",
+          "required": false,
+          "choices": [
+            "RW",
+            "RO"
+          ],
+          "suboptions": {}
+        },
+        "client": {
+          "aliases": [
+            "name"
+          ],
+          "description": "Client IP or Range. Ranges can be defined as follows 192.168.0.1-192.168.0.254.",
+          "required": true,
+          "suboptions": {}
+        },
+        "export": {
+          "aliases": [],
+          "description": "Name of the export.",
+          "required": true,
+          "suboptions": {}
+        },
+        "no_root_squash": {
+          "aliases": [],
+          "description": "Don't squash root user to anonymous. Will be set to \"no\" on creation if not specified explicitly.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Infinibox User password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Creates/Modifies client when present and removes when absent.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "system": {
+          "aliases": [],
+          "description": "Infinibox Hostname or IPv4 Address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "user": {
+          "aliases": [],
+          "description": "Infinibox User username with sufficient priveledges ( see notes ).",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "infinisdk (https://infinisdk.readthedocs.io/en/latest/)",
+        "munch",
+        "python2 >= 2.7 or python3 >= 3.6"
+      ],
+      "short_description": "Create, Delete or Modify NFS Client(s) for existing exports on Infinibox",
+      "version_added": "2.3"
+    },
+    "examples": "\n- name: Make sure nfs client 10.0.0.1 is configured for export. Allow root access\n  infini_export_client:\n    client: 10.0.0.1\n    access_mode: RW\n    no_root_squash: yes\n    export: /data\n    state: present  # Default\n    user: admin\n    password: secret\n    system: ibox001\n\n- name: Add multiple clients with RO access. Squash root privileges\n  infini_export_client:\n    client: \"{{ item }}\"\n    access_mode: RO\n    no_root_squash: no\n    export: /data\n    user: admin\n    password: secret\n    system: ibox001\n  with_items:\n    - 10.0.0.2\n    - 10.0.0.3\n"
+  },
+  "infinidat.infinibox.infini_fs": {
+    "doc": {
+      "description": "This module creates, deletes or modifies filesystems on Infinibox.",
+      "has_action": false,
+      "notes": "This module requires infinisdk python library\nYou must set INFINIBOX_USER and INFINIBOX_PASSWORD environment variables if user and password arguments are not passed to the module directly\nAnsible uses the infinisdk configuration file C(~/.infinidat/infinisdk.ini) if no credentials are provided. See U(http://infinisdk.readthedocs.io/en/latest/getting_started.html)\nAll Infinidat modules support check mode (--check). However, a dryrun that creates resources may fail if the resource dependencies are not met for a task. For example, consider a task that creates a volume in a pool. If the pool does not exist, the volume creation task will fail. It will fail even if there was a previous task in the playbook that would have created the pool but did not because the pool creation was also part of the dry run.",
+      "options": {
+        "name": {
+          "aliases": [],
+          "description": "File system name.",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Infinibox User password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "pool": {
+          "aliases": [],
+          "description": "Pool that will host file system.",
+          "required": true,
+          "suboptions": {}
+        },
+        "size": {
+          "aliases": [],
+          "description": "File system size in MB, GB or TB units. See examples.",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Creates/Modifies file system when present or removes when absent.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "system": {
+          "aliases": [],
+          "description": "Infinibox Hostname or IPv4 Address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "user": {
+          "aliases": [],
+          "description": "Infinibox User username with sufficient priveledges ( see notes ).",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "capacity",
+        "infinisdk (https://infinisdk.readthedocs.io/en/latest/)",
+        "python2 >= 2.7 or python3 >= 3.6"
+      ],
+      "short_description": "Create, Delete or Modify filesystems on Infinibox",
+      "version_added": "2.3"
+    },
+    "examples": "\n- name: Create new file system named foo under pool named bar\n  infini_fs:\n    name: foo\n    size: 1TB\n    pool: bar\n    state: present\n    user: admin\n    password: secret\n    system: ibox001\n"
+  },
+  "infinidat.infinibox.infini_host": {
+    "doc": {
+      "description": "This module creates, deletes or modifies hosts on Infinibox.",
+      "has_action": false,
+      "notes": "This module requires infinisdk python library\nYou must set INFINIBOX_USER and INFINIBOX_PASSWORD environment variables if user and password arguments are not passed to the module directly\nAnsible uses the infinisdk configuration file C(~/.infinidat/infinisdk.ini) if no credentials are provided. See U(http://infinisdk.readthedocs.io/en/latest/getting_started.html)\nAll Infinidat modules support check mode (--check). However, a dryrun that creates resources may fail if the resource dependencies are not met for a task. For example, consider a task that creates a volume in a pool. If the pool does not exist, the volume creation task will fail. It will fail even if there was a previous task in the playbook that would have created the pool but did not because the pool creation was also part of the dry run.",
+      "options": {
+        "name": {
+          "aliases": [],
+          "description": "Host Name",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Infinibox User password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Creates/Modifies Host when present or removes when absent",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "stat",
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "system": {
+          "aliases": [],
+          "description": "Infinibox Hostname or IPv4 Address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "user": {
+          "aliases": [],
+          "description": "Infinibox User username with sufficient priveledges ( see notes ).",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python2 >= 2.7 or python3 >= 3.6",
+        "infinisdk (https://infinisdk.readthedocs.io/en/latest/)"
+      ],
+      "short_description": "Create, Delete and Modify Hosts on Infinibox",
+      "version_added": "2.3"
+    },
+    "examples": "\n- name: Create new host\n  infini_host:\n    name: foo.example.com\n    user: admin\n    password: secret\n    system: ibox001\n"
+  },
+  "infinidat.infinibox.infini_map": {
+    "doc": {
+      "description": "This module creates or deletes mappings of volumes to hosts or clusters on Infinibox.",
+      "has_action": false,
+      "notes": "This module requires infinisdk python library\nYou must set INFINIBOX_USER and INFINIBOX_PASSWORD environment variables if user and password arguments are not passed to the module directly\nAnsible uses the infinisdk configuration file C(~/.infinidat/infinisdk.ini) if no credentials are provided. See U(http://infinisdk.readthedocs.io/en/latest/getting_started.html)\nAll Infinidat modules support check mode (--check). However, a dryrun that creates resources may fail if the resource dependencies are not met for a task. For example, consider a task that creates a volume in a pool. If the pool does not exist, the volume creation task will fail. It will fail even if there was a previous task in the playbook that would have created the pool but did not because the pool creation was also part of the dry run.",
+      "options": {
+        "cluster": {
+          "aliases": [],
+          "description": "Cluster Name",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "Host Name",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Infinibox User password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Creates mapping when present or removes when absent, or provides details of a mapping when stat.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "stat",
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "system": {
+          "aliases": [],
+          "description": "Infinibox Hostname or IPv4 Address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "user": {
+          "aliases": [],
+          "description": "Infinibox User username with sufficient priveledges ( see notes ).",
+          "required": false,
+          "suboptions": {}
+        },
+        "volume": {
+          "aliases": [],
+          "description": "Volume name to map to the host",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python2 >= 2.7 or python3 >= 3.6",
+        "infinisdk (https://infinisdk.readthedocs.io/en/latest/)"
+      ],
+      "short_description": "Create and Delete mapping of a volume to a host or cluster on Infinibox",
+      "version_added": "2.10"
+    },
+    "examples": "\n- name: Map a volume to an existing host\n  infini_map:\n    host: foo.example.com\n    volume: bar\n    state: present  # Default\n    user: admin\n    password: secret\n    system: ibox001\n\n- name: Map a volume to an existing cluster\n  infini_map:\n    cluster: test-cluster\n    volume: bar\n    state: present  # Default\n    user: admin\n    password: secret\n    system: ibox001\n\n- name: Unmap volume bar from host foo.example.com\n  infini_map:\n    host: foo.example.com\n    volume: bar\n    state: absent\n    system: ibox01\n    user: admin\n    password: secret\n\n- name: Stat mapping of volume bar to host foo.example.com\n  infini_map:\n    host: foo.example.com\n    volume: bar\n    state: stat\n    system: ibox01\n    user: admin\n    password: secret\n"
+  },
+  "infinidat.infinibox.infini_pool": {
+    "doc": {
+      "description": "This module to creates, deletes or modifies pools on Infinibox.",
+      "has_action": false,
+      "notes": "Infinibox Admin level access is required for pool modifications\nThis module requires infinisdk python library\nYou must set INFINIBOX_USER and INFINIBOX_PASSWORD environment variables if user and password arguments are not passed to the module directly\nAnsible uses the infinisdk configuration file C(~/.infinidat/infinisdk.ini) if no credentials are provided. See U(http://infinisdk.readthedocs.io/en/latest/getting_started.html)\nAll Infinidat modules support check mode (--check). However, a dryrun that creates resources may fail if the resource dependencies are not met for a task. For example, consider a task that creates a volume in a pool. If the pool does not exist, the volume creation task will fail. It will fail even if there was a previous task in the playbook that would have created the pool but did not because the pool creation was also part of the dry run.",
+      "options": {
+        "compression": {
+          "aliases": [],
+          "description": "Enable/Disable Compression on Pool",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "version_added": "2.8",
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Pool Name",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Infinibox User password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "size": {
+          "aliases": [],
+          "description": "Pool Physical Capacity in MB, GB or TB units. If pool size is not set on pool creation, size will be equal to 1TB. See examples.",
+          "required": false,
+          "suboptions": {}
+        },
+        "ssd_cache": {
+          "aliases": [],
+          "description": "Enable/Disable SSD Cache on Pool",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Creates/Modifies Pool when present or removes when absent",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "system": {
+          "aliases": [],
+          "description": "Infinibox Hostname or IPv4 Address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "user": {
+          "aliases": [],
+          "description": "Infinibox User username with sufficient priveledges ( see notes ).",
+          "required": false,
+          "suboptions": {}
+        },
+        "vsize": {
+          "aliases": [],
+          "description": "Pool Virtual Capacity in MB, GB or TB units. If pool vsize is not set on pool creation, Virtual Capacity will be equal to Physical Capacity. See examples.",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "capacity",
+        "infinisdk (https://infinisdk.readthedocs.io/en/latest/)",
+        "python2 >= 2.7 or python3 >= 3.6"
+      ],
+      "short_description": "Create, Delete and Modify Pools on Infinibox",
+      "version_added": "2.3"
+    },
+    "examples": "\n- name: Make sure pool foo exists. Set pool physical capacity to 10TB\n  infini_pool:\n    name: foo\n    size: 10TB\n    vsize: 10TB\n    user: admin\n    password: secret\n    system: ibox001\n\n- name: Disable SSD Cache on pool\n  infini_pool:\n    name: foo\n    ssd_cache: no\n    user: admin\n    password: secret\n    system: ibox001\n\n- name: Disable Compression on pool\n  infini_pool:\n    name: foo\n    compression: no\n    user: admin\n    password: secret\n    system: ibox001\n"
+  },
+  "infinidat.infinibox.infini_port": {
+    "doc": {
+      "description": "This module adds or deletes fiber channel or iSCSI ports to hosts on Infinibox.",
+      "has_action": false,
+      "notes": "This module requires infinisdk python library\nYou must set INFINIBOX_USER and INFINIBOX_PASSWORD environment variables if user and password arguments are not passed to the module directly\nAnsible uses the infinisdk configuration file C(~/.infinidat/infinisdk.ini) if no credentials are provided. See U(http://infinisdk.readthedocs.io/en/latest/getting_started.html)\nAll Infinidat modules support check mode (--check). However, a dryrun that creates resources may fail if the resource dependencies are not met for a task. For example, consider a task that creates a volume in a pool. If the pool does not exist, the volume creation task will fail. It will fail even if there was a previous task in the playbook that would have created the pool but did not because the pool creation was also part of the dry run.",
+      "options": {
+        "iqns": {
+          "aliases": [],
+          "description": "List of iqns of the host",
+          "default": "[]",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Host Name",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Infinibox User password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Creates mapping when present, removes when absent, or provides details of a mapping when stat.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "stat",
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "system": {
+          "aliases": [],
+          "description": "Infinibox Hostname or IPv4 Address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "user": {
+          "aliases": [],
+          "description": "Infinibox User username with sufficient priveledges ( see notes ).",
+          "required": false,
+          "suboptions": {}
+        },
+        "wwns": {
+          "aliases": [],
+          "description": "List of wwns of the host",
+          "default": "[]",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python2 >= 2.7 or python3 >= 3.6",
+        "infinisdk (https://infinisdk.readthedocs.io/en/latest/)"
+      ],
+      "short_description": "Add and Delete fiber channel and iSCSI ports to a host on Infinibox",
+      "version_added": "2.1"
+    },
+    "examples": "\n- name: Make sure host bar is available with wwn/iqn ports\n  infini_host:\n    name: bar.example.com\n    state: present\n    wwns:\n      - \"00:00:00:00:00:00:00\"\n      - \"11:11:11:11:11:11:11\"\n    iqns:\n        - \"iqn.yyyy-mm.reverse-domain:unique-string\"\n    system: ibox01\n    user: admin\n    password: secret\n"
+  },
+  "infinidat.infinibox.infini_user": {
+    "doc": {
+      "description": "This module creates, deletes or modifies a user on Infinibox.",
+      "has_action": false,
+      "notes": "This module requires infinisdk python library\nYou must set INFINIBOX_USER and INFINIBOX_PASSWORD environment variables if user and password arguments are not passed to the module directly\nAnsible uses the infinisdk configuration file C(~/.infinidat/infinisdk.ini) if no credentials are provided. See U(http://infinisdk.readthedocs.io/en/latest/getting_started.html)\nAll Infinidat modules support check mode (--check). However, a dryrun that creates resources may fail if the resource dependencies are not met for a task. For example, consider a task that creates a volume in a pool. If the pool does not exist, the volume creation task will fail. It will fail even if there was a previous task in the playbook that would have created the pool but did not because the pool creation was also part of the dry run.",
+      "options": {
+        "password": {
+          "aliases": [],
+          "description": "Infinibox User password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Creates/Modifies user when present or removes when absent",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "stat",
+            "reset_password",
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "system": {
+          "aliases": [],
+          "description": "Infinibox Hostname or IPv4 Address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "user": {
+          "aliases": [],
+          "description": "Infinibox User username with sufficient priveledges ( see notes ).",
+          "required": false,
+          "suboptions": {}
+        },
+        "user_email": {
+          "aliases": [],
+          "description": "The new user's Email address",
+          "required": true,
+          "suboptions": {}
+        },
+        "user_enabled": {
+          "aliases": [],
+          "description": "Specify whether to enable the user",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "user_name": {
+          "aliases": [],
+          "description": "The new user's Name. Once a user is created, the user_name may not be changed from this module. It may be changed from the UI or from infinishell.",
+          "required": true,
+          "suboptions": {}
+        },
+        "user_password": {
+          "aliases": [],
+          "description": "The new user's password",
+          "required": true,
+          "suboptions": {}
+        },
+        "user_pool": {
+          "aliases": [],
+          "description": "Use with role==pool_admin. Specify the new user's pool.",
+          "required": false,
+          "suboptions": {}
+        },
+        "user_role": {
+          "aliases": [],
+          "description": "The user's role",
+          "required": true,
+          "choices": [
+            "admin",
+            "pool_admin",
+            "read_only"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python2 >= 2.7 or python3 >= 3.6",
+        "infinisdk (https://infinisdk.readthedocs.io/en/latest/)"
+      ],
+      "short_description": "Create, Delete and Modify a User on Infinibox",
+      "version_added": "2.10"
+    },
+    "examples": "\n- name: Create new user\n  infini_user:\n    user_name: foo_user\n    user_email: foo@example.com\n    user_password: secret2\n    user_role: pool_admin\n    user_enabled: false\n    pool: foo_pool\n    state: present\n    password: secret1\n    system: ibox001\n"
+  }
+}

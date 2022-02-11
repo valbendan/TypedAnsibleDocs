@@ -1,0 +1,217 @@
+{
+  "ngine_io.exoscale.exo_dns_domain": {
+    "doc": {
+      "description": "Create and remove domain records.",
+      "has_action": false,
+      "notes": "As Exoscale DNS uses the same API key and secret for all services, we reuse the config used for Exscale Compute based on CloudStack. The config is read from several locations, in the following order. The C(CLOUDSTACK_KEY), C(CLOUDSTACK_SECRET) environment variables. A C(CLOUDSTACK_CONFIG) environment variable pointing to an C(.ini) file, A C(cloudstack.ini) file in the current working directory. A C(.cloudstack.ini) file in the users home directory. Optionally multiple credentials and endpoints can be specified using ini sections in C(cloudstack.ini). Use the argument C(api_region) to select the section name, default section is C(cloudstack).\nThis module does not support multiple A records and will complain properly if you try.\nMore information Exoscale DNS can be found on https://community.exoscale.ch/documentation/dns/.\nThis module supports check mode and diff.",
+      "options": {
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Exoscale DNS API.\nThe ENV variable C(CLOUDSTACK_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_region": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(cloustack.ini) file.\nThe ENV variable C(CLOUDSTACK_REGION) is used as default, when defined.",
+          "default": "cloudstack",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_secret": {
+          "aliases": [],
+          "description": "Secret key of the Exoscale DNS API.\nThe ENV variable C(CLOUDSTACK_SECRET) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Exoscale DNS API.\nThe ENV variable C(CLOUDSTACK_TIMEOUT) is used as default, when defined.",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the record.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the resource.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Exoscale DNS API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Manages domain records on Exoscale DNS API.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Create a domain\n  exo_dns_domain:\n    name: example.com\n\n- name: Remove a domain\n  exo_dns_domain:\n    name: example.com\n    state: absent\n"
+  },
+  "ngine_io.exoscale.exo_dns_record": {
+    "doc": {
+      "description": "Create, update and delete records.",
+      "has_action": false,
+      "notes": "As Exoscale DNS uses the same API key and secret for all services, we reuse the config used for Exscale Compute based on CloudStack. The config is read from several locations, in the following order. The C(CLOUDSTACK_KEY), C(CLOUDSTACK_SECRET) environment variables. A C(CLOUDSTACK_CONFIG) environment variable pointing to an C(.ini) file, A C(cloudstack.ini) file in the current working directory. A C(.cloudstack.ini) file in the users home directory. Optionally multiple credentials and endpoints can be specified using ini sections in C(cloudstack.ini). Use the argument C(api_region) to select the section name, default section is C(cloudstack).\nThis module does not support multiple A records and will complain properly if you try.\nMore information Exoscale DNS can be found on https://community.exoscale.ch/documentation/dns/.\nThis module supports check mode and diff.",
+      "options": {
+        "api_key": {
+          "aliases": [],
+          "description": "API key of the Exoscale DNS API.\nThe ENV variable C(CLOUDSTACK_KEY) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_region": {
+          "aliases": [],
+          "description": "Name of the ini section in the C(cloustack.ini) file.\nThe ENV variable C(CLOUDSTACK_REGION) is used as default, when defined.",
+          "default": "cloudstack",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_secret": {
+          "aliases": [],
+          "description": "Secret key of the Exoscale DNS API.\nThe ENV variable C(CLOUDSTACK_SECRET) is used as default, when defined.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_timeout": {
+          "aliases": [],
+          "description": "HTTP timeout to Exoscale DNS API.\nThe ENV variable C(CLOUDSTACK_TIMEOUT) is used as default, when defined.",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "content": {
+          "aliases": [
+            "value",
+            "address"
+          ],
+          "description": "Content of the record.\nRequired if C(state=present) or C(multiple=yes).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "domain": {
+          "aliases": [],
+          "description": "Domain the record is related to.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "multiple": {
+          "aliases": [],
+          "description": "Whether there are more than one records with similar I(name) and I(record_type).\nOnly allowed for a few record types, e.g. C(record_type=A), C(record_type=NS) or C(record_type=MX).\nI(content) will not be updated, instead it is used as a key to find existing records.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the record.",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "prio": {
+          "aliases": [
+            "priority"
+          ],
+          "description": "Priority of the record.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "record_type": {
+          "aliases": [
+            "rtype",
+            "type"
+          ],
+          "description": "Type of the record.",
+          "default": "A",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "A",
+            "ALIAS",
+            "CNAME",
+            "MX",
+            "SPF",
+            "URL",
+            "TXT",
+            "NS",
+            "SRV",
+            "NAPTR",
+            "PTR",
+            "AAAA",
+            "SSHFP",
+            "HINFO",
+            "POOL"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the record.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "ttl": {
+          "aliases": [],
+          "description": "TTL of the record in seconds.",
+          "default": "3600",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Validate SSL certs of the Exoscale DNS API.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Manages DNS records on Exoscale DNS.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Create or update an A record\n  ngine_io.exoscale.exo_dns_record:\n    name: web-vm-1\n    domain: example.com\n    content: 1.2.3.4\n\n- name: Update an existing A record with a new IP\n  ngine_io.exoscale.exo_dns_record:\n    name: web-vm-1\n    domain: example.com\n    content: 1.2.3.5\n\n- name: Create another A record with same name\n  ngine_io.exoscale.exo_dns_record:\n    name: web-vm-1\n    domain: example.com\n    content: 1.2.3.6\n    multiple: yes\n\n- name: Create or update a CNAME record\n  ngine_io.exoscale.exo_dns_record:\n    name: www\n    domain: example.com\n    record_type: CNAME\n    content: web-vm-1\n\n- name: Create another MX record\n  ngine_io.exoscale.exo_dns_record:\n    domain: example.com\n    record_type: MX\n    content: mx1.example.com\n    prio: 10\n    multiple: yes\n\n- name: Delete one MX record out of multiple\n  ngine_io.exoscale.exo_dns_record:\n    domain: example.com\n    record_type: MX\n    content: mx1.example.com\n    multiple: yes\n    state: absent\n\n- name: Remove a single A record\n  ngine_io.exoscale.exo_dns_record:\n    name: www\n    domain: example.com\n    state: absent\n"
+  }
+}
