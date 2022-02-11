@@ -18,7 +18,9 @@ def gen_ansible_full(version: str):
 
     context = dict(version=version, doc_files=doc_files)
 
-    rst_content = render_jinja2_file(os.path.join(p_dir, "ansible_full.jinja2"), context)
+    rst_content = render_jinja2_file(
+        os.path.join(p_dir, "ansible_full.jinja2"), context
+    )
 
-    with open(os.path.join(p_dir, f"../source/ansible/{version}.rst"), 'w') as fp:
+    with open(os.path.join(p_dir, f"../source/ansible/{version}.rst"), "w") as fp:
         fp.write(rst_content)
