@@ -10,3 +10,4 @@ Welcome to Typed Ansible's documentation!
    ansible/v5.3/index
    collections/azure.azcollection/index
    collections/linode.cloud/index
+   collections/sensu.sensu_go/index
