@@ -20,6 +20,9 @@ jobs:
       - name: Build HTML
         run: pip install poetry && poetry install && make fast-build
 
+      - name: Show Files
+        run: ls build/html
+
       - name: Publish HTML
         uses: peter-evans/create-pull-request@v3.12.1
         with:
