@@ -29,7 +29,8 @@ release = "2022.2.11"
 # -- General configuration ---------------------------------------------------
 
 # for sitemap remove lang and version
-html_baseurl = "https://jb.2cc.net"
+# ta for Typed Ansible
+html_baseurl = "https://ta.2cc.net"
 sitemap_url_scheme = "{link}"
 
 # Add any Sphinx extension module names here, as strings. They can be
