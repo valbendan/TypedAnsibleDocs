@@ -1,0 +1,14 @@
+{# @formatter:off #}
+
+Ansible Collection {{ name }} Docs
+=========================================
+
+.. list-table:: Collections
+:header-rows: 1
+
+* - Collection Name
+- Download URL
+{% for doc in doc_files %}
+    * - {{ doc[:-5] }}
+    - :download:`{{ doc }} <{{ doc }}>`_
+{% endfor %}

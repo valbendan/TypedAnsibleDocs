@@ -16,7 +16,12 @@ def gen_ansible_full(version: str = typer.Argument("v5.3", help="生成 Ansible 
 
 
 @app.command()
-def gen_collection():
+def gen_collection(name: str = typer.Argument(..., help="Ansible Collections 名称")):
+    """
+    生成 Ansible Collections 所有版本的文档
+
+    name 目录应该存在: docs/{name}/
+    """
     pass
 
 
