@@ -22,3 +22,12 @@ help:
 
 format:
 	poetry run black .
+
+
+gen-all-ansible-full:
+	poetry run python rst.py gen-ansible-full v5.1
+	poetry run python rst.py gen-ansible-full v5.3
+
+
+gen-all-ansible-collections:
+	poetry run python rst.py gen-collection linode.cloud

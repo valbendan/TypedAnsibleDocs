@@ -1,4 +1,304 @@
+
+
 Ansible v5.3 Docs
 =========================
 
-:download:`this example script <../example.py>`.
+.. list-table:: Collections
+   :header-rows: 1
+
+   * - Collection Name
+     - Download URL
+
+   * - community.mongodb
+     - :download:`community.mongodb.json <community.mongodb.json>`_
+
+   * - ngine_io.vultr
+     - :download:`ngine_io.vultr.json <ngine_io.vultr.json>`_
+
+   * - inspur.sm
+     - :download:`inspur.sm.json <inspur.sm.json>`_
+
+   * - community.mysql
+     - :download:`community.mysql.json <community.mysql.json>`_
+
+   * - community.crypto
+     - :download:`community.crypto.json <community.crypto.json>`_
+
+   * - ansible.builtin
+     - :download:`ansible.builtin.json <ansible.builtin.json>`_
+
+   * - infinidat.infinibox
+     - :download:`infinidat.infinibox.json <infinidat.infinibox.json>`_
+
+   * - openvswitch.openvswitch
+     - :download:`openvswitch.openvswitch.json <openvswitch.openvswitch.json>`_
+
+   * - netapp.cloudmanager
+     - :download:`netapp.cloudmanager.json <netapp.cloudmanager.json>`_
+
+   * - cisco.ios
+     - :download:`cisco.ios.json <cisco.ios.json>`_
+
+   * - hpe.nimble
+     - :download:`hpe.nimble.json <hpe.nimble.json>`_
+
+   * - netapp.azure
+     - :download:`netapp.azure.json <netapp.azure.json>`_
+
+   * - cisco.nso
+     - :download:`cisco.nso.json <cisco.nso.json>`_
+
+   * - servicenow.servicenow
+     - :download:`servicenow.servicenow.json <servicenow.servicenow.json>`_
+
+   * - community.rabbitmq
+     - :download:`community.rabbitmq.json <community.rabbitmq.json>`_
+
+   * - community.vmware
+     - :download:`community.vmware.json <community.vmware.json>`_
+
+   * - check_point.mgmt
+     - :download:`check_point.mgmt.json <check_point.mgmt.json>`_
+
+   * - ngine_io.cloudstack
+     - :download:`ngine_io.cloudstack.json <ngine_io.cloudstack.json>`_
+
+   * - dellemc.os6
+     - :download:`dellemc.os6.json <dellemc.os6.json>`_
+
+   * - junipernetworks.junos
+     - :download:`junipernetworks.junos.json <junipernetworks.junos.json>`_
+
+   * - community.libvirt
+     - :download:`community.libvirt.json <community.libvirt.json>`_
+
+   * - community.zabbix
+     - :download:`community.zabbix.json <community.zabbix.json>`_
+
+   * - gluster.gluster
+     - :download:`gluster.gluster.json <gluster.gluster.json>`_
+
+   * - community.general
+     - :download:`community.general.json <community.general.json>`_
+
+   * - purestorage.flashblade
+     - :download:`purestorage.flashblade.json <purestorage.flashblade.json>`_
+
+   * - netapp.elementsw
+     - :download:`netapp.elementsw.json <netapp.elementsw.json>`_
+
+   * - ibm.qradar
+     - :download:`ibm.qradar.json <ibm.qradar.json>`_
+
+   * - community.kubevirt
+     - :download:`community.kubevirt.json <community.kubevirt.json>`_
+
+   * - cisco.nxos
+     - :download:`cisco.nxos.json <cisco.nxos.json>`_
+
+   * - azure.azcollection
+     - :download:`azure.azcollection.json <azure.azcollection.json>`_
+
+   * - cisco.asa
+     - :download:`cisco.asa.json <cisco.asa.json>`_
+
+   * - community.sops
+     - :download:`community.sops.json <community.sops.json>`_
+
+   * - cisco.aci
+     - :download:`cisco.aci.json <cisco.aci.json>`_
+
+   * - community.ciscosmb
+     - :download:`community.ciscosmb.json <community.ciscosmb.json>`_
+
+   * - netbox.netbox
+     - :download:`netbox.netbox.json <netbox.netbox.json>`_
+
+   * - cyberark.pas
+     - :download:`cyberark.pas.json <cyberark.pas.json>`_
+
+   * - ansible.windows
+     - :download:`ansible.windows.json <ansible.windows.json>`_
+
+   * - community.aws
+     - :download:`community.aws.json <community.aws.json>`_
+
+   * - infoblox.nios_modules
+     - :download:`infoblox.nios_modules.json <infoblox.nios_modules.json>`_
+
+   * - theforeman.foreman
+     - :download:`theforeman.foreman.json <theforeman.foreman.json>`_
+
+   * - cloud.common
+     - :download:`cloud.common.json <cloud.common.json>`_
+
+   * - google.cloud
+     - :download:`google.cloud.json <google.cloud.json>`_
+
+   * - community.grafana
+     - :download:`community.grafana.json <community.grafana.json>`_
+
+   * - community.dns
+     - :download:`community.dns.json <community.dns.json>`_
+
+   * - frr.frr
+     - :download:`frr.frr.json <frr.frr.json>`_
+
+   * - openstack.cloud
+     - :download:`openstack.cloud.json <openstack.cloud.json>`_
+
+   * - ovirt.ovirt
+     - :download:`ovirt.ovirt.json <ovirt.ovirt.json>`_
+
+   * - cisco.mso
+     - :download:`cisco.mso.json <cisco.mso.json>`_
+
+   * - netapp.ontap
+     - :download:`netapp.ontap.json <netapp.ontap.json>`_
+
+   * - hetzner.hcloud
+     - :download:`hetzner.hcloud.json <hetzner.hcloud.json>`_
+
+   * - community.azure
+     - :download:`community.azure.json <community.azure.json>`_
+
+   * - fortinet.fortios
+     - :download:`fortinet.fortios.json <fortinet.fortios.json>`_
+
+   * - kubernetes.core
+     - :download:`kubernetes.core.json <kubernetes.core.json>`_
+
+   * - purestorage.flasharray
+     - :download:`purestorage.flasharray.json <purestorage.flasharray.json>`_
+
+   * - community.network
+     - :download:`community.network.json <community.network.json>`_
+
+   * - ansible.utils
+     - :download:`ansible.utils.json <ansible.utils.json>`_
+
+   * - community.hashi_vault
+     - :download:`community.hashi_vault.json <community.hashi_vault.json>`_
+
+   * - arista.eos
+     - :download:`arista.eos.json <arista.eos.json>`_
+
+   * - t_systems_mms.icinga_director
+     - :download:`t_systems_mms.icinga_director.json <t_systems_mms.icinga_director.json>`_
+
+   * - cisco.ise
+     - :download:`cisco.ise.json <cisco.ise.json>`_
+
+   * - chocolatey.chocolatey
+     - :download:`chocolatey.chocolatey.json <chocolatey.chocolatey.json>`_
+
+   * - amazon.aws
+     - :download:`amazon.aws.json <amazon.aws.json>`_
+
+   * - cisco.iosxr
+     - :download:`cisco.iosxr.json <cisco.iosxr.json>`_
+
+   * - community.fortios
+     - :download:`community.fortios.json <community.fortios.json>`_
+
+   * - community.windows
+     - :download:`community.windows.json <community.windows.json>`_
+
+   * - community.routeros
+     - :download:`community.routeros.json <community.routeros.json>`_
+
+   * - mellanox.onyx
+     - :download:`mellanox.onyx.json <mellanox.onyx.json>`_
+
+   * - community.docker
+     - :download:`community.docker.json <community.docker.json>`_
+
+   * - wti.remote
+     - :download:`wti.remote.json <wti.remote.json>`_
+
+   * - dellemc.openmanage
+     - :download:`dellemc.openmanage.json <dellemc.openmanage.json>`_
+
+   * - cisco.ucs
+     - :download:`cisco.ucs.json <cisco.ucs.json>`_
+
+   * - netapp.um_info
+     - :download:`netapp.um_info.json <netapp.um_info.json>`_
+
+   * - dellemc.enterprise_sonic
+     - :download:`dellemc.enterprise_sonic.json <dellemc.enterprise_sonic.json>`_
+
+   * - containers.podman
+     - :download:`containers.podman.json <containers.podman.json>`_
+
+   * - netapp.aws
+     - :download:`netapp.aws.json <netapp.aws.json>`_
+
+   * - community.google
+     - :download:`community.google.json <community.google.json>`_
+
+   * - community.skydive
+     - :download:`community.skydive.json <community.skydive.json>`_
+
+   * - sensu.sensu_go
+     - :download:`sensu.sensu_go.json <sensu.sensu_go.json>`_
+
+   * - community.digitalocean
+     - :download:`community.digitalocean.json <community.digitalocean.json>`_
+
+   * - dellemc.os10
+     - :download:`dellemc.os10.json <dellemc.os10.json>`_
+
+   * - community.postgresql
+     - :download:`community.postgresql.json <community.postgresql.json>`_
+
+   * - fortinet.fortimanager
+     - :download:`fortinet.fortimanager.json <fortinet.fortimanager.json>`_
+
+   * - dellemc.os9
+     - :download:`dellemc.os9.json <dellemc.os9.json>`_
+
+   * - vyos.vyos
+     - :download:`vyos.vyos.json <vyos.vyos.json>`_
+
+   * - ansible.netcommon
+     - :download:`ansible.netcommon.json <ansible.netcommon.json>`_
+
+   * - community.proxysql
+     - :download:`community.proxysql.json <community.proxysql.json>`_
+
+   * - splunk.es
+     - :download:`splunk.es.json <splunk.es.json>`_
+
+   * - netapp_eseries.santricity
+     - :download:`netapp_eseries.santricity.json <netapp_eseries.santricity.json>`_
+
+   * - netapp.storagegrid
+     - :download:`netapp.storagegrid.json <netapp.storagegrid.json>`_
+
+   * - awx.awx
+     - :download:`awx.awx.json <awx.awx.json>`_
+
+   * - ngine_io.exoscale
+     - :download:`ngine_io.exoscale.json <ngine_io.exoscale.json>`_
+
+   * - cloudscale_ch.cloud
+     - :download:`cloudscale_ch.cloud.json <cloudscale_ch.cloud.json>`_
+
+   * - community.okd
+     - :download:`community.okd.json <community.okd.json>`_
+
+   * - cisco.intersight
+     - :download:`cisco.intersight.json <cisco.intersight.json>`_
+
+   * - ansible.posix
+     - :download:`ansible.posix.json <ansible.posix.json>`_
+
+   * - cisco.meraki
+     - :download:`cisco.meraki.json <cisco.meraki.json>`_
+
+   * - community.hrobot
+     - :download:`community.hrobot.json <community.hrobot.json>`_
+
+   * - f5networks.f5_modules
+     - :download:`f5networks.f5_modules.json <f5networks.f5_modules.json>`_
