@@ -177,14 +177,14 @@ Ansible v5.1
    * - :download:`dellemc.openmanage.json <../../../docs/ansible/v5.1/dellemc.openmanage.json>`
      - `dellemc.openmanage.json <../../docs/ansible/v5.1/dellemc.openmanage.json>`_
 
-   * - :download:`dellemc.os10.json <../../../docs/ansible/v5.1/dellemc.os10.json>`
-     - `dellemc.os10.json <../../docs/ansible/v5.1/dellemc.os10.json>`_
-
    * - :download:`dellemc.os6.json <../../../docs/ansible/v5.1/dellemc.os6.json>`
      - `dellemc.os6.json <../../docs/ansible/v5.1/dellemc.os6.json>`_
 
    * - :download:`dellemc.os9.json <../../../docs/ansible/v5.1/dellemc.os9.json>`
      - `dellemc.os9.json <../../docs/ansible/v5.1/dellemc.os9.json>`_
+
+   * - :download:`dellemc.os10.json <../../../docs/ansible/v5.1/dellemc.os10.json>`
+     - `dellemc.os10.json <../../docs/ansible/v5.1/dellemc.os10.json>`_
 
    * - :download:`f5networks.f5_modules.json <../../../docs/ansible/v5.1/f5networks.f5_modules.json>`
      - `f5networks.f5_modules.json <../../docs/ansible/v5.1/f5networks.f5_modules.json>`_
@@ -231,6 +231,9 @@ Ansible v5.1
    * - :download:`mellanox.onyx.json <../../../docs/ansible/v5.1/mellanox.onyx.json>`
      - `mellanox.onyx.json <../../docs/ansible/v5.1/mellanox.onyx.json>`_
 
+   * - :download:`netapp_eseries.santricity.json <../../../docs/ansible/v5.1/netapp_eseries.santricity.json>`
+     - `netapp_eseries.santricity.json <../../docs/ansible/v5.1/netapp_eseries.santricity.json>`_
+
    * - :download:`netapp.aws.json <../../../docs/ansible/v5.1/netapp.aws.json>`
      - `netapp.aws.json <../../docs/ansible/v5.1/netapp.aws.json>`_
 
@@ -251,9 +254,6 @@ Ansible v5.1
 
    * - :download:`netapp.um_info.json <../../../docs/ansible/v5.1/netapp.um_info.json>`
      - `netapp.um_info.json <../../docs/ansible/v5.1/netapp.um_info.json>`_
-
-   * - :download:`netapp_eseries.santricity.json <../../../docs/ansible/v5.1/netapp_eseries.santricity.json>`
-     - `netapp_eseries.santricity.json <../../docs/ansible/v5.1/netapp_eseries.santricity.json>`_
 
    * - :download:`netbox.netbox.json <../../../docs/ansible/v5.1/netbox.netbox.json>`
      - `netbox.netbox.json <../../docs/ansible/v5.1/netbox.netbox.json>`_

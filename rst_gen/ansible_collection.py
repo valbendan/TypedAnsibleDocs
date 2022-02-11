@@ -2,17 +2,13 @@ import os
 import sys
 from functools import cmp_to_key
 
-from packaging.version import parse
+from .v_cmp import my_version_cmp
 
 __all__ = ["do_gen_ansible_collection"]
 
 from .j2_utils import render_jinja2_file
 
 p_dir = os.path.dirname(__file__)
-
-
-def _version_cmp(v1, v2):
-    return parse(v1) < parse(v2)
 
 
 def do_gen_ansible_collection(name: str):
@@ -22,7 +18,7 @@ def do_gen_ansible_collection(name: str):
         sys.exit(2)
 
     version_list = sorted(
-        os.listdir(collection_dir), key=cmp_to_key(_version_cmp), reverse=True
+        os.listdir(collection_dir), key=cmp_to_key(my_version_cmp), reverse=True
     )
 
     context = dict(name=name, version_list=version_list)
