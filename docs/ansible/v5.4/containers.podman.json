@@ -1,0 +1,2604 @@
+{
+  "containers.podman.podman_container": {
+    "doc": {
+      "description": "Start, stop, restart and manage Podman containers",
+      "has_action": false,
+      "notes": "",
+      "options": {
+        "annotation": {
+          "aliases": [],
+          "description": "Add an annotation to the container. The format is key value, multiple times.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "authfile": {
+          "aliases": [],
+          "description": "Path of the authentication file. Default is ``${XDG_RUNTIME_DIR}/containers/auth.json`` (Not available for remote commands) You can also override the default path of the authentication file by setting the ``REGISTRY_AUTH_FILE`` environment variable. ``export REGISTRY_AUTH_FILE=path``",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "blkio_weight": {
+          "aliases": [],
+          "description": "Block IO weight (relative weight) accepts a weight value between 10 and 1000",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "blkio_weight_device": {
+          "aliases": [],
+          "description": "Block IO weight (relative device weight, format DEVICE_NAME[:]WEIGHT).",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "cap_add": {
+          "aliases": [
+            "capabilities"
+          ],
+          "description": "List of capabilities to add to the container.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "cap_drop": {
+          "aliases": [],
+          "description": "List of capabilities to drop from the container.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "cgroup_parent": {
+          "aliases": [],
+          "description": "Path to cgroups under which the cgroup for the container will be created. If the path is not absolute, the path is considered to be relative to the cgroups path of the init process. Cgroups will be created if they do not already exist.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "cgroupns": {
+          "aliases": [],
+          "description": "Path to cgroups under which the cgroup for the container will be created.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cgroups": {
+          "aliases": [],
+          "description": "Determines whether the container will create CGroups. Valid values are enabled and disabled, which the default being enabled. The disabled option will force the container to not create CGroups, and thus conflicts with CGroup options cgroupns and cgroup-parent.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cidfile": {
+          "aliases": [],
+          "description": "Write the container ID to the file",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "cmd_args": {
+          "aliases": [],
+          "description": "Any additional command options you want to pass to podman command, cmd_args - ['--other-param', 'value'] Be aware module doesn't support idempotency if this is set.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "command": {
+          "aliases": [],
+          "description": "Override command of container. Can be a string or a list.",
+          "type": "raw",
+          "required": false,
+          "suboptions": {}
+        },
+        "conmon_pidfile": {
+          "aliases": [],
+          "description": "Write the pid of the conmon process to a file. conmon runs in a separate process than Podman, so this is necessary when using systemd to restart Podman containers.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "cpu_period": {
+          "aliases": [],
+          "description": "Limit the CPU real-time period in microseconds",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "cpu_rt_period": {
+          "aliases": [],
+          "description": "Limit the CPU real-time period in microseconds. Limit the container's Real Time CPU usage. This flag tell the kernel to restrict the container's Real Time CPU usage to the period you specify.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "cpu_rt_runtime": {
+          "aliases": [],
+          "description": "Limit the CPU real-time runtime in microseconds. This flag tells the kernel to limit the amount of time in a given CPU period Real Time tasks may consume.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "cpu_shares": {
+          "aliases": [],
+          "description": "CPU shares (relative weight)",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "cpus": {
+          "aliases": [],
+          "description": "Number of CPUs. The default is 0.0 which means no limit.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cpuset_cpus": {
+          "aliases": [],
+          "description": "CPUs in which to allow execution (0-3, 0,1)",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cpuset_mems": {
+          "aliases": [],
+          "description": "Memory nodes (MEMs) in which to allow execution (0-3, 0,1). Only effective on NUMA systems.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "debug": {
+          "aliases": [],
+          "description": "Return additional information which can be helpful for investigations.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "detach": {
+          "aliases": [],
+          "description": "Run container in detach mode",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "detach_keys": {
+          "aliases": [],
+          "description": "Override the key sequence for detaching a container. Format is a single character or ctrl-value",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "device": {
+          "aliases": [],
+          "description": "Add a host device to the container. The format is <device-on-host>[:<device-on-container>][:<permissions>] (e.g. device /dev/sdc:/dev/xvdc:rwm)",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "device_read_bps": {
+          "aliases": [],
+          "description": "Limit read rate (bytes per second) from a device (e.g. device-read-bps /dev/sda:1mb)",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "device_read_iops": {
+          "aliases": [],
+          "description": "Limit read rate (IO per second) from a device (e.g. device-read-iops /dev/sda:1000)",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "device_write_bps": {
+          "aliases": [],
+          "description": "Limit write rate (bytes per second) to a device (e.g. device-write-bps /dev/sda:1mb)",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "device_write_iops": {
+          "aliases": [],
+          "description": "Limit write rate (IO per second) to a device (e.g. device-write-iops /dev/sda:1000)",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "dns": {
+          "aliases": [
+            "dns_servers"
+          ],
+          "description": "Set custom DNS servers",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "dns_option": {
+          "aliases": [
+            "dns_opts"
+          ],
+          "description": "Set custom DNS options",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "dns_search": {
+          "aliases": [
+            "dns_search_domains"
+          ],
+          "description": "Set custom DNS search domains (Use dns_search with '' if you don't wish to set the search domain)",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "entrypoint": {
+          "aliases": [],
+          "description": "Overwrite the default ENTRYPOINT of the image",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "env": {
+          "aliases": [],
+          "description": "Set environment variables. This option allows you to specify arbitrary environment variables that are available for the process that will be launched inside of the container.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "env_file": {
+          "aliases": [],
+          "description": "Read in a line delimited file of environment variables. Doesn't support idempotency. If users changes the file with environment variables it's on them to recreate the container.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "env_host": {
+          "aliases": [],
+          "description": "Use all current host environment variables in container. Defaults to false.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "etc_hosts": {
+          "aliases": [
+            "add_hosts"
+          ],
+          "description": "Dict of host-to-IP mappings, where each host name is a key in the dictionary. Each host name will be added to the container's ``/etc/hosts`` file.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "executable": {
+          "aliases": [],
+          "description": "Path to C(podman) executable if it is not in the C($PATH) on the machine running C(podman)",
+          "default": "podman",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "expose": {
+          "aliases": [
+            "exposed",
+            "exposed_ports"
+          ],
+          "description": "Expose a port, or a range of ports (e.g. expose \"3300-3310\") to set up port redirection on the host system.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "force_restart": {
+          "aliases": [
+            "restart"
+          ],
+          "description": "Force restart of container.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "generate_systemd": {
+          "aliases": [],
+          "description": "Generate systemd unit file for container.",
+          "default": "{}",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "container_prefix": {
+              "aliases": [],
+              "description": "Set the systemd unit name prefix for containers. The default is \"container\".",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "names": {
+              "aliases": [],
+              "description": "Use names of the containers for the start, stop, and description in the unit file. Default is true.",
+              "default": "True",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "new": {
+              "aliases": [],
+              "description": "Create containers and pods when the unit is started instead of expecting them to exist. The default is \"false\". Refer to podman-generate-systemd(1) for more information.",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "no_header": {
+              "aliases": [],
+              "description": "Do not generate the header including meta data such as the Podman version and the timestamp. From podman version 3.1.0.",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "path": {
+              "aliases": [],
+              "description": "Specify a path to the directory where unit files will be generated. Required for this option. If it doesn't exist, the directory will be created.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "pod_prefix": {
+              "aliases": [],
+              "description": "Set the systemd unit name prefix for pods. The default is \"pod\".",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "restart_policy": {
+              "aliases": [],
+              "description": "Specify a restart policy for the service.  The restart-policy must be one of \"no\", \"on-success\", \"on-failure\", \"on-abnormal\", \"on-watchdog\", \"on-abort\", or \"always\". The default policy is \"on-failure\".",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "no",
+                "on-success",
+                "on-failure",
+                "on-abnormal",
+                "on-watchdog",
+                "on-abort",
+                "always"
+              ],
+              "suboptions": {}
+            },
+            "separator": {
+              "aliases": [],
+              "description": "Set the systemd unit name separator between the name/id of a container/pod and the prefix. The default is \"-\" (dash).",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "time": {
+              "aliases": [],
+              "description": "Override the default stop timeout for the container with the given value.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "gidmap": {
+          "aliases": [],
+          "description": "Run the container in a new user namespace using the supplied mapping.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "group_add": {
+          "aliases": [
+            "groups"
+          ],
+          "description": "Add additional groups to run as",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "healthcheck": {
+          "aliases": [],
+          "description": "Set or alter a healthcheck command for a container.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "healthcheck_interval": {
+          "aliases": [],
+          "description": "Set an interval for the healthchecks (a value of disable results in no automatic timer setup) (default \"30s\")",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "healthcheck_retries": {
+          "aliases": [],
+          "description": "The number of retries allowed before a healthcheck is considered to be unhealthy. The default value is 3.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "healthcheck_start_period": {
+          "aliases": [],
+          "description": "The initialization time needed for a container to bootstrap. The value can be expressed in time format like 2m3s. The default value is 0s",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "healthcheck_timeout": {
+          "aliases": [],
+          "description": "The maximum time allowed to complete the healthcheck before an interval is considered failed. Like start-period, the value can be expressed in a time format such as 1m22s. The default value is 30s",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "Container host name. Sets the container host name that is available inside the container.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "http_proxy": {
+          "aliases": [],
+          "description": "By default proxy environment variables are passed into the container if set for the podman process. This can be disabled by setting the http_proxy option to false. The environment variables passed in include http_proxy, https_proxy, ftp_proxy, no_proxy, and also the upper case versions of those. Defaults to true",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "image": {
+          "aliases": [],
+          "description": "Repository path (or image name) and tag used to create the container. If an image is not found, the image will be pulled from the registry. If no tag is included, C(latest) will be used.\nCan also be an image ID. If this is the case, the image is assumed to be available locally.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "image_strict": {
+          "aliases": [],
+          "description": "Whether to compare images in idempotency by taking into account a full name with registry and namespaces.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "image_volume": {
+          "aliases": [],
+          "description": "Tells podman how to handle the builtin image volumes. The options are bind, tmpfs, or ignore (default bind)",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "bind",
+            "tmpfs",
+            "ignore"
+          ],
+          "suboptions": {}
+        },
+        "init": {
+          "aliases": [],
+          "description": "Run an init inside the container that forwards signals and reaps processes. The default is false.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "init_path": {
+          "aliases": [],
+          "description": "Path to the container-init binary.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "interactive": {
+          "aliases": [],
+          "description": "Keep STDIN open even if not attached. The default is false. When set to true, keep stdin open even if not attached. The default is false.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "ip": {
+          "aliases": [],
+          "description": "Specify a static IP address for the container, for example '10.88.64.128'. Can only be used if no additional CNI networks to join were specified via 'network:', and if the container is not joining another container's network namespace via 'network container:<name|id>'. The address must be within the default CNI network's pool (default 10.88.0.0/16).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipc": {
+          "aliases": [
+            "ipc_mode"
+          ],
+          "description": "Default is to create a private IPC namespace (POSIX SysV IPC) for the container",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "kernel_memory": {
+          "aliases": [],
+          "description": "Kernel memory limit (format <number>[<unit>], where unit = b, k, m or g) Note - idempotency is supported for integers only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "label": {
+          "aliases": [
+            "labels"
+          ],
+          "description": "Add metadata to a container, pass dictionary of label names and values",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "label_file": {
+          "aliases": [],
+          "description": "Read in a line delimited file of labels",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "log_driver": {
+          "aliases": [],
+          "description": "Logging driver. Used to set the log driver for the container. For example log_driver \"k8s-file\".",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "k8s-file",
+            "journald",
+            "json-file"
+          ],
+          "suboptions": {}
+        },
+        "log_level": {
+          "aliases": [],
+          "description": "Logging level for Podman. Log messages above specified level (\"debug\"|\"info\"|\"warn\"|\"error\"|\"fatal\"|\"panic\") (default \"error\")",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "debug",
+            "info",
+            "warn",
+            "error",
+            "fatal",
+            "panic"
+          ],
+          "suboptions": {}
+        },
+        "log_opt": {
+          "aliases": [
+            "log_options"
+          ],
+          "description": "Logging driver specific options. Used to set the path to the container log file.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "max_size": {
+              "aliases": [],
+              "description": "Specify a max size of the log file (e.g 10mb).",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "path": {
+              "aliases": [],
+              "description": "Specify a path to the log file (e.g. /var/log/container/mycontainer.json).",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "tag": {
+              "aliases": [],
+              "description": "Specify a custom log tag for the container.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "mac_address": {
+          "aliases": [],
+          "description": "Specify a MAC address for the container, for example '92:d0:c6:0a:29:33'. Don't forget that it must be unique within one Ethernet network.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "memory": {
+          "aliases": [],
+          "description": "Memory limit (format 10k, where unit = b, k, m or g) Note - idempotency is supported for integers only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "memory_reservation": {
+          "aliases": [],
+          "description": "Memory soft limit (format 100m, where unit = b, k, m or g) Note - idempotency is supported for integers only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "memory_swap": {
+          "aliases": [],
+          "description": "A limit value equal to memory plus swap. Must be used with the -m (--memory) flag. The swap LIMIT should always be larger than -m (--memory) value. By default, the swap LIMIT will be set to double the value of --memory Note - idempotency is supported for integers only.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "memory_swappiness": {
+          "aliases": [],
+          "description": "Tune a container's memory swappiness behavior. Accepts an integer between 0 and 100.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "mount": {
+          "aliases": [
+            "mounts"
+          ],
+          "description": "Attach a filesystem mount to the container. bind or tmpfs For example mount \"type=bind,source=/path/on/host,destination=/path/in/container\"",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the container",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "network": {
+          "aliases": [
+            "net",
+            "network_mode"
+          ],
+          "description": "Set the Network mode for the container * bridge create a network stack on the default bridge * none no networking * container:<name|id> reuse another container's network stack * host use the podman host network stack. * <network-name>|<network-id> connect to a user-defined network * ns:<path> path to a network namespace to join * slirp4netns use slirp4netns to create a user network stack. This is the default for rootless containers",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "network_aliases": {
+          "aliases": [],
+          "description": "Add network-scoped alias for the container. A container will only have access to aliases on the first network that it joins. This is a limitation that will be removed in a later release.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "no_hosts": {
+          "aliases": [],
+          "description": "Do not create /etc/hosts for the container Default is false.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "oom_kill_disable": {
+          "aliases": [],
+          "description": "Whether to disable OOM Killer for the container or not. Default is false.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "oom_score_adj": {
+          "aliases": [],
+          "description": "Tune the host's OOM preferences for containers (accepts -1000 to 1000)",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "pid": {
+          "aliases": [
+            "pid_mode"
+          ],
+          "description": "Set the PID mode for the container",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "pids_limit": {
+          "aliases": [],
+          "description": "Tune the container's PIDs limit. Set -1 to have unlimited PIDs for the container.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "pod": {
+          "aliases": [],
+          "description": "Run container in an existing pod. If you want podman to make the pod for you, preference the pod name with \"new:\"",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "privileged": {
+          "aliases": [],
+          "description": "Give extended privileges to this container. The default is false.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "publish": {
+          "aliases": [
+            "ports",
+            "published",
+            "published_ports"
+          ],
+          "description": "Publish a container's port, or range of ports, to the host. Format - ip:hostPort:containerPort | ip::containerPort | hostPort:containerPort | containerPort In case of only containerPort is set, the hostPort will chosen randomly by Podman.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "publish_all": {
+          "aliases": [],
+          "description": "Publish all exposed ports to random ports on the host interfaces. The default is false.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "read_only": {
+          "aliases": [],
+          "description": "Mount the container's root filesystem as read only. Default is false",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "read_only_tmpfs": {
+          "aliases": [],
+          "description": "If container is running in --read-only mode, then mount a read-write tmpfs on /run, /tmp, and /var/tmp. The default is true",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "recreate": {
+          "aliases": [],
+          "description": "Use with present and started states to force the re-creation of an existing container.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "restart_policy": {
+          "aliases": [],
+          "description": "Restart policy to follow when containers exit. Restart policy will not take effect if a container is stopped via the podman kill or podman stop commands. Valid values are * no - Do not restart containers on exit * on-failure[:max_retries] - Restart containers when they exit with a non-0 exit code, retrying indefinitely or until the optional max_retries count is hit * always - Restart containers when they exit, regardless of status, retrying indefinitely",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "rm": {
+          "aliases": [
+            "remove",
+            "auto_remove"
+          ],
+          "description": "Automatically remove the container when it exits. The default is false.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "rootfs": {
+          "aliases": [],
+          "description": "If true, the first argument refers to an exploded container on the file system. The default is false.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "secrets": {
+          "aliases": [],
+          "description": "Add the named secrets into the container. The format is C(secret[,opt=opt...]), see L(documentation,https://docs.podman.io/en/latest/markdown/podman-run.1.html#secret-secret-opt-opt) for more details.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "security_opt": {
+          "aliases": [],
+          "description": "Security Options. For example security_opt \"seccomp=unconfined\"",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "shm_size": {
+          "aliases": [],
+          "description": "Size of /dev/shm. The format is <number><unit>. number must be greater than 0. Unit is optional and can be b (bytes), k (kilobytes), m(megabytes), or g (gigabytes). If you omit the unit, the system uses bytes. If you omit the size entirely, the system uses 64m",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sig_proxy": {
+          "aliases": [],
+          "description": "Proxy signals sent to the podman run command to the container process. SIGCHLD, SIGSTOP, and SIGKILL are not proxied. The default is true.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "I(absent) - A container matching the specified name will be stopped and removed.\nI(present) - Asserts the existence of a container matching the name and any provided configuration parameters. If no container matches the name, a container will be created. If a container matches the name but the provided configuration does not match, the container will be updated, if it can be. If it cannot be updated, it will be removed and re-created with the requested config. Image version will be taken into account when comparing configuration. Use the recreate option to force the re-creation of the matching container.\nI(started) - Asserts there is a running container matching the name and any provided configuration. If no container matches the name, a container will be created and started. Use recreate to always re-create a matching container, even if it is running. Use force_restart to force a matching container to be stopped and restarted.\nI(stopped) - Asserts that the container is first I(present), and then if the container is running moves it to a stopped state.\nI(created) - Asserts that the container exists with given configuration. If container doesn't exist, the module creates it and leaves it in 'created' state. If configuration doesn't match or 'recreate' option is set, the container will be recreated",
+          "default": "started",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present",
+            "stopped",
+            "started",
+            "created"
+          ],
+          "suboptions": {}
+        },
+        "stop_signal": {
+          "aliases": [],
+          "description": "Signal to stop a container. Default is SIGTERM.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "stop_timeout": {
+          "aliases": [],
+          "description": "Timeout (in seconds) to stop a container. Default is 10.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "subgidname": {
+          "aliases": [],
+          "description": "Run the container in a new user namespace using the map with 'name' in the /etc/subgid file.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "subuidname": {
+          "aliases": [],
+          "description": "Run the container in a new user namespace using the map with 'name' in the /etc/subuid file.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sysctl": {
+          "aliases": [],
+          "description": "Configure namespaced kernel parameters at runtime",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "systemd": {
+          "aliases": [],
+          "description": "Run container in systemd mode. The default is true.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timezone": {
+          "aliases": [],
+          "description": "Set timezone in container. This flag takes area-based timezones, GMT time, as well as local, which sets the timezone in the container to match the host machine. See /usr/share/zoneinfo/ for valid timezones. Remote connections use local containers.conf for defaults.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tmpfs": {
+          "aliases": [],
+          "description": "Create a tmpfs mount. For example tmpfs \"/tmp\" \"rw,size=787448k,mode=1777\"",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "tty": {
+          "aliases": [],
+          "description": "Allocate a pseudo-TTY. The default is false.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "uidmap": {
+          "aliases": [],
+          "description": "Run the container in a new user namespace using the supplied mapping.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "ulimit": {
+          "aliases": [
+            "ulimits"
+          ],
+          "description": "Ulimit options",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "user": {
+          "aliases": [],
+          "description": "Sets the username or UID used and optionally the groupname or GID for the specified command.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "userns": {
+          "aliases": [
+            "userns_mode"
+          ],
+          "description": "Set the user namespace mode for the container. It defaults to the PODMAN_USERNS environment variable. An empty value means user namespaces are disabled.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "uts": {
+          "aliases": [],
+          "description": "Set the UTS mode for the container",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "volume": {
+          "aliases": [
+            "volumes"
+          ],
+          "description": "Create a bind mount. If you specify, volume /HOST-DIR:/CONTAINER-DIR, podman bind mounts /HOST-DIR in the host to /CONTAINER-DIR in the podman container.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "volumes_from": {
+          "aliases": [],
+          "description": "Mount volumes from the specified container(s).",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "workdir": {
+          "aliases": [
+            "working_dir"
+          ],
+          "description": "Working directory inside the container. The default working directory for running binaries within a container is the root directory (/).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "podman"
+      ],
+      "short_description": "Manage podman containers",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Run container\n  containers.podman.podman_container:\n    name: container\n    image: quay.io/bitnami/wildfly\n    state: started\n\n- name: Create a data container\n  containers.podman.podman_container:\n    name: mydata\n    image: busybox\n    volume:\n      - /tmp/data\n\n- name: Re-create a redis container with systemd service file generated in /tmp/\n  containers.podman.podman_container:\n    name: myredis\n    image: redis\n    command: redis-server --appendonly yes\n    state: present\n    recreate: yes\n    expose:\n      - 6379\n    volumes_from:\n      - mydata\n    generate_systemd:\n      path: /tmp/\n      restart_policy: always\n      time: 120\n      names: true\n      container_prefix: ainer\n\n- name: Restart a container\n  containers.podman.podman_container:\n    name: myapplication\n    image: redis\n    state: started\n    restart: yes\n    etc_hosts:\n        other: \"127.0.0.1\"\n    restart_policy: \"no\"\n    device: \"/dev/sda:/dev/xvda:rwm\"\n    ports:\n        - \"8080:9000\"\n        - \"127.0.0.1:8081:9001/udp\"\n    env:\n        SECRET_KEY: \"ssssh\"\n        BOOLEAN_KEY: \"yes\"\n\n- name: Container present\n  containers.podman.podman_container:\n    name: mycontainer\n    state: present\n    image: ubuntu:14.04\n    command: \"sleep 1d\"\n\n- name: Stop a container\n  containers.podman.podman_container:\n    name: mycontainer\n    state: stopped\n\n- name: Start 4 load-balanced containers\n  containers.podman.podman_container:\n    name: \"container{{ item }}\"\n    recreate: yes\n    image: someuser/anotherappimage\n    command: sleep 1d\n  with_sequence: count=4\n\n- name: remove container\n  containers.podman.podman_container:\n    name: ohno\n    state: absent\n\n- name: Writing output\n  containers.podman.podman_container:\n    name: myservice\n    image: busybox\n    log_options: path=/var/log/container/mycontainer.json\n    log_driver: k8s-file\n"
+  },
+  "containers.podman.podman_container_info": {
+    "doc": {
+      "description": "Gather facts about containers using C(podman)",
+      "has_action": false,
+      "notes": "Podman may require elevated privileges in order to run properly.",
+      "options": {
+        "executable": {
+          "aliases": [],
+          "description": "Path to C(podman) executable if it is not in the C($PATH) on the machine running C(podman)",
+          "default": "podman",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "List of container names to gather facts about. If no name is given return facts about all containers.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Podman installed on host"
+      ],
+      "short_description": "Gather facts about containers using podman"
+    },
+    "examples": "\n- name: Gather facts for all containers\n  containers.podman.podman_container_info:\n\n- name: Gather facts on a specific container\n  containers.podman.podman_container_info:\n    name: web1\n\n- name: Gather facts on several containers\n  containers.podman.podman_container_info:\n    name:\n      - redis\n      - web1\n"
+  },
+  "containers.podman.podman_containers": {
+    "doc": {
+      "description": "Manage groups of podman containers",
+      "has_action": false,
+      "options": {
+        "containers": {
+          "aliases": [],
+          "description": "List of dictionaries with data for running containers for podman_container module.",
+          "type": "list",
+          "required": true,
+          "elements": "dict",
+          "suboptions": {}
+        },
+        "debug": {
+          "aliases": [],
+          "description": "Return additional information which can be helpful for investigations.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "podman"
+      ],
+      "short_description": "Manage podman containers in a batch",
+      "version_added": "1.4.0"
+    },
+    "examples": "\n- name: Run three containers at once\n  podman_containers:\n    containers:\n      - name: alpine\n        image: alpine\n        command: sleep 1d\n      - name: web\n        image: nginx\n      - name: test\n        image: python:3-alpine\n        command: python -V\n"
+  },
+  "containers.podman.podman_export": {
+    "doc": {
+      "description": "podman export exports the filesystem of a container and saves it as a tarball on the local machine",
+      "has_action": false,
+      "options": {
+        "container": {
+          "aliases": [],
+          "description": "Container to export.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "dest": {
+          "aliases": [],
+          "description": "Path to export container to.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "executable": {
+          "aliases": [],
+          "description": "Path to C(podman) executable if it is not in the C($PATH) on the machine running C(podman)",
+          "default": "podman",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Force saving to file even if it exists.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Podman installed on host"
+      ],
+      "short_description": "Export a podman container"
+    },
+    "examples": "\n# What modules does for example\n- containers.podman.podman_export:\n    dest: /path/to/tar/file\n    container: container-name\n"
+  },
+  "containers.podman.podman_image": {
+    "doc": {
+      "description": "Build, pull, or push images using Podman.",
+      "has_action": false,
+      "notes": "",
+      "options": {
+        "auth_file": {
+          "aliases": [
+            "authfile"
+          ],
+          "description": "Path to file containing authorization credentials to the remote registry.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "build": {
+          "aliases": [
+            "build_args",
+            "buildargs"
+          ],
+          "description": "Arguments that control image build.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "annotation": {
+              "aliases": [],
+              "description": "Dictionary of key=value pairs to add to the image. Only works with OCI images. Ignored for Docker containers.",
+              "type": "dict",
+              "required": false,
+              "suboptions": {}
+            },
+            "cache": {
+              "aliases": [],
+              "description": "Whether or not to use cached layers when building an image",
+              "default": "True",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "extra_args": {
+              "aliases": [],
+              "description": "Extra args to pass to build, if executed. Does not idempotently check for new build args.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "force_rm": {
+              "aliases": [],
+              "description": "Always remove intermediate containers after a build, even if the build is unsuccessful.",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "format": {
+              "aliases": [],
+              "description": "Format of the built image.",
+              "default": "oci",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "docker",
+                "oci"
+              ],
+              "suboptions": {}
+            },
+            "rm": {
+              "aliases": [],
+              "description": "Remove intermediate containers after a successful build",
+              "default": "True",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "volume": {
+              "aliases": [],
+              "description": "Specify multiple volume / mount options to mount one or more mounts to a container.",
+              "type": "list",
+              "required": false,
+              "elements": "str",
+              "suboptions": {}
+            }
+          }
+        },
+        "ca_cert_dir": {
+          "aliases": [],
+          "description": "Path to directory containing TLS certificates and keys to use.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "executable": {
+          "aliases": [],
+          "description": "Path to C(podman) executable if it is not in the C($PATH) on the machine running C(podman).",
+          "default": "podman",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Whether or not to force push or pull an image.\nWhen building, force the build even if the image already exists.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the image to pull, push, or delete. It may contain a tag using the format C(image:tag).",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password to use when authenticating to remote registries.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "path": {
+          "aliases": [],
+          "description": "Path to directory containing the build file.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "pull": {
+          "aliases": [],
+          "description": "Whether or not to pull the image.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "push": {
+          "aliases": [],
+          "description": "Whether or not to push an image.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "push_args": {
+          "aliases": [],
+          "description": "Arguments that control pushing images.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "compress": {
+              "aliases": [],
+              "description": "Compress tarball image layers when pushing to a directory using the 'dir' transport.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "dest": {
+              "aliases": [
+                "destination"
+              ],
+              "description": "Path or URL where image will be pushed.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "format": {
+              "aliases": [],
+              "description": "Manifest type to use when pushing an image using the 'dir' transport (default is manifest type of source).",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "oci",
+                "v2s1",
+                "v2s2"
+              ],
+              "suboptions": {}
+            },
+            "remove_signatures": {
+              "aliases": [],
+              "description": "Discard any pre-existing signatures in the image",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "sign_by": {
+              "aliases": [],
+              "description": "Path to a key file to use to sign the image.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "transport": {
+              "aliases": [],
+              "description": "Transport to use when pushing in image. If no transport is set, will attempt to push to a remote registry.",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "dir",
+                "docker-archive",
+                "docker-daemon",
+                "oci-archive",
+                "ostree"
+              ],
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether an image should be present, absent, or built.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent",
+            "build"
+          ],
+          "suboptions": {}
+        },
+        "tag": {
+          "aliases": [],
+          "description": "Tag of the image to pull, push, or delete.",
+          "default": "latest",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "username to use when authenticating to remote registries.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [
+            "tlsverify",
+            "tls_verify"
+          ],
+          "description": "Require HTTPS and validate certificates when pulling or pushing. Also used during build if a pull or push is necessary.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Pull images for use by podman"
+    },
+    "examples": "\n- name: Pull an image\n  containers.podman.podman_image:\n    name: quay.io/bitnami/wildfly\n\n- name: Remove an image\n  containers.podman.podman_image:\n    name: quay.io/bitnami/wildfly\n    state: absent\n\n- name: Pull a specific version of an image\n  containers.podman.podman_image:\n    name: redis\n    tag: 4\n\n- name: Build a basic OCI image\n  containers.podman.podman_image:\n    name: nginx\n    path: /path/to/build/dir\n\n- name: Build a basic OCI image with advanced parameters\n  containers.podman.podman_image:\n    name: nginx\n    path: /path/to/build/dir\n    build:\n      cache: no\n      force_rm: yes\n      format: oci\n      annotation:\n        app: nginx\n        function: proxy\n        info: Load balancer for my cool app\n\n- name: Build a Docker formatted image\n  containers.podman.podman_image:\n    name: nginx\n    path: /path/to/build/dir\n    build:\n      format: docker\n\n- name: Build and push an image using existing credentials\n  containers.podman.podman_image:\n    name: nginx\n    path: /path/to/build/dir\n    push: yes\n    push_args:\n      dest: quay.io/acme\n\n- name: Build and push an image using an auth file\n  containers.podman.podman_image:\n    name: nginx\n    push: yes\n    auth_file: /etc/containers/auth.json\n    push_args:\n      dest: quay.io/acme\n\n- name: Build and push an image using username and password\n  containers.podman.podman_image:\n    name: nginx\n    push: yes\n    username: bugs\n    password: \"{{ vault_registry_password }}\"\n    push_args:\n      dest: quay.io/acme\n\n- name: Build and push an image to multiple registries\n  containers.podman.podman_image:\n    name: \"{{ item }}\"\n    path: /path/to/build/dir\n    push: yes\n    auth_file: /etc/containers/auth.json\n    loop:\n    - quay.io/acme/nginx\n    - docker.io/acme/nginx\n\n- name: Build and push an image to multiple registries with separate parameters\n  containers.podman.podman_image:\n    name: \"{{ item.name }}\"\n    tag: \"{{ item.tag }}\"\n    path: /path/to/build/dir\n    push: yes\n    auth_file: /etc/containers/auth.json\n    push_args:\n      dest: \"{{ item.dest }}\"\n    loop:\n    - name: nginx\n      tag: 4\n      dest: docker.io/acme\n\n    - name: nginx\n      tag: 3\n      dest: docker.io/acme\n"
+  },
+  "containers.podman.podman_image_info": {
+    "doc": {
+      "description": "Gather info about images using C(podman)",
+      "has_action": false,
+      "notes": "Podman may required elevated privileges in order to run properly.",
+      "options": {
+        "executable": {
+          "aliases": [],
+          "description": "Path to C(podman) executable if it is not in the C($PATH) on the machine running C(podman)",
+          "default": "podman",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "List of tags or UID to gather info about. If no name is given return info about all images.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        }
+      },
+      "short_description": "Gather info about images using podman"
+    },
+    "examples": "\n- name: Gather info for all images\n  containers.podman.podman_image_info:\n\n- name: Gather info on a specific image\n  containers.podman.podman_image_info:\n    name: nginx\n\n- name: Gather info on several images\n  containers.podman.podman_image_info:\n    name:\n      - redis\n      - quay.io/bitnami/wildfly\n"
+  },
+  "containers.podman.podman_import": {
+    "doc": {
+      "description": "podman import imports a tarball (.tar, .tar.gz, .tgz, .bzip, .tar.xz, .txz) and saves it as a filesystem image.",
+      "has_action": false,
+      "options": {
+        "change": {
+          "aliases": [],
+          "description": "Set changes as list of key-value pairs, see example.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {}
+        },
+        "commit_message": {
+          "aliases": [],
+          "description": "Set commit message for imported image",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "executable": {
+          "aliases": [],
+          "description": "Path to C(podman) executable if it is not in the C($PATH) on the machine running C(podman)",
+          "default": "podman",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "src": {
+          "aliases": [],
+          "description": "Path to image file to load.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Podman installed on host"
+      ],
+      "short_description": "Import Podman container from a tar file."
+    },
+    "examples": "\n# What modules does for example\n- containers.podman.podman_import:\n    src: /path/to/tar/file\n    change:\n      - \"CMD\": /bin/bash\n      - \"User\": root\n    commit_message: \"Importing image\"\n"
+  },
+  "containers.podman.podman_load": {
+    "doc": {
+      "description": "podman load loads an image from either an oci-archive or a docker-archive stored on the local machine into container storage. podman load is used for loading from the archive generated by podman save, that includes the image parent layers.",
+      "has_action": false,
+      "options": {
+        "executable": {
+          "aliases": [],
+          "description": "Path to C(podman) executable if it is not in the C($PATH) on the machine running C(podman)",
+          "default": "podman",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "input": {
+          "aliases": [
+            "path"
+          ],
+          "description": "Path to image file to load.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Podman installed on host"
+      ],
+      "short_description": "Load image from a tar file."
+    },
+    "examples": "\n# What modules does for example\n- containers.podman.podman_load:\n    input: /path/to/tar/file\n"
+  },
+  "containers.podman.podman_login": {
+    "doc": {
+      "description": "Login to a container registry server using the podman login command If the registry is not specified, the first registry under `[registries.search]` from `registries.conf `will be used. The path of the authentication file can be overridden by the user by setting the `authfile` flag. The default path used is `${XDG_RUNTIME_DIR}/containers/auth.json`.",
+      "has_action": false,
+      "notes": "",
+      "options": {
+        "authfile": {
+          "aliases": [],
+          "description": "Path of the authentication file. Default is ``${XDG_RUNTIME_DIR}/containers/auth.json`` You can also override the default path of the authentication file by setting the ``REGISTRY_AUTH_FILE`` environment variable. ``export REGISTRY_AUTH_FILE=path``",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "certdir": {
+          "aliases": [],
+          "description": "Use certificates at path (*.crt, *.cert, *.key) to connect to the registry.  Default certificates directory is /etc/containers/certs.d.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "executable": {
+          "aliases": [],
+          "description": "Path to C(podman) executable if it is not in the C($PATH) on the machine running C(podman)",
+          "default": "podman",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password for the registry server.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "registry": {
+          "aliases": [],
+          "description": "Registry server. If the registry is not specified, the first registry under `[registries.search]` from `registries.conf` will be used.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tlsverify": {
+          "aliases": [],
+          "description": "Require HTTPS and verify certificates when contacting registries.  If explicitly set to true, then TLS verification will be used. If set to false, then TLS verification will not be used.  If not specified, TLS verification will be used unless the target registry is listed as an insecure registry in registries.conf.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Username for the registry server.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Podman installed on host"
+      ],
+      "short_description": "Login to a container registry using podman"
+    },
+    "examples": "\n- name: Login to default registry and create ${XDG_RUNTIME_DIR}/containers/auth.json\n  containers.podman.podman_login:\n    username: user\n    password: 'p4ssw0rd'\n\n- name: Login to default registry and create ${XDG_RUNTIME_DIR}/containers/auth.json\n  containers.podman.podman_login:\n    username: user\n    password: 'p4ssw0rd'\n    registry: quay.io\n\n"
+  },
+  "containers.podman.podman_login_info": {
+    "doc": {
+      "description": "Return the logged-in user if any for a given registry.",
+      "has_action": false,
+      "notes": "",
+      "options": {
+        "authfile": {
+          "aliases": [],
+          "description": "Path of the authentication file. Default is ``${XDG_RUNTIME_DIR}/containers/auth.json`` (Not available for remote commands) You can also override the default path of the authentication file by setting the ``REGISTRY_AUTH_FILE`` environment variable. ``export REGISTRY_AUTH_FILE=path``",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "executable": {
+          "aliases": [],
+          "description": "Path to C(podman) executable if it is not in the C($PATH) on the machine running C(podman)",
+          "default": "podman",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "registry": {
+          "aliases": [],
+          "description": "Registry server.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Podman installed on host"
+      ],
+      "short_description": "Return the logged-in user if any for a given registry",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Return the logged-in user for docker hub registry\n  containers.podman.podman_login_info:\n    registry: docker.io\n\n- name: Return the logged-in user for quay.io registry\n  containers.podman.podman_login_info:\n    registry: quay.io\n"
+  },
+  "containers.podman.podman_logout": {
+    "doc": {
+      "description": "Log out of a container registry server using the podman logout command by deleting the cached credentials stored in the `auth.json` file. If the registry is not specified, the first registry under `[registries.search]` from `registries.conf `will be used. The path of the authentication file can be overridden by the user by setting the `authfile` flag. The default path used is `${XDG_RUNTIME_DIR}/containers/auth.json`. All the cached credentials can be removed by setting the `all` flag. Warning - podman will use credentials in `${HOME}/.docker/config.json` to authenticate in case they are not found in the default `authfile`. However, the logout command will only removed credentials in the `authfile` specified.",
+      "has_action": false,
+      "notes": "",
+      "options": {
+        "all": {
+          "aliases": [],
+          "description": "Remove the cached credentials for all registries in the auth file.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "authfile": {
+          "aliases": [],
+          "description": "Path of the authentication file. Default is ``${XDG_RUNTIME_DIR}/containers/auth.json`` You can also override the default path of the authentication file by setting the ``REGISTRY_AUTH_FILE`` environment variable. ``export REGISTRY_AUTH_FILE=path``",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "executable": {
+          "aliases": [],
+          "description": "Path to C(podman) executable if it is not in the C($PATH) on the machine running C(podman)",
+          "default": "podman",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ignore_docker_credentials": {
+          "aliases": [],
+          "description": "Credentials created using other tools such as `docker login` are not removed unless the corresponding `authfile` is explicitly specified. Since podman also uses existing credentials in these files by default (for docker e.g. `${HOME}/.docker/config.json`), module execution will fail if a docker login exists for the registry specified in any `authfile` is used by podman. This can be ignored by setting `ignore_docker_credentials` to `yes` - the credentials will be kept and `changed` will be false. This option cannot be used together with `all` since in this case podman will not check for existing `authfiles` created by other tools.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "registry": {
+          "aliases": [],
+          "description": "Registry server. If the registry is not specified, the first registry under `[registries.search]` from `registries.conf` will be used.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Podman installed on host"
+      ],
+      "short_description": "Log out of a container registry using podman"
+    },
+    "examples": "\n- name: Log out of default registry\n  podman_logout:\n\n- name: Log out of quay.io\n  podman_logout:\n    registry: quay.io\n\n- name: Log out of all registries in auth file\n  podman_logout:\n    all: yes\n\n- name: Log out of all registries in specified auth file\n  podman_logout:\n    authfile: $HOME/.docker/config.json\n    all: yes\n"
+  },
+  "containers.podman.podman_network": {
+    "doc": {
+      "description": "Manage podman networks with podman network command.",
+      "has_action": false,
+      "notes": "",
+      "options": {
+        "debug": {
+          "aliases": [],
+          "description": "Return additional information which can be helpful for investigations.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "disable_dns": {
+          "aliases": [],
+          "description": "disable dns plugin (default \"false\")",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "driver": {
+          "aliases": [],
+          "description": "Driver to manage the network (default \"bridge\")",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "executable": {
+          "aliases": [],
+          "description": "Path to C(podman) executable if it is not in the C($PATH) on the machine running C(podman)",
+          "default": "podman",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "gateway": {
+          "aliases": [],
+          "description": "IPv4 or IPv6 gateway for the subnet",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "internal": {
+          "aliases": [],
+          "description": "Restrict external access from this network (default \"false\")",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "ip_range": {
+          "aliases": [],
+          "description": "Allocate container IP from range",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipv6": {
+          "aliases": [],
+          "description": "Enable IPv6 (Dual Stack) networking. You must pass a IPv6 subnet. The subnet option must be used with the ipv6 option.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "macvlan": {
+          "aliases": [],
+          "description": "Create a Macvlan connection based on this device",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the network",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "opt": {
+          "aliases": [],
+          "description": "Add network options. Currently 'vlan' and 'mtu' are supported.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "mtu": {
+              "aliases": [],
+              "description": "MTU size for bridge network interface.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "vlan": {
+              "aliases": [],
+              "description": "VLAN tag for bridge which enables vlan_filtering.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "recreate": {
+          "aliases": [],
+          "description": "Recreate network even if exists.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of network, default 'present'",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "subnet": {
+          "aliases": [],
+          "description": "Subnet in CIDR format",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "podman"
+      ],
+      "short_description": "Manage podman networks",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Create a podman network\n  containers.podman.podman_network:\n    name: podman_network\n  become: true\n\n- name: Create internal podman network\n  containers.podman.podman_network:\n    name: podman_internal\n    internal: true\n    ip_range: 192.168.22.128/25\n    subnet: 192.168.22.0/24\n    gateway: 192.168.22.1\n  become: true\n"
+  },
+  "containers.podman.podman_network_info": {
+    "doc": {
+      "description": "Gather info about podman networks with podman inspect command.",
+      "has_action": false,
+      "notes": "",
+      "options": {
+        "executable": {
+          "aliases": [],
+          "description": "Path to C(podman) executable if it is not in the C($PATH) on the machine running C(podman)",
+          "default": "podman",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the network",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Podman installed on host"
+      ],
+      "short_description": "Gather info about podman networks",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Gather info about all present networks\n  containers.podman.podman_network_info:\n\n- name: Gather info about specific network\n  containers.podman.podman_network_info:\n    name: podman\n"
+  },
+  "containers.podman.podman_play": {
+    "doc": {
+      "description": "The module reads in a structured file of Kubernetes YAML. It will then recreate the pod and containers described in the YAML.",
+      "has_action": false,
+      "notes": "",
+      "options": {
+        "authfile": {
+          "aliases": [],
+          "description": "Path of the authentication file. Default is ${XDG_RUNTIME_DIR}/containers/auth.json, which is set using podman login. If the authorization state is not found there, $HOME/.docker/config.json is checked, which is set using docker login. Note - You can also override the default path of the authentication file by setting the REGISTRY_AUTH_FILE environment variable. export REGISTRY_AUTH_FILE=path",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "cert_dir": {
+          "aliases": [],
+          "description": "Use certificates at path (*.crt, *.cert, *.key) to connect to the registry. Default certificates directory is /etc/containers/certs.d. (This option is not available with the remote Podman client)",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "configmap": {
+          "aliases": [],
+          "description": "Use Kubernetes configmap YAML at path to provide a source for environment variable values within the containers of the pod. Note - The configmap option can be used multiple times to pass multiple Kubernetes configmap YAMLs",
+          "type": "list",
+          "required": false,
+          "elements": "path",
+          "suboptions": {}
+        },
+        "debug": {
+          "aliases": [],
+          "description": "Enable debug for the module.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "executable": {
+          "aliases": [],
+          "description": "Name of executable to run, by default 'podman'",
+          "default": "podman",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "kube_file": {
+          "aliases": [],
+          "description": "Path to file with YAML configuration for a Pod.",
+          "type": "path",
+          "required": true,
+          "suboptions": {}
+        },
+        "log_driver": {
+          "aliases": [],
+          "description": "Set logging driver for all created containers.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "log_level": {
+          "aliases": [],
+          "description": "Set logging level for podman calls. Log messages above specified level (\"debug\"|\"info\"|\"warn\"|\"error\"|\"fatal\"|\"panic\") (default \"error\")",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "debug",
+            "info",
+            "warn",
+            "error",
+            "fatal",
+            "panic"
+          ],
+          "suboptions": {}
+        },
+        "network": {
+          "aliases": [],
+          "description": "List of the names of CNI networks the pod should join.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "The username and password to use to authenticate with the registry if required.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "quiet": {
+          "aliases": [],
+          "description": "Hide image pulls logs from output.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "recreate": {
+          "aliases": [],
+          "description": "If pod already exists, delete it and run the new one.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "seccomp_profile_root": {
+          "aliases": [],
+          "description": "Directory path for seccomp profiles (default is \"/var/lib/kubelet/seccomp\"). This option is not available with the remote Podman client",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Start the pod after creating it, or to leave it created only.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "created",
+            "started",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "tls_verify": {
+          "aliases": [],
+          "description": "Require HTTPS and verify certificates when contacting registries (default is true). If explicitly set to true, then TLS verification will be used. If set to false, then TLS verification will not be used. If not specified, TLS verification will be used unless the target registry is listed as an insecure registry in registries.conf.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "The username and password to use to authenticate with the registry if required.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Podman installed on host"
+      ],
+      "short_description": "Play kubernetes YAML file using podman"
+    },
+    "examples": "\n- name: Play kube file\n  containers.podman.podman_play:\n    kube_file: ~/kube.yaml\n\n"
+  },
+  "containers.podman.podman_pod": {
+    "doc": {
+      "description": "Manage podman pods.",
+      "has_action": false,
+      "options": {
+        "add_host": {
+          "aliases": [],
+          "description": "Add a host to the /etc/hosts file shared between all containers in the pod.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "cgroup_parent": {
+          "aliases": [],
+          "description": "Path to cgroups under which the cgroup for the pod will be created. If the path is not absolute, he path is considered to be relative to the cgroups path of the init process. Cgroups will be created if they do not already exist.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cpus": {
+          "aliases": [],
+          "description": "Set the total number of CPUs delegated to the pod. Default is 0.000 which indicates that there is no limit on computation power.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cpuset_cpus": {
+          "aliases": [],
+          "description": "Limit the CPUs to support execution. First CPU is numbered 0. Unlike `cpus` this is of type string and parsed as a list of numbers. Format is 0-3,0,1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "debug": {
+          "aliases": [],
+          "description": "Return additional information which can be helpful for investigations.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "device": {
+          "aliases": [],
+          "description": "Add a host device to the pod. Optional permissions parameter can be used to specify device permissions. It is a combination of r for read, w for write, and m for mknod(2)",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "device_read_bps": {
+          "aliases": [],
+          "description": "Limit read rate (bytes per second) from a device (e.g. device-read-bps=/dev/sda:1mb)",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "dns": {
+          "aliases": [],
+          "description": "Set custom DNS servers in the /etc/resolv.conf file that will be shared between all containers in the pod. A special option, \"none\" is allowed which disables creation of /etc/resolv.conf for the pod.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "dns_opt": {
+          "aliases": [],
+          "description": "Set custom DNS options in the /etc/resolv.conf file that will be shared between all containers in the pod.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "dns_search": {
+          "aliases": [],
+          "description": "Set custom DNS search domains in the /etc/resolv.conf file that will be shared between all containers in the pod.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "executable": {
+          "aliases": [],
+          "description": "Path to C(podman) executable if it is not in the C($PATH) on the machine running C(podman)",
+          "default": "podman",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "generate_systemd": {
+          "aliases": [],
+          "description": "Generate systemd unit file for container.",
+          "default": "{}",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "container_prefix": {
+              "aliases": [],
+              "description": "Set the systemd unit name prefix for containers. The default is \"container\".",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "names": {
+              "aliases": [],
+              "description": "Use names of the containers for the start, stop, and description in the unit file. Default is true.",
+              "default": "True",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "new": {
+              "aliases": [],
+              "description": "Create containers and pods when the unit is started instead of expecting them to exist. The default is \"false\". Refer to podman-generate-systemd(1) for more information.",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "no_header": {
+              "aliases": [],
+              "description": "Do not generate the header including meta data such as the Podman version and the timestamp. From podman version 3.1.0.",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "path": {
+              "aliases": [],
+              "description": "Specify a path to the directory where unit files will be generated. Required for this option. If it doesn't exist, the directory will be created.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "pod_prefix": {
+              "aliases": [],
+              "description": "Set the systemd unit name prefix for pods. The default is \"pod\".",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "restart_policy": {
+              "aliases": [],
+              "description": "Specify a restart policy for the service.  The restart-policy must be one of \"no\", \"on-success\", \"on-failure\", \"on-abnormal\", \"on-watchdog\", \"on-abort\", or \"always\". The default policy is \"on-failure\".",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "no",
+                "on-success",
+                "on-failure",
+                "on-abnormal",
+                "on-watchdog",
+                "on-abort",
+                "always"
+              ],
+              "suboptions": {}
+            },
+            "separator": {
+              "aliases": [],
+              "description": "Set the systemd unit name separator between the name/id of a container/pod and the prefix. The default is \"-\" (dash).",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "time": {
+              "aliases": [],
+              "description": "Override the default stop timeout for the container with the given value.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "gidmap": {
+          "aliases": [],
+          "description": "GID map for the user namespace. Using this flag will run the container with user namespace enabled. It conflicts with the `userns` and `subgidname` flags.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "Set a hostname to the pod",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "infra": {
+          "aliases": [],
+          "description": "Create an infra container and associate it with the pod. An infra container is a lightweight container used to coordinate the shared kernel namespace of a pod. Default is true.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "infra_command": {
+          "aliases": [],
+          "description": "The command that will be run to start the infra container. Default is \"/pause\".",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "infra_conmon_pidfile": {
+          "aliases": [],
+          "description": "Write the pid of the infra container's conmon process to a file. As conmon runs in a separate process than Podman, this is necessary when using systemd to manage Podman containers and pods.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "infra_image": {
+          "aliases": [],
+          "description": "The image that will be created for the infra container. Default is \"k8s.gcr.io/pause:3.1\".",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "infra_name": {
+          "aliases": [],
+          "description": "The name that will be used for the pod's infra container.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ip": {
+          "aliases": [],
+          "description": "Set a static IP for the pod's shared network.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "label": {
+          "aliases": [],
+          "description": "Add metadata to a pod, pass dictionary of label keys and values.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "label_file": {
+          "aliases": [],
+          "description": "Read in a line delimited file of labels.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "mac_address": {
+          "aliases": [],
+          "description": "Set a static MAC address for the pod's shared network.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Assign a name to the pod.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "network": {
+          "aliases": [],
+          "description": "Set network mode for the pod. Supported values are bridge (the default), host (do not create a network namespace, all containers in the pod will use the host's network), or a comma-separated list of the names of CNI networks the pod should join.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "network_alias": {
+          "aliases": [
+            "network_aliases"
+          ],
+          "description": "Add a network-scoped alias for the pod, setting the alias for all networks that the pod joins. To set a name only for a specific network, use the alias option as described under the -`network` option. Network aliases work only with the bridge networking mode. This option can be specified multiple times.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "no_hosts": {
+          "aliases": [],
+          "description": "Disable creation of /etc/hosts for the pod.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "pid": {
+          "aliases": [],
+          "description": "Set the PID mode for the pod. The default is to create a private PID namespace for the pod. Requires the PID namespace to be shared via `share` option.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "pod_id_file": {
+          "aliases": [],
+          "description": "Write the pod ID to the file.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "publish": {
+          "aliases": [
+            "ports"
+          ],
+          "description": "Publish a port or range of ports from the pod to the host.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "recreate": {
+          "aliases": [],
+          "description": "Use with present and started states to force the re-creation of an existing pod.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "share": {
+          "aliases": [],
+          "description": "A comma delimited list of kernel namespaces to share. If none or \"\" is specified, no namespaces will be shared. The namespaces to choose from are ipc, net, pid, user, uts.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "This variable is set for state",
+          "default": "created",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "created",
+            "killed",
+            "restarted",
+            "absent",
+            "started",
+            "stopped",
+            "paused",
+            "unpaused"
+          ],
+          "suboptions": {}
+        },
+        "subgidname": {
+          "aliases": [],
+          "description": "Name for GID map from the /etc/subgid file. Using this flag will run the container with user namespace enabled. This flag conflicts with `userns` and `gidmap`.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "subuidname": {
+          "aliases": [],
+          "description": "Name for UID map from the /etc/subuid file. Using this flag will run the container with user namespace enabled. This flag conflicts with `userns` and `uidmap`.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "uidmap": {
+          "aliases": [],
+          "description": "Run the container in a new user namespace using the supplied mapping. This option conflicts with the `userns` and `subuidname` options. This option provides a way to map host UIDs to container UIDs. It can be passed several times to map different ranges.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "userns": {
+          "aliases": [],
+          "description": "Set the user namespace mode for all the containers in a pod. It defaults to the PODMAN_USERNS environment variable. An empty value (\"\") means user namespaces are disabled.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "volume": {
+          "aliases": [
+            "volumes"
+          ],
+          "description": "Create a bind mount.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "podman"
+      ],
+      "short_description": "Manage Podman pods",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n# What modules does for example\n- podman_pod:\n    name: pod1\n    state: started\n    ports:\n      - 4444:5555\n\n# Connect random port from localhost to port 80 on pod2\n- name: Connect random port from localhost to port 80 on pod2\n  containers.podman.podman_pod:\n    name: pod2\n    state: started\n    publish: 127.0.0.1::80\n"
+  },
+  "containers.podman.podman_pod_info": {
+    "doc": {
+      "description": "Gather info about podman pods with podman inspect command.",
+      "has_action": false,
+      "notes": "",
+      "options": {
+        "executable": {
+          "aliases": [],
+          "description": "Path to C(podman) executable if it is not in the C($PATH) on the machine running C(podman)",
+          "default": "podman",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the pod",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Podman installed on host"
+      ],
+      "short_description": "Gather info about podman pods",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- name: Gather info about all present pods\n  containers.podman.podman_pod_info:\n\n- name: Gather info about specific pods\n  containers.podman.podman_pod_info:\n    name: special_pod\n"
+  },
+  "containers.podman.podman_save": {
+    "doc": {
+      "description": "podman save saves an image to either docker-archive, oci-archive, oci-dir (directory with oci manifest type), or docker-dir (directory with v2s2 manifest type) on the local machine, default is docker-archive.",
+      "has_action": false,
+      "options": {
+        "compress": {
+          "aliases": [],
+          "description": "Compress tarball image layers when pushing to a directory using the 'dir' transport. (default is same compression type, compressed or uncompressed, as source)",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "dest": {
+          "aliases": [
+            "path"
+          ],
+          "description": "Destination file to write image to.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "executable": {
+          "aliases": [],
+          "description": "Path to C(podman) executable if it is not in the C($PATH) on the machine running C(podman)",
+          "default": "podman",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Force saving to file even if it exists.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "format": {
+          "aliases": [],
+          "description": "Save image to docker-archive, oci-archive (see containers-transports(5)), oci-dir (oci transport), or docker-dir (dir transport with v2s2 manifest type).",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "docker-archive",
+            "oci-archive",
+            "oci-dir",
+            "docker-dir"
+          ],
+          "suboptions": {}
+        },
+        "image": {
+          "aliases": [],
+          "description": "Image to save.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "multi_image_archive": {
+          "aliases": [],
+          "description": "Allow for creating archives with more than one image. Additional names will be interpreted as images instead of tags. Only supported for docker-archive.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Podman installed on host"
+      ],
+      "short_description": "Saves podman image to tar file"
+    },
+    "examples": "\n# What modules does for example\n- containers.podman.podman_save:\n    dest: /path/to/tar/file\n    compress: true\n    format: oci-dir\n"
+  },
+  "containers.podman.podman_secret": {
+    "doc": {
+      "description": "Manage podman secrets",
+      "has_action": false,
+      "notes": "",
+      "options": {
+        "data": {
+          "aliases": [],
+          "description": "The value of the secret. Required when C(state) is C(present).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "driver": {
+          "aliases": [],
+          "description": "Override default secrets driver, currently podman uses C(file) which is unencrypted.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "driver_opts": {
+          "aliases": [],
+          "description": "Driver-specific key-value options.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "executable": {
+          "aliases": [],
+          "description": "Path to C(podman) executable if it is not in the C($PATH) on the machine running C(podman)",
+          "default": "podman",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Use it when C(state) is C(present) to remove and recreate an existing secret.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the secret.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "skip_existing": {
+          "aliases": [],
+          "description": "Use it when C(state) is C(present) and secret with the same name already exists. If set to C(true), the secret will NOT be recreated and remains as is.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether to create or remove the named secret.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "podman"
+      ],
+      "short_description": "Manage podman secrets",
+      "version_added": "1.7.0"
+    },
+    "examples": "\n- name: Create secret\n  containers.podman.podman_secret:\n    state: present\n    name: mysecret\n    data: \"my super secret content\"\n\n- name: Create container that uses the secret\n  containers.podman.podman_container:\n    name: showmysecret\n    image: docker.io/alpine:3.14\n    secrets:\n      - mysecret\n    detach: false\n    command: cat /run/secrets/mysecret\n    register: container\n\n- name: Output secret data\n  debug:\n    msg: '{{ container.stdout }}'\n\n- name: Remove secret\n  containers.podman.podman_secret:\n    state: absent\n    name: mysecret\n    "
+  },
+  "containers.podman.podman_tag": {
+    "doc": {
+      "description": "podman tag adds one or more additional names to locally-stored image.",
+      "has_action": false,
+      "options": {
+        "executable": {
+          "aliases": [],
+          "description": "Path to C(podman) executable if it is not in the C($PATH) on the machine running C(podman)",
+          "default": "podman",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "image": {
+          "aliases": [],
+          "description": "Image to tag.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "target_names": {
+          "aliases": [],
+          "description": "Additional names.",
+          "type": "list",
+          "required": true,
+          "elements": "str",
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Podman installed on host"
+      ],
+      "short_description": "Add an additional name to a local image"
+    },
+    "examples": "\n# What modules does for example\n- containers.podman.podman_tag:\n    image: docker.io/continuumio/miniconda3\n    target_names:\n      - miniconda3\n      - miniconda\n"
+  },
+  "containers.podman.podman_volume": {
+    "doc": {
+      "description": "Manage Podman volumes",
+      "has_action": false,
+      "options": {
+        "debug": {
+          "aliases": [],
+          "description": "Return additional information which can be helpful for investigations.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "driver": {
+          "aliases": [],
+          "description": "Specify volume driver name (default local).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "executable": {
+          "aliases": [],
+          "description": "Path to C(podman) executable if it is not in the C($PATH) on the machine running C(podman)",
+          "default": "podman",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "label": {
+          "aliases": [],
+          "description": "Add metadata to a pod volume (e.g., label com.example.key=value).",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of volume.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "options": {
+          "aliases": [],
+          "description": "Set driver specific options. For example 'device=tpmfs', 'type=tmpfs'. UID and GID idempotency is not supported due to changes in podman.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "recreate": {
+          "aliases": [],
+          "description": "Recreate volume even if exists.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of volume, default 'present'",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "podman"
+      ],
+      "short_description": "Manage Podman volumes",
+      "version_added": "1.1.0"
+    },
+    "examples": "\n# What modules does for example\n- podman_volume:\n    state: present\n    name: volume1\n    label:\n      key: value\n      key2: value2\n    options:\n      - \"device=/dev/loop1\"\n      - \"type=ext4\"\n"
+  },
+  "containers.podman.podman_volume_info": {
+    "doc": {
+      "description": "Gather info about podman volumes with podman inspect command.",
+      "has_action": false,
+      "notes": "",
+      "options": {
+        "executable": {
+          "aliases": [],
+          "description": "Path to C(podman) executable if it is not in the C($PATH) on the machine running C(podman)",
+          "default": "podman",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the volume",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "Podman installed on host"
+      ],
+      "short_description": "Gather info about podman volumes"
+    },
+    "examples": "\n- name: Gather info about all present volumes\n  podman_volume_info:\n\n- name: Gather info about specific volume\n  podman_volume_info:\n    name: specific_volume\n"
+  }
+}
