@@ -1,0 +1,1725 @@
+{
+  "community.grafana.grafana_dashboard": {
+    "doc": {
+      "description": "Create, update, delete, export Grafana dashboards via API.",
+      "has_action": false,
+      "options": {
+        "client_cert": {
+          "aliases": [],
+          "description": "PEM formatted certificate chain file to be used for SSL client authentication.\nThis file can also include the key as well, and if the key is included, I(client_key) is not required",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_key": {
+          "aliases": [],
+          "description": "PEM formatted file that contains your private key to be used for SSL client authentication.\nIf I(client_cert) contains both the certificate and key, this option is not required.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "commit_message": {
+          "aliases": [
+            "message"
+          ],
+          "description": "Set a commit message for the version history.\nOnly used when C(state) is C(present).\nC(message) alias is deprecated in Ansible 2.10, since it is used internally by Ansible Core Engine.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "dashboard_id": {
+          "aliases": [],
+          "description": "Public Grafana.com dashboard id to import",
+          "type": "str",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "dashboard_revision": {
+          "aliases": [],
+          "description": "Revision of the public grafana dashboard to import",
+          "default": "1",
+          "type": "str",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "folder": {
+          "aliases": [],
+          "description": "The Grafana folder where this dashboard will be imported to.",
+          "default": "General",
+          "type": "str",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "grafana_api_key": {
+          "aliases": [],
+          "description": "The Grafana API key.\nIf set, C(url_username) and C(url_password) will be ignored.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "org_id": {
+          "aliases": [],
+          "description": "The Grafana Organisation ID where the dashboard will be imported / exported.\nNot used when I(grafana_api_key) is set, because the grafana_api_key only belongs to one organisation..",
+          "default": "1",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "overwrite": {
+          "aliases": [],
+          "description": "Override existing dashboard when state is present.",
+          "default": "no",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "path": {
+          "aliases": [
+            "dashboard_url"
+          ],
+          "description": "The path to the json file containing the Grafana dashboard to import or export.\nA http URL is also accepted (since 2.10).\nRequired if C(state) is C(export) or C(present).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "slug": {
+          "aliases": [],
+          "description": "Deprecated since Grafana 5. Use grafana dashboard uid instead.\nslug of the dashboard. It's the friendly url name of the dashboard.\nWhen C(state) is C(present), this parameter can override the slug in the meta section of the json file.\nIf you want to import a json dashboard exported directly from the interface (not from the api), you have to specify the slug parameter because there is no meta section in the exported json.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the dashboard.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "export",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "uid": {
+          "aliases": [],
+          "description": "uid of the dashboard to export when C(state) is C(export) or C(absent).",
+          "type": "str",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "url": {
+          "aliases": [
+            "grafana_url"
+          ],
+          "description": "The Grafana URL.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "url_password": {
+          "aliases": [
+            "grafana_password"
+          ],
+          "description": "The Grafana password for API authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "url_username": {
+          "aliases": [
+            "grafana_user"
+          ],
+          "description": "The Grafana user for API authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), it will not use a proxy, even if one is defined in an environment variable on the target hosts.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If C(no), SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage Grafana dashboards",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n- hosts: localhost\n  connection: local\n  tasks:\n    - name: Import Grafana dashboard foo\n      community.grafana.grafana_dashboard:\n        grafana_url: http://grafana.company.com\n        grafana_api_key: \"{{ grafana_api_key }}\"\n        state: present\n        commit_message: Updated by ansible\n        overwrite: yes\n        path: /path/to/dashboards/foo.json\n\n    - name: Import Grafana dashboard Zabbix\n      community.grafana.grafana_dashboard:\n        grafana_url: http://grafana.company.com\n        grafana_api_key: \"{{ grafana_api_key }}\"\n        folder: zabbix\n        dashboard_id: 6098\n        dashbord_revision: 1\n\n    - name: Import Grafana dashboard zabbix\n      community.grafana.grafana_dashboard:\n        grafana_url: http://grafana.company.com\n        grafana_api_key: \"{{ grafana_api_key }}\"\n        folder: public\n        dashboard_url: https://grafana.com/api/dashboards/6098/revisions/1/download\n\n    - name: Export dashboard\n      community.grafana.grafana_dashboard:\n        grafana_url: http://grafana.company.com\n        grafana_user: \"admin\"\n        grafana_password: \"{{ grafana_password }}\"\n        org_id: 1\n        state: export\n        uid: \"000000653\"\n        path: \"/path/to/dashboards/000000653.json\"\n"
+  },
+  "community.grafana.grafana_datasource": {
+    "doc": {
+      "description": "Create/update/delete Grafana datasources via API.",
+      "has_action": false,
+      "notes": "Secure data will get encrypted by the Grafana API, thus it can not be compared on subsequent runs. To workaround this, secure data will not be updated after initial creation! To force the secure data update you have to set I(enforce_secure_data=True).\nHint, with the C(enforce_secure_data) always reporting changed=True, you might just do one Task updating the datasource without any secure data and make a separate playbook/task also changing the secure data. This way it will not break any workflow.",
+      "options": {
+        "access": {
+          "aliases": [],
+          "description": "The access mode for this datasource.",
+          "default": "proxy",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "direct",
+            "proxy"
+          ],
+          "suboptions": {}
+        },
+        "additional_json_data": {
+          "aliases": [],
+          "description": "Defined data is used for datasource jsonData\nData may be overridden by specifically defined parameters (like zabbix_user)",
+          "default": "{}",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "additional_secure_json_data": {
+          "aliases": [],
+          "description": "Defined data is used for datasource secureJsonData\nData may be overridden by specifically defined parameters (like tls_client_cert)\nStored as secure data, see C(enforce_secure_data) and notes!",
+          "default": "{}",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "aws_access_key": {
+          "aliases": [],
+          "description": "AWS access key for CloudWatch datasource type when C(aws_auth_type) is C(keys)",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "aws_assume_role_arn": {
+          "aliases": [],
+          "description": "AWS IAM role arn to assume for CloudWatch datasource type when C(aws_auth_type) is C(arn)",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "aws_auth_type": {
+          "aliases": [],
+          "description": "Type for AWS authentication for CloudWatch datasource type (authType of grafana api)",
+          "default": "keys",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "keys",
+            "credentials",
+            "arn",
+            "default"
+          ],
+          "suboptions": {}
+        },
+        "aws_credentials_profile": {
+          "aliases": [],
+          "description": "Profile for AWS credentials for CloudWatch datasource type when C(aws_auth_type) is C(credentials)",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "aws_custom_metrics_namespaces": {
+          "aliases": [],
+          "description": "Namespaces of Custom Metrics for CloudWatch datasource type",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "aws_default_region": {
+          "aliases": [],
+          "description": "AWS default region for CloudWatch datasource type",
+          "default": "us-east-1",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "ap-northeast-1",
+            "ap-northeast-2",
+            "ap-southeast-1",
+            "ap-southeast-2",
+            "ap-south-1",
+            "ca-central-1",
+            "cn-north-1",
+            "cn-northwest-1",
+            "eu-central-1",
+            "eu-west-1",
+            "eu-west-2",
+            "eu-west-3",
+            "sa-east-1",
+            "us-east-1",
+            "us-east-2",
+            "us-gov-west-1",
+            "us-west-1",
+            "us-west-2"
+          ],
+          "suboptions": {}
+        },
+        "aws_secret_key": {
+          "aliases": [],
+          "description": "AWS secret key for CloudWatch datasource type when C(aws_auth_type) is C(keys)",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "basic_auth_password": {
+          "aliases": [],
+          "description": "The datasource basic auth password, when C(basic auth) is C(yes).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "basic_auth_user": {
+          "aliases": [],
+          "description": "The datasource basic auth user.\nSetting this option with basic_auth_password will enable basic auth.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_cert": {
+          "aliases": [],
+          "description": "PEM formatted certificate chain file to be used for SSL client authentication.\nThis file can also include the key as well, and if the key is included, I(client_key) is not required",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_key": {
+          "aliases": [],
+          "description": "PEM formatted file that contains your private key to be used for SSL client authentication.\nIf I(client_cert) contains both the certificate and key, this option is not required.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "database": {
+          "aliases": [],
+          "description": "Name of the database for the datasource.\nThis options is required when the C(ds_type) is C(influxdb), C(elasticsearch) (index name), C(mysql) or C(postgres).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ds_type": {
+          "aliases": [],
+          "description": "The type of the datasource.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "graphite",
+            "prometheus",
+            "elasticsearch",
+            "influxdb",
+            "opentsdb",
+            "mysql",
+            "postgres",
+            "cloudwatch",
+            "alexanderzobnin-zabbix-datasource",
+            "sni-thruk-datasource",
+            "camptocamp-prometheus-alertmanager-datasource",
+            "loki",
+            "redis-datasource"
+          ],
+          "suboptions": {}
+        },
+        "ds_url": {
+          "aliases": [],
+          "description": "The URL of the datasource.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "enforce_secure_data": {
+          "aliases": [],
+          "description": "Secure data is not updated per default (see notes!)\nTo update secure data you have to enable this option!\nEnabling this, the task will always report changed=True",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "es_version": {
+          "aliases": [],
+          "description": "Elasticsearch version (for C(ds_type = elasticsearch) only)\nVersion 56 is for elasticsearch 5.6+ where you can specify the C(max_concurrent_shard_requests) option.",
+          "default": "5",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "2",
+            "5",
+            "56",
+            "60",
+            "70"
+          ],
+          "suboptions": {}
+        },
+        "grafana_api_key": {
+          "aliases": [],
+          "description": "The Grafana API key.\nIf set, C(url_username) and C(url_password) will be ignored.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "interval": {
+          "aliases": [],
+          "description": "For elasticsearch C(ds_type), this is the index pattern used.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "Hourly",
+            "Daily",
+            "Weekly",
+            "Monthly",
+            "Yearly"
+          ],
+          "suboptions": {}
+        },
+        "is_default": {
+          "aliases": [],
+          "description": "Make this datasource the default one.",
+          "default": "no",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "max_concurrent_shard_requests": {
+          "aliases": [],
+          "description": "Starting with elasticsearch 5.6, you can specify the max concurrent shard per requests.",
+          "default": "256",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the datasource.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "org_id": {
+          "aliases": [],
+          "description": "Grafana Organisation ID in which the datasource should be created.\nNot used when C(grafana_api_key) is set, because the C(grafana_api_key) only belong to one organisation.",
+          "default": "1",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "The datasource password.\nFor encrypted password use C(additional_secure_json_data.password).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sslmode": {
+          "aliases": [],
+          "description": "SSL mode for C(postgres) datasource type.",
+          "default": "disable",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "disable",
+            "require",
+            "verify-ca",
+            "verify-full"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Status of the datasource",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "time_field": {
+          "aliases": [],
+          "description": "Name of the time field in elasticsearch ds.\nFor example C(@timestamp).",
+          "default": "@timestamp",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "time_interval": {
+          "aliases": [],
+          "description": "Minimum group by interval for C(influxdb) or C(elasticsearch) datasources.\nfor example C(>10s).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tls_ca_cert": {
+          "aliases": [],
+          "description": "The TLS CA certificate for self signed certificates.\nOnly used when C(tls_client_cert) and C(tls_client_key) are set.\nStored as secure data, see C(enforce_secure_data) and notes!",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tls_client_cert": {
+          "aliases": [],
+          "description": "The client TLS certificate.\nIf C(tls_client_cert) and C(tls_client_key) are set, this will enable TLS authentication.\nStarts with ----- BEGIN CERTIFICATE -----\nStored as secure data, see C(enforce_secure_data) and notes!",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tls_client_key": {
+          "aliases": [],
+          "description": "The client TLS private key\nStarts with ----- BEGIN RSA PRIVATE KEY -----\nStored as secure data, see C(enforce_secure_data) and notes!",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tls_skip_verify": {
+          "aliases": [],
+          "description": "Skip the TLS datasource certificate verification.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "trends": {
+          "aliases": [],
+          "description": "Use trends or not for zabbix datasource type.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "tsdb_resolution": {
+          "aliases": [],
+          "description": "The opentsdb time resolution.",
+          "default": "second",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "millisecond",
+            "second"
+          ],
+          "suboptions": {}
+        },
+        "tsdb_version": {
+          "aliases": [],
+          "description": "The opentsdb version.\nUse C(1) for <=2.1, C(2) for ==2.2, C(3) for ==2.3.",
+          "default": "1",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "1",
+            "2",
+            "3"
+          ],
+          "suboptions": {}
+        },
+        "url": {
+          "aliases": [
+            "grafana_url"
+          ],
+          "description": "The Grafana URL.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "url_password": {
+          "aliases": [
+            "grafana_password"
+          ],
+          "description": "The Grafana password for API authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "url_username": {
+          "aliases": [
+            "grafana_user"
+          ],
+          "description": "The Grafana user for API authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), it will not use a proxy, even if one is defined in an environment variable on the target hosts.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "user": {
+          "aliases": [],
+          "description": "The datasource login user for influxdb datasources.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If C(no), SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "with_credentials": {
+          "aliases": [],
+          "description": "Whether credentials such as cookies or auth headers should be sent with cross-site requests.",
+          "default": "no",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "zabbix_password": {
+          "aliases": [],
+          "description": "Password for Zabbix API",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "zabbix_user": {
+          "aliases": [],
+          "description": "User for Zabbix API",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage Grafana datasources"
+    },
+    "examples": "\n---\n- name: Create elasticsearch datasource\n  community.grafana.grafana_datasource:\n    name: \"datasource-elastic\"\n    grafana_url: \"https://grafana.company.com\"\n    grafana_user: \"admin\"\n    grafana_password: \"xxxxxx\"\n    org_id: \"1\"\n    ds_type: \"elasticsearch\"\n    ds_url: \"https://elastic.company.com:9200\"\n    database: \"[logstash_]YYYY.MM.DD\"\n    basic_auth_user: \"grafana\"\n    basic_auth_password: \"******\"\n    time_field: \"@timestamp\"\n    time_interval: \"1m\"\n    interval: \"Daily\"\n    es_version: 56\n    max_concurrent_shard_requests: 42\n    tls_ca_cert: \"/etc/ssl/certs/ca.pem\"\n\n- name: Create influxdb datasource\n  community.grafana.grafana_datasource:\n    name: \"datasource-influxdb\"\n    grafana_url: \"https://grafana.company.com\"\n    grafana_user: \"admin\"\n    grafana_password: \"xxxxxx\"\n    org_id: \"1\"\n    ds_type: \"influxdb\"\n    ds_url: \"https://influx.company.com:8086\"\n    database: \"telegraf\"\n    time_interval: \">10s\"\n    tls_ca_cert: \"/etc/ssl/certs/ca.pem\"\n\n- name: Create postgres datasource\n  community.grafana.grafana_datasource:\n    name: \"datasource-postgres\"\n    grafana_url: \"https://grafana.company.com\"\n    grafana_user: \"admin\"\n    grafana_password: \"xxxxxx\"\n    org_id: \"1\"\n    ds_type: \"postgres\"\n    ds_url: \"postgres.company.com:5432\"\n    database: \"db\"\n    user: \"postgres\"\n    sslmode: \"verify-full\"\n    additional_json_data:\n      postgresVersion: 12\n      timescaledb: false\n    additional_secure_json_data:\n      password: \"iampgroot\"\n\n- name: Create cloudwatch datasource\n  community.grafana.grafana_datasource:\n    name: \"datasource-cloudwatch\"\n    grafana_url: \"https://grafana.company.com\"\n    grafana_user: \"admin\"\n    grafana_password: \"xxxxxx\"\n    org_id: \"1\"\n    ds_type: \"cloudwatch\"\n    ds_url: \"http://monitoring.us-west-1.amazonaws.com\"\n    aws_auth_type: \"keys\"\n    aws_default_region: \"us-west-1\"\n    aws_access_key: \"speakFriendAndEnter\"\n    aws_secret_key: \"mel10n\"\n    aws_custom_metrics_namespaces: \"n1,n2\"\n\n- name: grafana - add thruk datasource\n  community.grafana.grafana_datasource:\n    name: \"datasource-thruk\"\n    grafana_url: \"https://grafana.company.com\"\n    grafana_user: \"admin\"\n    grafana_password: \"xxxxxx\"\n    org_id: \"1\"\n    ds_type: \"sni-thruk-datasource\"\n    ds_url: \"https://thruk.company.com/sitename/thruk\"\n    basic_auth_user: \"thruk-user\"\n    basic_auth_password: \"******\"\n\n# handle secure data - workflow example\n# this will create/update the datasource but dont update the secure data on updates\n# so you can assert if all tasks are changed=False\n- name: create prometheus datasource\n  community.grafana.grafana_datasource:\n    name: openshift_prometheus\n    ds_type: prometheus\n    ds_url: https://openshift-monitoring.company.com\n    access: proxy\n    tls_skip_verify: true\n    additional_json_data:\n      httpHeaderName1: \"Authorization\"\n    additional_secure_json_data:\n      httpHeaderValue1: \"Bearer ihavenogroot\"\n\n# in a separate task or even play you then can force to update\n# and assert if each datasource is reporting changed=True\n- name: update prometheus datasource\n  community.grafana.grafana_datasource:\n    name: openshift_prometheus\n    ds_type: prometheus\n    ds_url: https://openshift-monitoring.company.com\n    access: proxy\n    tls_skip_verify: true\n    additional_json_data:\n      httpHeaderName1: \"Authorization\"\n    additional_secure_json_data:\n      httpHeaderValue1: \"Bearer ihavenogroot\"\n    enforce_secure_data: true\n"
+  },
+  "community.grafana.grafana_folder": {
+    "doc": {
+      "description": "Create/update/delete Grafana Folders through the Folders API.",
+      "has_action": false,
+      "options": {
+        "client_cert": {
+          "aliases": [],
+          "description": "PEM formatted certificate chain file to be used for SSL client authentication.\nThis file can also include the key as well, and if the key is included, I(client_key) is not required",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_key": {
+          "aliases": [],
+          "description": "PEM formatted file that contains your private key to be used for SSL client authentication.\nIf I(client_cert) contains both the certificate and key, this option is not required.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "grafana_api_key": {
+          "aliases": [],
+          "description": "The Grafana API key.\nIf set, C(url_username) and C(url_password) will be ignored.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [
+            "title"
+          ],
+          "description": "The title of the Grafana Folder.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "skip_version_check": {
+          "aliases": [],
+          "description": "Skip Grafana version check and try to reach api endpoint anyway.\nThis parameter can be useful if you enabled `hide_version` in grafana.ini",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.2.0",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Delete the members not found in the C(members) parameters from the\nlist of members found on the Folder.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "url": {
+          "aliases": [
+            "grafana_url"
+          ],
+          "description": "The Grafana URL.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "url_password": {
+          "aliases": [
+            "grafana_password"
+          ],
+          "description": "The Grafana password for API authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "url_username": {
+          "aliases": [
+            "grafana_user"
+          ],
+          "description": "The Grafana user for API authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), it will not use a proxy, even if one is defined in an environment variable on the target hosts.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If C(no), SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "The Folders API is only available starting Grafana 5 and the module will fail if the server version is lower than version 5."
+      ],
+      "short_description": "Manage Grafana Folders",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n---\n- name: Create a folder\n  community.grafana.grafana_folder:\n      url: \"https://grafana.example.com\"\n      grafana_api_key: \"{{ some_api_token_value }}\"\n      title: \"grafana_working_group\"\n      state: present\n\n- name: Delete a folder\n  community.grafana.grafana_folder:\n      url: \"https://grafana.example.com\"\n      grafana_api_key: \"{{ some_api_token_value }}\"\n      title: \"grafana_working_group\"\n      state: absent\n"
+  },
+  "community.grafana.grafana_notification_channel": {
+    "doc": {
+      "description": "Create/Update/Delete Grafana Notification Channels via API.",
+      "has_action": false,
+      "options": {
+        "client_cert": {
+          "aliases": [],
+          "description": "PEM formatted certificate chain file to be used for SSL client authentication.\nThis file can also include the key as well, and if the key is included, I(client_key) is not required",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_key": {
+          "aliases": [],
+          "description": "PEM formatted file that contains your private key to be used for SSL client authentication.\nIf I(client_cert) contains both the certificate and key, this option is not required.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "dingding_message_type": {
+          "aliases": [],
+          "description": "DingDing message type.",
+          "type": "list",
+          "required": false,
+          "choices": [
+            "link",
+            "action_card"
+          ],
+          "elements": "str",
+          "suboptions": {}
+        },
+        "dingding_url": {
+          "aliases": [],
+          "description": "DingDing webhook URL.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "disable_resolve_message": {
+          "aliases": [],
+          "description": "Disable the resolve message.",
+          "default": "no",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "discord_message_content": {
+          "aliases": [],
+          "description": "Overrides message content.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "discord_url": {
+          "aliases": [],
+          "description": "Discord webhook URL.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "email_addresses": {
+          "aliases": [],
+          "description": "List of recipients.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "email_single": {
+          "aliases": [],
+          "description": "Send single email to all recipients.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "googlechat_url": {
+          "aliases": [],
+          "description": "Google Hangouts webhook URL.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "grafana_api_key": {
+          "aliases": [],
+          "description": "The Grafana API key.\nIf set, C(url_username) and C(url_password) will be ignored.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hipchat_api_key": {
+          "aliases": [],
+          "description": "HipChat API key.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hipchat_room_id": {
+          "aliases": [],
+          "description": "HipChat room ID.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hipchat_url": {
+          "aliases": [],
+          "description": "HipChat webhook URL.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "include_image": {
+          "aliases": [],
+          "description": "Capture a visualization image and attach it to notifications.",
+          "default": "no",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "is_default": {
+          "aliases": [],
+          "description": "Use this channel for all alerts.",
+          "default": "no",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "kafka_topic": {
+          "aliases": [],
+          "description": "Kafka topic name.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "kafka_url": {
+          "aliases": [],
+          "description": "Kafka REST proxy URL.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "line_token": {
+          "aliases": [],
+          "description": "LINE token.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the notification channel.\nRequired when I(state) is C(present).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "opsgenie_api_key": {
+          "aliases": [],
+          "description": "OpsGenie API key.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "opsgenie_auto_close": {
+          "aliases": [],
+          "description": "Automatically close alerts in OpsGenie once the alert goes back to ok.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "opsgenie_override_priority": {
+          "aliases": [],
+          "description": "Allow the alert priority to be set using the og_priority tag.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "opsgenie_url": {
+          "aliases": [],
+          "description": "OpsGenie webhook URL.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "org_id": {
+          "aliases": [],
+          "description": "The Grafana Organisation ID where the dashboard will be imported / exported.\nNot used when I(grafana_api_key) is set, because the grafana_api_key only belongs to one organisation..",
+          "default": "1",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "pagerduty_auto_resolve": {
+          "aliases": [],
+          "description": "Resolve incidents in PagerDuty once the alert goes back to ok.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "pagerduty_integration_key": {
+          "aliases": [],
+          "description": "PagerDuty integration key.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "pagerduty_message_in_details": {
+          "aliases": [],
+          "description": "Move the alert message from the PD summary into the custom details.\nThis changes the custom details object and may break event rules you have configured.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "pagerduty_severity": {
+          "aliases": [],
+          "description": "Alert severity in PagerDuty.",
+          "type": "list",
+          "required": false,
+          "choices": [
+            "critical",
+            "error",
+            "warning",
+            "info"
+          ],
+          "elements": "str",
+          "suboptions": {}
+        },
+        "prometheus_password": {
+          "aliases": [],
+          "description": "Prometheus password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "prometheus_url": {
+          "aliases": [],
+          "description": "Prometheus API URL.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "prometheus_username": {
+          "aliases": [],
+          "description": "Prometheus username.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "pushover_alert_sound": {
+          "aliases": [],
+          "description": "L(Alert sound in Pushover,https://pushover.net/api#sounds)",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "pushover_api_token": {
+          "aliases": [],
+          "description": "Pushover API token.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "pushover_devices": {
+          "aliases": [],
+          "description": "Devices list in Pushover.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "pushover_expire": {
+          "aliases": [],
+          "description": "Expire alert in C(n) minutes.\nOnly when priority is C(emergency).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "pushover_ok_sound": {
+          "aliases": [],
+          "description": "L(OK sound in Pushover,https://pushover.net/api#sounds)",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "pushover_priority": {
+          "aliases": [],
+          "description": "Alert priority in Pushover.",
+          "type": "list",
+          "required": false,
+          "choices": [
+            "emergency",
+            "high",
+            "normal",
+            "low",
+            "lowest"
+          ],
+          "elements": "str",
+          "suboptions": {}
+        },
+        "pushover_retry": {
+          "aliases": [],
+          "description": "Retry in C(n) minutes.\nOnly when priority is C(emergency).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "pushover_user_key": {
+          "aliases": [],
+          "description": "Pushover user key.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "reminder_frequency": {
+          "aliases": [],
+          "description": "Additional notifications interval for triggered alerts.\nFor example C(15m).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sensu_handler": {
+          "aliases": [],
+          "description": "Sensu handler name.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sensu_password": {
+          "aliases": [],
+          "description": "Sensu password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sensu_source": {
+          "aliases": [],
+          "description": "Source in Sensu.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sensu_url": {
+          "aliases": [],
+          "description": "Sensu webhook URL.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sensu_username": {
+          "aliases": [],
+          "description": "Sensu user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "slack_icon_emoji": {
+          "aliases": [],
+          "description": "An emoji to use for the bot's message.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "slack_icon_url": {
+          "aliases": [],
+          "description": "URL to an image to use as the icon for the bot's message",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "slack_mention_channel": {
+          "aliases": [],
+          "description": "Mention whole channel or just active members.",
+          "type": "list",
+          "required": false,
+          "choices": [
+            "here",
+            "channel"
+          ],
+          "elements": "str",
+          "suboptions": {}
+        },
+        "slack_mention_groups": {
+          "aliases": [],
+          "description": "Mention groups list.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "slack_mention_users": {
+          "aliases": [],
+          "description": "Mention users list.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "slack_recipient": {
+          "aliases": [],
+          "description": "Override default Slack channel or user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "slack_token": {
+          "aliases": [],
+          "description": "Slack token.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "slack_url": {
+          "aliases": [],
+          "description": "Slack webhook URL.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "slack_username": {
+          "aliases": [],
+          "description": "Set the username for the bot's message.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Status of the notification channel.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "teams_url": {
+          "aliases": [],
+          "description": "Microsoft Teams webhook URL.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "telegram_bot_token": {
+          "aliases": [],
+          "description": "Telegram bot token;",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "telegram_chat_id": {
+          "aliases": [],
+          "description": "Telegram chat id.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "threema_api_secret": {
+          "aliases": [],
+          "description": "Threema Gateway API secret.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "threema_gateway_id": {
+          "aliases": [],
+          "description": "8 character Threema Gateway ID (starting with a *).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "threema_recipient_id": {
+          "aliases": [],
+          "description": "8 character Threema ID that should receive the alerts.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "The channel notification type.\nRequired when I(state) is C(present).",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "dingding",
+            "discord",
+            "email",
+            "googlechat",
+            "hipchat",
+            "kafka",
+            "line",
+            "teams",
+            "opsgenie",
+            "pagerduty",
+            "prometheus",
+            "pushover",
+            "sensu",
+            "slack",
+            "telegram",
+            "threema",
+            "victorops",
+            "webhook"
+          ],
+          "suboptions": {}
+        },
+        "uid": {
+          "aliases": [],
+          "description": "The channel unique identifier.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "url": {
+          "aliases": [
+            "grafana_url"
+          ],
+          "description": "The Grafana URL.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "url_password": {
+          "aliases": [
+            "grafana_password"
+          ],
+          "description": "The Grafana password for API authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "url_username": {
+          "aliases": [
+            "grafana_user"
+          ],
+          "description": "The Grafana user for API authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), it will not use a proxy, even if one is defined in an environment variable on the target hosts.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If C(no), SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "victorops_auto_resolve": {
+          "aliases": [],
+          "description": "Resolve incidents in VictorOps once the alert goes back to ok.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "victorops_url": {
+          "aliases": [],
+          "description": "VictorOps webhook URL.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "webhook_http_method": {
+          "aliases": [],
+          "description": "Webhook HTTP verb to use.",
+          "type": "list",
+          "required": false,
+          "choices": [
+            "POST",
+            "PUT"
+          ],
+          "elements": "str",
+          "suboptions": {}
+        },
+        "webhook_password": {
+          "aliases": [],
+          "description": "Webhook password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "webhook_url": {
+          "aliases": [],
+          "description": "Webhook URL",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "webhook_username": {
+          "aliases": [],
+          "description": "Webhook username.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage Grafana Notification Channels",
+      "version_added": "1.1.0"
+    },
+    "examples": "\n- name: Create slack notification channel\n  register: result\n  grafana_notification_channel:\n    uid: slack\n    name: slack\n    type: slack\n    slack_url: https://hooks.slack.com/services/xxx/yyy/zzz\n    grafana_url: \"{{ grafana_url }}\"\n    grafana_user: \"{{ grafana_username }}\"\n    grafana_password: \"{{ grafana_password}}\"\n\n- name: Delete slack notification channel\n  register: result\n  grafana_notification_channel:\n    state: absent\n    uid: slack\n    grafana_url: \"{{ grafana_url }}\"\n    grafana_user: \"{{ grafana_username }}\"\n    grafana_password: \"{{ grafana_password}}\"\n"
+  },
+  "community.grafana.grafana_organization": {
+    "doc": {
+      "description": "Create/delete Grafana organization through org API.\nTested with Grafana v6.5.0",
+      "has_action": false,
+      "options": {
+        "client_cert": {
+          "aliases": [],
+          "description": "PEM formatted certificate chain file to be used for SSL client authentication.\nThis file can also include the key as well, and if the key is included, I(client_key) is not required",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_key": {
+          "aliases": [],
+          "description": "PEM formatted file that contains your private key to be used for SSL client authentication.\nIf I(client_cert) contains both the certificate and key, this option is not required.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the Grafana Organization.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State if the organization should be present in Grafana or not",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "url": {
+          "aliases": [
+            "grafana_url"
+          ],
+          "description": "The Grafana URL.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "url_password": {
+          "aliases": [
+            "grafana_password"
+          ],
+          "description": "The Grafana password for API authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "url_username": {
+          "aliases": [
+            "grafana_user"
+          ],
+          "description": "The Grafana user for API authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), it will not use a proxy, even if one is defined in an environment variable on the target hosts.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If C(no), SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage Grafana Organization",
+      "version_added": "1.3.0"
+    },
+    "examples": "\n---\n- name: Create a Grafana organization\n  community.grafana.grafana_organization:\n    url: \"https://grafana.example.com\"\n    url_username: admin\n    url_password: changeme\n    name: orgtest\n    state: present\n\n- name: Delete a Grafana organization\n  community.grafana.grafana_organization:\n    url: \"https://grafana.example.com\"\n    url_username: admin\n    url_password: changeme\n    name: orgtest\n    state: absent\n"
+  },
+  "community.grafana.grafana_plugin": {
+    "doc": {
+      "description": "Install and remove Grafana plugins.\nSee U(https://grafana.com/docs/plugins/installation/) for upstream documentation.",
+      "has_action": false,
+      "options": {
+        "grafana_plugin_url": {
+          "aliases": [],
+          "description": "Full URL to the plugin zip file instead of downloading the file from U(https://grafana.com/api/plugins).\nRequires grafana 4.6.x or later.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "grafana_plugins_dir": {
+          "aliases": [],
+          "description": "Directory where the Grafana plugin will be installed.\nIf omitted, defaults to C(/var/lib/grafana/plugins).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "grafana_repo": {
+          "aliases": [],
+          "description": "URL to the Grafana plugin repository.\nIf omitted, grafana-cli will use the default value: U(https://grafana.com/api/plugins).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the plugin.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the plugin should be installed.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "version": {
+          "aliases": [],
+          "description": "Version of the plugin to install.\nDefaults to C(latest).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage Grafana plugins via grafana-cli"
+    },
+    "examples": "\n---\n- name: Install/update Grafana piechart panel plugin\n  community.grafana.grafana_plugin:\n    name: grafana-piechart-panel\n    version: latest\n    state: present\n"
+  },
+  "community.grafana.grafana_team": {
+    "doc": {
+      "description": "Create/update/delete Grafana Teams through the Teams API.\nAlso allows to add members in the team (if members exists).",
+      "has_action": false,
+      "options": {
+        "client_cert": {
+          "aliases": [],
+          "description": "PEM formatted certificate chain file to be used for SSL client authentication.\nThis file can also include the key as well, and if the key is included, I(client_key) is not required",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_key": {
+          "aliases": [],
+          "description": "PEM formatted file that contains your private key to be used for SSL client authentication.\nIf I(client_cert) contains both the certificate and key, this option is not required.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "email": {
+          "aliases": [],
+          "description": "The mail address associated with the Team.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "enforce_members": {
+          "aliases": [],
+          "description": "Delete the members not found in the C(members) parameters from the\nlist of members found on the Team.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "grafana_api_key": {
+          "aliases": [],
+          "description": "The Grafana API key.\nIf set, C(url_username) and C(url_password) will be ignored.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "members": {
+          "aliases": [],
+          "description": "List of team members (emails).\nThe list can be enforced with C(enforce_members) parameter.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the Grafana Team.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "skip_version_check": {
+          "aliases": [],
+          "description": "Skip Grafana version check and try to reach api endpoint anyway.\nThis parameter can be useful if you enabled `hide_version` in grafana.ini",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.2.0",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Delete the members not found in the C(members) parameters from the\nlist of members found on the Team.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "url": {
+          "aliases": [
+            "grafana_url"
+          ],
+          "description": "The Grafana URL.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "url_password": {
+          "aliases": [
+            "grafana_password"
+          ],
+          "description": "The Grafana password for API authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "url_username": {
+          "aliases": [
+            "grafana_user"
+          ],
+          "description": "The Grafana user for API authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), it will not use a proxy, even if one is defined in an environment variable on the target hosts.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If C(no), SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "The Teams API is only available starting Grafana 5 and the module will fail if the server version is lower than version 5."
+      ],
+      "short_description": "Manage Grafana Teams",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n---\n- name: Create a team\n  community.grafana.grafana_team:\n      url: \"https://grafana.example.com\"\n      grafana_api_key: \"{{ some_api_token_value }}\"\n      name: \"grafana_working_group\"\n      email: \"foo.bar@example.com\"\n      state: present\n\n- name: Create a team with members\n  community.grafana.grafana_team:\n      url: \"https://grafana.example.com\"\n      grafana_api_key: \"{{ some_api_token_value }}\"\n      name: \"grafana_working_group\"\n      email: \"foo.bar@example.com\"\n      members:\n          - john.doe@example.com\n          - jane.doe@example.com\n      state: present\n\n- name: Create a team with members and enforce the list of members\n  community.grafana.grafana_team:\n      url: \"https://grafana.example.com\"\n      grafana_api_key: \"{{ some_api_token_value }}\"\n      name: \"grafana_working_group\"\n      email: \"foo.bar@example.com\"\n      members:\n          - john.doe@example.com\n          - jane.doe@example.com\n      enforce_members: yes\n      state: present\n\n- name: Delete a team\n  community.grafana.grafana_team:\n      url: \"https://grafana.example.com\"\n      grafana_api_key: \"{{ some_api_token_value }}\"\n      name: \"grafana_working_group\"\n      email: \"foo.bar@example.com\"\n      state: absent\n"
+  },
+  "community.grafana.grafana_user": {
+    "doc": {
+      "description": "Create/update/delete Grafana User through the users and admin API.\nTested with Grafana v6.4.3\nPassword update is not supported at the time",
+      "has_action": false,
+      "options": {
+        "client_cert": {
+          "aliases": [],
+          "description": "PEM formatted certificate chain file to be used for SSL client authentication.\nThis file can also include the key as well, and if the key is included, I(client_key) is not required",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_key": {
+          "aliases": [],
+          "description": "PEM formatted file that contains your private key to be used for SSL client authentication.\nIf I(client_cert) contains both the certificate and key, this option is not required.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "email": {
+          "aliases": [],
+          "description": "The email of the Grafana User.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "is_admin": {
+          "aliases": [],
+          "description": "The Grafana User is an admin.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "login": {
+          "aliases": [],
+          "description": "The login of the Grafana User.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the Grafana User.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "The password of the Grafana User.\nAt the moment, this field is not updated yet.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State if the user should be present in Grafana or not",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "url": {
+          "aliases": [
+            "grafana_url"
+          ],
+          "description": "The Grafana URL.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "url_password": {
+          "aliases": [
+            "grafana_password"
+          ],
+          "description": "The Grafana password for API authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "url_username": {
+          "aliases": [
+            "grafana_user"
+          ],
+          "description": "The Grafana user for API authentication.",
+          "default": "admin",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), it will not use a proxy, even if one is defined in an environment variable on the target hosts.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If C(no), SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage Grafana User",
+      "version_added": "1.0.0"
+    },
+    "examples": "\n---\n- name: Create or update a Grafana user\n  community.grafana.grafana_user:\n    url: \"https://grafana.example.com\"\n    url_username: admin\n    url_password: changeme\n    name: \"Bruce Wayne\"\n    email: batman@gotham.city\n    login: batman\n    password: robin\n    is_admin: true\n    state: present\n\n- name: Delete a Grafana user\n  community.grafana.grafana_user:\n    url: \"https://grafana.example.com\"\n    url_username: admin\n    url_password: changeme\n    login: batman\n    state: absent\n"
+  }
+}

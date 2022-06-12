@@ -1,0 +1,1178 @@
+{
+  "community.hashi_vault.vault_login": {
+    "doc": {
+      "description": "Performs a login operation against a given path in HashiCorp Vault, returning the login response, including the token.",
+      "has_action": false,
+      "notes": "A login is a write operation (creating a token persisted to storage), so this module always reports C(changed=True), except when used with C(token) auth, because no new token is created in that case. For the purposes of Ansible playbooks however, it may be more useful to set C(changed_when=false) if you're doing idempotency checks against the target system.\nThe C(none) auth method is not valid for this module because there is no response to return.\nWith C(token) auth, no actual login is performed. Instead, the given token's additional information is returned in a structure that resembles what login responses look like.\nThe C(token) auth method will only return full information if I(token_validate=True). If the token does not have the C(lookup-self) capability, this will fail. If I(token_validate=False), only the token value itself will be returned in the structure.\nIn check mode, this module will not perform a login, and will instead return a basic structure with an empty token. However this may not be useful if the token is required for follow on tasks. It may be better to use this module with C(check_mode=no) in order to have a valid token that can be used.",
+      "options": {
+        "auth_method": {
+          "aliases": [],
+          "description": "Authentication method to be used.\nC(none) auth method was added in collection version C(1.2.0).\nC(cert) auth method was added in collection version C(1.4.0).\nC(aws_iam_login) was renamed C(aws_iam) in collection version C(2.1.0). The old name will be removed in C(3.0.0).",
+          "default": "token",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "token",
+            "userpass",
+            "ldap",
+            "approle",
+            "aws_iam",
+            "aws_iam_login",
+            "jwt",
+            "cert",
+            "none"
+          ],
+          "suboptions": {}
+        },
+        "aws_access_key": {
+          "aliases": [
+            "aws_access_key_id"
+          ],
+          "description": "The AWS access key to use.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "aws_iam_server_id": {
+          "aliases": [],
+          "description": "If specified, sets the value to use for the C(X-Vault-AWS-IAM-Server-ID) header as part of C(GetCallerIdentity) request.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "aws_profile": {
+          "aliases": [
+            "boto_profile"
+          ],
+          "description": "The AWS profile",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "aws_secret_key": {
+          "aliases": [
+            "aws_secret_access_key"
+          ],
+          "description": "The AWS secret key that corresponds to the access key.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "aws_security_token": {
+          "aliases": [],
+          "description": "The AWS security token if using temporary access and secret keys.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ca_cert": {
+          "aliases": [
+            "cacert"
+          ],
+          "description": "Path to certificate to use for authentication.\nIf not specified by any other means, the C(VAULT_CACERT) environment variable will be used.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cert_auth_private_key": {
+          "aliases": [],
+          "description": "For C(cert) auth, path to the private key file to authenticate with, in PEM format.",
+          "type": "path",
+          "required": false,
+          "version_added": "1.4.0",
+          "suboptions": {}
+        },
+        "cert_auth_public_key": {
+          "aliases": [],
+          "description": "For C(cert) auth, path to the certificate file to authenticate with, in PEM format.",
+          "type": "path",
+          "required": false,
+          "version_added": "1.4.0",
+          "suboptions": {}
+        },
+        "jwt": {
+          "aliases": [],
+          "description": "The JSON Web Token (JWT) to use for JWT authentication to Vault.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "mount_point": {
+          "aliases": [],
+          "description": "Vault mount point.\nIf not specified, the default mount point for a given auth method is used.\nDoes not apply to token authentication.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "namespace": {
+          "aliases": [],
+          "description": "Vault namespace where secrets reside. This option requires HVAC 0.7.0+ and Vault 0.11+.\nOptionally, this may be achieved by prefixing the authentication mount point and/or secret path with the namespace (e.g C(mynamespace/secret/mysecret)).\nIf environment variable C(VAULT_NAMESPACE) is set, its value will be used last among all ways to specify I(namespace).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Authentication password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxies": {
+          "aliases": [],
+          "description": "URL(s) to the proxies used to access the Vault service.\nIt can be a string or a dict.\nIf it's a dict, provide the scheme (eg. C(http) or C(https)) as the key, and the URL as the value.\nIf it's a string, provide a single URL that will be used as the proxy for both C(http) and C(https) schemes.\nA string that can be interpreted as a dictionary will be converted to one (see examples).\nYou can specify a different proxy for HTTP and HTTPS resources.\nIf not specified, L(environment variables from the Requests library,https://requests.readthedocs.io/en/master/user/advanced/#proxies) are used.",
+          "type": "raw",
+          "required": false,
+          "version_added": "1.1.0",
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [],
+          "description": "The AWS region for which to create the connection.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "retries": {
+          "aliases": [],
+          "description": "Allows for retrying on errors, based on the L(Retry class in the urllib3 library,https://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html#urllib3.util.Retry).\nThis collection defines recommended defaults for retrying connections to Vault.\nThis option can be specified as a positive number (integer) or dictionary.\nIf this option is not specified or the number is C(0), then retries are disabled.\nA number sets the total number of retries, and uses collection defaults for the other settings.\nA dictionary value is used directly to initialize the C(Retry) class, so it can be used to fully customize retries.\nFor detailed information on retries, see the collection User Guide.",
+          "type": "raw",
+          "required": false,
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "retry_action": {
+          "aliases": [],
+          "description": "Controls whether and how to show messages on I(retries).\nThis has no effect if a request is not retried.",
+          "default": "warn",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "ignore",
+            "warn"
+          ],
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "role_id": {
+          "aliases": [],
+          "description": "Vault Role ID or name. Used in C(approle), C(aws_iam), and C(cert) auth methods.\nFor C(cert) auth, if no I(role_id) is supplied, the default behavior is to try all certificate roles and return any one that matches.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "secret_id": {
+          "aliases": [],
+          "description": "Secret ID to be used for Vault AppRole authentication.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "Sets the connection timeout in seconds.\nIf not set, then the C(hvac) library's default is used.",
+          "type": "int",
+          "required": false,
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "token": {
+          "aliases": [],
+          "description": "Vault token. Token may be specified explicitly, through the listed [env] vars, and also through the C(VAULT_TOKEN) env var.\nIf no token is supplied, explicitly or through env, then the plugin will check for a token file, as determined by I(token_path) and I(token_file).\nThe order of token loading (first found wins) is C(token param -> ansible var -> ANSIBLE_HASHI_VAULT_TOKEN -> VAULT_TOKEN -> token file).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "token_file": {
+          "aliases": [],
+          "description": "If no token is specified, will try to read the token from this file in I(token_path).",
+          "default": ".vault-token",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "token_path": {
+          "aliases": [],
+          "description": "If no token is specified, will try to read the I(token_file) from this path.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "token_validate": {
+          "aliases": [],
+          "description": "For token auth, will perform a C(lookup-self) operation to determine the token's validity before using it.\nDisable if your token does not have the C(lookup-self) capability.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "url": {
+          "aliases": [],
+          "description": "URL to the Vault service.\nIf not specified by any other means, the value of the C(VAULT_ADDR) environment variable will be used.\nIf C(VAULT_ADDR) is also not defined then an error will be raised.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Authentication user name.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Controls verification and validation of SSL certificates, mostly you only want to turn off with self signed ones.\nWill be populated with the inverse of C(VAULT_SKIP_VERIFY) if that is set and I(validate_certs) is not explicitly provided.\nWill default to C(true) if neither I(validate_certs) or C(VAULT_SKIP_VERIFY) are set.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "C(hvac) (L(Python library,https://hvac.readthedocs.io/en/stable/overview.html))",
+        "For detailed requirements, see R(the collection requirements page,ansible_collections.community.hashi_vault.docsite.user_guide.requirements)."
+      ],
+      "short_description": "Perform a login operation against HashiCorp Vault",
+      "version_added": "2.2.0"
+    },
+    "examples": "\n- name: Login and use the resulting token\n  community.hashi_vault.vault_login:\n    url: https://vault:8201\n    auth_method: userpass\n    username: user\n    password: '{{ passwd }}'\n  register: login_data\n\n- name: Retrieve an approle role ID (token via filter)\n  community.hashi_vault.vault_read:\n    url: https://vault:8201\n    auth_method: token\n    token: '{{ login_data | community.hashi_vault.vault_login_token }}'\n    path: auth/approle/role/role-name/role-id\n  register: approle_id\n\n- name: Retrieve an approle role ID (token via direct dict access)\n  community.hashi_vault.vault_read:\n    url: https://vault:8201\n    auth_method: token\n    token: '{{ login_data.login.auth.client_token }}'\n    path: auth/approle/role/role-name/role-id\n  register: approle_id\n"
+  },
+  "community.hashi_vault.vault_pki_generate_certificate": {
+    "doc": {
+      "description": "Generates a new set of credentials (private key and certificate) based on a Vault PKI role.",
+      "has_action": false,
+      "options": {
+        "alt_names": {
+          "aliases": [],
+          "description": "Specifies requested Subject Alternative Names.\nThese can be host names or email addresses; they will be parsed into their respective fields.\nIf any requested names do not match role policy, the entire request will be denied.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "auth_method": {
+          "aliases": [],
+          "description": "Authentication method to be used.\nC(none) auth method was added in collection version C(1.2.0).\nC(cert) auth method was added in collection version C(1.4.0).\nC(aws_iam_login) was renamed C(aws_iam) in collection version C(2.1.0). The old name will be removed in C(3.0.0).",
+          "default": "token",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "token",
+            "userpass",
+            "ldap",
+            "approle",
+            "aws_iam",
+            "aws_iam_login",
+            "jwt",
+            "cert",
+            "none"
+          ],
+          "suboptions": {}
+        },
+        "aws_access_key": {
+          "aliases": [
+            "aws_access_key_id"
+          ],
+          "description": "The AWS access key to use.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "aws_iam_server_id": {
+          "aliases": [],
+          "description": "If specified, sets the value to use for the C(X-Vault-AWS-IAM-Server-ID) header as part of C(GetCallerIdentity) request.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "aws_profile": {
+          "aliases": [
+            "boto_profile"
+          ],
+          "description": "The AWS profile",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "aws_secret_key": {
+          "aliases": [
+            "aws_secret_access_key"
+          ],
+          "description": "The AWS secret key that corresponds to the access key.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "aws_security_token": {
+          "aliases": [],
+          "description": "The AWS security token if using temporary access and secret keys.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ca_cert": {
+          "aliases": [
+            "cacert"
+          ],
+          "description": "Path to certificate to use for authentication.\nIf not specified by any other means, the C(VAULT_CACERT) environment variable will be used.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cert_auth_private_key": {
+          "aliases": [],
+          "description": "For C(cert) auth, path to the private key file to authenticate with, in PEM format.",
+          "type": "path",
+          "required": false,
+          "version_added": "1.4.0",
+          "suboptions": {}
+        },
+        "cert_auth_public_key": {
+          "aliases": [],
+          "description": "For C(cert) auth, path to the certificate file to authenticate with, in PEM format.",
+          "type": "path",
+          "required": false,
+          "version_added": "1.4.0",
+          "suboptions": {}
+        },
+        "common_name": {
+          "aliases": [],
+          "description": "Specifies the requested CN for the certificate.\nIf the CN is allowed by role policy, it will be issued.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "engine_mount_point": {
+          "aliases": [],
+          "description": "Specify the mount point used by the PKI engine.\nDefaults to the default used by C(hvac).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "exclude_cn_from_sans": {
+          "aliases": [],
+          "description": "If true, the given I(common_name) will not be included in DNS or Email Subject Alternate Names (as appropriate).\nUseful if the CN is not a hostname or email address, but is instead some human-readable identifier.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "format": {
+          "aliases": [],
+          "description": "Specifies the format for returned data.\nCan be C(pem), C(der), or C(pem_bundle).\nIf C(der), the output is base64 encoded.\nIf C(pem_bundle), the C(certificate) field will contain the private key and certificate, concatenated. If the issuing CA is not a Vault-derived self-signed root, this will be included as well.",
+          "default": "pem",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "pem",
+            "der",
+            "pem_bundle"
+          ],
+          "suboptions": {}
+        },
+        "ip_sans": {
+          "aliases": [],
+          "description": "Specifies requested IP Subject Alternative Names.\nOnly valid if the role allows IP SANs (which is the default).",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "jwt": {
+          "aliases": [],
+          "description": "The JSON Web Token (JWT) to use for JWT authentication to Vault.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "mount_point": {
+          "aliases": [],
+          "description": "Vault mount point.\nIf not specified, the default mount point for a given auth method is used.\nDoes not apply to token authentication.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "namespace": {
+          "aliases": [],
+          "description": "Vault namespace where secrets reside. This option requires HVAC 0.7.0+ and Vault 0.11+.\nOptionally, this may be achieved by prefixing the authentication mount point and/or secret path with the namespace (e.g C(mynamespace/secret/mysecret)).\nIf environment variable C(VAULT_NAMESPACE) is set, its value will be used last among all ways to specify I(namespace).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "other_sans": {
+          "aliases": [],
+          "description": "Specifies custom OID/UTF8-string SANs.\nThese must match values specified on the role in C(allowed_other_sans).\nThe format is the same as OpenSSL: C(<oid>;<type>:<value>) where the only current valid type is C(UTF8).",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Authentication password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "private_key_format": {
+          "aliases": [],
+          "description": "Specifies the format for marshaling the private key.\nDefaults to C(der) which will return either base64-encoded DER or PEM-encoded DER, depending on the value of I(format).\nThe other option is C(pkcs8) which will return the key marshalled as PEM-encoded PKCS8.",
+          "default": "der",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "der",
+            "pkcs8"
+          ],
+          "suboptions": {}
+        },
+        "proxies": {
+          "aliases": [],
+          "description": "URL(s) to the proxies used to access the Vault service.\nIt can be a string or a dict.\nIf it's a dict, provide the scheme (eg. C(http) or C(https)) as the key, and the URL as the value.\nIf it's a string, provide a single URL that will be used as the proxy for both C(http) and C(https) schemes.\nA string that can be interpreted as a dictionary will be converted to one (see examples).\nYou can specify a different proxy for HTTP and HTTPS resources.\nIf not specified, L(environment variables from the Requests library,https://requests.readthedocs.io/en/master/user/advanced/#proxies) are used.",
+          "type": "raw",
+          "required": false,
+          "version_added": "1.1.0",
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [],
+          "description": "The AWS region for which to create the connection.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "retries": {
+          "aliases": [],
+          "description": "Allows for retrying on errors, based on the L(Retry class in the urllib3 library,https://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html#urllib3.util.Retry).\nThis collection defines recommended defaults for retrying connections to Vault.\nThis option can be specified as a positive number (integer) or dictionary.\nIf this option is not specified or the number is C(0), then retries are disabled.\nA number sets the total number of retries, and uses collection defaults for the other settings.\nA dictionary value is used directly to initialize the C(Retry) class, so it can be used to fully customize retries.\nFor detailed information on retries, see the collection User Guide.",
+          "type": "raw",
+          "required": false,
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "retry_action": {
+          "aliases": [],
+          "description": "Controls whether and how to show messages on I(retries).\nThis has no effect if a request is not retried.",
+          "default": "warn",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "ignore",
+            "warn"
+          ],
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "role_id": {
+          "aliases": [],
+          "description": "Vault Role ID or name. Used in C(approle), C(aws_iam), and C(cert) auth methods.\nFor C(cert) auth, if no I(role_id) is supplied, the default behavior is to try all certificate roles and return any one that matches.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "role_name": {
+          "aliases": [],
+          "description": "Specifies the name of the role to create the certificate against.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "secret_id": {
+          "aliases": [],
+          "description": "Secret ID to be used for Vault AppRole authentication.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "Sets the connection timeout in seconds.\nIf not set, then the C(hvac) library's default is used.",
+          "type": "int",
+          "required": false,
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "token": {
+          "aliases": [],
+          "description": "Vault token. Token may be specified explicitly, through the listed [env] vars, and also through the C(VAULT_TOKEN) env var.\nIf no token is supplied, explicitly or through env, then the plugin will check for a token file, as determined by I(token_path) and I(token_file).\nThe order of token loading (first found wins) is C(token param -> ansible var -> ANSIBLE_HASHI_VAULT_TOKEN -> VAULT_TOKEN -> token file).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "token_file": {
+          "aliases": [],
+          "description": "If no token is specified, will try to read the token from this file in I(token_path).",
+          "default": ".vault-token",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "token_path": {
+          "aliases": [],
+          "description": "If no token is specified, will try to read the I(token_file) from this path.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "token_validate": {
+          "aliases": [],
+          "description": "For token auth, will perform a C(lookup-self) operation to determine the token's validity before using it.\nDisable if your token does not have the C(lookup-self) capability.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "ttl": {
+          "aliases": [],
+          "description": "Specifies requested Time To Live.\nCannot be greater than the role's C(max_ttl) value.\nIf not provided, the role's C(ttl) value will be used.\nNote that the role values default to system values if not explicitly set.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "uri_sans": {
+          "aliases": [],
+          "description": "Specifies the requested URI Subject Alternative Names.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "url": {
+          "aliases": [],
+          "description": "URL to the Vault service.\nIf not specified by any other means, the value of the C(VAULT_ADDR) environment variable will be used.\nIf C(VAULT_ADDR) is also not defined then an error will be raised.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Authentication user name.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Controls verification and validation of SSL certificates, mostly you only want to turn off with self signed ones.\nWill be populated with the inverse of C(VAULT_SKIP_VERIFY) if that is set and I(validate_certs) is not explicitly provided.\nWill default to C(true) if neither I(validate_certs) or C(VAULT_SKIP_VERIFY) are set.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "C(hvac) (L(Python library,https://hvac.readthedocs.io/en/stable/changelog.html#may-25th-2019)) version C(0.9.1) or higher",
+        "For detailed requirements, see R(the collection requirements page,ansible_collections.community.hashi_vault.docsite.user_guide.requirements)."
+      ],
+      "short_description": "Generates a new set of credentials (private key and certificate) using HashiCorp Vault PKI",
+      "version_added": "2.3.0"
+    },
+    "examples": "\n- name: Login and use the resulting token\n  community.hashi_vault.vault_login:\n    url: https://localhost:8200\n    auth_method: ldap\n    username: \"john.doe\"\n    password: \"{{ user_passwd }}\"\n  register: login_data\n\n- name: Generate a certificate with an existing token\n  community.hashi_vault.vault_pki_generate_certificate:\n    role_name: test.example.org\n    common_name: test.example.org\n    ttl: 8760h\n    alt_names:\n      - test2.example.org\n      - test3.example.org\n    url: https://vault:8201\n    auth_method: token\n    token: \"{{ login_data.login.auth.client_token }}\"\n  register: cert_data\n\n- name: Display generated certificate\n  debug:\n    msg: \"{{ cert_data.data.data.certificate }}\"\n"
+  },
+  "community.hashi_vault.vault_read": {
+    "doc": {
+      "description": "Performs a generic read operation against a given path in HashiCorp Vault.",
+      "has_action": false,
+      "options": {
+        "auth_method": {
+          "aliases": [],
+          "description": "Authentication method to be used.\nC(none) auth method was added in collection version C(1.2.0).\nC(cert) auth method was added in collection version C(1.4.0).\nC(aws_iam_login) was renamed C(aws_iam) in collection version C(2.1.0). The old name will be removed in C(3.0.0).",
+          "default": "token",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "token",
+            "userpass",
+            "ldap",
+            "approle",
+            "aws_iam",
+            "aws_iam_login",
+            "jwt",
+            "cert",
+            "none"
+          ],
+          "suboptions": {}
+        },
+        "aws_access_key": {
+          "aliases": [
+            "aws_access_key_id"
+          ],
+          "description": "The AWS access key to use.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "aws_iam_server_id": {
+          "aliases": [],
+          "description": "If specified, sets the value to use for the C(X-Vault-AWS-IAM-Server-ID) header as part of C(GetCallerIdentity) request.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "aws_profile": {
+          "aliases": [
+            "boto_profile"
+          ],
+          "description": "The AWS profile",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "aws_secret_key": {
+          "aliases": [
+            "aws_secret_access_key"
+          ],
+          "description": "The AWS secret key that corresponds to the access key.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "aws_security_token": {
+          "aliases": [],
+          "description": "The AWS security token if using temporary access and secret keys.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ca_cert": {
+          "aliases": [
+            "cacert"
+          ],
+          "description": "Path to certificate to use for authentication.\nIf not specified by any other means, the C(VAULT_CACERT) environment variable will be used.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cert_auth_private_key": {
+          "aliases": [],
+          "description": "For C(cert) auth, path to the private key file to authenticate with, in PEM format.",
+          "type": "path",
+          "required": false,
+          "version_added": "1.4.0",
+          "suboptions": {}
+        },
+        "cert_auth_public_key": {
+          "aliases": [],
+          "description": "For C(cert) auth, path to the certificate file to authenticate with, in PEM format.",
+          "type": "path",
+          "required": false,
+          "version_added": "1.4.0",
+          "suboptions": {}
+        },
+        "jwt": {
+          "aliases": [],
+          "description": "The JSON Web Token (JWT) to use for JWT authentication to Vault.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "mount_point": {
+          "aliases": [],
+          "description": "Vault mount point.\nIf not specified, the default mount point for a given auth method is used.\nDoes not apply to token authentication.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "namespace": {
+          "aliases": [],
+          "description": "Vault namespace where secrets reside. This option requires HVAC 0.7.0+ and Vault 0.11+.\nOptionally, this may be achieved by prefixing the authentication mount point and/or secret path with the namespace (e.g C(mynamespace/secret/mysecret)).\nIf environment variable C(VAULT_NAMESPACE) is set, its value will be used last among all ways to specify I(namespace).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Authentication password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "path": {
+          "aliases": [],
+          "description": "Vault path to be read.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "proxies": {
+          "aliases": [],
+          "description": "URL(s) to the proxies used to access the Vault service.\nIt can be a string or a dict.\nIf it's a dict, provide the scheme (eg. C(http) or C(https)) as the key, and the URL as the value.\nIf it's a string, provide a single URL that will be used as the proxy for both C(http) and C(https) schemes.\nA string that can be interpreted as a dictionary will be converted to one (see examples).\nYou can specify a different proxy for HTTP and HTTPS resources.\nIf not specified, L(environment variables from the Requests library,https://requests.readthedocs.io/en/master/user/advanced/#proxies) are used.",
+          "type": "raw",
+          "required": false,
+          "version_added": "1.1.0",
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [],
+          "description": "The AWS region for which to create the connection.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "retries": {
+          "aliases": [],
+          "description": "Allows for retrying on errors, based on the L(Retry class in the urllib3 library,https://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html#urllib3.util.Retry).\nThis collection defines recommended defaults for retrying connections to Vault.\nThis option can be specified as a positive number (integer) or dictionary.\nIf this option is not specified or the number is C(0), then retries are disabled.\nA number sets the total number of retries, and uses collection defaults for the other settings.\nA dictionary value is used directly to initialize the C(Retry) class, so it can be used to fully customize retries.\nFor detailed information on retries, see the collection User Guide.",
+          "type": "raw",
+          "required": false,
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "retry_action": {
+          "aliases": [],
+          "description": "Controls whether and how to show messages on I(retries).\nThis has no effect if a request is not retried.",
+          "default": "warn",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "ignore",
+            "warn"
+          ],
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "role_id": {
+          "aliases": [],
+          "description": "Vault Role ID or name. Used in C(approle), C(aws_iam), and C(cert) auth methods.\nFor C(cert) auth, if no I(role_id) is supplied, the default behavior is to try all certificate roles and return any one that matches.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "secret_id": {
+          "aliases": [],
+          "description": "Secret ID to be used for Vault AppRole authentication.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "Sets the connection timeout in seconds.\nIf not set, then the C(hvac) library's default is used.",
+          "type": "int",
+          "required": false,
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "token": {
+          "aliases": [],
+          "description": "Vault token. Token may be specified explicitly, through the listed [env] vars, and also through the C(VAULT_TOKEN) env var.\nIf no token is supplied, explicitly or through env, then the plugin will check for a token file, as determined by I(token_path) and I(token_file).\nThe order of token loading (first found wins) is C(token param -> ansible var -> ANSIBLE_HASHI_VAULT_TOKEN -> VAULT_TOKEN -> token file).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "token_file": {
+          "aliases": [],
+          "description": "If no token is specified, will try to read the token from this file in I(token_path).",
+          "default": ".vault-token",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "token_path": {
+          "aliases": [],
+          "description": "If no token is specified, will try to read the I(token_file) from this path.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "token_validate": {
+          "aliases": [],
+          "description": "For token auth, will perform a C(lookup-self) operation to determine the token's validity before using it.\nDisable if your token does not have the C(lookup-self) capability.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "url": {
+          "aliases": [],
+          "description": "URL to the Vault service.\nIf not specified by any other means, the value of the C(VAULT_ADDR) environment variable will be used.\nIf C(VAULT_ADDR) is also not defined then an error will be raised.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Authentication user name.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Controls verification and validation of SSL certificates, mostly you only want to turn off with self signed ones.\nWill be populated with the inverse of C(VAULT_SKIP_VERIFY) if that is set and I(validate_certs) is not explicitly provided.\nWill default to C(true) if neither I(validate_certs) or C(VAULT_SKIP_VERIFY) are set.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "C(hvac) (L(Python library,https://hvac.readthedocs.io/en/stable/overview.html))",
+        "For detailed requirements, see R(the collection requirements page,ansible_collections.community.hashi_vault.docsite.user_guide.requirements)."
+      ],
+      "short_description": "Perform a read operation against HashiCorp Vault",
+      "version_added": "1.4.0"
+    },
+    "examples": "\n- name: Read a kv2 secret from Vault via the remote host with userpass auth\n  community.hashi_vault.vault_read:\n    url: https://vault:8201\n    path: secret/data/hello\n    auth_method: userpass\n    username: user\n    password: '{{ passwd }}'\n  register: secret\n\n- name: Display the secret data\n  ansible.builtin.debug:\n    msg: \"{{ secret.data.data.data }}\"\n\n- name: Retrieve an approle role ID from Vault via the remote host\n  community.hashi_vault.vault_read:\n    url: https://vault:8201\n    path: auth/approle/role/role-name/role-id\n  register: approle_id\n\n- name: Display the role ID\n  ansible.builtin.debug:\n    msg: \"{{ approle_id.data.data.role_id }}\"\n"
+  },
+  "community.hashi_vault.vault_token_create": {
+    "doc": {
+      "description": "Creates a token in HashiCorp Vault, returning the response, including the token.",
+      "has_action": false,
+      "notes": "Token creation is a write operation (creating a token persisted to storage), so this module always reports C(changed=True).\nFor the purposes of Ansible playbooks however, it may be more useful to set I(changed_when=false) if you are doing idempotency checks against the target system.\nIn check mode, this module will not create a token, and will instead return a basic structure with an empty token. However, this may not be useful if the token is required for follow on tasks. It may be better to use this module with I(check_mode=no) in order to have a valid token that can be used.",
+      "options": {
+        "auth_method": {
+          "aliases": [],
+          "description": "Authentication method to be used.\nC(none) auth method was added in collection version C(1.2.0).\nC(cert) auth method was added in collection version C(1.4.0).\nC(aws_iam_login) was renamed C(aws_iam) in collection version C(2.1.0). The old name will be removed in C(3.0.0).",
+          "default": "token",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "token",
+            "userpass",
+            "ldap",
+            "approle",
+            "aws_iam",
+            "aws_iam_login",
+            "jwt",
+            "cert",
+            "none"
+          ],
+          "suboptions": {}
+        },
+        "aws_access_key": {
+          "aliases": [
+            "aws_access_key_id"
+          ],
+          "description": "The AWS access key to use.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "aws_iam_server_id": {
+          "aliases": [],
+          "description": "If specified, sets the value to use for the C(X-Vault-AWS-IAM-Server-ID) header as part of C(GetCallerIdentity) request.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "aws_profile": {
+          "aliases": [
+            "boto_profile"
+          ],
+          "description": "The AWS profile",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "aws_secret_key": {
+          "aliases": [
+            "aws_secret_access_key"
+          ],
+          "description": "The AWS secret key that corresponds to the access key.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "aws_security_token": {
+          "aliases": [],
+          "description": "The AWS security token if using temporary access and secret keys.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ca_cert": {
+          "aliases": [
+            "cacert"
+          ],
+          "description": "Path to certificate to use for authentication.\nIf not specified by any other means, the C(VAULT_CACERT) environment variable will be used.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cert_auth_private_key": {
+          "aliases": [],
+          "description": "For C(cert) auth, path to the private key file to authenticate with, in PEM format.",
+          "type": "path",
+          "required": false,
+          "version_added": "1.4.0",
+          "suboptions": {}
+        },
+        "cert_auth_public_key": {
+          "aliases": [],
+          "description": "For C(cert) auth, path to the certificate file to authenticate with, in PEM format.",
+          "type": "path",
+          "required": false,
+          "version_added": "1.4.0",
+          "suboptions": {}
+        },
+        "display_name": {
+          "aliases": [],
+          "description": "The display name of the token.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "entity_alias": {
+          "aliases": [],
+          "description": "Name of the entity alias to associate with during token creation.\nOnly works in combination with I(role_name) option and used entity alias must be listed in C(allowed_entity_aliases).\nIf this has been specified, the entity will not be inherited from the parent.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "explicit_max_ttl": {
+          "aliases": [],
+          "description": "If set, the token will have an explicit max TTL set upon it.\nThis maximum token TTL cannot be changed later, and unlike with normal tokens, updates to the system/mount max TTL value will have no effect at renewal time.\nThe token will never be able to be renewed or used past the value set at issue time.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the client token. Can only be specified by a root token.\nThe ID provided may not contain a C(.) character.\nOtherwise, the token ID is a randomly generated value.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "jwt": {
+          "aliases": [],
+          "description": "The JSON Web Token (JWT) to use for JWT authentication to Vault.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "meta": {
+          "aliases": [],
+          "description": "A dict of string to string valued metadata. This is passed through to the audit devices.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "mount_point": {
+          "aliases": [],
+          "description": "Vault mount point.\nIf not specified, the default mount point for a given auth method is used.\nDoes not apply to token authentication.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "namespace": {
+          "aliases": [],
+          "description": "Vault namespace where secrets reside. This option requires HVAC 0.7.0+ and Vault 0.11+.\nOptionally, this may be achieved by prefixing the authentication mount point and/or secret path with the namespace (e.g C(mynamespace/secret/mysecret)).\nIf environment variable C(VAULT_NAMESPACE) is set, its value will be used last among all ways to specify I(namespace).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "no_default_policy": {
+          "aliases": [],
+          "description": "If C(true) the default policy will not be contained in this token's policy set.\nIf the token will be used with this collection, set I(token_validate=false).",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "no_parent": {
+          "aliases": [],
+          "description": "This option only has effect if used by a C(root) or C(sudo) caller, or in combination with I(orphan=true).\nWhen C(true), the token created will not have a parent.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "num_uses": {
+          "aliases": [],
+          "description": "The maximum uses for the given token. This can be used to create a one-time-token or limited use token.\nThe value of C(0) has no limit to the number of uses.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "orphan": {
+          "aliases": [],
+          "description": "When C(true), uses the C(/create-orphan) API endpoint, which requires C(sudo) (but not C(root)) to create an orphan.\nImplies I(no_parent=true).\nB(NOTE:) as of this writing, the underlying endpoint in the C(hvac) library to support this is deprecated and scheduled for removal in C(v1.0.0).\nIf I(orphan=true) and we cannot access the intended endpoint, the call will be attempted with the C(/create) endpoint, which requires root.\nIf a replacement is provided in C(hvac), we will add support for it.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Authentication password.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "period": {
+          "aliases": [],
+          "description": "If specified, the token will be periodic.\nIt will have no maximum TTL (unless an I(explicit_max_ttl) is also set) but every renewal will use the given period.\nRequires a root token or one with the C(sudo) capability.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "policies": {
+          "aliases": [],
+          "description": "A list of policies for the token. This must be a subset of the policies belonging to the token making the request, unless root.\nIf not specified, defaults to all the policies of the calling token.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "proxies": {
+          "aliases": [],
+          "description": "URL(s) to the proxies used to access the Vault service.\nIt can be a string or a dict.\nIf it's a dict, provide the scheme (eg. C(http) or C(https)) as the key, and the URL as the value.\nIf it's a string, provide a single URL that will be used as the proxy for both C(http) and C(https) schemes.\nA string that can be interpreted as a dictionary will be converted to one (see examples).\nYou can specify a different proxy for HTTP and HTTPS resources.\nIf not specified, L(environment variables from the Requests library,https://requests.readthedocs.io/en/master/user/advanced/#proxies) are used.",
+          "type": "raw",
+          "required": false,
+          "version_added": "1.1.0",
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [],
+          "description": "The AWS region for which to create the connection.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "renewable": {
+          "aliases": [],
+          "description": "Set to C(false) to disable the ability of the token to be renewed past its initial TTL.\nSetting the value to C(true) will allow the token to be renewable up to the system/mount maximum TTL.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "retries": {
+          "aliases": [],
+          "description": "Allows for retrying on errors, based on the L(Retry class in the urllib3 library,https://urllib3.readthedocs.io/en/latest/reference/urllib3.util.html#urllib3.util.Retry).\nThis collection defines recommended defaults for retrying connections to Vault.\nThis option can be specified as a positive number (integer) or dictionary.\nIf this option is not specified or the number is C(0), then retries are disabled.\nA number sets the total number of retries, and uses collection defaults for the other settings.\nA dictionary value is used directly to initialize the C(Retry) class, so it can be used to fully customize retries.\nFor detailed information on retries, see the collection User Guide.",
+          "type": "raw",
+          "required": false,
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "retry_action": {
+          "aliases": [],
+          "description": "Controls whether and how to show messages on I(retries).\nThis has no effect if a request is not retried.",
+          "default": "warn",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "ignore",
+            "warn"
+          ],
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "role_id": {
+          "aliases": [],
+          "description": "Vault Role ID or name. Used in C(approle), C(aws_iam), and C(cert) auth methods.\nFor C(cert) auth, if no I(role_id) is supplied, the default behavior is to try all certificate roles and return any one that matches.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "role_name": {
+          "aliases": [],
+          "description": "The name of the token role. If used, the token will be created against the specified role name which may override options set during this call.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "secret_id": {
+          "aliases": [],
+          "description": "Secret ID to be used for Vault AppRole authentication.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "Sets the connection timeout in seconds.\nIf not set, then the C(hvac) library's default is used.",
+          "type": "int",
+          "required": false,
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "token": {
+          "aliases": [],
+          "description": "Vault token. Token may be specified explicitly, through the listed [env] vars, and also through the C(VAULT_TOKEN) env var.\nIf no token is supplied, explicitly or through env, then the plugin will check for a token file, as determined by I(token_path) and I(token_file).\nThe order of token loading (first found wins) is C(token param -> ansible var -> ANSIBLE_HASHI_VAULT_TOKEN -> VAULT_TOKEN -> token file).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "token_file": {
+          "aliases": [],
+          "description": "If no token is specified, will try to read the token from this file in I(token_path).",
+          "default": ".vault-token",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "token_path": {
+          "aliases": [],
+          "description": "If no token is specified, will try to read the I(token_file) from this path.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "token_validate": {
+          "aliases": [],
+          "description": "For token auth, will perform a C(lookup-self) operation to determine the token's validity before using it.\nDisable if your token does not have the C(lookup-self) capability.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "version_added": "0.2.0",
+          "suboptions": {}
+        },
+        "ttl": {
+          "aliases": [],
+          "description": "The TTL period of the token, provided as C(1h) for example, where hour is the largest suffix.\nIf not provided, the token is valid for the default lease TTL, or indefinitely if the root policy is used.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "The token type. The default is determined by the role configuration specified by I(role_name).",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "batch",
+            "service"
+          ],
+          "suboptions": {}
+        },
+        "url": {
+          "aliases": [],
+          "description": "URL to the Vault service.\nIf not specified by any other means, the value of the C(VAULT_ADDR) environment variable will be used.\nIf C(VAULT_ADDR) is also not defined then an error will be raised.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Authentication user name.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Controls verification and validation of SSL certificates, mostly you only want to turn off with self signed ones.\nWill be populated with the inverse of C(VAULT_SKIP_VERIFY) if that is set and I(validate_certs) is not explicitly provided.\nWill default to C(true) if neither I(validate_certs) or C(VAULT_SKIP_VERIFY) are set.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "wrap_ttl": {
+          "aliases": [],
+          "description": "Specifies response wrapping token creation with duration. For example C(15s), C(20m), C(25h).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "C(hvac) (L(Python library,https://hvac.readthedocs.io/en/stable/overview.html))",
+        "For detailed requirements, see R(the collection requirements page,ansible_collections.community.hashi_vault.docsite.user_guide.requirements)."
+      ],
+      "short_description": "Create a HashiCorp Vault token",
+      "version_added": "2.3.0"
+    },
+    "examples": "\n- name: Login via userpass and create a child token\n  community.hashi_vault.vault_token_create:\n    url: https://vault:8201\n    auth_method: userpass\n    username: user\n    password: '{{ passwd }}'\n  register: token_data\n\n- name: Retrieve an approle role ID using the child token (token via filter)\n  community.hashi_vault.vault_read:\n    url: https://vault:8201\n    auth_method: token\n    token: '{{ token_data | community.hashi_vault.vault_login_token }}'\n    path: auth/approle/role/role-name/role-id\n  register: approle_id\n\n- name: Retrieve an approle role ID using the child token (token via direct dict access)\n  community.hashi_vault.vault_read:\n    url: https://vault:8201\n    auth_method: token\n    token: '{{ token_data.login.auth.client_token }}'\n    path: auth/approle/role/role-name/role-id\n  register: approle_id\n\n# implicitly uses token auth with a token from the environment\n- name: Create an orphaned token with a short TTL\n  community.hashi_vault.vault_token_create:\n    url: https://vault:8201\n    orphan: true\n    ttl: 60s\n  register: token_data\n\n- name: Display the full response\n  ansible.builtin.debug:\n    var: token_data.login\n"
+  }
+}

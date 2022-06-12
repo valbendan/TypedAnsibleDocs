@@ -1,0 +1,1554 @@
+{
+  "linode.cloud.domain": {
+    "doc": {
+      "description": "Manage Linode Domains.",
+      "has_action": false,
+      "options": {
+        "axfr_ips": {
+          "aliases": [],
+          "description": "The list of IPs that may perform a zone transfer for this Domain.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "The list of IPs that may perform a zone transfer for this Domain.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "domain": {
+          "aliases": [],
+          "description": "The domain this Domain represents.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "expire_sec": {
+          "aliases": [],
+          "description": "The amount of time in seconds that may pass before this Domain is no longer authoritative.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "master_ips": {
+          "aliases": [],
+          "description": "The IP addresses representing the master DNS for this Domain.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "refresh_sec": {
+          "aliases": [],
+          "description": "The amount of time in seconds before this Domain should be refreshed.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "retry_sec": {
+          "aliases": [],
+          "description": "The interval, in seconds, at which a failed refresh should be retried.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "soa_email": {
+          "aliases": [],
+          "description": "The Start of Authority email address.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "status": {
+          "aliases": [],
+          "description": "Used to control whether this Domain is currently being rendered.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "An array of tags applied to this object.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "ttl_sec": {
+          "aliases": [],
+          "description": "the amount of time in seconds that this Domain’s records may       be cached by resolvers or other domain servers.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "Whether this Domain represents the authoritative source of information for the domain it describes (master), or whether it is a read-only copy of a master (slave).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 3.0"
+      ]
+    },
+    "examples": "\n- name: Create a domain \n  linode.cloud.domain:\n    domain: my-domain.com\n    type: master\n    state: present\n\n- name: Delete a domain\n  linode.cloud.domain:\n    domain: my-domain.com\n    state: absent\n"
+  },
+  "linode.cloud.domain_info": {
+    "doc": {
+      "description": "Get info about a Linode Domain.",
+      "has_action": false,
+      "options": {
+        "domain": {
+          "aliases": [],
+          "description": "The unique id of the Domain.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The unique domain name of the Domain.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 3.0"
+      ]
+    },
+    "examples": "\n- name: Get info about a domain by domain\n  linode.cloud.domain_info:\n    domain: my-domain.com\n\n- name: Get info about a domain by id\n  linode.cloud.domain_info:\n    id: 12345\n"
+  },
+  "linode.cloud.domain_record": {
+    "doc": {
+      "description": "Manage Linode Domain Records.\nNOTE: Domain records are identified by their name, target, and type.",
+      "has_action": false,
+      "options": {
+        "domain": {
+          "aliases": [],
+          "description": "The name of the parent Domain.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "domain_id": {
+          "aliases": [],
+          "description": "The ID of the parent Domain.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "label": {
+          "aliases": [],
+          "description": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of this Record.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "The port this Record points to.\nOnly valid and required for SRV record requests.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "priority": {
+          "aliases": [],
+          "description": "The priority of the target host for this Record.\nLower values are preferred.\nOnly valid for MX and SRV record requests.\nRequired for SRV record requests.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "protocol": {
+          "aliases": [],
+          "description": "The protocol this Record’s service communicates with.\nAn underscore (_) is prepended automatically to the submitted value for this property.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "record_id": {
+          "aliases": [],
+          "description": "The id of the record to modify.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "service": {
+          "aliases": [],
+          "description": "An underscore (_) is prepended and a period (.) is appended automatically to the submitted value for this property.\nOnly valid and required for SRV record requests.\nThe name of the service.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tag": {
+          "aliases": [],
+          "description": "The tag portion of a CAA record.\nOnly valid and required for CAA record requests.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "target": {
+          "aliases": [],
+          "description": "The target for this Record.",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ttl_sec": {
+          "aliases": [],
+          "description": "The amount of time in seconds that this Domain’s records may be cached       by resolvers or other domain servers.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "The type of Record this is in the DNS system.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "weight": {
+          "aliases": [],
+          "description": "The relative weight of this Record used in the case of identical priority.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 3.0"
+      ]
+    },
+    "examples": "\n- name: Create an A record\n  linode.cloud.domain_record:\n    domain: my-domain.com\n    name: my-subdomain\n    type: 'A'\n    target: '127.0.0.1'\n    state: present\n\n- name: Delete a domain record\n  linode.cloud.domain:\n    domain: my-domain.com\n    name: my-subdomain\n    state: absent\n"
+  },
+  "linode.cloud.domain_record_info": {
+    "doc": {
+      "description": "Get info about a Linode Domain Records.",
+      "has_action": false,
+      "options": {
+        "domain": {
+          "aliases": [],
+          "description": "The name of the parent Domain.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "domain_id": {
+          "aliases": [],
+          "description": "The ID of the parent Domain.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The unique id of the subdomain.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the domain record.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 3.0"
+      ]
+    },
+    "examples": "\n- name: Get info about domain records by name\n  linode.cloud.domain_record_info:\n    domain: my-domain.com\n    name: my-subdomain\n    type: A\n    target: 0.0.0.0\n\n- name: Get info about a domain record by id\n  linode.cloud.domain_info:\n    domain: my-domain.com\n    id: 12345\n"
+  },
+  "linode.cloud.firewall": {
+    "doc": {
+      "description": "Manage Linode Firewalls.",
+      "has_action": false,
+      "options": {
+        "devices": {
+          "aliases": [],
+          "description": "The devices that are attached to this Firewall.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "id": {
+              "aliases": [],
+              "description": "The unique ID of the device to attach to this Firewall.",
+              "type": "int",
+              "required": true,
+              "suboptions": {}
+            },
+            "type": {
+              "aliases": [],
+              "description": "The type of device to be attached to this Firewall.",
+              "default": "linode",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "label": {
+          "aliases": [],
+          "description": "The unique label to give this Firewall.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "rules": {
+          "aliases": [],
+          "description": "The inbound and outbound access rules to apply to this Firewall.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "inbound": {
+              "aliases": [],
+              "description": "A list of rules for inbound traffic.",
+              "type": "list",
+              "required": false,
+              "elements": "dict",
+              "suboptions": {
+                "action": {
+                  "aliases": [],
+                  "description": "Controls whether traffic is accepted or dropped by this rule.",
+                  "type": "str",
+                  "required": true,
+                  "suboptions": {}
+                },
+                "addresses": {
+                  "aliases": [],
+                  "description": "Allowed IPv4 or IPv6 addresses.",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "ipv4": {
+                      "aliases": [],
+                      "description": "A list of IPv4 addresses or networks.\nMust be in IP/mask format.",
+                      "type": "list",
+                      "required": false,
+                      "elements": "str",
+                      "suboptions": {}
+                    },
+                    "ipv6": {
+                      "aliases": [],
+                      "description": "A list of IPv4 addresses or networks.\nMust be in IP/mask format.",
+                      "type": "list",
+                      "required": false,
+                      "elements": "str",
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "description": {
+                  "aliases": [],
+                  "description": "A description for this rule.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "label": {
+                  "aliases": [],
+                  "description": "The label of this rule.",
+                  "type": "str",
+                  "required": true,
+                  "suboptions": {}
+                },
+                "ports": {
+                  "aliases": [],
+                  "description": "A string representing the port or ports on which traffic will be allowed.\nSee U(https://www.linode.com/docs/api/networking/#firewall-create)",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "protocol": {
+                  "aliases": [],
+                  "description": "The type of network traffic to allow.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                }
+              }
+            },
+            "inbound_policy": {
+              "aliases": [],
+              "description": "The default behavior for inbound traffic.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "outbound": {
+              "aliases": [],
+              "description": "A list of rules for outbound traffic.",
+              "type": "list",
+              "required": false,
+              "elements": "dict",
+              "suboptions": {
+                "action": {
+                  "aliases": [],
+                  "description": "Controls whether traffic is accepted or dropped by this rule.",
+                  "type": "str",
+                  "required": true,
+                  "suboptions": {}
+                },
+                "addresses": {
+                  "aliases": [],
+                  "description": "Allowed IPv4 or IPv6 addresses.",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "ipv4": {
+                      "aliases": [],
+                      "description": "A list of IPv4 addresses or networks.\nMust be in IP/mask format.",
+                      "type": "list",
+                      "required": false,
+                      "elements": "str",
+                      "suboptions": {}
+                    },
+                    "ipv6": {
+                      "aliases": [],
+                      "description": "A list of IPv4 addresses or networks.\nMust be in IP/mask format.",
+                      "type": "list",
+                      "required": false,
+                      "elements": "str",
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "description": {
+                  "aliases": [],
+                  "description": "A description for this rule.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "label": {
+                  "aliases": [],
+                  "description": "The label of this rule.",
+                  "type": "str",
+                  "required": true,
+                  "suboptions": {}
+                },
+                "ports": {
+                  "aliases": [],
+                  "description": "A string representing the port or ports on which traffic will be allowed.\nSee U(https://www.linode.com/docs/api/networking/#firewall-create)",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "protocol": {
+                  "aliases": [],
+                  "description": "The type of network traffic to allow.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                }
+              }
+            },
+            "outbound_policy": {
+              "aliases": [],
+              "description": "The default behavior for outbound traffic.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "status": {
+          "aliases": [],
+          "description": "The status of this Firewall.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 3.0"
+      ]
+    },
+    "examples": "\n- name: Create a Linode Firewall\n  linode.cloud.firewall:\n    api_version: v4beta\n    label: 'my-firewall'\n    devices:\n      - id: 123\n        type: linode\n    rules:\n      inbound_policy: DROP\n      inbound:\n        - label: allow-http-in\n          addresses:\n            ipv4:\n              - 0.0.0.0/0\n            ipv6:\n              - 'ff00::/8'\n          description: Allow inbound HTTP and HTTPS connections.\n          ports: '80,443'\n          protocol: TCP\n          action: ACCEPT\n\n      outbound_policy: DROP\n      outbound:\n        - label: allow-http-out\n          addresses:\n            ipv4:\n              - 0.0.0.0/0\n            ipv6:\n              - 'ff00::/8'\n          description: Allow outbound HTTP and HTTPS connections.\n          ports: '80,443'\n          protocol: TCP\n          action: ACCEPT\n    state: present\n    \n- name: Delete a Linode Firewall\n  linode.cloud.firewall:\n    api_version: v4beta\n    label: 'my-firewall'\n    state: absent\n"
+  },
+  "linode.cloud.firewall_info": {
+    "doc": {
+      "description": "Get info about a Linode Firewall.",
+      "has_action": false,
+      "options": {
+        "id": {
+          "aliases": [],
+          "description": "The unique id of the Firewall.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "label": {
+          "aliases": [],
+          "description": "The Firewall’s label.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 3.0"
+      ]
+    },
+    "examples": "\n- name: Get info about a Firewall by label\n  linode.cloud.firewall_info:\n    label: 'my-firewall'\n\n- name: Get info about a Firewall by id\n  linode.cloud.firewall_info:\n    id: 12345\n"
+  },
+  "linode.cloud.instance": {
+    "doc": {
+      "description": "Manage Linode Instances.",
+      "has_action": false,
+      "options": {
+        "authorized_keys": {
+          "aliases": [],
+          "description": "A list of SSH public key parts to deploy for the root user.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "backup_id": {
+          "aliases": [],
+          "description": "The id of the Backup to restore to the new Instance.\nMay not be provided if “image” is given.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "boot_config_label": {
+          "aliases": [],
+          "description": "The label of the config to boot from.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "booted": {
+          "aliases": [],
+          "description": "Whether the new Instance should be booted.\nThis will default to True if the Instance is deployed from an Image or Backup.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "configs": {
+          "aliases": [],
+          "description": "A list of Instance configs to apply to the Linode.\nSee U(https://www.linode.com/docs/api/linode-instances/#configuration-profile-create)",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "comments": {
+              "aliases": [],
+              "description": "Arbitrary User comments on this Config.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "devices": {
+              "aliases": [],
+              "description": "The devices to map to this configuration.",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "sda": {
+                  "aliases": [],
+                  "description": "",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "disk_id": {
+                      "aliases": [],
+                      "description": "The ID of the disk to attach to this Linode.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "disk_label": {
+                      "aliases": [],
+                      "description": "The label of the disk to attach to this Linode.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "volume_id": {
+                      "aliases": [],
+                      "description": "The ID of the volume to attach to this Linode.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "sdb": {
+                  "aliases": [],
+                  "description": "",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "disk_id": {
+                      "aliases": [],
+                      "description": "The ID of the disk to attach to this Linode.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "disk_label": {
+                      "aliases": [],
+                      "description": "The label of the disk to attach to this Linode.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "volume_id": {
+                      "aliases": [],
+                      "description": "The ID of the volume to attach to this Linode.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "sdc": {
+                  "aliases": [],
+                  "description": "",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "disk_id": {
+                      "aliases": [],
+                      "description": "The ID of the disk to attach to this Linode.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "disk_label": {
+                      "aliases": [],
+                      "description": "The label of the disk to attach to this Linode.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "volume_id": {
+                      "aliases": [],
+                      "description": "The ID of the volume to attach to this Linode.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "sdd": {
+                  "aliases": [],
+                  "description": "",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "disk_id": {
+                      "aliases": [],
+                      "description": "The ID of the disk to attach to this Linode.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "disk_label": {
+                      "aliases": [],
+                      "description": "The label of the disk to attach to this Linode.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "volume_id": {
+                      "aliases": [],
+                      "description": "The ID of the volume to attach to this Linode.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "sde": {
+                  "aliases": [],
+                  "description": "",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "disk_id": {
+                      "aliases": [],
+                      "description": "The ID of the disk to attach to this Linode.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "disk_label": {
+                      "aliases": [],
+                      "description": "The label of the disk to attach to this Linode.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "volume_id": {
+                      "aliases": [],
+                      "description": "The ID of the volume to attach to this Linode.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "sdf": {
+                  "aliases": [],
+                  "description": "",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "disk_id": {
+                      "aliases": [],
+                      "description": "The ID of the disk to attach to this Linode.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "disk_label": {
+                      "aliases": [],
+                      "description": "The label of the disk to attach to this Linode.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "volume_id": {
+                      "aliases": [],
+                      "description": "The ID of the volume to attach to this Linode.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "sdg": {
+                  "aliases": [],
+                  "description": "",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "disk_id": {
+                      "aliases": [],
+                      "description": "The ID of the disk to attach to this Linode.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "disk_label": {
+                      "aliases": [],
+                      "description": "The label of the disk to attach to this Linode.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "volume_id": {
+                      "aliases": [],
+                      "description": "The ID of the volume to attach to this Linode.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                },
+                "sdh": {
+                  "aliases": [],
+                  "description": "",
+                  "type": "dict",
+                  "required": false,
+                  "suboptions": {
+                    "disk_id": {
+                      "aliases": [],
+                      "description": "The ID of the disk to attach to this Linode.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "disk_label": {
+                      "aliases": [],
+                      "description": "The label of the disk to attach to this Linode.",
+                      "type": "str",
+                      "required": false,
+                      "suboptions": {}
+                    },
+                    "volume_id": {
+                      "aliases": [],
+                      "description": "The ID of the volume to attach to this Linode.",
+                      "type": "int",
+                      "required": false,
+                      "suboptions": {}
+                    }
+                  }
+                }
+              }
+            },
+            "helpers": {
+              "aliases": [],
+              "description": "Helpers enabled when booting to this Linode Config.",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "devtmpfs_automount": {
+                  "aliases": [],
+                  "description": "Populates the /dev directory early during boot without udev.",
+                  "type": "bool",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "distro": {
+                  "aliases": [],
+                  "description": "Helps maintain correct inittab/upstart console device.",
+                  "type": "bool",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "modules_dep": {
+                  "aliases": [],
+                  "description": "Creates a modules dependency file for the Kernel you run.",
+                  "type": "bool",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "network": {
+                  "aliases": [],
+                  "description": "Automatically configures static networking.",
+                  "type": "bool",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "updatedb_disabled": {
+                  "aliases": [],
+                  "description": "Disables updatedb cron job to avoid disk thrashing.",
+                  "type": "bool",
+                  "required": false,
+                  "suboptions": {}
+                }
+              }
+            },
+            "kernel": {
+              "aliases": [],
+              "description": "A Kernel ID to boot a Linode with. Defaults to “linode/latest-64bit”          .",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "label": {
+              "aliases": [],
+              "description": "The label to assign to this config.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "memory_limit": {
+              "aliases": [],
+              "description": "Defaults to the total RAM of the Linode.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "root_device": {
+              "aliases": [],
+              "description": "The root device to boot.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "run_level": {
+              "aliases": [],
+              "description": "Defines the state of your Linode after booting.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "virt_mode": {
+              "aliases": [],
+              "description": "Controls the virtualization mode.",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "paravirt",
+                "fullvirt"
+              ],
+              "suboptions": {}
+            }
+          }
+        },
+        "disks": {
+          "aliases": [],
+          "description": "A list of Disks to create on the Linode.\nSee U(https://www.linode.com/docs/api/linode-instances/#disk-create)",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "authorized_keys": {
+              "aliases": [],
+              "description": "A list of SSH public key parts to deploy for the root user.",
+              "type": "list",
+              "required": false,
+              "elements": "str",
+              "suboptions": {}
+            },
+            "authorized_users": {
+              "aliases": [],
+              "description": "A list of usernames.",
+              "type": "list",
+              "required": false,
+              "elements": "str",
+              "suboptions": {}
+            },
+            "filesystem": {
+              "aliases": [],
+              "description": "The filesystem to create this disk with.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "image": {
+              "aliases": [],
+              "description": "An Image ID to deploy the Disk from.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "label": {
+              "aliases": [],
+              "description": "The label to give this Disk.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "root_pass": {
+              "aliases": [],
+              "description": "The root user’s password on the newly-created Linode.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "size": {
+              "aliases": [],
+              "description": "The size of the Disk in MB.",
+              "type": "int",
+              "required": true,
+              "suboptions": {}
+            },
+            "stackscript_data": {
+              "aliases": [],
+              "description": "An object containing arguments to any User Defined Fields present in the StackScript used when creating the instance.\nOnly valid when a stackscript_id is provided.\nSee U(https://www.linode.com/docs/api/stackscripts/)",
+              "type": "dict",
+              "required": false,
+              "suboptions": {}
+            },
+            "stackscript_id": {
+              "aliases": [],
+              "description": "The ID of the StackScript to use when creating the instance.\nSee U(https://www.linode.com/docs/api/stackscripts/)",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "group": {
+          "aliases": [],
+          "description": "The group that the instance should be marked under.\nPlease note, that group labelling is deprecated but still supported.\nThe encouraged method for marking instances is to use tags.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "image": {
+          "aliases": [],
+          "description": "The image ID to deploy the instance disk from.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "interfaces": {
+          "aliases": [],
+          "description": "A list of network interfaces to apply to the Linode.\nSee U(https://www.linode.com/docs/api/linode-instances/#linode-create__request-body-schema).",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "ipam_address": {
+              "aliases": [],
+              "description": "This Network Interface’s private IP address in Classless           Inter-Domain Routing (CIDR) notation.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "label": {
+              "aliases": [],
+              "description": "The name of this interface.\nRequired for vlan purpose interfaces.\nMust be an empty string or null for public purpose interfaces.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "purpose": {
+              "aliases": [],
+              "description": "The type of interface.",
+              "type": "str",
+              "required": true,
+              "choices": [
+                "public",
+                "vlan"
+              ],
+              "suboptions": {}
+            }
+          }
+        },
+        "private_ip": {
+          "aliases": [],
+          "description": "If true, the created Linode will have private networking enabled.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [],
+          "description": "The location to deploy the instance in.\nSee U(https://api.linode.com/v4/regions)",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "root_pass": {
+          "aliases": [],
+          "description": "The password for the root user.\nIf not specified, one will be generated.\nThis generated password will be available in the task success JSON.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "stackscript_data": {
+          "aliases": [],
+          "description": "An object containing arguments to any User Defined Fields present in the StackScript used when creating the instance.\nOnly valid when a stackscript_id is provided.\nSee U(https://www.linode.com/docs/api/stackscripts/).",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "stackscript_id": {
+          "aliases": [],
+          "description": "The ID of the StackScript to use when creating the instance.\nSee U(https://www.linode.com/docs/api/stackscripts/).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "The unique label to give this instance.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait": {
+          "aliases": [],
+          "description": "Wait for the instance to have status `running` before returning.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_timeout": {
+          "aliases": [],
+          "description": "The amount of time, in seconds, to wait for an instance to have status `running`.",
+          "default": "240",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 3.0"
+      ]
+    },
+    "examples": "\n- name: Create a new Linode instance.\n  linode.cloud.instance:\n    label: my-linode\n    type: g6-nanode-1\n    region: us-east\n    image: linode/ubuntu20.04\n    root_pass: verysecurepassword!!!\n    private_ip: false\n    authorized_keys:\n      - \"ssh-rsa ...\"\n    stackscript_id: 1337\n    stackscript_data:\n      variable: value\n    group: app\n    tags:\n      - env=prod\n    state: present\n\n- name: Delete that new Linode instance.\n  linode.cloud.instance:\n    label: my-linode\n    state: absent\n"
+  },
+  "linode.cloud.instance_info": {
+    "doc": {
+      "description": "Get info about a Linode Instance.",
+      "has_action": false,
+      "options": {
+        "id": {
+          "aliases": [],
+          "description": "The instance’s label.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "label": {
+          "aliases": [],
+          "description": "The unique ID of the Instance.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 3.0"
+      ]
+    },
+    "examples": "\n- name: Get info about an instance by label\n  linode.cloud.instance_info:\n    label: 'my-instance'\n    \n- name: Get info about an instance by id\n  linode.cloud.instance_info:\n    id: 12345\n"
+  },
+  "linode.cloud.nodebalancer": {
+    "doc": {
+      "description": "Manage a Linode NodeBalancer.",
+      "has_action": false,
+      "options": {
+        "client_conn_throttle": {
+          "aliases": [],
+          "description": "Throttle connections per second.\nSet to 0 (zero) to disable throttling.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "configs": {
+          "aliases": [],
+          "description": "A list of configs to apply to the NodeBalancer.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "algorithm": {
+              "aliases": [],
+              "description": "What algorithm this NodeBalancer should use for routing traffic to backends.",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "roundrobin",
+                "leastconn",
+                "source"
+              ],
+              "suboptions": {}
+            },
+            "check": {
+              "aliases": [],
+              "description": "The type of check to perform against backends to ensure they are serving requests.",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "none",
+                "connection",
+                "http",
+                "http_body"
+              ],
+              "suboptions": {}
+            },
+            "check_attempts": {
+              "aliases": [],
+              "description": "How many times to attempt a check before considering a backend to be down.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "check_body": {
+              "aliases": [],
+              "description": "This value must be present in the response body of the check in order for it to pass.\nIf this value is not present in the response body of a check request, the backend is considered to be down.",
+              "default": "",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "check_interval": {
+              "aliases": [],
+              "description": "How often, in seconds, to check that backends are up and serving requests.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "check_passive": {
+              "aliases": [],
+              "description": "If true, any response from this backend with a 5xx status code will be enough for it to be considered unhealthy and taken out of rotation.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "check_path": {
+              "aliases": [],
+              "description": "The URL path to check on each backend. If the backend does not respond to this request it is considered to be down.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "check_timeout": {
+              "aliases": [],
+              "description": "How long, in seconds, to wait for a check attempt before considering it failed.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "cipher_suite": {
+              "aliases": [],
+              "description": "What ciphers to use for SSL connections served by this NodeBalancer.",
+              "default": "recommended",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "recommended",
+                "legacy"
+              ],
+              "suboptions": {}
+            },
+            "nodes": {
+              "aliases": [],
+              "description": "A list of nodes to apply to this config.",
+              "type": "list",
+              "required": false,
+              "elements": "dict",
+              "suboptions": {
+                "address": {
+                  "aliases": [],
+                  "description": "The private IP Address where this backend can be reached.\nThis must be a private IP address.",
+                  "type": "str",
+                  "required": true,
+                  "suboptions": {}
+                },
+                "label": {
+                  "aliases": [],
+                  "description": "The label for this node.",
+                  "type": "str",
+                  "required": true,
+                  "suboptions": {}
+                },
+                "mode": {
+                  "aliases": [],
+                  "description": "The mode this NodeBalancer should use when sending traffic to this backend.",
+                  "type": "str",
+                  "required": false,
+                  "choices": [
+                    "accept",
+                    "reject",
+                    "drain",
+                    "backup"
+                  ],
+                  "suboptions": {}
+                },
+                "weight": {
+                  "aliases": [],
+                  "description": "Nodes with a higher weight will receive more traffic.",
+                  "type": "int",
+                  "required": false,
+                  "suboptions": {}
+                }
+              }
+            },
+            "port": {
+              "aliases": [],
+              "description": "The port this Config is for.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "protocol": {
+              "aliases": [],
+              "description": "The protocol this port is configured to serve.",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "http",
+                "https",
+                "tcp"
+              ],
+              "suboptions": {}
+            },
+            "proxy_protocol": {
+              "aliases": [],
+              "description": "ProxyProtocol is a TCP extension that sends initial TCP connection information such as source/destination IPs and ports to backend devices.",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "none",
+                "v1",
+                "v2"
+              ],
+              "suboptions": {}
+            },
+            "ssl_cert": {
+              "aliases": [],
+              "description": "The PEM-formatted public SSL certificate (or the combined PEM-formatted           SSL certificate and Certificate Authority chain) that should be served           on this NodeBalancerConfig’s port.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "ssl_key": {
+              "aliases": [],
+              "description": "The PEM-formatted private key for the SSL certificate set in the ssl_cert field.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "stickiness": {
+              "aliases": [],
+              "description": "Controls how session stickiness is handled on this port.",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "none",
+                "table",
+                "http_cookie"
+              ],
+              "suboptions": {}
+            }
+          }
+        },
+        "label": {
+          "aliases": [],
+          "description": "The unique label to give this NodeBalancer.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [],
+          "description": "The ID of the Region to create this NodeBalancer in.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 3.0"
+      ]
+    },
+    "examples": "\n- name: Create a Linode NodeBalancer\n  linode.cloud.nodebalancer:\n    label: my-loadbalancer\n    region: us-east\n    tags: [ prod-env ]\n    state: present\n    configs:\n      - port: 80\n        protocol: http\n        algorithm: roundrobin\n        nodes:\n          - label: node1\n            address: 0.0.0.0:80\n\n- name: Delete the NodeBalancer\n  linode.cloud.nodebalancer:\n    label: my-loadbalancer\n    region: us-east\n    state: absent\n"
+  },
+  "linode.cloud.nodebalancer_info": {
+    "doc": {
+      "description": "Get info about a Linode NodeBalancer.",
+      "has_action": false,
+      "options": {
+        "id": {
+          "aliases": [],
+          "description": "The ID of this NodeBalancer.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "label": {
+          "aliases": [],
+          "description": "The label of this NodeBalancer.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 3.0"
+      ]
+    },
+    "examples": "\n- name: Get a NodeBalancer by its id\n  linode.cloud.nodebalancer_info:\n    id: 12345\n    \n- name: Get a NodeBalancer by its label\n  linode.cloud.nodebalancer_info:\n    label: cool_nodebalancer\n"
+  },
+  "linode.cloud.object_cluster_info": {
+    "doc": {
+      "description": "Get info about a Linode Object Storage Cluster.",
+      "has_action": false,
+      "options": {
+        "domain": {
+          "aliases": [],
+          "description": "The domain of the clusters.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The unique id given to the clusters.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [],
+          "description": "The region the clusters are in.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "static_site_domain": {
+          "aliases": [],
+          "description": "The static-site domain of the clusters.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 3.0"
+      ]
+    },
+    "examples": "\n- name: Get info about clusters in us-east\n  linode.cloud.object_cluster_info:\n    region: us-east\n\n- name: Get info about the cluster with id us-east-1\n  linode.cloud.object_cluster_info:\n    id: us-east-1\n"
+  },
+  "linode.cloud.object_keys": {
+    "doc": {
+      "description": "Manage Linode Object Storage Keys.",
+      "has_action": false,
+      "options": {
+        "access": {
+          "aliases": [],
+          "description": "A list of access permissions to give the key.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "bucket_name": {
+              "aliases": [],
+              "description": "The name of the bucket to set the key's permissions for.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "cluster": {
+              "aliases": [],
+              "description": "The id of the cluster that the provided bucket exists under.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "permissions": {
+              "aliases": [],
+              "description": "The permissions to give the key.",
+              "type": "str",
+              "required": true,
+              "choices": [
+                "read_only",
+                "write_only",
+                "read_write"
+              ],
+              "suboptions": {}
+            }
+          }
+        },
+        "label": {
+          "aliases": [],
+          "description": "The unique label to give this key.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 3.0"
+      ]
+    },
+    "examples": "\n- name: Create an Object Storage key\n  linode.cloud.object_keys:\n    label: 'my-fullaccess-key'\n    state: present\n    \n- name: Create a limited Object Storage key\n  linode.cloud.object_keys:\n    label: 'my-limited-key'\n    access:\n      - cluster: us-east-1\n        bucket_name: my-bucket\n        permissions: read_write\n    state: present\n    \n- name: Remove an object storage key\n  linode.cloud.object_keys:\n    label: 'my-key'\n    state: absent\n"
+  },
+  "linode.cloud.vlan_info": {
+    "doc": {
+      "description": "Get info about a Linode VLAN.",
+      "has_action": false,
+      "options": {
+        "label": {
+          "aliases": [],
+          "description": "The VLAN’s label.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 3.0"
+      ]
+    },
+    "examples": "\n- name: Get info about a VLAN by label\n  linode.cloud.vlan_info:\n    label: example-vlan\n"
+  },
+  "linode.cloud.volume": {
+    "doc": {
+      "description": "Manage a Linode Volume.",
+      "has_action": false,
+      "options": {
+        "attached": {
+          "aliases": [],
+          "description": "If true, the volume will be attached to a Linode. Otherwise, the volume will be detached.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "config_id": {
+          "aliases": [],
+          "description": "When creating a Volume attached to a Linode, the ID of the Linode Config to include the new Volume in.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "label": {
+          "aliases": [],
+          "description": "The Volume’s label, which is also used in the filesystem_path       of the resulting volume.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "linode_id": {
+          "aliases": [],
+          "description": "The Linode this volume should be attached to upon creation.\nIf not given, the volume will be created without an attachment.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [],
+          "description": "The location to deploy the volume in.\nSee U(https://api.linode.com/v4/regions)",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "size": {
+          "aliases": [],
+          "description": "The size of this volume, in GB.\nBe aware that volumes may only be resized up after creation.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_timeout": {
+          "aliases": [],
+          "description": "The amount of time, in seconds, to wait for a volume to have the active status.",
+          "default": "240",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 3.0"
+      ]
+    },
+    "examples": "\n- name: Create a volume attached to an instance\n  linode.cloud.volume:\n    label: example-volume\n    region: us-east\n    size: 30\n    linode_id: 12345\n    state: present\n    \n- name: Create an unattached volume\n  linode.cloud.volume:\n    label: example-volume\n    region: us-east\n    size: 30\n    state: present\n    \n- name: Resize a volume\n  linode.cloud.volume:\n    label: example-volume\n    size: 50\n    state: present\n    \n- name: Detach a volume\n  linode.cloud.volume:\n    label: example-volume\n    attached: false\n    state: present\n    \n- name: Delete a volume\n  linode.cloud.volume:\n    label: example-volume\n    state: absent\n"
+  },
+  "linode.cloud.volume_info": {
+    "doc": {
+      "description": "Get info about a Linode Volume.",
+      "has_action": false,
+      "options": {
+        "id": {
+          "aliases": [],
+          "description": "The ID of the Volume.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "label": {
+          "aliases": [],
+          "description": "The label of the Volume.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 3.0"
+      ]
+    },
+    "examples": "\n- name: Get info about a volume by label\n  linode.cloud.volume_info:\n    label: example-volume\n    \n- name: Get info about a volume by id\n  linode.cloud.volume_info:\n    id: 12345\n"
+  }
+}

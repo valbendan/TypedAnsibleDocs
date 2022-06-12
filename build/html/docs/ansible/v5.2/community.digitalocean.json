@@ -1,0 +1,3866 @@
+{
+  "community.digitalocean.digital_ocean": {
+    "doc": {
+      "description": "Create/delete a droplet in DigitalOcean and optionally wait for it to be 'running', or deploy an SSH key.",
+      "has_action": false,
+      "notes": "Two environment variables can be used, DO_API_KEY and DO_API_TOKEN. They both refer to the v2 token.\nAs of Ansible 1.9.5 and 2.0, Version 2 of the DigitalOcean API is used, this removes C(client_id) and C(api_key) options in favor of C(api_token).\nIf you are running Ansible 1.9.4 or earlier you might not be able to use the included version of this module as the API version used has been retired. Upgrade Ansible or, if unable to, try downloading the latest version of this module from github and putting it into a 'library' directory.",
+      "options": {
+        "api_token": {
+          "aliases": [
+            "API_TOKEN"
+          ],
+          "description": "DigitalOcean api token.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "backups_enabled": {
+          "aliases": [],
+          "description": "Optional, Boolean, enables backups for your droplet.",
+          "default": "no",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "command": {
+          "aliases": [],
+          "description": "Which target you want to operate on.",
+          "default": "droplet",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "droplet",
+            "ssh"
+          ],
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [
+            "droplet_id"
+          ],
+          "description": "Numeric, the droplet id you want to operate on.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "image_id": {
+          "aliases": [],
+          "description": "This is the slug of the image you would like the droplet created with.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipv6": {
+          "aliases": [],
+          "description": "Optional, Boolean, enable IPv6 for your droplet.",
+          "default": "no",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "String, this is the name of the droplet - must be formatted by hostname rules, or the name of a SSH key.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "private_networking": {
+          "aliases": [],
+          "description": "Bool, add an additional, private network interface to droplet for inter-droplet communication.",
+          "default": "no",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "region_id": {
+          "aliases": [],
+          "description": "This is the slug of the region you would like your server to be created in.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "size_id": {
+          "aliases": [],
+          "description": "This is the slug of the size you would like the droplet created with.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ssh_key_ids": {
+          "aliases": [],
+          "description": "Optional, array of SSH key (numeric) ID that you would like to be added to the server.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "ssh_pub_key": {
+          "aliases": [],
+          "description": "The public SSH key you want to add to your account.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Indicate desired state of the target.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "active",
+            "absent",
+            "deleted"
+          ],
+          "suboptions": {}
+        },
+        "unique_name": {
+          "aliases": [],
+          "description": "Bool, require unique hostnames.  By default, DigitalOcean allows multiple hosts with the same name.  Setting this to \"yes\" allows only one host per name.  Useful for idempotence.",
+          "default": "no",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "user_data": {
+          "aliases": [],
+          "description": "opaque blob of data which is made available to the droplet",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "virtio": {
+          "aliases": [],
+          "description": "Bool, turn on virtio driver in droplet for improved network and storage I/O.",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait": {
+          "aliases": [],
+          "description": "Wait for the droplet to be in state 'running' before returning.  If wait is \"no\" an ip_address may not be returned.",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_timeout": {
+          "aliases": [],
+          "description": "How long before wait gives up, in seconds.",
+          "default": "300",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6",
+        "dopy"
+      ],
+      "short_description": "Create/delete a droplet/SSH_key in DigitalOcean"
+    },
+    "examples": "\n# Ensure a SSH key is present\n# If a key matches this name, will return the ssh key id and changed = False\n# If no existing key matches this name, a new key is created, the ssh key id is returned and changed = False\n\n- name: Ensure a SSH key is present\n  community.digitalocean.digital_ocean:\n    state: present\n    command: ssh\n    name: my_ssh_key\n    ssh_pub_key: 'ssh-rsa AAAA...'\n    api_token: XXX\n\n# Will return the droplet details including the droplet id (used for idempotence)\n- name: Create a new Droplet\n  community.digitalocean.digital_ocean:\n    state: present\n    command: droplet\n    name: mydroplet\n    api_token: XXX\n    size_id: 2gb\n    region_id: ams2\n    image_id: fedora-19-x64\n    wait_timeout: 500\n  register: my_droplet\n\n- debug:\n    msg: \"ID is {{ my_droplet.droplet.id }}\"\n\n- debug:\n    msg: \"IP is {{ my_droplet.droplet.ip_address }}\"\n\n# Ensure a droplet is present\n# If droplet id already exist, will return the droplet details and changed = False\n# If no droplet matches the id, a new droplet will be created and the droplet details (including the new id) are returned, changed = True.\n\n- name: Ensure a droplet is present\n  community.digitalocean.digital_ocean:\n    state: present\n    command: droplet\n    id: 123\n    name: mydroplet\n    api_token: XXX\n    size_id: 2gb\n    region_id: ams2\n    image_id: fedora-19-x64\n    wait_timeout: 500\n\n# Create a droplet with ssh key\n# The ssh key id can be passed as argument at the creation of a droplet (see ssh_key_ids).\n# Several keys can be added to ssh_key_ids as id1,id2,id3\n# The keys are used to connect as root to the droplet.\n\n- name: Create a droplet with ssh key\n  community.digitalocean.digital_ocean:\n    state: present\n    ssh_key_ids: 123,456\n    name: mydroplet\n    api_token: XXX\n    size_id: 2gb\n    region_id: ams2\n    image_id: fedora-19-x64\n"
+  },
+  "community.digitalocean.digital_ocean_account_facts": {
+    "doc": {
+      "description": "This module can be used to gather information about User account.\nThis module was called C(digital_ocean_account_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean User account"
+    },
+    "examples": "\n- name: Gather information about user account\n  community.digitalocean.digital_ocean_account_info:\n    oauth_token: \"{{ oauth_token }}\"\n"
+  },
+  "community.digitalocean.digital_ocean_account_info": {
+    "doc": {
+      "description": "This module can be used to gather information about User account.\nThis module was called C(digital_ocean_account_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean User account"
+    },
+    "examples": "\n- name: Gather information about user account\n  community.digitalocean.digital_ocean_account_info:\n    oauth_token: \"{{ oauth_token }}\"\n"
+  },
+  "community.digitalocean.digital_ocean_balance_info": {
+    "doc": {
+      "description": "This module can be used to display the DigitalOcean customer balance.",
+      "has_action": false,
+      "options": {
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Display DigitalOcean customer balance",
+      "version_added": "1.2.0"
+    },
+    "examples": "\n- name: Display DigitalOcean customer balance\n  community.digitalocean.digital_ocean_balance_info:\n    oauth_token: \"{{ oauth_token }}\"\n"
+  },
+  "community.digitalocean.digital_ocean_block_storage": {
+    "doc": {
+      "description": "Create/destroy Block Storage volume in DigitalOcean, or attach/detach Block Storage volume to a droplet.",
+      "has_action": false,
+      "notes": "Two environment variables can be used, DO_API_KEY and DO_API_TOKEN. They both refer to the v2 token.\nIf snapshot_id is used, region and block_size will be ignored and changed to null.",
+      "options": {
+        "block_size": {
+          "aliases": [],
+          "description": "The size of the Block Storage volume in gigabytes.\nRequired when I(command=create) and I(state=present).\nIf snapshot_id is included, this will be ignored.\nIf block_size > current size of the volume, the volume is resized.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "command": {
+          "aliases": [],
+          "description": "Which operation do you want to perform.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "create",
+            "attach"
+          ],
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "Description of the Block Storage volume.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "droplet_id": {
+          "aliases": [],
+          "description": "The droplet id you want to operate on.\nRequired when I(command=attach).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "project_name": {
+          "aliases": [
+            "project"
+          ],
+          "description": "Project to assign the resource to (project name, not UUID).\nDefaults to the default project of the account (empty string).\nCurrently only supported when C(command=create).",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [],
+          "description": "The slug of the region where your Block Storage volume should be located in.\nIf I(snapshot_id) is included, this will be ignored.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "snapshot_id": {
+          "aliases": [],
+          "description": "The snapshot id you would like the Block Storage volume created with.\nIf included, I(region) and I(block_size) will be ignored and changed to C(null).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Indicate desired state of the target.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "volume_name": {
+          "aliases": [],
+          "description": "The name of the Block Storage volume.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Create/destroy or attach/detach Block Storage volumes in DigitalOcean"
+    },
+    "examples": "\n- name: Create new Block Storage\n  community.digitalocean.digital_ocean_block_storage:\n    state: present\n    command: create\n    api_token: <TOKEN>\n    region: nyc1\n    block_size: 10\n    volume_name: nyc1-block-storage\n\n- name: Create new Block Storage (and assign to Project \"test\")\n  community.digitalocean.digital_ocean_block_storage:\n    state: present\n    command: create\n    api_token: <TOKEN>\n    region: nyc1\n    block_size: 10\n    volume_name: nyc1-block-storage\n    project_name: test\n\n- name: Resize an existing Block Storage\n  community.digitalocean.digital_ocean_block_storage:\n    state: present\n    command: create\n    api_token: <TOKEN>\n    region: nyc1\n    block_size: 20\n    volume_name: nyc1-block-storage\n\n- name: Delete Block Storage\n  community.digitalocean.digital_ocean_block_storage:\n    state: absent\n    command: create\n    api_token: <TOKEN>\n    region: nyc1\n    volume_name: nyc1-block-storage\n\n- name: Attach Block Storage to a Droplet\n  community.digitalocean.digital_ocean_block_storage:\n    state: present\n    command: attach\n    api_token: <TOKEN>\n    volume_name: nyc1-block-storage\n    region: nyc1\n    droplet_id: <ID>\n\n- name: Detach Block Storage from a Droplet\n  community.digitalocean.digital_ocean_block_storage:\n    state: absent\n    command: attach\n    api_token: <TOKEN>\n    volume_name: nyc1-block-storage\n    region: nyc1\n    droplet_id: <ID>\n"
+  },
+  "community.digitalocean.digital_ocean_cdn_endpoints": {
+    "doc": {
+      "description": "Create, update, and delete DigitalOcean CDN Endpoints",
+      "has_action": false,
+      "options": {
+        "certificate_id": {
+          "aliases": [],
+          "description": "The ID of a DigitalOcean managed TLS certificate used for SSL when a custom subdomain is provided.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "custom_domain": {
+          "aliases": [],
+          "description": "The fully qualified domain name (FQDN) of the custom subdomain used with the CDN endpoint.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "origin": {
+          "aliases": [],
+          "description": "The fully qualified domain name (FQDN) for the origin server which provides the content for the CDN.\nThis is currently restricted to a Space.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The usual, C(present) to create, C(absent) to destroy",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "ttl": {
+          "aliases": [],
+          "description": "The amount of time the content is cached by the CDN's edge servers in seconds.\nTTL must be one of 60, 600, 3600, 86400, or 604800.\nDefaults to 3600 (one hour) when excluded.",
+          "default": "3600",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "60",
+            "600",
+            "3600",
+            "86400",
+            "604800"
+          ],
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Create, update, and delete DigitalOcean CDN Endpoints",
+      "version_added": "1.10.0"
+    },
+    "examples": "\n- name: Create DigitalOcean CDN Endpoint\n  community.digitalocean.digital_ocean_cdn_endpoints_info:\n    state: present\n    oauth_token: \"{{ lookup('ansible.builtin.env', 'DO_API_TOKEN') }}\"\n    origin: mamercad.nyc3.digitaloceanspaces.com\n\n- name: Update DigitalOcean CDN Endpoint (change ttl to 600, default is 3600)\n  community.digitalocean.digital_ocean_cdn_endpoints_info:\n    state: present\n    oauth_token: \"{{ lookup('ansible.builtin.env', 'DO_API_TOKEN') }}\"\n    origin: mamercad.nyc3.digitaloceanspaces.com\n    ttl: 600\n\n- name: Delete DigitalOcean CDN Endpoint\n  community.digitalocean.digital_ocean_cdn_endpoints_info:\n    state: absent\n    oauth_token: \"{{ lookup('ansible.builtin.env', 'DO_API_TOKEN') }}\"\n    origin: mamercad.nyc3.digitaloceanspaces.com\n"
+  },
+  "community.digitalocean.digital_ocean_cdn_endpoints_info": {
+    "doc": {
+      "description": "Display DigitalOcean CDN Endpoints",
+      "has_action": false,
+      "options": {
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The usual, C(present) to create, C(absent) to destroy",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Display DigitalOcean CDN Endpoints",
+      "version_added": "1.10.0"
+    },
+    "examples": "\n- name: Display DigitalOcean CDN Endpoints\n  community.digitalocean.digital_ocean_cdn_endpoints_info:\n    oauth_token: \"{{ lookup('ansible.builtin.env', 'DO_API_TOKEN') }}\"\n"
+  },
+  "community.digitalocean.digital_ocean_certificate": {
+    "doc": {
+      "description": "Create, Retrieve and remove certificates DigitalOcean.",
+      "has_action": false,
+      "notes": "Two environment variables can be used, DO_API_KEY, DO_OAUTH_TOKEN and DO_API_TOKEN. They both refer to the v2 token.",
+      "options": {
+        "certificate_chain": {
+          "aliases": [],
+          "description": "The full PEM-formatted trust chain between the certificate authority's certificate and your domain's SSL certificate.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "leaf_certificate": {
+          "aliases": [],
+          "description": "A PEM-formatted public SSL Certificate.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the certificate.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "private_key": {
+          "aliases": [],
+          "description": "A PEM-formatted private key content of SSL Certificate.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the certificate should be present or absent.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage certificates in DigitalOcean"
+    },
+    "examples": "\n- name: Create a certificate\n  community.digitalocean.digital_ocean_certificate:\n    name: production\n    state: present\n    private_key: \"-----BEGIN PRIVATE KEY-----\\nMIIEvgIBADANBgkqhkM8OI7pRpgyj1I\\n-----END PRIVATE KEY-----\"\n    leaf_certificate: \"-----BEGIN CERTIFICATE-----\\nMIIFDmg2Iaw==\\n-----END CERTIFICATE-----\"\n    oauth_token: b7d03a6947b217efb6f3ec3bd365652\n\n- name: Create a certificate using file lookup plugin\n  community.digitalocean.digital_ocean_certificate:\n    name: production\n    state: present\n    private_key: \"{{ lookup('file', 'test.key') }}\"\n    leaf_certificate: \"{{ lookup('file', 'test.cert') }}\"\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Create a certificate with trust chain\n  community.digitalocean.digital_ocean_certificate:\n    name: production\n    state: present\n    private_key: \"{{ lookup('file', 'test.key') }}\"\n    leaf_certificate: \"{{ lookup('file', 'test.cert') }}\"\n    certificate_chain: \"{{ lookup('file', 'chain.cert') }}\"\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Remove a certificate\n  community.digitalocean.digital_ocean_certificate:\n    name: production\n    state: absent\n    oauth_token: \"{{ oauth_token }}\"\n\n"
+  },
+  "community.digitalocean.digital_ocean_certificate_facts": {
+    "doc": {
+      "description": "This module can be used to gather information about DigitalOcean provided certificates.\nThis module was called C(digital_ocean_certificate_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "certificate_id": {
+          "aliases": [],
+          "description": "Certificate ID that can be used to identify and reference a certificate.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean certificates"
+    },
+    "examples": "\n- name: Gather information about all certificates\n  community.digitalocean.digital_ocean_certificate_info:\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about certificate with given id\n  community.digitalocean.digital_ocean_certificate_info:\n    oauth_token: \"{{ oauth_token }}\"\n    certificate_id: \"892071a0-bb95-49bc-8021-3afd67a210bf\"\n\n- name: Get not after information about certificate\n  community.digitalocean.digital_ocean_certificate_info:\n  register: resp_out\n- set_fact:\n    not_after_date: \"{{ item.not_after }}\"\n  loop: \"{{ resp_out.data | community.general.json_query(name) }}\"\n  vars:\n    name: \"[?name=='web-cert-01']\"\n- debug:\n    var: not_after_date\n"
+  },
+  "community.digitalocean.digital_ocean_certificate_info": {
+    "doc": {
+      "description": "This module can be used to gather information about DigitalOcean provided certificates.\nThis module was called C(digital_ocean_certificate_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "certificate_id": {
+          "aliases": [],
+          "description": "Certificate ID that can be used to identify and reference a certificate.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean certificates"
+    },
+    "examples": "\n- name: Gather information about all certificates\n  community.digitalocean.digital_ocean_certificate_info:\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about certificate with given id\n  community.digitalocean.digital_ocean_certificate_info:\n    oauth_token: \"{{ oauth_token }}\"\n    certificate_id: \"892071a0-bb95-49bc-8021-3afd67a210bf\"\n\n- name: Get not after information about certificate\n  community.digitalocean.digital_ocean_certificate_info:\n  register: resp_out\n- set_fact:\n    not_after_date: \"{{ item.not_after }}\"\n  loop: \"{{ resp_out.data | community.general.json_query(name) }}\"\n  vars:\n    name: \"[?name=='web-cert-01']\"\n- debug:\n    var: not_after_date\n"
+  },
+  "community.digitalocean.digital_ocean_database": {
+    "doc": {
+      "description": "Create and delete a database in DigitalOcean and optionally wait for it to be online.\nDigitalOcean's managed database service simplifies the creation and management of highly available database clusters.\nCurrently, it offers support for PostgreSQL, Redis, MySQL, and MongoDB.",
+      "has_action": false,
+      "options": {
+        "engine": {
+          "aliases": [],
+          "description": "A slug representing the database engine used for the cluster.\nThe possible values are C(pg) for PostgreSQL, C(mysql) for MySQL, C(redis) for Redis, and C(mongodb) for MongoDB.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "pg",
+            "mysql",
+            "redis",
+            "mongodb"
+          ],
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [
+            "database_id"
+          ],
+          "description": "A unique ID that can be used to identify and reference a database cluster.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "A unique, human-readable name for the database cluster.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "num_nodes": {
+          "aliases": [],
+          "description": "The number of nodes in the database cluster.\nValid choices are 1, 2 or 3.",
+          "default": "1",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "1",
+            "2",
+            "3"
+          ],
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "private_network_uuid": {
+          "aliases": [],
+          "description": "A string specifying the UUID of the VPC to which the database cluster is assigned.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "project_name": {
+          "aliases": [
+            "project"
+          ],
+          "description": "Project to assign the resource to (project name, not UUID).\nDefaults to the default project of the account (empty string).\nCurrently only supported when creating databases.",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [
+            "region_id"
+          ],
+          "description": "The slug identifier for the region where the database cluster is located.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "size": {
+          "aliases": [
+            "size_id"
+          ],
+          "description": "The slug identifier representing the size of the nodes in the database cluster.\nSee U(https://developers.digitalocean.com/documentation/v2/#create-a-new-database-cluster) for supported sizes.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Indicates the desired state of the target.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "An array of tags that have been applied to the database cluster.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "version": {
+          "aliases": [],
+          "description": "A string representing the version of the database engine in use for the cluster.\nFor C(pg), versions are 10, 11 and 12.\nFor C(mysql), version is 8.\nFor C(redis), version is 5.\nFor C(mongodb), version is 4.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait": {
+          "aliases": [],
+          "description": "Wait for the database to be online before returning.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_timeout": {
+          "aliases": [],
+          "description": "How long before wait gives up, in seconds, when creating a database.",
+          "default": "600",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Create and delete a DigitalOcean database",
+      "version_added": "1.3.0"
+    },
+    "examples": "\n- name: Create a Redis database\n  community.digitalocean.digital_ocean_database:\n    oauth_token: \"{{ lookup('ansible.builtin.env', 'DO_API_KEY') }}\"\n    state: present\n    name: testdatabase1\n    engine: redis\n    size: db-s-1vcpu-1gb\n    region: nyc1\n    num_nodes: 1\n  register: my_database\n\n- name: Create a Redis database (and assign to Project \"test\")\n  community.digitalocean.digital_ocean_database:\n    oauth_token: \"{{ lookup('ansible.builtin.env', 'DO_API_KEY') }}\"\n    state: present\n    name: testdatabase1\n    engine: redis\n    size: db-s-1vcpu-1gb\n    region: nyc1\n    num_nodes: 1\n    project_name: test\n  register: my_database\n"
+  },
+  "community.digitalocean.digital_ocean_database_info": {
+    "doc": {
+      "description": "Gather information about DigitalOcean databases.",
+      "has_action": false,
+      "options": {
+        "id": {
+          "aliases": [
+            "database_id"
+          ],
+          "description": "A unique ID that can be used to identify and reference a database cluster.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "A unique, human-readable name for the database cluster.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Gather information about DigitalOcean databases",
+      "version_added": "1.3.0"
+    },
+    "examples": "\n- name: Gather all DigitalOcean databases\n  community.digitalocean.digital_ocean_database_info:\n    oauth_token: \"{{ lookup('ansible.builtin.env', 'DO_API_KEY') }}\"\n  register: my_databases\n"
+  },
+  "community.digitalocean.digital_ocean_domain": {
+    "doc": {
+      "description": "Create/delete a DNS domain in DigitalOcean.",
+      "has_action": false,
+      "notes": "Environment variables DO_OAUTH_TOKEN can be used for the oauth_token.\nAs of Ansible 1.9.5 and 2.0, Version 2 of the DigitalOcean API is used, this removes C(client_id) and C(api_key) options in favor of C(oauth_token).\nIf you are running Ansible 1.9.4 or earlier you might not be able to use the included version of this module as the API version used has been retired.",
+      "options": {
+        "id": {
+          "aliases": [
+            "droplet_id"
+          ],
+          "description": "The droplet id you want to operate on.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "ip": {
+          "aliases": [],
+          "description": "An 'A' record for '@' ($ORIGIN) will be created with the value 'ip'.  'ip' is an IP version 4 address.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the droplet - must be formatted by hostname rules, or the name of a SSH key, or the name of a domain.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "project_name": {
+          "aliases": [
+            "project"
+          ],
+          "description": "Project to assign the resource to (project name, not UUID).\nDefaults to the default project of the account (empty string).\nCurrently only supported when creating domains.",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Indicate desired state of the target.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Create/delete a DNS domain in DigitalOcean"
+    },
+    "examples": "\n- name: Create a domain\n  community.digitalocean.digital_ocean_domain:\n    state: present\n    name: my.digitalocean.domain\n    ip: 127.0.0.1\n\n- name: Create a domain (and associate to Project \"test\")\n  community.digitalocean.digital_ocean_domain:\n    state: present\n    name: my.digitalocean.domain\n    ip: 127.0.0.1\n    project: test\n\n# Create a droplet and corresponding domain\n- name: Create a droplet\n  community.digitalocean.digital_ocean:\n    state: present\n    name: test_droplet\n    size_id: 1gb\n    region_id: sgp1\n    image_id: ubuntu-14-04-x64\n  register: test_droplet\n\n- name: Create a corresponding domain\n  community.digitalocean.digital_ocean_domain:\n    state: present\n    name: \"{{ test_droplet.droplet.name }}.my.domain\"\n    ip: \"{{ test_droplet.droplet.ip_address }}\"\n\n"
+  },
+  "community.digitalocean.digital_ocean_domain_facts": {
+    "doc": {
+      "description": "This module can be used to gather information about DigitalOcean provided Domains.\nThis module was called C(digital_ocean_domain_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "domain_name": {
+          "aliases": [],
+          "description": "Name of the domain to gather information for.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean Domains"
+    },
+    "examples": "\n- name: Gather information about all domains\n  community.digitalocean.digital_ocean_domain_info:\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about domain with given name\n  community.digitalocean.digital_ocean_domain_info:\n    oauth_token: \"{{ oauth_token }}\"\n    domain_name: \"example.com\"\n\n- name: Get ttl from domain\n  community.digitalocean.digital_ocean_domain_info:\n  register: resp_out\n- set_fact:\n    domain_ttl: \"{{ item.ttl }}\"\n  loop: \"{{ resp_out.data | community.general.json_query(name) }}\"\n  vars:\n    name: \"[?name=='example.com']\"\n- debug:\n    var: domain_ttl\n"
+  },
+  "community.digitalocean.digital_ocean_domain_info": {
+    "doc": {
+      "description": "This module can be used to gather information about DigitalOcean provided Domains.\nThis module was called C(digital_ocean_domain_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "domain_name": {
+          "aliases": [],
+          "description": "Name of the domain to gather information for.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean Domains"
+    },
+    "examples": "\n- name: Gather information about all domains\n  community.digitalocean.digital_ocean_domain_info:\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about domain with given name\n  community.digitalocean.digital_ocean_domain_info:\n    oauth_token: \"{{ oauth_token }}\"\n    domain_name: \"example.com\"\n\n- name: Get ttl from domain\n  community.digitalocean.digital_ocean_domain_info:\n  register: resp_out\n- set_fact:\n    domain_ttl: \"{{ item.ttl }}\"\n  loop: \"{{ resp_out.data | community.general.json_query(name) }}\"\n  vars:\n    name: \"[?name=='example.com']\"\n- debug:\n    var: domain_ttl\n"
+  },
+  "community.digitalocean.digital_ocean_domain_record": {
+    "doc": {
+      "description": "Create/delete a domain record in DigitalOcean.",
+      "has_action": false,
+      "notes": "Version 2 of DigitalOcean API is used.\nThe number of requests that can be made through the API is currently limited to 5,000 per hour per OAuth token.",
+      "options": {
+        "data": {
+          "aliases": [],
+          "description": "This is the value of the record, depending on the record type.",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "domain": {
+          "aliases": [],
+          "description": "Name of the domain.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "flags": {
+          "aliases": [],
+          "description": "An unsignedinteger between 0-255 used for CAA records.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "force_update": {
+          "aliases": [],
+          "description": "If there is already a record with the same C(name) and C(type) force update it.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Required for C(A, AAAA, CNAME, TXT, SRV) records. The host name, alias, or service being defined by the record.",
+          "default": "@",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "API_TOKEN"
+          ],
+          "description": "DigitalOcean OAuth token. Can be specified in C(DO_API_KEY), C(DO_API_TOKEN), or C(DO_OAUTH_TOKEN) environment variables",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "The port that the service is accessible on for SRV records only.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "priority": {
+          "aliases": [],
+          "description": "The priority of the host for C(SRV, MX) records).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "record_id": {
+          "aliases": [],
+          "description": "Used with C(force_update=yes) and C(state='absent') to update or delete a specific record.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Indicate desired state of the target.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "tag": {
+          "aliases": [],
+          "description": "The parameter tag for CAA records.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "issue",
+            "wildissue",
+            "iodef"
+          ],
+          "suboptions": {}
+        },
+        "ttl": {
+          "aliases": [],
+          "description": "Time to live for the record, in seconds.",
+          "default": "1800",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "The type of record you would like to create.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "A",
+            "AAAA",
+            "CNAME",
+            "MX",
+            "TXT",
+            "SRV",
+            "NS",
+            "CAA"
+          ],
+          "suboptions": {}
+        },
+        "weight": {
+          "aliases": [],
+          "description": "The weight of records with the same priority for SRV records only.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage DigitalOcean domain records",
+      "version_added": "1.1.0"
+    },
+    "examples": "\n- name: Create default A record for example.com\n  community.digitalocean.digital_ocean_domain_record:\n    oauth_token: xxxx\n    state: present\n    domain: example.com\n    type: A\n    name: \"@\"\n    data: 127.0.0.1\n\n- name: Create A record for www\n  community.digitalocean.digital_ocean_domain_record:\n    oauth_token: xxxx\n    state: present\n    domain: example.com\n    type: A\n    name: www\n    data: 127.0.0.1\n\n- name: Update A record for www based on name/type/data\n  community.digitalocean.digital_ocean_domain_record:\n    oauth_token: xxxx\n    state: present\n    domain: example.com\n    type: A\n    name: www\n    data: 127.0.0.2\n    force_update: yes\n\n- name: Update A record for www based on record_id\n  community.digitalocean.digital_ocean_domain_record:\n    oauth_token: xxxx\n    state: present\n    domain: example.com\n    record_id: 123456\n    type: A\n    name: www\n    data: 127.0.0.2\n    force_update: yes\n\n- name: Remove www record based on name/type/data\n  community.digitalocean.digital_ocean_domain_record:\n    oauth_token: xxxx\n    state: absent\n    domain: example.com\n    type: A\n    name: www\n    data: 127.0.0.1\n\n- name: Remove www record based on record_id\n  community.digitalocean.digital_ocean_domain_record:\n    oauth_token: xxxx\n    state: absent\n    domain: example.com\n    record_id: 1234567\n\n- name: Create MX record with priority 10 for example.com\n  community.digitalocean.digital_ocean_domain_record:\n    oauth_token: xxxx\n    state: present\n    domain: example.com\n    type: MX\n    data: mail1.example.com\n    priority: 10\n"
+  },
+  "community.digitalocean.digital_ocean_droplet": {
+    "doc": {
+      "description": "Create and delete a droplet in DigitalOcean and optionally wait for it to be active.",
+      "has_action": false,
+      "options": {
+        "backups": {
+          "aliases": [],
+          "description": "Indicates whether automated backups should be enabled.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "firewall": {
+          "aliases": [],
+          "description": "Array of firewall names to apply to the Droplet.\nOmitting a firewall name that is currently applied to a droplet will remove it.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [
+            "droplet_id"
+          ],
+          "description": "The Droplet ID you want to operate on.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "image": {
+          "aliases": [
+            "image_id"
+          ],
+          "description": "This is the slug of the image you would like the Droplet created with.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipv6": {
+          "aliases": [],
+          "description": "Enable IPv6 for the Droplet.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "monitoring": {
+          "aliases": [],
+          "description": "Indicates whether to install the DigitalOcean agent for monitoring.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "This is the name of the Droplet.\nMust be formatted by hostname rules.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "private_networking": {
+          "aliases": [],
+          "description": "Add an additional, private network interface to the Droplet (for inter-Droplet communication).",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "project_name": {
+          "aliases": [
+            "project"
+          ],
+          "description": "Project to assign the resource to (project name, not UUID).\nDefaults to the default project of the account (empty string).\nCurrently only supported when creating.",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [
+            "region_id"
+          ],
+          "description": "This is the slug of the region you would like your Droplet to be created in.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "resize_disk": {
+          "aliases": [],
+          "description": "Whether to increase disk size on resize.\nOnly consulted if the C(unique_name) is C(true).\nDroplet C(size) must dictate an increase.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "size": {
+          "aliases": [
+            "size_id"
+          ],
+          "description": "This is the slug of the size you would like the Droplet created with.\nPlease see U(https://slugs.do-api.dev/) for current slugs.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sleep_interval": {
+          "aliases": [],
+          "description": "How long to C(sleep) in between action and status checks.\nDefault is 10 seconds; this should be less than C(wait_timeout) and nonzero.",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "ssh_keys": {
+          "aliases": [],
+          "description": "Array of SSH key fingerprints that you would like to be added to the Droplet.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Indicate desired state of the target.\nC(present) will create the named droplet; be mindful of the C(unique_name) parameter.\nC(absent) will delete the named droplet, if it exists.\nC(active) will create the named droplet (unless it exists) and ensure that it is powered on.\nC(inactive) will create the named droplet (unless it exists) and ensure that it is powered off.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent",
+            "active",
+            "inactive"
+          ],
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "A list of tag names as strings to apply to the Droplet after it is created.\nTag names can either be existing or new tags.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "unique_name": {
+          "aliases": [],
+          "description": "Require unique hostnames.\nBy default, DigitalOcean allows multiple hosts with the same name.\nSetting this to C(true) allows only one host per name.\nUseful for idempotence.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "user_data": {
+          "aliases": [],
+          "description": "Opaque blob of data which is made available to the Droplet.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "volumes": {
+          "aliases": [],
+          "description": "A list including the unique string identifier for each Block Storage volume to be attached to the Droplet.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "vpc_uuid": {
+          "aliases": [],
+          "description": "A string specifying the UUID of the VPC to which the Droplet will be assigned.\nIf excluded, the Droplet will be assigned to the account's default VPC for the region.",
+          "type": "str",
+          "required": false,
+          "version_added": "0.1.0",
+          "suboptions": {}
+        },
+        "wait": {
+          "aliases": [],
+          "description": "Wait for the Droplet to be active before returning.\nIf wait is C(false) an IP address may not be returned.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_timeout": {
+          "aliases": [],
+          "description": "How long before C(wait) gives up, in seconds, when creating a Droplet.",
+          "default": "120",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Create and delete a DigitalOcean droplet"
+    },
+    "examples": "\n- name: Create a new Droplet\n  community.digitalocean.digital_ocean_droplet:\n    state: present\n    oauth_token: \"{{ lookup('ansible.builtin.env', 'DO_API_TOKEN') }}\"\n    name: mydroplet\n    size: s-1vcpu-1gb\n    region: sfo3\n    image: ubuntu-20-04-x64\n    wait_timeout: 500\n    ssh_keys: [ .... ]\n  register: my_droplet\n\n- name: Show Droplet info\n  ansible.builtin.debug:\n    msg: |\n      Droplet ID is {{ my_droplet.data.droplet.id }}\n      First Public IPv4 is {{ (my_droplet.data.droplet.networks.v4 | selectattr('type', 'equalto', 'public')).0.ip_address | default('<none>', true) }}\n      First Private IPv4 is {{ (my_droplet.data.droplet.networks.v4 | selectattr('type', 'equalto', 'private')).0.ip_address | default('<none>', true) }}\n\n- name: Create a new Droplet (and assign to Project \"test\")\n  community.digitalocean.digital_ocean_droplet:\n    state: present\n    oauth_token: \"{{ lookup('ansible.builtin.env', 'DO_API_TOKEN') }}\"\n    name: mydroplet\n    size: s-1vcpu-1gb\n    region: sfo3\n    image: ubuntu-20-04-x64\n    wait_timeout: 500\n    ssh_keys: [ .... ]\n    project: test\n  register: my_droplet\n\n- name: Ensure a Droplet is present\n  community.digitalocean.digital_ocean_droplet:\n    state: present\n    oauth_token: \"{{ lookup('ansible.builtin.env', 'DO_API_TOKEN') }}\"\n    id: 123\n    name: mydroplet\n    size: s-1vcpu-1gb\n    region: sfo3\n    image: ubuntu-20-04-x64\n    wait_timeout: 500\n\n- name: Ensure a Droplet is present and has firewall rules applied\n  community.digitalocean.digital_ocean_droplet:\n    state: present\n    oauth_token: \"{{ lookup('ansible.builtin.env', 'DO_API_TOKEN') }}\"\n    id: 123\n    name: mydroplet\n    size: s-1vcpu-1gb\n    region: sfo3\n    image: ubuntu-20-04-x64\n    firewall: ['myfirewall', 'anotherfirewall']\n    wait_timeout: 500\n\n- name: Ensure a Droplet is present with SSH keys installed\n  community.digitalocean.digital_ocean_droplet:\n    state: present\n    oauth_token: \"{{ lookup('ansible.builtin.env', 'DO_API_TOKEN') }}\"\n    id: 123\n    name: mydroplet\n    size: s-1vcpu-1gb\n    region: sfo3\n    ssh_keys: ['1534404', '1784768']\n    image: ubuntu-20-04-x64\n    wait_timeout: 500\n"
+  },
+  "community.digitalocean.digital_ocean_droplet_info": {
+    "doc": {
+      "description": "This module can be used to gather information about Droplets.",
+      "has_action": false,
+      "options": {
+        "id": {
+          "aliases": [],
+          "description": "Droplet ID that can be used to identify and reference a droplet.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Droplet name that can be used to identify and reference a droplet.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Gather information about DigitalOcean Droplets",
+      "version_added": "1.4.0"
+    },
+    "examples": "\n- name: Gather information about all droplets\n  community.digitalocean.digital_ocean_droplet_info:\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about a specific droplet by name\n  community.digitalocean.digital_ocean_droplet_info:\n    oauth_token: \"{{ oauth_token }}\"\n    name: my-droplet-name\n\n- name: Gather information about a specific droplet by id\n  community.digitalocean.digital_ocean_droplet_info:\n    oauth_token: \"{{ oauth_token }}\"\n    id: abc-123-d45\n\n- name: Get information about all droplets to loop through\n  community.digitalocean.digital_ocean_droplet_info:\n    oauth_token: \"{{ oauth_token }}\"\n  register: droplets\n\n- name: Get number of droplets\n  set_fact:\n    droplet_count: \"{{ droplets.data | length }}\"\n"
+  },
+  "community.digitalocean.digital_ocean_firewall": {
+    "doc": {
+      "description": "This module can be used to add or remove firewalls on the DigitalOcean cloud platform.",
+      "has_action": false,
+      "options": {
+        "droplet_ids": {
+          "aliases": [],
+          "description": "List of droplet ids to be assigned to the firewall",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "inbound_rules": {
+          "aliases": [],
+          "description": "Firewall rules specifically targeting inbound network traffic into DigitalOcean",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "ports": {
+              "aliases": [],
+              "description": "The ports on which traffic will be allowed, single, range, or all",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "protocol": {
+              "aliases": [],
+              "description": "Network protocol to be accepted.",
+              "default": "tcp",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "udp",
+                "tcp",
+                "icmp"
+              ],
+              "suboptions": {}
+            },
+            "sources": {
+              "aliases": [],
+              "description": "Dictionary of locations from which inbound traffic will be accepted",
+              "type": "dict",
+              "required": true,
+              "suboptions": {
+                "addresses": {
+                  "aliases": [],
+                  "description": "List of strings containing the IPv4 addresses, IPv6 addresses, IPv4 CIDRs, and/or IPv6 CIDRs to which the firewall will allow traffic",
+                  "type": "list",
+                  "required": false,
+                  "elements": "str",
+                  "suboptions": {}
+                },
+                "droplet_ids": {
+                  "aliases": [],
+                  "description": "List of integers containing the IDs of the Droplets to which the firewall will allow traffic",
+                  "type": "list",
+                  "required": false,
+                  "elements": "str",
+                  "suboptions": {}
+                },
+                "load_balancer_uids": {
+                  "aliases": [],
+                  "description": "List of strings containing the IDs of the Load Balancers to which the firewall will allow traffic",
+                  "type": "list",
+                  "required": false,
+                  "elements": "str",
+                  "suboptions": {}
+                },
+                "tags": {
+                  "aliases": [],
+                  "description": "List of strings containing the names of Tags corresponding to groups of Droplets to which the Firewall will allow traffic",
+                  "type": "list",
+                  "required": false,
+                  "elements": "str",
+                  "suboptions": {}
+                }
+              }
+            }
+          }
+        },
+        "name": {
+          "aliases": [],
+          "description": "Name of the firewall rule to create or manage",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "outbound_rules": {
+          "aliases": [],
+          "description": "Firewall rules specifically targeting outbound network traffic from DigitalOcean",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "destinations": {
+              "aliases": [],
+              "description": "Dictionary of locations from which outbound traffic will be allowed",
+              "type": "dict",
+              "required": true,
+              "suboptions": {
+                "addresses": {
+                  "aliases": [],
+                  "description": "List of strings containing the IPv4 addresses, IPv6 addresses, IPv4 CIDRs, and/or IPv6 CIDRs to which the firewall will allow traffic",
+                  "type": "list",
+                  "required": false,
+                  "elements": "str",
+                  "suboptions": {}
+                },
+                "droplet_ids": {
+                  "aliases": [],
+                  "description": "List of integers containing the IDs of the Droplets to which the firewall will allow traffic",
+                  "type": "list",
+                  "required": false,
+                  "elements": "str",
+                  "suboptions": {}
+                },
+                "load_balancer_uids": {
+                  "aliases": [],
+                  "description": "List of strings containing the IDs of the Load Balancers to which the firewall will allow traffic",
+                  "type": "list",
+                  "required": false,
+                  "elements": "str",
+                  "suboptions": {}
+                },
+                "tags": {
+                  "aliases": [],
+                  "description": "List of strings containing the names of Tags corresponding to groups of Droplets to which the Firewall will allow traffic",
+                  "type": "list",
+                  "required": false,
+                  "elements": "str",
+                  "suboptions": {}
+                }
+              }
+            },
+            "ports": {
+              "aliases": [],
+              "description": "The ports on which traffic will be allowed, single, range, or all",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "protocol": {
+              "aliases": [],
+              "description": "Network protocol to be accepted.",
+              "default": "tcp",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "udp",
+                "tcp",
+                "icmp"
+              ],
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "Assert the state of the firewall rule. Set to 'present' to create or update and 'absent' to remove.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "List of tags to be assigned to the firewall",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage cloud firewalls within DigitalOcean",
+      "version_added": "1.1.0"
+    },
+    "examples": "\n# Allows tcp connections to port 22 (SSH) from specific sources\n# Allows tcp connections to ports 80 and 443 from any source\n# Allows outbound access to any destination for protocols tcp, udp and icmp\n# The firewall rules will be applied to any droplets with the tag \"sample\"\n- name: Create a Firewall named my-firewall\n  digital_ocean_firewall:\n    name: my-firewall\n    state: present\n    inbound_rules:\n      - protocol: \"tcp\"\n        ports: \"22\"\n        sources:\n          addresses: [\"1.2.3.4\"]\n          droplet_ids: [\"my_droplet_id_1\", \"my_droplet_id_2\"]\n          load_balancer_uids: [\"my_lb_id_1\", \"my_lb_id_2\"]\n          tags: [\"tag_1\", \"tag_2\"]\n      - protocol: \"tcp\"\n        ports: \"80\"\n        sources:\n          addresses: [\"0.0.0.0/0\", \"::/0\"]\n      - protocol: \"tcp\"\n        ports: \"443\"\n        sources:\n          addresses: [\"0.0.0.0/0\", \"::/0\"]\n    outbound_rules:\n      - protocol: \"tcp\"\n        ports: \"1-65535\"\n        destinations:\n          addresses: [\"0.0.0.0/0\", \"::/0\"]\n      - protocol: \"udp\"\n        ports: \"1-65535\"\n        destinations:\n          addresses: [\"0.0.0.0/0\", \"::/0\"]\n      - protocol: \"icmp\"\n        ports: \"1-65535\"\n        destinations:\n          addresses: [\"0.0.0.0/0\", \"::/0\"]\n    droplet_ids: []\n    tags: [\"sample\"]\n"
+  },
+  "community.digitalocean.digital_ocean_firewall_facts": {
+    "doc": {
+      "description": "This module can be used to gather information about DigitalOcean firewalls.\nThis module was called C(digital_ocean_firewall_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "name": {
+          "aliases": [],
+          "description": "Firewall rule name that can be used to identify and reference a specific firewall rule.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean firewalls"
+    },
+    "examples": "\n- name: Gather information about all firewalls\n  community.digitalocean.digital_ocean_firewall_info:\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about a specific firewall by name\n  community.digitalocean.digital_ocean_firewall_info:\n    oauth_token: \"{{ oauth_token }}\"\n    name: \"firewall_name\"\n\n- name: Gather information from a firewall rule\n  community.digitalocean.digital_ocean_firewall_info:\n    name: SSH\n  register: resp_out\n\n- set_fact:\n    firewall_id: \"{{ resp_out.data.id }}\"\n\n- debug:\n    msg: \"{{ firewall_id }}\"\n"
+  },
+  "community.digitalocean.digital_ocean_firewall_info": {
+    "doc": {
+      "description": "This module can be used to gather information about DigitalOcean firewalls.\nThis module was called C(digital_ocean_firewall_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "name": {
+          "aliases": [],
+          "description": "Firewall rule name that can be used to identify and reference a specific firewall rule.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean firewalls"
+    },
+    "examples": "\n- name: Gather information about all firewalls\n  community.digitalocean.digital_ocean_firewall_info:\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about a specific firewall by name\n  community.digitalocean.digital_ocean_firewall_info:\n    oauth_token: \"{{ oauth_token }}\"\n    name: \"firewall_name\"\n\n- name: Gather information from a firewall rule\n  community.digitalocean.digital_ocean_firewall_info:\n    name: SSH\n  register: resp_out\n\n- set_fact:\n    firewall_id: \"{{ resp_out.data.id }}\"\n\n- debug:\n    msg: \"{{ firewall_id }}\"\n"
+  },
+  "community.digitalocean.digital_ocean_floating_ip": {
+    "doc": {
+      "description": "Create/delete/assign a floating IP.",
+      "has_action": false,
+      "notes": "Version 2 of DigitalOcean API is used.",
+      "options": {
+        "droplet_id": {
+          "aliases": [],
+          "description": "The Droplet that the Floating IP has been assigned to.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ip": {
+          "aliases": [
+            "id"
+          ],
+          "description": "Public IP address of the Floating IP. Used to remove an IP",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [],
+          "description": "DigitalOcean OAuth token.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "project_name": {
+          "aliases": [
+            "project"
+          ],
+          "description": "Project to assign the resource to (project name, not UUID).\nDefaults to the default project of the account (empty string).\nCurrently only supported when creating.",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [],
+          "description": "The region that the Floating IP is reserved to.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Indicate desired state of the target.\nIf C(state=present) Create (and optionally attach) floating IP\nIf C(state=absent) Delete floating IP\nIf C(state=attached) attach floating IP to a droplet\nIf C(state=detached) detach floating IP from a droplet",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent",
+            "attached",
+            "detached"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "Floating IP creation timeout.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Manage DigitalOcean Floating IPs"
+    },
+    "examples": "\n- name: \"Create a Floating IP in region lon1\"\n  community.digitalocean.digital_ocean_floating_ip:\n    state: present\n    region: lon1\n\n- name: Create a Floating IP in region lon1 (and assign to Project \"test\")\n  community.digitalocean.digital_ocean_floating_ip:\n    state: present\n    region: lon1\n    project: test\n\n- name: \"Create a Floating IP assigned to Droplet ID 123456\"\n  community.digitalocean.digital_ocean_floating_ip:\n    state: present\n    droplet_id: 123456\n\n- name: \"Attach an existing Floating IP of 1.2.3.4 to Droplet ID 123456\"\n  community.digitalocean.digital_ocean_floating_ip:\n    state: attached\n    ip: \"1.2.3.4\"\n    droplet_id: 123456\n\n- name: \"Detach an existing Floating IP of 1.2.3.4 from its Droplet\"\n  community.digitalocean.digital_ocean_floating_ip:\n    state: detached\n    ip: \"1.2.3.4\"\n\n- name: \"Delete a Floating IP with ip 1.2.3.4\"\n  community.digitalocean.digital_ocean_floating_ip:\n    state: absent\n    ip: \"1.2.3.4\"\n\n"
+  },
+  "community.digitalocean.digital_ocean_floating_ip_facts": {
+    "doc": {
+      "description": "This module can be used to fetch DigitalOcean Floating IPs information.\nThis module was called C(digital_ocean_floating_ip_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "notes": "Version 2 of DigitalOcean API is used.",
+      "options": {
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "DigitalOcean Floating IPs information"
+    },
+    "examples": "\n- name: \"Gather information about all Floating IPs\"\n  community.digitalocean.digital_ocean_floating_ip_info:\n  register: result\n\n- name: \"List of current floating ips\"\n  debug:\n    var: result.floating_ips\n"
+  },
+  "community.digitalocean.digital_ocean_floating_ip_info": {
+    "doc": {
+      "description": "This module can be used to fetch DigitalOcean Floating IPs information.\nThis module was called C(digital_ocean_floating_ip_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "notes": "Version 2 of DigitalOcean API is used.",
+      "options": {
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "DigitalOcean Floating IPs information"
+    },
+    "examples": "\n- name: \"Gather information about all Floating IPs\"\n  community.digitalocean.digital_ocean_floating_ip_info:\n  register: result\n\n- name: \"List of current floating ips\"\n  debug:\n    var: result.floating_ips\n"
+  },
+  "community.digitalocean.digital_ocean_image_facts": {
+    "doc": {
+      "description": "This module can be used to gather information about DigitalOcean provided images.\nThese images can be either of type C(distribution), C(application) and C(private).\nThis module was called C(digital_ocean_image_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "image_type": {
+          "aliases": [],
+          "description": "Specifies the type of image information to be retrieved.\nIf set to C(application), then information are gathered related to all application images.\nIf set to C(distribution), then information are gathered related to all distribution images.\nIf set to C(private), then information are gathered related to all private images.\nIf not set to any of above, then information are gathered related to all images.",
+          "default": "all",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "all",
+            "application",
+            "distribution",
+            "private"
+          ],
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean images"
+    },
+    "examples": "\n- name: Gather information about all images\n  community.digitalocean.digital_ocean_image_info:\n    image_type: all\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about application images\n  community.digitalocean.digital_ocean_image_info:\n    image_type: application\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about distribution images\n  community.digitalocean.digital_ocean_image_info:\n    image_type: distribution\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Get distribution about image with slug coreos-beta\n  community.digitalocean.digital_ocean_image_info:\n  register: resp_out\n- set_fact:\n    distribution_name: \"{{ item.distribution }}\"\n  loop: \"{{ resp_out.data | community.general.json_query(name) }}\"\n  vars:\n    name: \"[?slug=='coreos-beta']\"\n- debug:\n    var: distribution_name\n\n"
+  },
+  "community.digitalocean.digital_ocean_image_info": {
+    "doc": {
+      "description": "This module can be used to gather information about DigitalOcean provided images.\nThese images can be either of type C(distribution), C(application) and C(private).\nThis module was called C(digital_ocean_image_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "image_type": {
+          "aliases": [],
+          "description": "Specifies the type of image information to be retrieved.\nIf set to C(application), then information are gathered related to all application images.\nIf set to C(distribution), then information are gathered related to all distribution images.\nIf set to C(private), then information are gathered related to all private images.\nIf not set to any of above, then information are gathered related to all images.",
+          "default": "all",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "all",
+            "application",
+            "distribution",
+            "private"
+          ],
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean images"
+    },
+    "examples": "\n- name: Gather information about all images\n  community.digitalocean.digital_ocean_image_info:\n    image_type: all\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about application images\n  community.digitalocean.digital_ocean_image_info:\n    image_type: application\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about distribution images\n  community.digitalocean.digital_ocean_image_info:\n    image_type: distribution\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Get distribution about image with slug coreos-beta\n  community.digitalocean.digital_ocean_image_info:\n  register: resp_out\n- set_fact:\n    distribution_name: \"{{ item.distribution }}\"\n  loop: \"{{ resp_out.data | community.general.json_query(name) }}\"\n  vars:\n    name: \"[?slug=='coreos-beta']\"\n- debug:\n    var: distribution_name\n\n"
+  },
+  "community.digitalocean.digital_ocean_kubernetes": {
+    "doc": {
+      "description": "Create and delete a Kubernetes cluster in DigitalOcean (and optionally wait for it to be running).",
+      "has_action": false,
+      "options": {
+        "auto_upgrade": {
+          "aliases": [],
+          "description": "A boolean value indicating whether the cluster will be automatically upgraded to new patch releases during its maintenance window.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "ha": {
+          "aliases": [],
+          "description": "A boolean value indicating whether the control plane is run in a highly available configuration in the cluster.\nHighly available control planes incur less downtime.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "maintenance_policy": {
+          "aliases": [],
+          "description": "An object specifying the maintenance window policy for the Kubernetes cluster (see table below).",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "A human-readable name for a Kubernetes cluster.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "node_pools": {
+          "aliases": [],
+          "description": "An object specifying the details of the worker nodes available to the Kubernetes cluster (see table below).",
+          "default": "[{'auto_scale': False, 'count': 1, 'labels': {}, 'max_nodes': 0, 'min_nodes': 0, 'name': 'worker-pool', 'size': 's-1vcpu-2gb', 'tags': [], 'taints': []}]",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "auto_scale": {
+              "aliases": [],
+              "description": "A boolean value indicating whether auto-scaling is enabled for this node pool.",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "count": {
+              "aliases": [],
+              "description": "The number of Droplet instances in the node pool.",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "labels": {
+              "aliases": [],
+              "description": "An object containing a set of Kubernetes labels. The keys are user-defined.",
+              "type": "dict",
+              "required": false,
+              "suboptions": {}
+            },
+            "max_nodes": {
+              "aliases": [],
+              "description": "The maximum number of nodes that this node pool can be auto-scaled to.\nThe value will be C(0) if C(auto_scale) is set to C(false).",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "min_nodes": {
+              "aliases": [],
+              "description": "The minimum number of nodes that this node pool can be auto-scaled to.\nThe value will be C(0) if C(auto_scale) is set to C(false).",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "name": {
+              "aliases": [],
+              "description": "A human-readable name for the node pool.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "size": {
+              "aliases": [],
+              "description": "The slug identifier for the type of Droplet used as workers in the node pool.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "tags": {
+              "aliases": [],
+              "description": "An array containing the tags applied to the node pool.\nAll node pools are automatically tagged C(\"k8s\"), C(\"k8s-worker\"), and C(\"k8s:$K8S_CLUSTER_ID\").",
+              "type": "list",
+              "required": false,
+              "suboptions": {}
+            },
+            "taints": {
+              "aliases": [],
+              "description": "An array of taints to apply to all nodes in a pool.\nTaints will automatically be applied to all existing nodes and any subsequent nodes added to the pool.\nWhen a taint is removed, it is removed from all nodes in the pool.",
+              "type": "list",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "oauth_token": {
+          "aliases": [
+            "API_TOKEN"
+          ],
+          "description": "DigitalOcean OAuth token; can be specified in C(DO_API_KEY), C(DO_API_TOKEN), or C(DO_OAUTH_TOKEN) environment variables",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [
+            "region_id"
+          ],
+          "description": "The slug identifier for the region where the Kubernetes cluster will be created.",
+          "default": "nyc1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "return_kubeconfig": {
+          "aliases": [],
+          "description": "Controls whether or not to return the C(kubeconfig).",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The usual, C(present) to create, C(absent) to destroy",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "surge_upgrade": {
+          "aliases": [],
+          "description": "A boolean value indicating whether surge upgrade is enabled/disabled for the cluster.\nSurge upgrade makes cluster upgrades fast and reliable by bringing up new nodes before destroying the outdated nodes.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "A flat array of tag names as strings to be applied to the Kubernetes cluster.\nAll clusters will be automatically tagged \"k8s\" and \"k8s:$K8S_CLUSTER_ID\" in addition to any tags provided by the user.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "version": {
+          "aliases": [],
+          "description": "The slug identifier for the version of Kubernetes used for the cluster. See the /v2/kubernetes/options endpoint for available versions.",
+          "default": "latest",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "vpc_uuid": {
+          "aliases": [],
+          "description": "A string specifying the UUID of the VPC to which the Kubernetes cluster will be assigned.\nIf excluded, the cluster will be assigned to your account's default VPC for the region.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait": {
+          "aliases": [],
+          "description": "Wait for the cluster to be running before returning.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_timeout": {
+          "aliases": [],
+          "description": "How long before wait gives up, in seconds, when creating a cluster.",
+          "default": "600",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Create and delete a DigitalOcean Kubernetes cluster",
+      "version_added": "1.3.0"
+    },
+    "examples": "\n- name: Create a new DigitalOcean Kubernetes cluster in New York 1\n  community.digitalocean.digital_ocean_kubernetes:\n    state: present\n    oauth_token: \"{{ lookup('env', 'DO_API_TOKEN') }}\"\n    name: hacktoberfest\n    region: nyc1\n    node_pools:\n      - name: hacktoberfest-workers\n        size: s-1vcpu-2gb\n        count: 3\n    return_kubeconfig: yes\n    wait_timeout: 600\n    register: my_cluster\n\n- name: Show the kubeconfig for the cluster we just created\n  debug:\n    msg: \"{{ my_cluster.data.kubeconfig }}\"\n\n- name: Destroy (delete) an existing DigitalOcean Kubernetes cluster\n  community.digitalocean.digital_ocean_kubernetes:\n    state: absent\n    oauth_token: \"{{ lookup('env', 'DO_API_TOKEN') }}\"\n    name: hacktoberfest\n"
+  },
+  "community.digitalocean.digital_ocean_kubernetes_info": {
+    "doc": {
+      "description": "Returns information about an existing DigitalOcean Kubernetes cluster.",
+      "has_action": false,
+      "options": {
+        "name": {
+          "aliases": [],
+          "description": "A human-readable name for a Kubernetes cluster.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "API_TOKEN"
+          ],
+          "description": "DigitalOcean OAuth token; can be specified in C(DO_API_KEY), C(DO_API_TOKEN), or C(DO_OAUTH_TOKEN) environment variables",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "return_kubeconfig": {
+          "aliases": [],
+          "description": "Controls whether or not to return the C(kubeconfig).",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Returns information about an existing DigitalOcean Kubernetes cluster",
+      "version_added": "1.3.0"
+    },
+    "examples": "\n- name: Get information about an existing DigitalOcean Kubernetes cluster\n  community.digitalocean.digital_ocean_kubernetes_info:\n    oauth_token: \"{{ lookup('ansible.builtin.env', 'DO_API_TOKEN') }}\"\n    name: hacktoberfest\n    return_kubeconfig: yes\n  register: my_cluster\n\n- ansible.builtin.debug:\n    msg: \"Cluster name is {{ my_cluster.data.name }}, ID is {{ my_cluster.data.id }}\"\n\n- ansible.builtin.debug:\n    msg: \"Cluster kubeconfig is {{ my_cluster.data.kubeconfig }}\"\n"
+  },
+  "community.digitalocean.digital_ocean_load_balancer": {
+    "doc": {
+      "description": "Manage DigitalOcean Load Balancers",
+      "has_action": false,
+      "options": {
+        "algorithm": {
+          "aliases": [],
+          "description": "The load balancing algorithm used to determine which backend Droplet will be selected by a client.\nIt must be either C(round_robin) or C(least_connections).",
+          "default": "round_robin",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "round_robin",
+            "least_connections"
+          ],
+          "suboptions": {}
+        },
+        "droplet_ids": {
+          "aliases": [],
+          "description": "An array containing the IDs of the Droplets assigned to the load balancer.\nRequired when creating load balancers.",
+          "type": "list",
+          "required": false,
+          "elements": "int",
+          "suboptions": {}
+        },
+        "enable_backend_keepalive": {
+          "aliases": [],
+          "description": "A boolean value indicating whether HTTP keepalive connections are maintained to target Droplets.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "enable_proxy_protocol": {
+          "aliases": [],
+          "description": "A boolean value indicating whether PROXY Protocol is in use.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "forwarding_rules": {
+          "aliases": [],
+          "description": "An array of objects specifying the forwarding rules for a load balancer.\nRequired when creating load balancers.",
+          "default": "[{'certificate_id': '', 'entry_port': 8080, 'entry_protocol': 'http', 'target_port': 8080, 'target_protocol': 'http', 'tls_passthrough': False}]",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "certificate_id": {
+              "aliases": [],
+              "description": "Certificate ID",
+              "default": "",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "entry_port": {
+              "aliases": [],
+              "description": "Entry port",
+              "default": "8080",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "entry_protocol": {
+              "aliases": [],
+              "description": "Entry protocol",
+              "default": "http",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "target_port": {
+              "aliases": [],
+              "description": "Target port",
+              "default": "8080",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "target_protocol": {
+              "aliases": [],
+              "description": "Target protocol",
+              "default": "http",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "tls_passthrough": {
+              "aliases": [],
+              "description": "TLS passthrough",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "health_check": {
+          "aliases": [],
+          "description": "An object specifying health check settings for the load balancer.",
+          "default": "{'check_interval_seconds': 10, 'healthy_threshold': 5, 'path': '/', 'port': 80, 'protocol': 'http', 'response_timeout_seconds': 5, 'unhealthy_threshold': 3}",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "check_interval_seconds": {
+              "aliases": [],
+              "description": "Check interval seconds",
+              "default": "10",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "healthy_threshold": {
+              "aliases": [],
+              "description": "Healthy threshold",
+              "default": "5",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "path": {
+              "aliases": [],
+              "description": "Path",
+              "default": "/",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "port": {
+              "aliases": [],
+              "description": "Port",
+              "default": "80",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "protocol": {
+              "aliases": [],
+              "description": "Protocol",
+              "default": "http",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "response_timeout_seconds": {
+              "aliases": [],
+              "description": "Response timeout seconds",
+              "default": "5",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "unhealthy_threshold": {
+              "aliases": [],
+              "description": "Unhealthy threshold",
+              "default": "3",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "name": {
+          "aliases": [],
+          "description": "A human-readable name for a load balancer instance.\nRequired and must be unique (current API documentation is not up-to-date for this parameter).",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "API_TOKEN"
+          ],
+          "description": "DigitalOcean OAuth token; can be specified in C(DO_API_KEY), C(DO_API_TOKEN), or C(DO_OAUTH_TOKEN) environment variables",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "project_name": {
+          "aliases": [
+            "project"
+          ],
+          "description": "Project to assign the resource to (project name, not UUID).\nDefaults to the default project of the account (empty string).\nCurrently only supported when creating.",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "redirect_http_to_https": {
+          "aliases": [],
+          "description": "A boolean value indicating whether HTTP requests to the load balancer on port 80 will be redirected to HTTPS on port 443.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [
+            "region_id"
+          ],
+          "description": "The slug identifier for the region where the resource will initially be available.",
+          "default": "nyc1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "size": {
+          "aliases": [],
+          "description": "The size of the load balancer.\nThe available sizes are C(lb-small), C(lb-medium), or C(lb-large).\nYou can resize load balancers after creation up to once per hour.\nYou cannot resize a load balancer within the first hour of its creation.",
+          "default": "lb-small",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "lb-small",
+            "lb-medium",
+            "lb-large"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The usual, C(present) to create, C(absent) to destroy",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "sticky_sessions": {
+          "aliases": [],
+          "description": "An object specifying sticky sessions settings for the load balancer.",
+          "default": "{'type': 'none'}",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "type": {
+              "aliases": [],
+              "description": "Type",
+              "default": "none",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "vpc_uuid": {
+          "aliases": [],
+          "description": "A string specifying the UUID of the VPC to which the load balancer is assigned.\nIf unspecified, uses the default VPC in the region.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait": {
+          "aliases": [],
+          "description": "Wait for the Load Balancer to be running before returning.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_timeout": {
+          "aliases": [],
+          "description": "How long before wait gives up, in seconds, when creating a Load Balancer.",
+          "default": "600",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage DigitalOcean Load Balancers",
+      "version_added": "1.10.0"
+    },
+    "examples": "\n- name: Create a Load Balancer\n  community.digitalocean.digital_ocean_load_balancer:\n    state: present\n    name: test-loadbalancer-1\n    droplet_ids:\n      - 12345678\n    region: nyc1\n    forwarding_rules:\n      - entry_protocol: http\n        entry_port: 8080\n        target_protocol: http\n        target_port: 8080\n        certificate_id: \"\"\n        tls_passthrough: false\n\n- name: Create a Load Balancer (and assign to Project \"test\")\n  community.digitalocean.digital_ocean_load_balancer:\n    state: present\n    name: test-loadbalancer-1\n    droplet_ids:\n      - 12345678\n    region: nyc1\n    forwarding_rules:\n      - entry_protocol: http\n        entry_port: 8080\n        target_protocol: http\n        target_port: 8080\n        certificate_id: \"\"\n        tls_passthrough: false\n    project: test\n"
+  },
+  "community.digitalocean.digital_ocean_load_balancer_facts": {
+    "doc": {
+      "description": "This module can be used to gather information about DigitalOcean provided load balancers.\nThis module was called C(digital_ocean_load_balancer_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "load_balancer_id": {
+          "aliases": [],
+          "description": "Load balancer ID that can be used to identify and reference a load_balancer.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean load balancers"
+    },
+    "examples": "\n- name: Gather information about all load balancers\n  community.digitalocean.digital_ocean_load_balancer_info:\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about load balancer with given id\n  community.digitalocean.digital_ocean_load_balancer_info:\n    oauth_token: \"{{ oauth_token }}\"\n    load_balancer_id: \"4de7ac8b-495b-4884-9a69-1050c6793cd6\"\n\n- name: Get name from load balancer id\n  community.digitalocean.digital_ocean_load_balancer_info:\n  register: resp_out\n- set_fact:\n    load_balancer_name: \"{{ item.name }}\"\n  loop: \"{{ resp_out.data | community.general.json_query(name) }}\"\n  vars:\n    name: \"[?id=='4de7ac8b-495b-4884-9a69-1050c6793cd6']\"\n- debug:\n    var: load_balancer_name\n"
+  },
+  "community.digitalocean.digital_ocean_load_balancer_info": {
+    "doc": {
+      "description": "This module can be used to gather information about DigitalOcean provided load balancers.\nThis module was called C(digital_ocean_load_balancer_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "load_balancer_id": {
+          "aliases": [],
+          "description": "Load balancer ID that can be used to identify and reference a load_balancer.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean load balancers"
+    },
+    "examples": "\n- name: Gather information about all load balancers\n  community.digitalocean.digital_ocean_load_balancer_info:\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about load balancer with given id\n  community.digitalocean.digital_ocean_load_balancer_info:\n    oauth_token: \"{{ oauth_token }}\"\n    load_balancer_id: \"4de7ac8b-495b-4884-9a69-1050c6793cd6\"\n\n- name: Get name from load balancer id\n  community.digitalocean.digital_ocean_load_balancer_info:\n  register: resp_out\n- set_fact:\n    load_balancer_name: \"{{ item.name }}\"\n  loop: \"{{ resp_out.data | community.general.json_query(name) }}\"\n  vars:\n    name: \"[?id=='4de7ac8b-495b-4884-9a69-1050c6793cd6']\"\n- debug:\n    var: load_balancer_name\n"
+  },
+  "community.digitalocean.digital_ocean_monitoring_alerts": {
+    "doc": {
+      "description": "The DigitalOcean Monitoring API makes it possible to programmatically retrieve metrics as well as configure alert policies based on these metrics.\nThe Monitoring API can help you gain insight into how your apps are performing and consuming resources.",
+      "has_action": false,
+      "options": {
+        "alerts": {
+          "aliases": [],
+          "description": "Alert object, required for C(state=present)\nSupports C(email[\"email1\", \"email2\", ...]) and C(slack[{\"channel1\", \"url1\"}, {\"channel2\", \"url2\"}, ...])",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "compare": {
+          "aliases": [],
+          "description": "Alert comparison, required for C(state=present)",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "GreaterThan",
+            "LessThan"
+          ],
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "Alert description, required for C(state=present)",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "enabled": {
+          "aliases": [],
+          "description": "Enabled or not, required for C(state=present)",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "entities": {
+          "aliases": [],
+          "description": "Alert entities, required for C(state=present)",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "API_TOKEN"
+          ],
+          "description": "DigitalOcean OAuth token; can be specified in C(DO_API_KEY), C(DO_API_TOKEN), or C(DO_OAUTH_TOKEN) environment variables",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "The usual, C(present) to create, C(absent) to destroy",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "Alert tags, required for C(state=present)",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "Alert type, required for C(state=present)\nSee U(https://docs.digitalocean.com/reference/api/api-reference/#operation/create_alert_policy) for valid types",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "v1/insights/droplet/load_1",
+            "v1/insights/droplet/load_5",
+            "v1/insights/droplet/load_15",
+            "v1/insights/droplet/memory_utilization_percent",
+            "v1/insights/droplet/disk_utilization_percent",
+            "v1/insights/droplet/cpu",
+            "v1/insights/droplet/disk_read",
+            "v1/insights/droplet/disk_write",
+            "v1/insights/droplet/public_outbound_bandwidth",
+            "v1/insights/droplet/public_inbound_bandwidth",
+            "v1/insights/droplet/private_outbound_bandwidth",
+            "v1/insights/droplet/private_inbound_bandwidth"
+          ],
+          "suboptions": {}
+        },
+        "uuid": {
+          "aliases": [],
+          "description": "Alert uuid, required for C(state=absent)",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "value": {
+          "aliases": [],
+          "description": "Alert threshold, required for C(state=present)",
+          "type": "float",
+          "required": false,
+          "suboptions": {}
+        },
+        "window": {
+          "aliases": [],
+          "description": "Alert window, required for C(state=present)",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "5m",
+            "10m",
+            "30m",
+            "1h"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Programmatically retrieve metrics as well as configure alert policies based on these metrics",
+      "version_added": "1.10.0"
+    },
+    "examples": "\n- name: Create Droplet Monitoring alerts policy\n  community.digitalocean.digital_ocean_monitoring_alerts:\n    state: present\n    oauth_token: \"{{ lookup('ansible.builtin.env', 'DO_API_TOKEN') }}\"\n    alerts:\n      email: [\"alerts@example.com\"]\n      slack: []\n    compare: GreaterThan\n    description: Droplet load1 alert\n    enabled: true\n    entities: [\"{{ droplet_id }}\"]\n    tags: [\"my_alert_tag\"]\n    type: v1/insights/droplet/load_1\n    value: 3.14159\n    window: 5m\n  register: monitoring_alert_policy\n\n- name: Delete Droplet Monitoring alerts policy\n  community.digitalocean.digital_ocean_monitoring_alerts:\n    state: absent\n    oauth_token: \"{{ lookup('ansible.builtin.env', 'DO_API_TOKEN') }}\"\n    uuid: \"{{ monitoring_alert_policy.data.uuid }}\"\n"
+  },
+  "community.digitalocean.digital_ocean_monitoring_alerts_info": {
+    "doc": {
+      "description": "The DigitalOcean Monitoring API makes it possible to programmatically retrieve metrics as well as configure alert policies based on these metrics.\nThe Monitoring API can help you gain insight into how your apps are performing and consuming resources.",
+      "has_action": false,
+      "options": {
+        "oauth_token": {
+          "aliases": [
+            "API_TOKEN"
+          ],
+          "description": "DigitalOcean OAuth token; can be specified in C(DO_API_KEY), C(DO_API_TOKEN), or C(DO_OAUTH_TOKEN) environment variables",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "C(present) to return alerts",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "uuid": {
+          "aliases": [],
+          "description": "Alert uuid (if specified only returns the specific alert policy)",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Programmatically retrieve metrics as well as configure alert policies based on these metrics",
+      "version_added": "1.10.0"
+    },
+    "examples": "\n- name: Get Droplet Monitoring alerts polices\n  community.digitalocean.digital_ocean_monitoring_alerts_info:\n    oauth_token: \"{{ lookup('ansible.builtin.env', 'DO_API_TOKEN') }}\"\n  register: monitoring_alerts\n\n- name: Get specific Droplet Monitoring alerts policy\n  community.digitalocean.digital_ocean_monitoring_alerts_info:\n    oauth_token: \"{{ lookup('ansible.builtin.env', 'DO_API_TOKEN') }}\"\n    uuid: ec48b0e7-23bb-4a7f-95f2-d83da62fcd60\n  register: monitoring_alert\n"
+  },
+  "community.digitalocean.digital_ocean_project": {
+    "doc": {
+      "description": "Manage a project in DigitalOcean",
+      "has_action": false,
+      "options": {
+        "description": {
+          "aliases": [],
+          "description": "The description of the project. The maximum length is 255 characters.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "environment": {
+          "aliases": [],
+          "description": "The environment of the projects resources.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "Development",
+            "Staging",
+            "Production"
+          ],
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "UUID of the project",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "is_default": {
+          "aliases": [],
+          "description": "If true, all resources will be added to this project if no project is specified.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The human-readable name for the project. The maximum length is 175 characters and the name must be unique.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "API_TOKEN"
+          ],
+          "description": "DigitalOcean OAuth token. Can be specified in C(DO_API_KEY), C(DO_API_TOKEN), or C(DO_OAUTH_TOKEN) environment variables",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "purpose": {
+          "aliases": [],
+          "description": "The purpose of the project. The maximum length is 255 characters\nRequired if state is C(present)\nIf not one of DO provided purposes, will be prefixed with C(Other)\nDO provided purposes can be found below\nC(Just trying out DigitalOcean)\nC(Class project/Educational Purposes)\nC(Website or blog)\nC(Web Application)\nC(Service or API)\nC(Mobile Application)\nC(Machine Learning/AI/Data Processing)\nC(IoT)\nC(Operational/Developer tooling)",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Indicate desired state of the target.\nC(present) will create the project\nC(absent) will delete the project, if it exists.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage a DigitalOcean project",
+      "version_added": "1.6.0"
+    },
+    "examples": "\n# Creates a new project\n- community.digitalocean.digital_ocean_project:\n    name: \"TestProj\"\n    state: \"present\"\n    description: \"This is a test project\"\n    purpose: \"IoT\"\n    environment: \"Development\"\n\n# Updates the existing project with the new environment\n- community.digitalocean.digital_ocean_project:\n    name: \"TestProj\"\n    state: \"present\"\n    description: \"This is a test project\"\n    purpose: \"IoT\"\n    environment: \"Production\"\n\n# This renames an existing project by utilizing the id of the project\n- community.digitalocean.digital_ocean_project:\n    name: \"TestProj2\"\n    id: \"12312312-abcd-efgh-ijkl-123123123123\"\n    state: \"present\"\n    description: \"This is a test project\"\n    purpose: \"IoT\"\n    environment: \"Development\"\n\n# This creates a project that results with a purpose of \"Other: My Prod App\"\n- community.digitalocean.digital_ocean_project:\n    name: \"ProdProj\"\n    state: \"present\"\n    description: \"This is a prod app\"\n    purpose: \"My Prod App\"\n    environment: \"Production\"\n\n# This removes a project\n- community.digitalocean.digital_ocean_project:\n    name: \"ProdProj\"\n    state: \"absent\"\n"
+  },
+  "community.digitalocean.digital_ocean_project_info": {
+    "doc": {
+      "description": "This module can be used to gather information about Projects.",
+      "has_action": false,
+      "options": {
+        "id": {
+          "aliases": [],
+          "description": "Project ID that can be used to identify and reference a project.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "Project name that can be used to identify and reference a project.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Gather information about DigitalOcean Projects",
+      "version_added": "1.6.0"
+    },
+    "examples": "\n# Get specific project by id\n- community.digitalocean.digital_ocean_project_info:\n    id: cb1ef55e-3cd8-4c7c-aa5d-07c32bf41627\n\n# Get specific project by name\n- community.digitalocean.digital_ocean_project_info:\n    name: my-project-name\n\n# Get all projects\n- community.digitalocean.digital_ocean_project_info:\n  register: projects\n"
+  },
+  "community.digitalocean.digital_ocean_region_facts": {
+    "doc": {
+      "description": "This module can be used to gather information about regions.\nThis module was called C(digital_ocean_region_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean regions"
+    },
+    "examples": "\n- name: Gather information about all regions\n  community.digitalocean.digital_ocean_region_info:\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Get Name of region where slug is known\n  community.digitalocean.digital_ocean_region_info:\n    oauth_token: \"{{ oauth_token }}\"\n  register: resp_out\n- debug: var=resp_out\n- set_fact:\n    region_slug: \"{{ item.name }}\"\n  loop: \"{{ resp_out.data | community.general.json_query(name) }}\"\n  vars:\n    name: \"[?slug==`nyc1`]\"\n- debug:\n    var: region_slug\n"
+  },
+  "community.digitalocean.digital_ocean_region_info": {
+    "doc": {
+      "description": "This module can be used to gather information about regions.\nThis module was called C(digital_ocean_region_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean regions"
+    },
+    "examples": "\n- name: Gather information about all regions\n  community.digitalocean.digital_ocean_region_info:\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Get Name of region where slug is known\n  community.digitalocean.digital_ocean_region_info:\n    oauth_token: \"{{ oauth_token }}\"\n  register: resp_out\n- debug: var=resp_out\n- set_fact:\n    region_slug: \"{{ item.name }}\"\n  loop: \"{{ resp_out.data | community.general.json_query(name) }}\"\n  vars:\n    name: \"[?slug==`nyc1`]\"\n- debug:\n    var: region_slug\n"
+  },
+  "community.digitalocean.digital_ocean_size_facts": {
+    "doc": {
+      "description": "This module can be used to gather information about droplet sizes.\nThis module was called C(digital_ocean_size_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean Droplet sizes"
+    },
+    "examples": "\n- name: Gather information about all droplet sizes\n  community.digitalocean.digital_ocean_size_info:\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Get droplet Size Slug where vcpus is 1\n  community.digitalocean.digital_ocean_size_info:\n    oauth_token: \"{{ oauth_token }}\"\n  register: resp_out\n- debug: var=resp_out\n- set_fact:\n    size_slug: \"{{ item.slug }}\"\n  loop: \"{{ resp_out.data | community.general.json_query(name) }}\"\n  vars:\n    name: \"[?vcpus==`1`]\"\n- debug:\n    var: size_slug\n\n\n"
+  },
+  "community.digitalocean.digital_ocean_size_info": {
+    "doc": {
+      "description": "This module can be used to gather information about droplet sizes.\nThis module was called C(digital_ocean_size_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean Droplet sizes"
+    },
+    "examples": "\n- name: Gather information about all droplet sizes\n  community.digitalocean.digital_ocean_size_info:\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Get droplet Size Slug where vcpus is 1\n  community.digitalocean.digital_ocean_size_info:\n    oauth_token: \"{{ oauth_token }}\"\n  register: resp_out\n- debug: var=resp_out\n- set_fact:\n    size_slug: \"{{ item.slug }}\"\n  loop: \"{{ resp_out.data | community.general.json_query(name) }}\"\n  vars:\n    name: \"[?vcpus==`1`]\"\n- debug:\n    var: size_slug\n\n\n"
+  },
+  "community.digitalocean.digital_ocean_snapshot": {
+    "doc": {
+      "description": "This module can be used to create and delete DigitalOcean Droplet and volume snapshots.",
+      "has_action": false,
+      "options": {
+        "droplet_id": {
+          "aliases": [],
+          "description": "Droplet ID to snapshot.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "snapshot_id": {
+          "aliases": [],
+          "description": "Snapshot ID to delete.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "snapshot_name": {
+          "aliases": [],
+          "description": "Name of the snapshot to create.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "snapshot_tags": {
+          "aliases": [],
+          "description": "List of tags to apply to the volume snapshot.\nOnly applies to volume snapshots (not Droplets).",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "snapshot_type": {
+          "aliases": [],
+          "description": "Specifies the type of snapshot information to be create or delete.\nIf set to C(droplet), then a Droplet snapshot is created.\nIf set to C(volume), then a volume snapshot is created.",
+          "default": "droplet",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "droplet",
+            "volume"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the snapshot should be present (created) or absent (deleted).",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "volume_id": {
+          "aliases": [],
+          "description": "Volume ID to snapshot.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait": {
+          "aliases": [],
+          "description": "Wait for the snapshot to be created before returning.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_timeout": {
+          "aliases": [],
+          "description": "How long before wait gives up, in seconds, when creating a snapshot.",
+          "default": "120",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Create and delete DigitalOcean snapshots",
+      "version_added": "1.7.0"
+    },
+    "examples": "\n- name: Snapshot a Droplet\n  community.digitalocean.digital_ocean_snapshot:\n    state: present\n    snapshot_type: droplet\n    droplet_id: 250329179\n  register: result\n\n- name: Delete a Droplet snapshot\n  community.digitalocean.digital_ocean_snapshot:\n    state: absent\n    snapshot_type: droplet\n    snapshot_id: 85905825\n  register: result\n\n- name: Snapshot a Volume\n  community.digitalocean.digital_ocean_snapshot:\n    state: present\n    snapshot_type: volume\n    snapshot_name: mysnapshot1\n    volume_id: 9db5e329-cc68-11eb-b027-0a58ac144f91\n\n- name: Delete a Volume snapshot\n  community.digitalocean.digital_ocean_snapshot:\n    state: absent\n    snapshot_type: volume\n    snapshot_id: a902cdba-cc68-11eb-a701-0a58ac145708\n"
+  },
+  "community.digitalocean.digital_ocean_snapshot_facts": {
+    "doc": {
+      "description": "This module can be used to gather information about snapshot information based upon provided values such as droplet, volume and snapshot id.\nThis module was called C(digital_ocean_snapshot_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "snapshot_id": {
+          "aliases": [],
+          "description": "To retrieve information about a snapshot, please specify this as a snapshot id.\nIf set to actual snapshot id, then information are gathered related to that particular snapshot only.\nThis is required parameter, if C(snapshot_type) is set to C(by_id).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "snapshot_type": {
+          "aliases": [],
+          "description": "Specifies the type of snapshot information to be retrieved.\nIf set to C(droplet), then information are gathered related to snapshots based on Droplets only.\nIf set to C(volume), then information are gathered related to snapshots based on volumes only.\nIf set to C(by_id), then information are gathered related to snapshots based on snapshot id only.\nIf not set to any of the above, then information are gathered related to all snapshots.",
+          "default": "all",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "all",
+            "droplet",
+            "volume",
+            "by_id"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean Snapshot"
+    },
+    "examples": "\n- name: Gather information about all snapshots\n  community.digitalocean.digital_ocean_snapshot_info:\n    snapshot_type: all\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about droplet snapshots\n  community.digitalocean.digital_ocean_snapshot_info:\n    snapshot_type: droplet\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about volume snapshots\n  community.digitalocean.digital_ocean_snapshot_info:\n    snapshot_type: volume\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about snapshot by snapshot id\n  community.digitalocean.digital_ocean_snapshot_info:\n    snapshot_type: by_id\n    snapshot_id: 123123123\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Get information about snapshot named big-data-snapshot1\n  community.digitalocean.digital_ocean_snapshot_info:\n  register: resp_out\n- set_fact:\n    snapshot_id: \"{{ item.id }}\"\n  loop: \"{{ resp_out.data | community.general.json_query(name) }}\"\n  vars:\n    name: \"[?name=='big-data-snapshot1']\"\n- debug:\n    var: snapshot_id\n\n"
+  },
+  "community.digitalocean.digital_ocean_snapshot_info": {
+    "doc": {
+      "description": "This module can be used to gather information about snapshot information based upon provided values such as droplet, volume and snapshot id.\nThis module was called C(digital_ocean_snapshot_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "snapshot_id": {
+          "aliases": [],
+          "description": "To retrieve information about a snapshot, please specify this as a snapshot id.\nIf set to actual snapshot id, then information are gathered related to that particular snapshot only.\nThis is required parameter, if C(snapshot_type) is set to C(by_id).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "snapshot_type": {
+          "aliases": [],
+          "description": "Specifies the type of snapshot information to be retrieved.\nIf set to C(droplet), then information are gathered related to snapshots based on Droplets only.\nIf set to C(volume), then information are gathered related to snapshots based on volumes only.\nIf set to C(by_id), then information are gathered related to snapshots based on snapshot id only.\nIf not set to any of the above, then information are gathered related to all snapshots.",
+          "default": "all",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "all",
+            "droplet",
+            "volume",
+            "by_id"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean Snapshot"
+    },
+    "examples": "\n- name: Gather information about all snapshots\n  community.digitalocean.digital_ocean_snapshot_info:\n    snapshot_type: all\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about droplet snapshots\n  community.digitalocean.digital_ocean_snapshot_info:\n    snapshot_type: droplet\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about volume snapshots\n  community.digitalocean.digital_ocean_snapshot_info:\n    snapshot_type: volume\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about snapshot by snapshot id\n  community.digitalocean.digital_ocean_snapshot_info:\n    snapshot_type: by_id\n    snapshot_id: 123123123\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Get information about snapshot named big-data-snapshot1\n  community.digitalocean.digital_ocean_snapshot_info:\n  register: resp_out\n- set_fact:\n    snapshot_id: \"{{ item.id }}\"\n  loop: \"{{ resp_out.data | community.general.json_query(name) }}\"\n  vars:\n    name: \"[?name=='big-data-snapshot1']\"\n- debug:\n    var: snapshot_id\n\n"
+  },
+  "community.digitalocean.digital_ocean_sshkey": {
+    "doc": {
+      "description": "Create/delete DigitalOcean SSH keys.",
+      "has_action": false,
+      "notes": "Version 2 of DigitalOcean API is used.",
+      "options": {
+        "fingerprint": {
+          "aliases": [
+            "id"
+          ],
+          "description": "This is a unique identifier for the SSH key used to delete a key",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name for the SSH key",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [],
+          "description": "DigitalOcean OAuth token.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "ssh_pub_key": {
+          "aliases": [],
+          "description": "The Public SSH key to add.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Indicate desired state of the target.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Manage DigitalOcean SSH keys"
+    },
+    "examples": "\n- name: \"Create ssh key\"\n  community.digitalocean.digital_ocean_sshkey:\n    oauth_token: \"{{ oauth_token }}\"\n    name: \"My SSH Public Key\"\n    ssh_pub_key: \"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAQQDDHr/jh2Jy4yALcK4JyWbVkPRaWmhck3IgCoeOO3z1e2dBowLh64QAM+Qb72pxekALga2oi4GvT+TlWNhzPH4V example\"\n    state: present\n  register: result\n\n- name: \"Delete ssh key\"\n  community.digitalocean.digital_ocean_sshkey:\n    oauth_token: \"{{ oauth_token }}\"\n    state: \"absent\"\n    fingerprint: \"3b:16:bf:e4:8b:00:8b:b8:59:8c:a9:d3:f0:19:45:fa\"\n"
+  },
+  "community.digitalocean.digital_ocean_sshkey_facts": {
+    "doc": {
+      "description": "This module can be used to gather information about DigitalOcean SSH keys.\nThis module replaces the C(digital_ocean_sshkey_facts) module.",
+      "has_action": false,
+      "notes": "Version 2 of DigitalOcean API is used.",
+      "options": {
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean SSH keys"
+    },
+    "examples": "\n- name: Gather information about DigitalOcean SSH keys\n  community.digitalocean.digital_ocean_sshkey_info:\n    oauth_token: \"{{ my_do_key }}\"\n  register: ssh_keys\n\n- name: Set facts based on the gathered information\n  set_fact:\n    pubkey: \"{{ item.public_key }}\"\n  loop: \"{{ ssh_keys.data | community.general.json_query(ssh_pubkey) }}\"\n  vars:\n    ssh_pubkey: \"[?name=='ansible_ctrl']\"\n\n- name: Print SSH public key\n  debug:\n    msg: \"{{ pubkey }}\"\n"
+  },
+  "community.digitalocean.digital_ocean_sshkey_info": {
+    "doc": {
+      "description": "This module can be used to gather information about DigitalOcean SSH keys.\nThis module replaces the C(digital_ocean_sshkey_facts) module.",
+      "has_action": false,
+      "notes": "Version 2 of DigitalOcean API is used.",
+      "options": {
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean SSH keys"
+    },
+    "examples": "\n- name: Gather information about DigitalOcean SSH keys\n  community.digitalocean.digital_ocean_sshkey_info:\n    oauth_token: \"{{ my_do_key }}\"\n  register: ssh_keys\n\n- name: Set facts based on the gathered information\n  set_fact:\n    pubkey: \"{{ item.public_key }}\"\n  loop: \"{{ ssh_keys.data | community.general.json_query(ssh_pubkey) }}\"\n  vars:\n    ssh_pubkey: \"[?name=='ansible_ctrl']\"\n\n- name: Print SSH public key\n  debug:\n    msg: \"{{ pubkey }}\"\n"
+  },
+  "community.digitalocean.digital_ocean_tag": {
+    "doc": {
+      "description": "Create and remove tag(s) to DigitalOcean resource.",
+      "has_action": false,
+      "notes": "Two environment variables can be used, DO_API_KEY and DO_API_TOKEN. They both refer to the v2 token.\nAs of Ansible 2.0, Version 2 of the DigitalOcean API is used.",
+      "options": {
+        "name": {
+          "aliases": [],
+          "description": "The name of the tag. The supported characters for names include alphanumeric characters, dashes, and underscores.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "resource_id": {
+          "aliases": [
+            "droplet_id"
+          ],
+          "description": "The ID of the resource to operate on.\nThe data type of resource_id is changed from integer to string since Ansible 2.5.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "resource_type": {
+          "aliases": [],
+          "description": "The type of resource to operate on. Currently, only tagging of droplets is supported.",
+          "default": "droplet",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "droplet"
+          ],
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the tag should be present or absent on the resource.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Create and remove tag(s) to DigitalOcean resource."
+    },
+    "examples": "\n- name: Create a tag\n  community.digitalocean.digital_ocean_tag:\n    name: production\n    state: present\n\n- name: Tag a resource; creating the tag if it does not exist\n  community.digitalocean.digital_ocean_tag:\n    name: \"{{ item }}\"\n    resource_id: \"73333005\"\n    state: present\n  loop:\n    - staging\n    - dbserver\n\n- name: Untag a resource\n  community.digitalocean.digital_ocean_tag:\n    name: staging\n    resource_id: \"73333005\"\n    state: absent\n\n# Deleting a tag also untags all the resources that have previously been\n# tagged with it\n- name: Remove a tag\n  community.digitalocean.digital_ocean_tag:\n    name: dbserver\n    state: absent\n"
+  },
+  "community.digitalocean.digital_ocean_tag_facts": {
+    "doc": {
+      "description": "This module can be used to gather information about DigitalOcean provided tags.\nThis module was called C(digital_ocean_tag_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tag_name": {
+          "aliases": [],
+          "description": "Tag name that can be used to identify and reference a tag.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean tags"
+    },
+    "examples": "\n- name: Gather information about all tags\n  community.digitalocean.digital_ocean_tag_info:\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about tag with given name\n  community.digitalocean.digital_ocean_tag_info:\n    oauth_token: \"{{ oauth_token }}\"\n    tag_name: \"extra_awesome_tag\"\n\n- name: Get resources from tag name\n  community.digitalocean.digital_ocean_tag_info:\n  register: resp_out\n- set_fact:\n    resources: \"{{ item.resources }}\"\n  loop: \"{{ resp_out.data | community.general.json_query(name) }}\"\n  vars:\n    name: \"[?name=='extra_awesome_tag']\"\n- debug:\n    var: resources\n"
+  },
+  "community.digitalocean.digital_ocean_tag_info": {
+    "doc": {
+      "description": "This module can be used to gather information about DigitalOcean provided tags.\nThis module was called C(digital_ocean_tag_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "tag_name": {
+          "aliases": [],
+          "description": "Tag name that can be used to identify and reference a tag.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean tags"
+    },
+    "examples": "\n- name: Gather information about all tags\n  community.digitalocean.digital_ocean_tag_info:\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about tag with given name\n  community.digitalocean.digital_ocean_tag_info:\n    oauth_token: \"{{ oauth_token }}\"\n    tag_name: \"extra_awesome_tag\"\n\n- name: Get resources from tag name\n  community.digitalocean.digital_ocean_tag_info:\n  register: resp_out\n- set_fact:\n    resources: \"{{ item.resources }}\"\n  loop: \"{{ resp_out.data | community.general.json_query(name) }}\"\n  vars:\n    name: \"[?name=='extra_awesome_tag']\"\n- debug:\n    var: resources\n"
+  },
+  "community.digitalocean.digital_ocean_volume_facts": {
+    "doc": {
+      "description": "This module can be used to gather information about DigitalOcean provided volumes.\nThis module was called C(digital_ocean_volume_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "region_name": {
+          "aliases": [],
+          "description": "Name of region to restrict results to volumes available in a specific region.\nPlease use M(community.digitalocean.digital_ocean_region_info) for getting valid values related regions.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean volumes"
+    },
+    "examples": "\n- name: Gather information about all volume\n  community.digitalocean.digital_ocean_volume_info:\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about volume in given region\n  community.digitalocean.digital_ocean_volume_info:\n    region_name: nyc1\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Get information about volume named nyc3-test-volume\n  community.digitalocean.digital_ocean_volume_info:\n  register: resp_out\n- set_fact:\n    volume_id: \"{{ item.id }}\"\n  loop: \"{{ resp_out.data | community.general.json_query(name) }}\"\n  vars:\n    name: \"[?name=='nyc3-test-volume']\"\n- debug: var=volume_id\n"
+  },
+  "community.digitalocean.digital_ocean_volume_info": {
+    "doc": {
+      "description": "This module can be used to gather information about DigitalOcean provided volumes.\nThis module was called C(digital_ocean_volume_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "region_name": {
+          "aliases": [],
+          "description": "Name of region to restrict results to volumes available in a specific region.\nPlease use M(community.digitalocean.digital_ocean_region_info) for getting valid values related regions.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "python >= 2.6"
+      ],
+      "short_description": "Gather information about DigitalOcean volumes"
+    },
+    "examples": "\n- name: Gather information about all volume\n  community.digitalocean.digital_ocean_volume_info:\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Gather information about volume in given region\n  community.digitalocean.digital_ocean_volume_info:\n    region_name: nyc1\n    oauth_token: \"{{ oauth_token }}\"\n\n- name: Get information about volume named nyc3-test-volume\n  community.digitalocean.digital_ocean_volume_info:\n  register: resp_out\n- set_fact:\n    volume_id: \"{{ item.id }}\"\n  loop: \"{{ resp_out.data | community.general.json_query(name) }}\"\n  vars:\n    name: \"[?name=='nyc3-test-volume']\"\n- debug: var=volume_id\n"
+  },
+  "community.digitalocean.digital_ocean_vpc": {
+    "doc": {
+      "description": "This module can be used to create and delete DigitalOcean VPCs.",
+      "has_action": false,
+      "options": {
+        "default": {
+          "aliases": [],
+          "description": "A boolean value indicating whether or not the VPC is the default network for the region.\nAll applicable resources are placed into the default VPC network unless otherwise specified during their creation.\nThe C(default) field cannot be unset from C(true).\nIf you want to set a new default VPC network, update the C(default) field of another VPC network in the same region.\nThe previous network's C(default) field will be set to C(false) when a new default VPC has been defined.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "A free-form text field for describing the VPC's purpose.\nIt may be a maximum of 255 characters.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ip_range": {
+          "aliases": [],
+          "description": "The requested range of IP addresses for the VPC in CIDR notation.\nNetwork ranges cannot overlap with other networks in the same account and must be in range of private addresses as defined in RFC1918.\nIt may not be smaller than /24 nor larger than /16.\nIf no IP range is specified, a /20 network range is generated that won't conflict with other VPC networks in your account.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the VPC.\nMust be unique and contain alphanumeric characters, dashes, and periods only.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "region": {
+          "aliases": [],
+          "description": "The slug identifier for the region where the VPC will be created.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether the VPC should be present (created) or absent (deleted).",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Create and delete DigitalOcean VPCs",
+      "version_added": "1.7.0"
+    },
+    "examples": "\n- name: Create a VPC\n  community.digitalocean.digital_ocean_vpc:\n    state: present\n    name: myvpc1\n    region: nyc1\n\n- name: Create a VPC (choose IP range)\n  community.digitalocean.digital_ocean_vpc:\n    state: present\n    name: myvpc1\n    region: nyc1\n    ip_range: 192.168.192.0/24\n\n- name: Update a VPC (make it default)\n  community.digitalocean.digital_ocean_vpc:\n    state: present\n    name: myvpc1\n    region: nyc1\n    default: true\n\n- name: Update a VPC (change description)\n  community.digitalocean.digital_ocean_vpc:\n    state: present\n    name: myvpc1\n    region: nyc1\n    description: myvpc\n\n- name: Delete a VPC\n  community.digitalocean.digital_ocean_vpc:\n    state: absent\n    name: myvpc1\n"
+  },
+  "community.digitalocean.digital_ocean_vpc_info": {
+    "doc": {
+      "description": "This module can be used to gather information about DigitalOcean VPCs.",
+      "has_action": false,
+      "options": {
+        "members": {
+          "aliases": [],
+          "description": "Return VPC members (instead of all VPCs).",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the VPC.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "oauth_token": {
+          "aliases": [
+            "api_token"
+          ],
+          "description": "DigitalOcean OAuth token.\nThere are several other environment variables which can be used to provide this value.\ni.e., - 'DO_API_TOKEN', 'DO_API_KEY', 'DO_OAUTH_TOKEN' and 'OAUTH_TOKEN'",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The timeout in seconds used for polling DigitalOcean's API.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If set to C(no), the SSL certificates will not be validated.\nThis should only set to C(no) used on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Gather information about DigitalOcean VPCs",
+      "version_added": "1.7.0"
+    },
+    "examples": "\n- name: Fetch all VPCs\n  community.digitalocean.digital_ocean_vpc_info:\n  register: my_vpcs\n\n- name: Fetch members of a VPC\n  community.digitalocean.digital_ocean_vpc_info:\n    members: true\n    name: myvpc1\n  register: my_vpc_members\n"
+  }
+}

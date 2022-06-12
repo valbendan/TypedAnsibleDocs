@@ -1,0 +1,2806 @@
+{
+  "wti.remote.cpm_alarm_info": {
+    "doc": {
+      "description": "Get temperature alarm from WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.)",
+      "options": {
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Get alarm information from WTI OOB and PDU devices",
+      "version_added": "2.9"
+    },
+    "examples": "\n- name: Get the Alarm Information for a WTI device\n  cpm_alarm_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n\n- name: Get the Alarm Information for a WTI device\n  cpm_alarm_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: false\n    validate_certs: false\n"
+  },
+  "wti.remote.cpm_config_backup": {
+    "doc": {
+      "description": "Get parameters from WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.)",
+      "options": {
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to get the parameters from.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_path": {
+          "aliases": [],
+          "description": "This is the directory path to store the WTI device configuration file.",
+          "default": "/tmp/",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to get the parameters from.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to get the parameters from.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Get parameters from WTI OOB and PDU devices",
+      "version_added": "2.9"
+    },
+    "examples": "\n-   name: Get the Parameters for a WTI device\n    cpm_config_backup:\n        cpm_url: \"nonexist.wti.com\"\n        cpm_username: \"super\"\n        cpm_password: \"super\"\n        use_https: true\n        validate_certs: false\n"
+  },
+  "wti.remote.cpm_config_restore": {
+    "doc": {
+      "description": "Send operational parameters to WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.)",
+      "options": {
+        "cpm_filename": {
+          "aliases": [],
+          "description": "This is the filename of the existing WTI device configuration file.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to get the parameters from.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_path": {
+          "aliases": [],
+          "description": "This is the directory path to the existing the WTI device configuration file.",
+          "default": "/tmp/",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to get the parameters from.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to get the parameters from.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Send operational parameters to WTI OOB and PDU devices",
+      "version_added": "2.9"
+    },
+    "examples": "\n-   name: Get the Parameters for a WTI device\n    cpm_config_restore:\n        cpm_url: \"nonexist.wti.com\"\n        cpm_username: \"super\"\n        cpm_password: \"super\"\n        cpm_path: \"/tmp/\"\n        cpm_filename: \"wti-192-10-10-239-2020-02-13T16-05-57-xml\"\n        use_https: true\n        validate_certs: false\n"
+  },
+  "wti.remote.cpm_current_info": {
+    "doc": {
+      "description": "Get the Current Information of a WTI device",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.)",
+      "options": {
+        "cpm_enddate": {
+          "aliases": [],
+          "description": "End date of the range to look for current data",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_startdate": {
+          "aliases": [],
+          "description": "Start date of the range to look for current data",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Get the Current Information of a WTI device",
+      "version_added": "2.9"
+    },
+    "examples": "\n- name: Get the Current Information of a WTI device\n  cpm_current_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n\n- name: Get the Current Information of a WTI device\n  cpm_current_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: false\n    validate_certs: false\n    startdate: 01-12-2020\"\n    enddate: 02-16-2020\"\n"
+  },
+  "wti.remote.cpm_firmware_info": {
+    "doc": {
+      "description": "Get firmware information from WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.)",
+      "options": {
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Get firmware information from WTI OOB and PDU devices",
+      "version_added": "2.9"
+    },
+    "examples": "\n- name: Get the Firmware Information for a WTI device\n  cpm_firmware_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n\n- name: Get the Firmware Information for a WTI device\n  cpm_firmware_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: false\n    validate_certs: false\n"
+  },
+  "wti.remote.cpm_firmware_update": {
+    "doc": {
+      "description": "Set Serial port parameters in WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.",
+      "options": {
+        "cpm_file": {
+          "aliases": [],
+          "description": "If a file is defined, this file will be used to update the WTI device.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_path": {
+          "aliases": [],
+          "description": "This is the directory path to store the WTI device configuration file.",
+          "default": "/tmp/",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "family": {
+          "aliases": [],
+          "description": "Force the download to both either Console (1) or Power (0)",
+          "default": "1",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "removefileonexit": {
+          "aliases": [],
+          "description": "After an upgrade, remove the upgrade OS image",
+          "default": "1",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "use_force": {
+          "aliases": [],
+          "description": "If set to True, the upgrade will happen even if the device doesnt need it.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used - on personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Set Serial port parameters in WTI OOB and PDU devices",
+      "version_added": "2.9"
+    },
+    "examples": "\n# Upgrade the firmware of a WTI device\n- name: Upgrade the firmware of a WTI device\n  cpm_firmware_update:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n\n\n# Upgrade the firmware of a WTI device and keep the download OS image after exit\n- name: Upgrade the firmware of a WTI device and keep the download OS image after exit\n  cpm_firmware_update:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    removefileonexit: \"0\"\n"
+  },
+  "wti.remote.cpm_hostname_config": {
+    "doc": {
+      "description": "Set Hostname (Site ID), Location, Asset Tag parameters parameters in WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.",
+      "options": {
+        "assettag": {
+          "aliases": [],
+          "description": "This is the Asset Tag to be set for the WTI OOB and PDU device.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "This is the Hostname (Site-ID) tag to be set for the WTI OOB and PDU device.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "location": {
+          "aliases": [],
+          "description": "This is the Location tag to be set for the WTI OOB and PDU device.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Set Hostname (Site ID), Location, Asset Tag parameters in WTI OOB and PDU devices.",
+      "version_added": "2.11"
+    },
+    "examples": "\n# Set Hostname, Location and Site-ID variables of a WTI device\n- name: Set known fixed hostname variables of a WTI device\n  cpm_time_config:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    hostname: \"myhostname\"\n    location: \"Irvine\"\n    assettag: \"irvine92395\"\n\n# Set the Hostname variable of a WTI device\n- name: Set the Hostname of a WTI device\n  cpm_time_config:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    hostname: \"myhostname\"\n"
+  },
+  "wti.remote.cpm_hostname_info": {
+    "doc": {
+      "description": "Get Hostname (Site ID), Location, Asset Tag parameters from WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.)",
+      "options": {
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Get Hostname (Site ID), Location, Asset Tag parameters in WTI OOB and PDU devices",
+      "version_added": "2.11"
+    },
+    "examples": "\n- name: Get the Hostname parameters for a WTI device\n  cpm_hostname_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n\n- name: Get the Hostname parameters for a WTI device\n  cpm_hostname_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: false\n    validate_certs: false\n"
+  },
+  "wti.remote.cpm_interface_config": {
+    "doc": {
+      "description": "Set network interface parameters in WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.",
+      "options": {
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "interface": {
+          "aliases": [],
+          "description": "This is the ethernet port name that is getting configured.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "eth0",
+            "eth1"
+          ],
+          "suboptions": {}
+        },
+        "ipv4address": {
+          "aliases": [],
+          "description": "IPv4 format IP address for the defined interface Port.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipv4dhcpdefgateway": {
+          "aliases": [],
+          "description": "Enable or Disable this ports configuration as the default IPv4 route for the device.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "ipv4dhcpenable": {
+          "aliases": [],
+          "description": "Enable IPv4 DHCP request call to obtain confufuration information.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "ipv4dhcphostname": {
+          "aliases": [],
+          "description": "Define IPv4 DHCP Hostname.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipv4dhcplease": {
+          "aliases": [],
+          "description": "IPv4 DHCP Lease Time.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipv4dhcpobdns": {
+          "aliases": [],
+          "description": "IPv6 DHCP Obtain DNS addresses auto.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "ipv4dhcpupdns": {
+          "aliases": [],
+          "description": "IPv4 DHCP DNS Server Update.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "ipv4gateway": {
+          "aliases": [],
+          "description": "IPv4 format Gateway address for the defined interface Port.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipv4netmask": {
+          "aliases": [],
+          "description": "IPv4 format Netmask for the defined interface Port.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipv6address": {
+          "aliases": [],
+          "description": "IPv6 format IP address for the defined interface Port.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipv6gateway": {
+          "aliases": [],
+          "description": "IPv6 format Gateway address for the defined interface Port.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipv6subnetprefix": {
+          "aliases": [],
+          "description": "IPv6 format Subnet Prefix for the defined interface Port.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "negotiation": {
+          "aliases": [],
+          "description": "This is the speed of the interface port being configured.\n0=Auto, 1=10/half, 2=10/full, 3=100/half, 4=100/full, 5=1000/half, 6=1000/full",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6"
+          ],
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Set network interface parameters in WTI OOB and PDU devices",
+      "version_added": "2.10"
+    },
+    "examples": "\n# Set Network Interface Parameters\n- name: Set the Interface Parameters for port eth1 of a WTI device\n  cpm_interface_config:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    interface: \"eth1\"\n    ipv4address: \"192.168.0.14\"\n    ipv4netmask: \"255.255.255.0\"\n    ipv4gateway: \"192.168.0.1\"\n    negotiation: 0\n\n# Set Network Interface Parameters\n- name: Set the Interface Parameters for port eth1 to DHCP of a WTI device\n  cpm_interface_config:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    interface: \"eth1\"\n    negotiation: 0\n    ipv4dhcpenable: 1\n    ipv4dhcphostname: \"\"\n    ipv4dhcplease: -1\n    ipv4dhcpobdns: 0\n    ipv4dhcpupdns: 0\n    ipv4dhcpdefgateway: 0\n"
+  },
+  "wti.remote.cpm_interface_info": {
+    "doc": {
+      "description": "Get network interface parameters from WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.)",
+      "options": {
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "interface": {
+          "aliases": [],
+          "description": "This is the ethernet port name that is getting retrieved. It can include a single ethernet\nport name, multiple ethernet port names separated by commas or not defined for all ports.",
+          "type": "list",
+          "required": false,
+          "choices": [
+            "eth0",
+            "eth1",
+            "ppp0"
+          ],
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Get network interface parameters from WTI OOB and PDU devices",
+      "version_added": "2.10"
+    },
+    "examples": "\n- name: Get the network interface Parameters for a WTI device for all interfaces\n  cpm_interface_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n\n- name: Get the network interface Parameters for a WTI device for a specific interface\n  cpm_interface_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    interface: \"eth0,eth1\"\n    use_https: false\n    validate_certs: false\n"
+  },
+  "wti.remote.cpm_iptables_config": {
+    "doc": {
+      "description": "Set network IPTables parameters in WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.",
+      "options": {
+        "clear": {
+          "aliases": [],
+          "description": "Removes all the iptables for the protocol being defined before setting the newly defined entry.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "command": {
+          "aliases": [],
+          "description": "Actual iptables command to send to the WTI device.",
+          "type": "list",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "index": {
+          "aliases": [],
+          "description": "Index in which command should be inserted. If not defined entry will start at position one.",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "protocol": {
+          "aliases": [],
+          "description": "The protocol that the iptables entry should be applied. 0 = ipv4, 1 = ipv6.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Set network IPTables parameters in WTI OOB and PDU devices",
+      "version_added": "2.10"
+    },
+    "examples": "\n# Set Network IPTables Parameters\n- name: Set the an IPTables Parameter for a WTI device\n  cpm_iptables_config:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    command: \"iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT\"\n\n# Sets multiple Network IPTables Parameters\n- name: Set the IPTables Parameters a WTI device\n  cpm_iptables_config:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    index:\n      - 1\n      - 2\n    command:\n      - \"iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT\"\n      - \"iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT\"\n"
+  },
+  "wti.remote.cpm_iptables_info": {
+    "doc": {
+      "description": "Get network IPTABLES parameters from WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.)",
+      "options": {
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Get network IPTABLES parameters from WTI OOB and PDU devices",
+      "version_added": "2.10"
+    },
+    "examples": "\n- name: Get the network IPTABLES Parameters for a WTI device.\n  cpm_interface_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n\n- name: Get the network IPTABLES Parameters for a WTI device.\n  cpm_interface_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: false\n    validate_certs: false\n"
+  },
+  "wti.remote.cpm_plugconfig": {
+    "doc": {
+      "description": "Get and Set Plug Parameters on WTI OOB and PDU devices",
+      "has_action": false,
+      "options": {
+        "cpm_action": {
+          "aliases": [],
+          "description": "This is the Action to send the module.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "getplugconfig",
+            "setplugconfig"
+          ],
+          "suboptions": {}
+        },
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "plug_bootdelay": {
+          "aliases": [],
+          "description": "On a reboot command, this is the time when a plug will turn on power, after it has been turned off.\n0='0.5 Secs', 1='1 Sec', 2='2 Sec', 3='5 Sec', 4='15 Sec', 5='30 Sec', 6='1 Min', 7='2 Mins', - 8='3 Mins', 9='5 Mins'.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9"
+          ],
+          "suboptions": {}
+        },
+        "plug_bootpriority": {
+          "aliases": [],
+          "description": "Prioritizes which plug gets its state changed first. The lower the number the higher the priority.\nValid value can from 1 to the maximum number of plugs of the WTI unit.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "plug_default": {
+          "aliases": [],
+          "description": "What the Plugs default state is when the device starts. 0 - Off, 1 - On.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "plug_id": {
+          "aliases": [],
+          "description": "This is the plug number that is to be manipulated\nFor the getplugconfig command, the plug_id 'all' will return the status of all the plugs the\nuser has rights to access.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "plug_name": {
+          "aliases": [],
+          "description": "The new name of the Plug.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Get and Set Plug Parameters on WTI OOB and PDU power devices",
+      "version_added": "2.8"
+    },
+    "examples": "\n# Get Plug parameters for all ports\n- name: Get the Plug parameters for ALL ports of a WTI Power device\n  cpm_plugconfig:\n    cpm_action: \"getplugconfig\"\n    cpm_url: \"rest.wti.com\"\n    cpm_username: \"restpower\"\n    cpm_password: \"restfulpowerpass12\"\n    use_https: true\n    validate_certs: true\n    plug_id: \"all\"\n\n# Get Plug parameters for port 2\n- name: Get the Plug parameters for the given port of a WTI Power device\n  cpm_plugconfig:\n    cpm_action: \"getplugconfig\"\n    cpm_url: \"rest.wti.com\"\n    cpm_username: \"restpower\"\n    cpm_password: \"restfulpowerpass12\"\n    use_https: true\n    validate_certs: false\n    plug_id: \"2\"\n\n# Configure plug 5\n- name: Configure parameters for Plug 5 on a given WTI Power device\n  cpm_plugconfig:\n    cpm_action: \"setplugconfig\"\n    cpm_url: \"rest.wti.com\"\n    cpm_username: \"restpower\"\n    cpm_password: \"restfulpowerpass12\"\n    use_https: true\n    plug_id: \"5\"\n    plug_name: \"NewPlugNameFive\"\n    plug_bootdelay: \"3\"\n    plug_default: \"0\"\n    plug_bootpriority: \"1\"\n"
+  },
+  "wti.remote.cpm_plugcontrol": {
+    "doc": {
+      "description": "Get and Set Plug actions on WTI OOB and PDU devices",
+      "has_action": false,
+      "options": {
+        "cpm_action": {
+          "aliases": [],
+          "description": "This is the Action to send the module.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "getplugcontrol",
+            "setplugcontrol"
+          ],
+          "suboptions": {}
+        },
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device  to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "plug_id": {
+          "aliases": [],
+          "description": "This is the plug number or the plug name that is to be manipulated\nFor the plugget command, the plug_id 'all' will return the status of all the plugs the\nuser has rights to access.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "plug_state": {
+          "aliases": [],
+          "description": "This is what action to take on the plug.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "on",
+            "off",
+            "boot",
+            "default"
+          ],
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Get and Set Plug actions on WTI OOB and PDU power devices",
+      "version_added": "2.8"
+    },
+    "examples": "\n# Get Plug status for all ports\n- name: Get the Plug status for ALL ports of a WTI device\n  cpm_plugcontrol:\n    cpm_action: \"getplugcontrol\"\n    cpm_url: \"rest.wti.com\"\n    cpm_username: \"restpower\"\n    cpm_password: \"restfulpowerpass12\"\n    use_https: true\n    validate_certs: true\n    plug_id: \"all\"\n\n# Get Plug status for port 2\n- name: Get the Plug status for the given port of a WTI device\n  cpm_plugcontrol:\n    cpm_action: \"getplugcontrol\"\n    cpm_url: \"rest.wti.com\"\n    cpm_username: \"restpower\"\n    cpm_password: \"restfulpowerpass12\"\n    use_https: true\n    validate_certs: false\n    plug_id: \"2\"\n\n# Reboot plug 5\n- name: Reboot Plug 5 on a given WTI device\n  cpm_plugcontrol:\n    cpm_action: \"setplugcontrol\"\n    cpm_url: \"rest.wti.com\"\n    cpm_username: \"restpower\"\n    cpm_password: \"restfulpowerpass12\"\n    use_https: true\n    plug_id: \"5\"\n    plug_state: \"boot\"\n"
+  },
+  "wti.remote.cpm_power_info": {
+    "doc": {
+      "description": "Get the Power Information of a WTI device",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.)",
+      "options": {
+        "cpm_enddate": {
+          "aliases": [],
+          "description": "End date of the range to look for power data",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_startdate": {
+          "aliases": [],
+          "description": "Start date of the range to look for power data",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Get the Power Information of a WTI device",
+      "version_added": "2.9"
+    },
+    "examples": "\n- name: Get the Power Information of a WTI device\n  cpm_power_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n\n- name: Get the Power Information of a WTI device\n  cpm_power_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: false\n    validate_certs: false\n    startdate: 01-12-2020\"\n    enddate: 02-16-2020\"\n"
+  },
+  "wti.remote.cpm_serial_port_action_info": {
+    "doc": {
+      "description": "Get Serial port connection status from WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.)",
+      "options": {
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "This is the serial port number that is getting retrieved. It can include a single port\nnumber, multiple port numbers separated by commas, a list of port numbers, or an '*' character for all ports.",
+          "default": "['*']",
+          "type": "list",
+          "required": true,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Get Serial port connection status in WTI OOB and PDU devices",
+      "version_added": "2.9"
+    },
+    "examples": "\n- name: Get the Serial Port Parameters for port 2 of a WTI device\n  cpm_serial_port_action_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    port: 2\n\n- name: Get the Serial Port Parameters for ports 2 and 4 of a WTI device\n  cpm_serial_port_action_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    port: 2,4\n\n- name: Get the Serial Port Parameters for all ports of a WTI device\n  cpm_serial_port_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    port: \"*\"\n"
+  },
+  "wti.remote.cpm_serial_port_action_set": {
+    "doc": {
+      "description": "Set Serial port connection/disconnection commands in WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.",
+      "options": {
+        "action": {
+          "aliases": [],
+          "description": "This is the baud rate to assign to the port.\n1=Connect, 2=Disconnect",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "1",
+            "2"
+          ],
+          "suboptions": {}
+        },
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "This is the port number that is getting the action performed on.",
+          "type": "int",
+          "required": true,
+          "suboptions": {}
+        },
+        "portremote": {
+          "aliases": [],
+          "description": "This is the port number that is getting the action performed on.",
+          "type": "int",
+          "required": true,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Set Serial port connection/disconnection commands in WTI OOB and PDU devices",
+      "version_added": "2.9"
+    },
+    "examples": "\n# Set Serial Port Action (Connect)\n- name: Connect port 2 to port 3 of a WTI device\n  cpm_serial_port_action_set:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    port: \"2\"\n    portremote: \"3\"\n    action: \"1\"\n\n# Set Serial port Action (Disconnect)\n- name: Disconnect port 2 and 3 of a WTI device\n  cpm_serial_port_action_set:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    port: \"2\"\n    action: \"2\"\n"
+  },
+  "wti.remote.cpm_serial_port_config": {
+    "doc": {
+      "description": "Set Serial port parameters in WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.",
+      "options": {
+        "baud": {
+          "aliases": [],
+          "description": "This is the baud rate to assign to the port.\n0=300, 1=1200, 2=2400, 3=4800, 4=9600, 5=19200, 6=38400, 7=57600, 8=115200, 9=230400, 10=460800",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ],
+          "suboptions": {}
+        },
+        "break_allow": {
+          "aliases": [],
+          "description": "This is if the break character is allowed to be passed through the port, 0=Off, 1=On",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "cmd": {
+          "aliases": [],
+          "description": "This is the Admin Mode to assign to the port, 0=Deny, 1=Permit.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "echo": {
+          "aliases": [],
+          "description": "-This is the command echo parameter to assign to the port, 0=Off, 1=On",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "handshake": {
+          "aliases": [],
+          "description": "This is the handshake to assign to the port, 0=None, 1=XON/XOFF, 2=RTS/CTS, 3=Both.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1",
+            "2",
+            "3"
+          ],
+          "suboptions": {}
+        },
+        "logoff": {
+          "aliases": [],
+          "description": "This is the logout character to assign to the port\nIf preceded by a ^ character, the sequence will be a control character. Used if seq is set to 0 or 1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "mode": {
+          "aliases": [],
+          "description": "This is the port mode to assign to the port, 0=Any-to-Any. 1=Passive, 2=Buffer, 3=Modem, 4=ModemPPP.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "suboptions": {}
+        },
+        "parity": {
+          "aliases": [],
+          "description": "This is the parity to assign to the port, 0=7-None, 1=7-Even, 2=7-Odd, 3=8-None, 4=8-Even, 5=8-Odd.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ],
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "This is the port number that is getting the action performed on.",
+          "type": "int",
+          "required": true,
+          "suboptions": {}
+        },
+        "portname": {
+          "aliases": [],
+          "description": "This is the Name of the Port that is displayed.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "seq": {
+          "aliases": [],
+          "description": "This is the type of Sequence Disconnect to assign to the port, 1=Three Characters (before and after), 2=One Character Only, 3=Off",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "1",
+            "2",
+            "3"
+          ],
+          "suboptions": {}
+        },
+        "stopbits": {
+          "aliases": [],
+          "description": "This is the stop bits to assign to the port, 1=1 Stop Bit, 2=2 Stop Bit.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "1",
+            "2"
+          ],
+          "suboptions": {}
+        },
+        "tout": {
+          "aliases": [],
+          "description": "This is the Port Activity Timeout to assign to the port, 0=Off, 1=5 Min, 2=15 Min, 3=30 Min, 4=90 Min, 5=1 Min.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ],
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Set Serial port parameters in WTI OOB and PDU devices",
+      "version_added": "2.9"
+    },
+    "examples": "\n# Set Serial Port Parameters\n- name: Set the Port Parameters for port 2 of a WTI device\n  cpm_serial_port_config:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    port: \"2\"\n    portname: \"RouterLabel\"\n    baud: \"7\"\n    handshake: \"1\"\n    stopbits: \"1\"\n    parity: \"0\"\n    mode: \"0\"\n    cmd: \"0\"\n    seq: \"1\"\n    tout: \"1\"\n    echo: \"0\"\n    break_allow: \"0\"\n    logoff: \"^H\"\n\n# Set Serial Port Port Name and Baud Rate Parameters\n- name: Set New port name and baud rate (115k) for port 4 of a WTI device\n  cpm_serial_port_config:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    port: \"4\"\n    portname: \"NewPortName1\"\n    baud: \"8\"\n"
+  },
+  "wti.remote.cpm_serial_port_info": {
+    "doc": {
+      "description": "Get Serial port parameters from WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.)",
+      "options": {
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "This is the serial port number that is getting retrieved. It can include a single port\nnumber, multiple port numbers separated by commas, a list of port numbers, or an '*' character for all ports.",
+          "default": "['*']",
+          "type": "list",
+          "required": true,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Get Serial port parameters in WTI OOB and PDU devices",
+      "version_added": "2.9"
+    },
+    "examples": "\n- name: Get the Serial Port Parameters for port 2 of a WTI device\n  cpm_serial_port_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    port: 2\n\n- name: Get the Serial Port Parameters for ports 2 and 4 of a WTI device\n  cpm_serial_port_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    port: 2,4\n\n- name: Get the Serial Port Parameters for all ports of a WTI device\n  cpm_serial_port_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    port: \"*\"\n"
+  },
+  "wti.remote.cpm_snmp_config": {
+    "doc": {
+      "description": "Set network IPTables parameters in WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.",
+      "options": {
+        "authpass": {
+          "aliases": [],
+          "description": "Sets the Authentication Password for SNMPv3 (V3 only).",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "authpriv": {
+          "aliases": [],
+          "description": "Configures the Authentication and Privacy features for SNMPv3 communication, 0 = Auth/NoPriv, 1 = Auth/Priv (V3 only).",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "authproto": {
+          "aliases": [],
+          "description": "Which authentication protocol will be used, 0 = MD5, 1 = SHA1 (V3 only).",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "clear": {
+          "aliases": [],
+          "description": "Removes all the users for the protocol being defined before setting the newly defined entries.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "contact": {
+          "aliases": [],
+          "description": "The name of the administrator responsible for SNMP issues.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "enable": {
+          "aliases": [],
+          "description": "The activates SNMP polling for the specified interface and protocol.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "index": {
+          "aliases": [],
+          "description": "Index of the user being modified (V3 only).",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "interface": {
+          "aliases": [],
+          "description": "The ethernet port for the SNMP we are defining.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "eth0",
+            "eth1",
+            "ppp0"
+          ],
+          "suboptions": {}
+        },
+        "location": {
+          "aliases": [],
+          "description": "The location of the SNMP Server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "privpass": {
+          "aliases": [],
+          "description": "Sets the Privacy Password for SNMPv3 (V3 only) (V3 only).",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "privproto": {
+          "aliases": [],
+          "description": "Which privacy protocol will be used, 0 = DES, 1 = AES128 (V3 only).",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "protocol": {
+          "aliases": [],
+          "description": "The protocol that the SNMP entry should be applied. 0 = ipv4, 1 = ipv6.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "readonly": {
+          "aliases": [],
+          "description": "Controls the ability to change configuration parameters with SNMP.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "rocommunity": {
+          "aliases": [],
+          "description": "Read Only Community Password, not used for SNMP V3.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "rwcommunity": {
+          "aliases": [],
+          "description": "Read/Write Community Password, not used for SNMP V3.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "systemname": {
+          "aliases": [],
+          "description": "The hostname of the WTI Device.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Sets the User Name for SNMPv3 access (V3 only).",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "version": {
+          "aliases": [],
+          "description": "Defined which version of SNMP the device will respond to 0 = V1/V2 Only, 1 = V3 Only, 2 = V1/V2/V3.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1",
+            "2"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Set network IPTables parameters in WTI OOB and PDU devices",
+      "version_added": "2.10"
+    },
+    "examples": "\n# Sets the device SNMP Parameters\n- name: Set the an SNMP Parameter for a WTI device\n  cpm_iptables_config:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    interface: \"eth0\"\n    use_https: true\n    validate_certs: false\n    protocol: 0\n    clear: 1\n    enable: 1\n    readonly: 0\n    version: 0\n    rocommunity: \"ropassword\"\n    rwcommunity: \"rwpassword\"\n\n# Sets the device SNMP Parameters\n- name: Set the SNMP Parameters a WTI device\n  cpm_iptables_config:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    version: 1\n    index:\n      - 1\n      - 2\n    username:\n      - \"username1\"\n      - \"username2\"\n    authpriv:\n      - 1\n      - 1\n    authpass:\n      - \"authpass1\"\n      - \"uthpass2\"\n    authproto:\n      - 1\n      - 1\n    privpass:\n      - \"authpass1\"\n      - \"uthpass2\"\n    privproto:\n      - 1\n      - 1\n"
+  },
+  "wti.remote.cpm_snmp_info": {
+    "doc": {
+      "description": "Get network SNMP parameters from WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.)",
+      "options": {
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "interface": {
+          "aliases": [],
+          "description": "This is the ethernet port name that is getting retrieved. It can include a single ethernet\nport name, multiple ethernet port names separated by commas or not defined for all ports.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "eth0",
+            "eth1",
+            "ppp0"
+          ],
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Get network SNMP parameters from WTI OOB and PDU devices",
+      "version_added": "2.10"
+    },
+    "examples": "\n- name: Get the network SNMP Parameters for all interfaces of a WTI device.\n  cpm_interface_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n\n\n- name: Get the network SNMP Parameters for eth0 of a WTI device.\n  cpm_interface_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: false\n    validate_certs: false\n    interface: \"eth0\"\n"
+  },
+  "wti.remote.cpm_status_info": {
+    "doc": {
+      "description": "Get temperature general status from WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.)",
+      "options": {
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Get general status information from WTI OOB and PDU devices",
+      "version_added": "2.9"
+    },
+    "examples": "\n- name: Get the Status Information for a WTI device\n  cpm_status_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n\n- name: Get the Status Information for a WTI device\n  cpm_status_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: false\n    validate_certs: false\n"
+  },
+  "wti.remote.cpm_syslog_client_config": {
+    "doc": {
+      "description": "Set network SYSLOG Client parameters in WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.",
+      "options": {
+        "address": {
+          "aliases": [],
+          "description": "Sets the IP Address of the SYSLOG server to contact.",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "clear": {
+          "aliases": [],
+          "description": "Removes all the IP block entries for the protocol being defined before setting the newly defined entries.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "index": {
+          "aliases": [],
+          "description": "Index of the IP block being modified.",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Defines the port number used by the SYSLOG Client (1 - 65535).",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "protocol": {
+          "aliases": [],
+          "description": "The protocol that the SYSLOG entry should be applied. 0 = ipv4, 1 = ipv6.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "secure": {
+          "aliases": [],
+          "description": "Defines if a secure connection is used by the SYSLOG Client (TCP Transport required).",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "transport": {
+          "aliases": [],
+          "description": "Defines the transfer protocol type used by the SYSLOG Client. 0=UDP, 1=TCP;",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Set network SYSLOG Client parameters in WTI OOB and PDU devices",
+      "version_added": "2.11"
+    },
+    "examples": "\n# Sets the device SYSLOG Client Parameters\n- name: Set the an SYSLOG Client Parameter for a WTI device\n  cpm_iptables_config:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    protocol: 0\n    index:\n        - 1\n    address:\n        - \"11.22.33.44\"\n    port:\n        - 555\n    transport:\n        - 1\n    secure:\n        - 0\n\n# Sets the device SYSLOG Client Parameters\n- name: Set the SYSLOG Client Parameters a WTI device\n  cpm_iptables_config:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    protocol: 0\n    index:\n        - 1\n        - 2\n    address:\n        - \"11.22.33.44\"\n        - \"55.66.77.88\"\n    port:\n        - 555\n        - 557\n    transport:\n        - 1\n        - 0\n    secure:\n        - 0\n        - 1\n"
+  },
+  "wti.remote.cpm_syslog_client_info": {
+    "doc": {
+      "description": "Get network SYSLOG Client parameters from WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.)",
+      "options": {
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "interface": {
+          "aliases": [],
+          "description": "This is the ethernet port name that is getting retrieved. It can include a single ethernet\nport name, multiple ethernet port names separated by commas or not defined for all ports.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "eth0",
+            "eth1",
+            "ppp0",
+            "qmimux0"
+          ],
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Get network SYSLOG Client parameters from WTI OOB and PDU devices",
+      "version_added": "2.11"
+    },
+    "examples": "\n- name: Get the network SYSLOG Client Parameters for all interfaces of a WTI device.\n  cpm_interface_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n\n\n- name: Get the network SYSLOG Client Parameters for eth0 of a WTI device.\n  cpm_interface_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: false\n    validate_certs: false\n    interface: \"eth0\"\n"
+  },
+  "wti.remote.cpm_syslog_server_config": {
+    "doc": {
+      "description": "Set network SYSLOG Server parameters in WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.",
+      "options": {
+        "address": {
+          "aliases": [],
+          "description": "Sets the IP Address to block message logging.",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "clear": {
+          "aliases": [],
+          "description": "Removes all the IP block entries for the protocol being defined before setting the newly defined entries.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "enable": {
+          "aliases": [],
+          "description": "Activates SYSLOG listening for the specified interface and protocol.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "index": {
+          "aliases": [],
+          "description": "Index of the IP block being modified.",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "interface": {
+          "aliases": [],
+          "description": "The ethernet port for the SYSLOG we are defining.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "eth0",
+            "eth1",
+            "ppp0",
+            "qmimux0"
+          ],
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Defines the port number used by the SYSLOG Server (1 - 65535).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "protocol": {
+          "aliases": [],
+          "description": "The protocol that the SYSLOG entry should be applied. 0 = ipv4, 1 = ipv6.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "secure": {
+          "aliases": [],
+          "description": "Defines if a secure connection is used by the SYSLOG Server (TCP Transport required).",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "transport": {
+          "aliases": [],
+          "description": "Defines the transfer protocol type used by the SYSLOG Server. 0=UDP, 1=TCP;",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Set network SYSLOG Server parameters in WTI OOB and PDU devices",
+      "version_added": "2.11"
+    },
+    "examples": "\n# Sets the device SYSLOG Server Parameters\n- name: Set the an SYSLOG Server Parameter for a WTI device\n  cpm_iptables_config:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    interface: \"eth0\"\n    protocol: 0\n    port: 514\n    transport: 0\n    secure: 0\n    clear: 1\n\n# Sets the device SYSLOG Server Parameters\n- name: Set the SYSLOG Server Parameters a WTI device\n  cpm_iptables_config:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    interface: \"eth0\"\n    protocol: 0\n    port: 514\n    transport: 0\n    secure: 0\n    clear: 1\n    index:\n      - 1\n      - 2\n    block:\n      - \"192.168.50.4\"\n      - \"72.76.4.56\"\n"
+  },
+  "wti.remote.cpm_syslog_server_info": {
+    "doc": {
+      "description": "Get network SYSLOG Server parameters from WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.)",
+      "options": {
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "interface": {
+          "aliases": [],
+          "description": "This is the ethernet port name that is getting retrieved. It can include a single ethernet\nport name, multiple ethernet port names separated by commas or not defined for all ports.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "eth0",
+            "eth1",
+            "ppp0",
+            "qmimux0"
+          ],
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Get network SYSLOG Server parameters from WTI OOB and PDU devices",
+      "version_added": "2.11"
+    },
+    "examples": "\n- name: Get the network SYSLOG Server Parameters for all interfaces of a WTI device.\n  cpm_interface_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n\n\n- name: Get the network SYSLOG Server Parameters for eth0 of a WTI device.\n  cpm_interface_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: false\n    validate_certs: false\n    interface: \"eth0\"\n"
+  },
+  "wti.remote.cpm_temp_info": {
+    "doc": {
+      "description": "Get temperature information from WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.)",
+      "options": {
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Get temperature information from WTI OOB and PDU devices",
+      "version_added": "2.9"
+    },
+    "examples": "\n- name: Get the Temperature Information of a WTI device\n  cpm_temp_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n\n- name: Get the Temperature Information of a WTI device\n  cpm_temp_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: false\n    validate_certs: false\n"
+  },
+  "wti.remote.cpm_time_config": {
+    "doc": {
+      "description": "Set Time/Date and NTP parameters parameters in WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.",
+      "options": {
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "date": {
+          "aliases": [],
+          "description": "Static date in the format of two digit month, two digit day, four digit year separated by a slash symbol.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipv4address": {
+          "aliases": [],
+          "description": "Comma separated string of up to two addresses for a primary and secondary IPv4 base NTP server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ipv6address": {
+          "aliases": [],
+          "description": "Comma separated string of up to two addresses for a primary and secondary IPv6 base NTP server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ntpenable": {
+          "aliases": [],
+          "description": "This enables or disables the NTP client service.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "time": {
+          "aliases": [],
+          "description": "Static time in the format of two digit hour, two digit minute, two digit second separated by a colon symbol.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "Set the network timeout in seconds of contacting the NTP servers, valid options can be from 1-60.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "timezone": {
+          "aliases": [],
+          "description": "This is timezone that is assigned to the WTI device.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Set Time/Date parameters in WTI OOB and PDU devices.",
+      "version_added": "2.10"
+    },
+    "examples": "\n# Set a static time/date and timezone of a WTI device\n- name: Set known fixed time/date of a WTI device\n  cpm_time_config:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    date: \"12/12/2019\"\n    time: \"09:23:46\"\n    timezone: 5\n\n# Enable NTP and set primary and seconday servers of a WTI device\n- name: Set NTP primary and seconday servers of a WTI device\n  cpm_time_config:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n    timezone: 5\n    ntpenable: 1\n    ipv4address: \"129.6.15.28.pool.ntp.org\"\n    timeout: 15\n"
+  },
+  "wti.remote.cpm_time_info": {
+    "doc": {
+      "description": "Get Time/Date and NTP parameters from WTI OOB and PDU devices",
+      "has_action": false,
+      "notes": "Use C(groups/cpm) in C(module_defaults) to set common options used between CPM modules.)",
+      "options": {
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Get Time/Date parameters in WTI OOB and PDU devices",
+      "version_added": "2.10"
+    },
+    "examples": "\n- name: Get the Time/Date Parameters for a WTI device\n  cpm_time_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: true\n    validate_certs: false\n\n- name: Get the Time/Date Parameters for a WTI device\n  cpm_time_info:\n    cpm_url: \"nonexist.wti.com\"\n    cpm_username: \"super\"\n    cpm_password: \"super\"\n    use_https: false\n    validate_certs: false\n"
+  },
+  "wti.remote.cpm_user": {
+    "doc": {
+      "description": "Get/Add/Edit Delete Users from WTI OOB and PDU devices",
+      "has_action": false,
+      "options": {
+        "cpm_action": {
+          "aliases": [],
+          "description": "This is the Action to send the module.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "getuser",
+            "adduser",
+            "edituser",
+            "deleteuser"
+          ],
+          "suboptions": {}
+        },
+        "cpm_password": {
+          "aliases": [],
+          "description": "This is the Basic Authentication Password of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_url": {
+          "aliases": [],
+          "description": "This is the URL of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "cpm_username": {
+          "aliases": [],
+          "description": "This is the Basic Authentication Username of the WTI device to send the module.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "use_https": {
+          "aliases": [],
+          "description": "Designates to use an https connection or http connection.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "Flag to control if the lookup will observe HTTP proxy environment variables when present.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "user_accessapi": {
+          "aliases": [],
+          "description": "If the user has access to the WTI device via RESTful APIs\n0 No , 1 Yes",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "user_accesslevel": {
+          "aliases": [],
+          "description": "This is the access level that needs to be create/modified/deleted\n0 View, 1 User, 2 SuperUser, 3 Administrator",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1",
+            "2",
+            "3"
+          ],
+          "suboptions": {}
+        },
+        "user_accessmonitor": {
+          "aliases": [],
+          "description": "If the user has ability to monitor connection sessions\n0 No , 1 Yes",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "user_accessoutbound": {
+          "aliases": [],
+          "description": "If the user has ability to initiate Outbound connection\n0 No , 1 Yes",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "user_accessserial": {
+          "aliases": [],
+          "description": "If the user has access to the WTI device via Serial ports\n0 No , 1 Yes",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "user_accessssh": {
+          "aliases": [],
+          "description": "If the user has access to the WTI device via SSH\n0 No , 1 Yes",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "user_accessweb": {
+          "aliases": [],
+          "description": "If the user has access to the WTI device via Web\n0 No , 1 Yes",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1"
+          ],
+          "suboptions": {}
+        },
+        "user_callbackphone": {
+          "aliases": [],
+          "description": "This is the Call Back phone number used for POTS modem connections",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "user_groupaccess": {
+          "aliases": [],
+          "description": "If AccessLevel is lower than Administrator, which Groups the user has access",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "user_name": {
+          "aliases": [],
+          "description": "This is the User Name that needs to be create/modified/deleted",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "user_pass": {
+          "aliases": [],
+          "description": "This is the User Password that needs to be create/modified/deleted\nIf the user is being Created this parameter is required",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "user_plugaccess": {
+          "aliases": [],
+          "description": "If AccessLevel is lower than Administrator, which plugs the user has access",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "user_portaccess": {
+          "aliases": [],
+          "description": "If AccessLevel is lower than Administrator, which ports the user has access",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "If false, SSL certificates will not be validated. This should only be used\non personally controlled sites using self-signed certificates.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Get various status and parameters from WTI OOB and PDU devices",
+      "version_added": "2.7"
+    },
+    "examples": "\n# Get User Parameters\n- name: Get the User Parameters for the given user of a WTI device\n  cpm_user:\n    cpm_action: \"getuser\"\n    cpm_url: \"rest.wti.com\"\n    cpm_username: \"restuser\"\n    cpm_password: \"restfuluserpass12\"\n    use_https: true\n    validate_certs: true\n    user_name: \"usernumberone\"\n\n# Create User\n- name: Create a User on a given WTI device\n  cpm_user:\n    cpm_action: \"adduser\"\n    cpm_url: \"rest.wti.com\"\n    cpm_username: \"restuser\"\n    cpm_password: \"restfuluserpass12\"\n    use_https: true\n    validate_certs: false\n    user_name: \"usernumberone\"\n    user_pass: \"complicatedpassword\"\n    user_accesslevel: 2\n    user_accessssh: 1\n    user_accessserial: 1\n    user_accessweb: 0\n    user_accessapi: 1\n    user_accessmonitor: 0\n    user_accessoutbound: 0\n    user_portaccess: \"10011111\"\n    user_plugaccess: \"00000111\"\n    user_groupaccess: \"00000000\"\n\n# Edit User\n- name: Edit a User on a given WTI device\n  cpm_user:\n    cpm_action: \"edituser\"\n    cpm_url: \"rest.wti.com\"\n    cpm_username: \"restuser\"\n    cpm_password: \"restfuluserpass12\"\n    use_https: true\n    validate_certs: false\n    user_name: \"usernumberone\"\n    user_pass: \"newpasswordcomplicatedpassword\"\n\n# Delete User\n- name: Delete a User from a given WTI device\n  cpm_user:\n    cpm_action: \"deleteuser\"\n    cpm_url: \"rest.wti.com\"\n    cpm_username: \"restuser\"\n    cpm_password: \"restfuluserpass12\"\n    use_https: true\n    validate_certs: true\n    user_name: \"usernumberone\"\n"
+  }
+}
