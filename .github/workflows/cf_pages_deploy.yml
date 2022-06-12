@@ -1,11 +1,11 @@
 name: Cloudflare Pages Deployment
 
-# r6
+# r7
 
 on:
   push:
     paths:
-      - '.github/workflows/cf_pages_deploy.yml'
+      - ".github/workflows/cf_pages_deploy.yml"
 
 jobs:
   build:
