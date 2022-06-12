@@ -1,0 +1,1359 @@
+{
+  "community.proxysql.proxysql_backend_servers": {
+    "doc": {
+      "description": "The M(community.proxysql.proxysql_backend_servers) module adds or removes mysql hosts using the proxysql admin interface.",
+      "has_action": false,
+      "notes": "Supports C(check_mode).",
+      "options": {
+        "comment": {
+          "aliases": [],
+          "description": "Text field that can be used for any purposed defined by the user. Could be a description of what the host stores, a reminder of when the host was added or disabled, or a JSON processed by some checker script.",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "compression": {
+          "aliases": [],
+          "description": "If the value of I(compression) is greater than 0, new connections to that server will use compression. If omitted the proxysql database default for I(compression) is 0.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "config_file": {
+          "aliases": [],
+          "description": "Specify a config file from which I(login_user) and I(login_password) are to be read.",
+          "default": "",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostgroup_id": {
+          "aliases": [],
+          "description": "The hostgroup in which this mysqld instance is included. An instance can be part of one or more hostgroups.",
+          "default": "0",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "hostname": {
+          "aliases": [],
+          "description": "The ip address at which the mysqld instance can be contacted.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "load_to_runtime": {
+          "aliases": [],
+          "description": "Dynamically load config to runtime memory.",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_host": {
+          "aliases": [],
+          "description": "The host used to connect to ProxySQL admin interface.",
+          "default": "127.0.0.1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "The password used to authenticate to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_port": {
+          "aliases": [],
+          "description": "The port used to connect to ProxySQL admin interface.",
+          "default": "6032",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_unix_socket": {
+          "aliases": [],
+          "description": "The socket used to connect to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "The username used to authenticate to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "max_connections": {
+          "aliases": [],
+          "description": "The maximum number of connections ProxySQL will open to this backend server. If omitted the proxysql database default for I(max_connections) is 1000.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "max_latency_ms": {
+          "aliases": [],
+          "description": "Ping time is monitored regularly. If a host has a ping time greater than I(max_latency_ms) it is excluded from the connection pool (although the server stays ONLINE). If omitted the proxysql database default for I(max_latency_ms) is 0.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "max_replication_lag": {
+          "aliases": [],
+          "description": "If greater than 0, ProxySQL will regularly monitor replication lag. If replication lag goes above I(max_replication_lag), proxysql will temporarily shun the server until replication catches up. If omitted the proxysql database default for I(max_replication_lag) is 0.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "The port at which the mysqld instance can be contacted.",
+          "default": "3306",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "save_to_disk": {
+          "aliases": [],
+          "description": "Save config to sqlite db on disk to persist the configuration.",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "When C(present) - adds the host, when C(absent) - removes the host.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "status": {
+          "aliases": [],
+          "description": "ONLINE - Backend server is fully operational. OFFLINE_SOFT - When a server is put into C(OFFLINE_SOFT) mode, connections are kept in use until the current transaction is completed. This allows to gracefully detach a backend. OFFLINE_HARD - When a server is put into C(OFFLINE_HARD) mode, the existing connections are dropped, while new incoming connections aren't accepted either.\nIf omitted the proxysql database default for I(status) is C(ONLINE).",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "ONLINE",
+            "OFFLINE_SOFT",
+            "OFFLINE_HARD"
+          ],
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If I(use_ssl) is set to C(True), connections to this server will be made using SSL connections. If omitted the proxysql database default for I(use_ssl) is C(False).",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "weight": {
+          "aliases": [],
+          "description": "The bigger the weight of a server relative to other weights, the higher the probability of the server being chosen from the hostgroup. If omitted the proxysql database default for I(weight) is 1.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "PyMySQL",
+        "mysqlclient"
+      ],
+      "short_description": "Adds or removes mysql hosts from proxysql admin interface"
+    },
+    "examples": "\n---\n# This example adds a server, it saves the mysql server config to disk, but\n# avoids loading the mysql server config to runtime (this might be because\n# several servers are being added and the user wants to push the config to\n# runtime in a single batch using the community.general.proxysql_manage_config\n# module).  It uses supplied credentials to connect to the proxysql admin\n# interface.\n\n- name: Add a server\n  community.proxysql.proxysql_backend_servers:\n    login_user: 'admin'\n    login_password: 'admin'\n    hostname: 'mysql01'\n    state: present\n    load_to_runtime: False\n\n# This example removes a server, saves the mysql server config to disk, and\n# dynamically loads the mysql server config to runtime.  It uses credentials\n# in a supplied config file to connect to the proxysql admin interface.\n\n- name: Remove a server\n  community.proxysql.proxysql_backend_servers:\n    config_file: '~/proxysql.cnf'\n    hostname: 'mysql02'\n    state: absent\n"
+  },
+  "community.proxysql.proxysql_global_variables": {
+    "doc": {
+      "description": "The M(community.proxysql.proxysql_global_variables) module gets or sets the proxysql global variables.",
+      "has_action": false,
+      "notes": "Supports C(check_mode).",
+      "options": {
+        "config_file": {
+          "aliases": [],
+          "description": "Specify a config file from which I(login_user) and I(login_password) are to be read.",
+          "default": "",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "load_to_runtime": {
+          "aliases": [],
+          "description": "Dynamically load config to runtime memory.",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_host": {
+          "aliases": [],
+          "description": "The host used to connect to ProxySQL admin interface.",
+          "default": "127.0.0.1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "The password used to authenticate to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_port": {
+          "aliases": [],
+          "description": "The port used to connect to ProxySQL admin interface.",
+          "default": "6032",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_unix_socket": {
+          "aliases": [],
+          "description": "The socket used to connect to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "The username used to authenticate to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "save_to_disk": {
+          "aliases": [],
+          "description": "Save config to sqlite db on disk to persist the configuration.",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "value": {
+          "aliases": [],
+          "description": "Defines a value the variable specified using I(variable) should be set to.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "variable": {
+          "aliases": [],
+          "description": "Defines which variable should be returned, or if I(value) is specified which variable should be updated.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "PyMySQL",
+        "mysqlclient"
+      ],
+      "short_description": "Gets or sets the proxysql global variables"
+    },
+    "examples": "\n---\n# This example sets the value of a variable, saves the mysql admin variables\n# config to disk, and dynamically loads the mysql admin variables config to\n# runtime. It uses supplied credentials to connect to the proxysql admin\n# interface.\n\n- name: Set the value of a variable\n  community.proxysql.proxysql_global_variables:\n    login_user: 'admin'\n    login_password: 'admin'\n    variable: 'mysql-max_connections'\n    value: 4096\n\n# This example gets the value of a variable.  It uses credentials in a\n# supplied config file to connect to the proxysql admin interface.\n\n- name: Get the value of a variable\n  community.proxysql.proxysql_global_variables:\n    config_file: '~/proxysql.cnf'\n    variable: 'mysql-default_query_delay'\n"
+  },
+  "community.proxysql.proxysql_info": {
+    "doc": {
+      "description": "Gathers information about proxysql server.\nCaution. The number of tables that returns, depends on the underlying proyxsql server version.",
+      "has_action": false,
+      "notes": "Supports C(check_mode).",
+      "options": {
+        "config_file": {
+          "aliases": [],
+          "description": "Specify a config file from which I(login_user) and I(login_password) are to be read.",
+          "default": "",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_host": {
+          "aliases": [],
+          "description": "The host used to connect to ProxySQL admin interface.",
+          "default": "127.0.0.1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "The password used to authenticate to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_port": {
+          "aliases": [],
+          "description": "The port used to connect to ProxySQL admin interface.",
+          "default": "6032",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_unix_socket": {
+          "aliases": [],
+          "description": "The socket used to connect to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "The username used to authenticate to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "PyMySQL",
+        "mysqlclient"
+      ],
+      "short_description": "Gathers information about proxysql server",
+      "version_added": "1.2.0"
+    },
+    "examples": "\n- name: Receive information about proxysql setup\n  community.proxysql.proxysql_info:\n    login_user: admin\n    login_password: admin\n"
+  },
+  "community.proxysql.proxysql_manage_config": {
+    "doc": {
+      "description": "The M(community.proxysql.proxysql_global_variables) module writes the proxysql configuration settings between layers. Currently this module will always report a changed state, so should typically be used with WHEN however this will change in a future version when the CHECKSUM table commands are available for all tables in proxysql.",
+      "has_action": false,
+      "notes": "Supports C(check_mode).",
+      "options": {
+        "action": {
+          "aliases": [],
+          "description": "The supplied I(action) combines with the supplied I(direction) to provide the semantics of how we want to move the I(config_settings) between the I(config_layers).",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "LOAD",
+            "SAVE"
+          ],
+          "suboptions": {}
+        },
+        "config_file": {
+          "aliases": [],
+          "description": "Specify a config file from which I(login_user) and I(login_password) are to be read.",
+          "default": "",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "config_layer": {
+          "aliases": [],
+          "description": "RUNTIME - represents the in-memory data structures of ProxySQL used by the threads that are handling the requests. MEMORY - (sometimes also referred as main) represents the in-memory SQLite3 database. DISK - represents the on-disk SQLite3 database. CONFIG - is the classical config file. You can only LOAD FROM the config file.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "MEMORY",
+            "DISK",
+            "RUNTIME",
+            "CONFIG"
+          ],
+          "suboptions": {}
+        },
+        "config_settings": {
+          "aliases": [],
+          "description": "The I(config_settings) specifies which configuration we're writing.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "MYSQL USERS",
+            "MYSQL SERVERS",
+            "MYSQL QUERY RULES",
+            "MYSQL VARIABLES",
+            "ADMIN VARIABLES",
+            "SCHEDULER"
+          ],
+          "suboptions": {}
+        },
+        "direction": {
+          "aliases": [],
+          "description": "FROM - denotes we're reading values FROM the supplied I(config_layer) and writing to the next layer. TO - denotes we're reading from the previous layer and writing TO the supplied I(config_layer).\"",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "FROM",
+            "TO"
+          ],
+          "suboptions": {}
+        },
+        "login_host": {
+          "aliases": [],
+          "description": "The host used to connect to ProxySQL admin interface.",
+          "default": "127.0.0.1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "The password used to authenticate to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_port": {
+          "aliases": [],
+          "description": "The port used to connect to ProxySQL admin interface.",
+          "default": "6032",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_unix_socket": {
+          "aliases": [],
+          "description": "The socket used to connect to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "The username used to authenticate to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "PyMySQL",
+        "mysqlclient"
+      ],
+      "short_description": "Writes the proxysql configuration settings between layers"
+    },
+    "examples": "\n---\n# This example saves the mysql users config from memory to disk. It uses\n# supplied credentials to connect to the proxysql admin interface.\n\n- name: Save the mysql users config from memory to disk\n  community.proxysql.proxysql_manage_config:\n    login_user: 'admin'\n    login_password: 'admin'\n    action: \"SAVE\"\n    config_settings: \"MYSQL USERS\"\n    direction: \"FROM\"\n    config_layer: \"MEMORY\"\n\n# This example loads the mysql query rules config from memory to runtime. It\n# uses supplied credentials to connect to the proxysql admin interface.\n\n- name: Load the mysql query rules config from memory to runtime\n  community.proxysql.proxysql_manage_config:\n    config_file: '~/proxysql.cnf'\n    action: \"LOAD\"\n    config_settings: \"MYSQL QUERY RULES\"\n    direction: \"TO\"\n    config_layer: \"RUNTIME\"\n"
+  },
+  "community.proxysql.proxysql_mysql_users": {
+    "doc": {
+      "description": "The M(community.proxysql.proxysql_mysql_users) module adds or removes mysql users using the proxysql admin interface.",
+      "has_action": false,
+      "notes": "Supports C(check_mode).",
+      "options": {
+        "active": {
+          "aliases": [],
+          "description": "A user with I(active) set to C(False) will be tracked in the database, but will be never loaded in the in-memory data structures. If omitted the proxysql database default for I(active) is C(True).",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "backend": {
+          "aliases": [],
+          "description": "If I(backend) is set to C(True), this (username, password) pair is used for authenticating to the ProxySQL instance.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "config_file": {
+          "aliases": [],
+          "description": "Specify a config file from which I(login_user) and I(login_password) are to be read.",
+          "default": "",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "default_hostgroup": {
+          "aliases": [],
+          "description": "If there is no matching rule for the queries sent by this user, the traffic it generates is sent to the specified hostgroup. If omitted the proxysql database default for I(use_ssl) is 0.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "default_schema": {
+          "aliases": [],
+          "description": "The schema to which the connection should change to by default.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "encrypt_password": {
+          "aliases": [],
+          "description": "Encrypt a cleartext password passed in the I(password) option, using the method defined in I(encryption_method).",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "encryption_method": {
+          "aliases": [],
+          "description": "Encryption method used when I(encrypt_password) is set to C(True).",
+          "default": "mysql_native_password",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "mysql_native_password"
+          ],
+          "suboptions": {}
+        },
+        "fast_forward": {
+          "aliases": [],
+          "description": "If I(fast_forward) is set to C(True), I(fast_forward) will bypass the query processing layer (rewriting, caching) and pass through the query directly as is to the backend server. If omitted the proxysql database default for I(fast_forward) is C(False).",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "frontend": {
+          "aliases": [],
+          "description": "If I(frontend) is set to C(True), this (username, password) pair is used for authenticating to the mysqld servers against any hostgroup.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "load_to_runtime": {
+          "aliases": [],
+          "description": "Dynamically load config to runtime memory.",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_host": {
+          "aliases": [],
+          "description": "The host used to connect to ProxySQL admin interface.",
+          "default": "127.0.0.1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "The password used to authenticate to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_port": {
+          "aliases": [],
+          "description": "The port used to connect to ProxySQL admin interface.",
+          "default": "6032",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_unix_socket": {
+          "aliases": [],
+          "description": "The socket used to connect to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "The username used to authenticate to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "max_connections": {
+          "aliases": [],
+          "description": "The maximum number of connections ProxySQL will open to the backend for this user. If omitted the proxysql database default for I(max_connections) is 10000.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "password": {
+          "aliases": [],
+          "description": "Password of the user connecting to the mysqld or ProxySQL instance.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "save_to_disk": {
+          "aliases": [],
+          "description": "Save config to sqlite db on disk to persist the configuration.",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "When C(present) - adds the user, when C(absent) - removes the user.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "transaction_persistent": {
+          "aliases": [],
+          "description": "If this is set for the user with which the MySQL client is connecting to ProxySQL (thus a \"frontend\" user), transactions started within a hostgroup will remain within that hostgroup regardless of any other rules. If omitted the proxysql database default for I(transaction_persistent) is C(False).",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_ssl": {
+          "aliases": [],
+          "description": "If I(use_ssl) is set to C(True), connections by this user will be made using SSL connections. If omitted the proxysql database default for I(use_ssl) is C(False).",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Name of the user connecting to the mysqld or ProxySQL instance.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "PyMySQL",
+        "mysqlclient"
+      ],
+      "short_description": "Adds or removes mysql users from proxysql admin interface"
+    },
+    "examples": "\n---\n# This example adds a user, it saves the mysql user config to disk, but\n# avoids loading the mysql user config to runtime (this might be because\n# several users are being added and the user wants to push the config to\n# runtime in a single batch using the community.general.proxysql_manage_config\n# module).  It uses supplied credentials to connect to the proxysql admin\n# interface.\n\n- name: Add a user\n  community.proxysql.proxysql_mysql_users:\n    login_user: 'admin'\n    login_password: 'admin'\n    username: 'productiondba'\n    state: present\n    load_to_runtime: False\n\n# This example removes a user, saves the mysql user config to disk, and\n# dynamically loads the mysql user config to runtime.  It uses credentials\n# in a supplied config file to connect to the proxysql admin interface.\n\n- name: Remove a user\n  community.proxysql.proxysql_mysql_users:\n    config_file: '~/proxysql.cnf'\n    username: 'mysqlboy'\n    state: absent\n"
+  },
+  "community.proxysql.proxysql_query_rules": {
+    "doc": {
+      "description": "The M(community.proxysql.proxysql_query_rules) module modifies query rules using the proxysql admin interface.",
+      "has_action": false,
+      "notes": "Supports C(check_mode).",
+      "options": {
+        "OK_msg": {
+          "aliases": [],
+          "description": "The specified message will be returned for a query that uses the defined rule.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.1.0",
+          "suboptions": {}
+        },
+        "active": {
+          "aliases": [],
+          "description": "A rule with I(active) set to C(False) will be tracked in the database, but will be never loaded in the in-memory data structures.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "apply": {
+          "aliases": [],
+          "description": "Used in combination with I(flagIN) and I(flagOUT) to create chains of rules. Setting apply to True signifies the last rule to be applied.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "cache_empty_result": {
+          "aliases": [],
+          "description": "Controls if resultset without rows will be cached or not.",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.1.0",
+          "suboptions": {}
+        },
+        "cache_ttl": {
+          "aliases": [],
+          "description": "The number of milliseconds for which to cache the result of the query. Note in ProxySQL 1.1 I(cache_ttl) was in seconds.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "client_addr": {
+          "aliases": [],
+          "description": "Match traffic from a specific source.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "comment": {
+          "aliases": [],
+          "description": "Free form text field, usable for a descriptive comment of the query rule.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "config_file": {
+          "aliases": [],
+          "description": "Specify a config file from which I(login_user) and I(login_password) are to be read.",
+          "default": "",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "delay": {
+          "aliases": [],
+          "description": "Number of milliseconds to delay the execution of the query. This is essentially a throttling mechanism and QoS, and allows a way to give priority to queries over others. This value is added to the mysql-default_query_delay global variable that applies to all queries.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "destination_hostgroup": {
+          "aliases": [],
+          "description": "Route matched queries to this hostgroup. This happens unless there is a started transaction and the logged in user has I(transaction_persistent) set to C(True) (see M(community.proxysql.proxysql_mysql_users)).",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "digest": {
+          "aliases": [],
+          "description": "Match queries with a specific digest, as returned by stats_mysql_query_digest.digest.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "error_msg": {
+          "aliases": [],
+          "description": "Query will be blocked, and the specified error_msg will be returned to the client.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "flagIN": {
+          "aliases": [],
+          "description": "Used in combination with I(flagOUT) and I(apply) to create chains of rules.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "flagOUT": {
+          "aliases": [],
+          "description": "Used in combination with I(flagIN) and apply to create chains of rules. When set, I(flagOUT) signifies the I(flagIN) to be used in the next chain of rules.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "force_delete": {
+          "aliases": [],
+          "description": "By default we avoid deleting more than one schedule in a single batch, however if you need this behaviour and you are not concerned about the schedules deleted, you can set I(force_delete) to C(True).",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "load_to_runtime": {
+          "aliases": [],
+          "description": "Dynamically load config to runtime memory.",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "log": {
+          "aliases": [],
+          "description": "Query will be logged.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_host": {
+          "aliases": [],
+          "description": "The host used to connect to ProxySQL admin interface.",
+          "default": "127.0.0.1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "The password used to authenticate to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_port": {
+          "aliases": [],
+          "description": "The port used to connect to ProxySQL admin interface.",
+          "default": "6032",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_unix_socket": {
+          "aliases": [],
+          "description": "The socket used to connect to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "The username used to authenticate to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "match_digest": {
+          "aliases": [],
+          "description": "Regular expression that matches the query digest. The dialect of regular expressions used is that of re2 - U(https://github.com/google/re2).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "match_pattern": {
+          "aliases": [],
+          "description": "Regular expression that matches the query text. The dialect of regular expressions used is that of re2 - U(https://github.com/google/re2).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "mirror_flagOUT": {
+          "aliases": [],
+          "description": "Enables query mirroring. If set I(mirror_flagOUT) can be used to evaluates the mirrored query against the specified chain of rules.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "mirror_hostgroup": {
+          "aliases": [],
+          "description": "Enables query mirroring. If set I(mirror_hostgroup) can be used to mirror queries to the same or different hostgroup.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "multiplex": {
+          "aliases": [],
+          "description": "If C(0), multiplex will be disabled.\nIf C(1), try to enable multiplex. There can be other conditions preventing this (for example, user variables or transactions).\nIf C(2), multiplexing is not disabled for just the current query.\nBy default, does not change multiplexing policies.",
+          "type": "int",
+          "required": false,
+          "choices": [
+            "0",
+            "1",
+            "2"
+          ],
+          "version_added": "1.1.0",
+          "suboptions": {}
+        },
+        "negate_match_pattern": {
+          "aliases": [],
+          "description": "If I(negate_match_pattern) is set to C(True), only queries not matching the query text will be considered as a match. This acts as a NOT operator in front of the regular expression matching against match_pattern.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "next_query_flagIN": {
+          "aliases": [],
+          "description": "When is set, its value will become the I(flagIN) value for the next queries.",
+          "type": "int",
+          "required": false,
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "proxy_addr": {
+          "aliases": [],
+          "description": "Match incoming traffic on a specific local IP.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "proxy_port": {
+          "aliases": [],
+          "description": "Match incoming traffic on a specific local port.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "re_modifiers": {
+          "aliases": [],
+          "description": "Comma separated list of options to modify the behavior of the RE engine. With C(CASELESS) the match is case insensitive. With C(GLOBAL) the replace is global (replaces all matches and not just the first). For backward compatibility, only C(CASELESS) is the enabled by default.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "replace_pattern": {
+          "aliases": [],
+          "description": "This is the pattern with which to replace the matched pattern. Note that this is optional, and when omitted, the query processor will only cache, route, or set other parameters without rewriting.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "retries": {
+          "aliases": [],
+          "description": "The maximum number of times a query needs to be re-executed in case of detected failure during the execution of the query. If retries is not specified, the global variable mysql-query_retries_on_failure applies.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "rule_id": {
+          "aliases": [],
+          "description": "The unique id of the rule. Rules are processed in rule_id order.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "save_to_disk": {
+          "aliases": [],
+          "description": "Save config to sqlite db on disk to persist the configuration.",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "schemaname": {
+          "aliases": [],
+          "description": "Filtering criteria matching schemaname. If I(schemaname) is non-NULL, a query will match only if the connection uses schemaname as its default schema.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "When C(present) - adds the rule, when C(absent) - removes the rule.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "The maximum timeout in milliseconds with which the matched or rewritten query should be executed. If a query run for longer than the specific threshold, the query is automatically killed. If timeout is not specified, the global variable mysql-default_query_timeout applies.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Filtering criteria matching username.  If I(username) is non-NULL, a query will match only if the connection is made with the correct username.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "PyMySQL",
+        "mysqlclient"
+      ],
+      "short_description": "Modifies query rules using the proxysql admin interface"
+    },
+    "examples": "\n---\n# This example adds a rule to redirect queries from a specific user to another\n# hostgroup, it saves the mysql query rule config to disk, but avoids loading\n# the mysql query config config to runtime (this might be because several\n# rules are being added and the user wants to push the config to runtime in a\n# single batch using the community.general.proxysql_manage_config module). It\n# uses supplied credentials to connect to the proxysql admin interface.\n\n- name: Add a rule\n  community.proxysql.proxysql_query_rules:\n    login_user: admin\n    login_password: admin\n    username: 'guest_ro'\n    match_pattern: \"^SELECT.*\"\n    destination_hostgroup: 1\n    active: 1\n    retries: 3\n    state: present\n    load_to_runtime: False\n\n# This example demonstrates the situation, if your application tries to set a\n# variable that will disable multiplexing, and you think it can be filtered out,\n# you can create a filter that returns OK without executing the request.\n\n- name: Add a filter rule\n  community.proxysql.proxysql_query_rules:\n    login_user: admin\n    login_password: admin\n    match_digest: '^SET @@wait_timeout = ?'\n    active: 1\n    OK_msg: 'The wait_timeout variable is ignored'\n\n# This example adds a caching rule for a query that matches the digest.\n# The query digest can be obtained from the `stats_mysql_query_digest`\n# table. `cache_ttl` is specified in milliseconds. Empty responses are\n# not cached.\n\n- name: Add a cache rule\n  community.proxysql.proxysql_query_rules:\n    login_user: admin\n    login_password: admin\n    rule_id: 1\n    digest: 0xECA450EA500A9A55\n    cache_ttl: 30000\n    cache_empty_result: no\n    destination_hostgroup: 1\n    active: yes\n    state: present\n    save_to_disk: yes\n    load_to_runtime: yes\n\n# This example demonstrates how to prevent disabling multiplexing for\n# situations where a request contains @.\n\n- name: Add a rule with multiplex\n  community.proxysql.proxysql_query_rules:\n    login_user: admin\n    login_password: admin\n    rule_id: 1\n    active: 1\n    match_digest: '^SELECT @@max_allowed_packet'\n    multiplex: 2\n\n# This example demonstrates how to use next_query_flagIN argument. It allows\n# ProxySQL query rules to be chained. The examples shows how you can have SELECTS\n# immediately follow INSERT/UPDATE/DELETE statements to query the primary hostgroup\n# and avoid replication lag\n\n- name: Add insert query rule\n  proxysql_query_rules:\n    match_digest: \"^INSERT\"\n    destination_hostgroup: 1,\n    next_query_flagIN: 1\n\n- name: Add update query rule\n  proxysql_query_rules:\n    match_digest: \"^UPDATE\"\n    destination_hostgroup: 1,\n    next_query_flagIN: 1\n\n- name: Add delete query rules\n  proxysql_query_rules:\n    match_digest: \"^DELETE\"\n    destination_hostgroup: 1,\n    next_query_flagIN: 1\n\n- name: Add insert query rules\n  proxysql_query_rules:\n    match_digest: \".*\"\n    destination_hostgroup: 1,\n    next_query_flagIN: 1\n    comment: Match every queries after an INSERT/UPDATE/DELETE query\n\n# This example removes all rules that use the username 'guest_ro', saves the\n# mysql query rule config to disk, and dynamically loads the mysql query rule\n# config to runtime.  It uses credentials in a supplied config file to connect\n# to the proxysql admin interface.\n\n- name: Remove rules\n  community.proxysql.proxysql_query_rules:\n    config_file: '~/proxysql.cnf'\n    username: 'guest_ro'\n    state: absent\n    force_delete: true\n"
+  },
+  "community.proxysql.proxysql_query_rules_fast_routing": {
+    "doc": {
+      "description": "The M(community.proxysql.proxysql_query_rules_fast_routing) module modifies query rules for fast routing policies and attributes using the proxysql admin interface.",
+      "has_action": false,
+      "notes": "Supports C(check_mode).",
+      "options": {
+        "comment": {
+          "aliases": [],
+          "description": "Free form text field, usable for a descriptive comment of the query rule.",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "config_file": {
+          "aliases": [],
+          "description": "Specify a config file from which I(login_user) and I(login_password) are to be read.",
+          "default": "",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "destination_hostgroup": {
+          "aliases": [],
+          "description": "Route matched queries to this hostgroup. This happens unless there is a started transaction and the logged in user has I(transaction_persistent) set to C(True) (refer to M(community.proxysql.proxysql_mysql_users)).",
+          "type": "int",
+          "required": true,
+          "suboptions": {}
+        },
+        "flagIN": {
+          "aliases": [],
+          "description": "Evaluated in the same way as I(flagIN) is in B(mysql_query_rules) and correlates to the I(flagOUT/apply) specified in the B(mysql_query_rules) table. (see M(community.proxysql.proxysql_query_rules)).",
+          "default": "0",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "force_delete": {
+          "aliases": [],
+          "description": "By default, we avoid deleting more than one schedule in a single batch; however, if you need this behaviour and you are not concerned about the schedules deleted, you can set I(force_delete) to C(True).",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "load_to_runtime": {
+          "aliases": [],
+          "description": "Dynamically load config to runtime memory.",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_host": {
+          "aliases": [],
+          "description": "The host used to connect to ProxySQL admin interface.",
+          "default": "127.0.0.1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "The password used to authenticate to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_port": {
+          "aliases": [],
+          "description": "The port used to connect to ProxySQL admin interface.",
+          "default": "6032",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_unix_socket": {
+          "aliases": [],
+          "description": "The socket used to connect to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "The username used to authenticate to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "save_to_disk": {
+          "aliases": [],
+          "description": "Save config to sqlite db on disk to persist the configuration.",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "schemaname": {
+          "aliases": [],
+          "description": "Filtering criteria matching schemaname, a query will match only if the connection uses schemaname as its default schema.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "When C(present), adds the rule. When C(absent), removes the rule.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "username": {
+          "aliases": [],
+          "description": "Filtering criteria matching username, a query will match only if the connection is made with the correct username.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "PyMySQL",
+        "mysqlclient"
+      ],
+      "short_description": "Modifies query rules for fast routing policies using the proxysql admin interface",
+      "version_added": "1.1.0"
+    },
+    "examples": "\n---\n# This example adds a rule for fast routing\n- name: Add a rule\n  community.proxysql.proxysql_query_rules_fast_routing:\n    login_user: admin\n    login_password: admin\n    username: 'user_ro'\n    schemaname: 'default'\n    destination_hostgroup: 1\n    comment: 'fast route user_ro to default schema'\n    state: present\n    save_to_disk: yes\n    load_to_runtime: yes\n"
+  },
+  "community.proxysql.proxysql_replication_hostgroups": {
+    "doc": {
+      "description": "Each row in mysql_replication_hostgroups represent a pair of writer_hostgroup and reader_hostgroup. ProxySQL will monitor the value of read_only for all the servers in specified hostgroups, and based on the value of read_only will assign the server to the writer or reader hostgroups.",
+      "has_action": false,
+      "notes": "Supports C(check_mode).",
+      "options": {
+        "check_type": {
+          "aliases": [],
+          "description": "Which check type to use when detecting that the node is a standby.\nRequires proxysql >= 2.0.1. Otherwise it has no effect.\nC(read_only|innodb_read_only) and C(read_only&innodb_read_only) requires proxysql >= 2.0.8.",
+          "default": "read_only",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "read_only",
+            "innodb_read_only",
+            "super_read_only",
+            "read_only|innodb_read_only",
+            "read_only&innodb_read_only"
+          ],
+          "version_added": "1.3.0",
+          "suboptions": {}
+        },
+        "comment": {
+          "aliases": [],
+          "description": "Text field that can be used for any purposes defined by the user.",
+          "default": "",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "config_file": {
+          "aliases": [],
+          "description": "Specify a config file from which I(login_user) and I(login_password) are to be read.",
+          "default": "",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "load_to_runtime": {
+          "aliases": [],
+          "description": "Dynamically load config to runtime memory.",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_host": {
+          "aliases": [],
+          "description": "The host used to connect to ProxySQL admin interface.",
+          "default": "127.0.0.1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "The password used to authenticate to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_port": {
+          "aliases": [],
+          "description": "The port used to connect to ProxySQL admin interface.",
+          "default": "6032",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_unix_socket": {
+          "aliases": [],
+          "description": "The socket used to connect to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "The username used to authenticate to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "reader_hostgroup": {
+          "aliases": [],
+          "description": "Id of the reader hostgroup.",
+          "type": "int",
+          "required": true,
+          "suboptions": {}
+        },
+        "save_to_disk": {
+          "aliases": [],
+          "description": "Save config to sqlite db on disk to persist the configuration.",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "When C(present) - adds the replication hostgroup, when C(absent) - removes the replication hostgroup.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "writer_hostgroup": {
+          "aliases": [],
+          "description": "Id of the writer hostgroup.",
+          "type": "int",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "PyMySQL",
+        "mysqlclient"
+      ],
+      "short_description": "Manages replication hostgroups using the proxysql admin interface"
+    },
+    "examples": "\n---\n# This example adds a replication hostgroup, it saves the mysql server config\n# to disk, but avoids loading the mysql server config to runtime (this might be\n# because several replication hostgroup are being added and the user wants to\n# push the config to runtime in a single batch using the\n# community.general.proxysql_manage_config module).  It uses supplied credentials\n# to connect to the proxysql admin interface.\n\n- name: Add a replication hostgroup\n  community.proxysql.proxysql_replication_hostgroups:\n    login_user: 'admin'\n    login_password: 'admin'\n    writer_hostgroup: 1\n    reader_hostgroup: 2\n    state: present\n    load_to_runtime: False\n\n- name: Change check_type\n  community.proxysql.proxysql_replication_hostgroups:\n    login_user: 'admin'\n    login_password: 'admin'\n    writer_hostgroup: 1\n    reader_hostgroup: 2\n    check_type: innodb_read_only\n    state: present\n    load_to_runtime: False\n\n# This example removes a replication hostgroup, saves the mysql server config\n# to disk, and dynamically loads the mysql server config to runtime.  It uses\n# credentials in a supplied config file to connect to the proxysql admin\n# interface.\n\n- name: Remove a replication hostgroup\n  community.proxysql.proxysql_replication_hostgroups:\n    config_file: '~/proxysql.cnf'\n    writer_hostgroup: 3\n    reader_hostgroup: 4\n    state: absent\n"
+  },
+  "community.proxysql.proxysql_scheduler": {
+    "doc": {
+      "description": "The M(community.proxysql.proxysql_scheduler) module adds or removes schedules using the proxysql admin interface.",
+      "has_action": false,
+      "notes": "Supports C(check_mode).",
+      "options": {
+        "active": {
+          "aliases": [],
+          "description": "A schedule with I(active) set to C(False) will be tracked in the database, but will be never loaded in the in-memory data structures.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "arg1": {
+          "aliases": [],
+          "description": "Argument that can be passed to the job.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "arg2": {
+          "aliases": [],
+          "description": "Argument that can be passed to the job.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "arg3": {
+          "aliases": [],
+          "description": "Argument that can be passed to the job.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "arg4": {
+          "aliases": [],
+          "description": "Argument that can be passed to the job.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "arg5": {
+          "aliases": [],
+          "description": "Argument that can be passed to the job.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "comment": {
+          "aliases": [],
+          "description": "Text field that can be used for any purposed defined by the user.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "config_file": {
+          "aliases": [],
+          "description": "Specify a config file from which I(login_user) and I(login_password) are to be read.",
+          "default": "",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "filename": {
+          "aliases": [],
+          "description": "Full path of the executable to be executed.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "force_delete": {
+          "aliases": [],
+          "description": "By default we avoid deleting more than one schedule in a single batch, however if you need this behaviour and you are not concerned about the schedules deleted, you can set I(force_delete) to C(True).",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "interval_ms": {
+          "aliases": [],
+          "description": "How often (in millisecond) the job will be started. The minimum value for I(interval_ms) is 100 milliseconds.",
+          "default": "10000",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "load_to_runtime": {
+          "aliases": [],
+          "description": "Dynamically load config to runtime memory.",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_host": {
+          "aliases": [],
+          "description": "The host used to connect to ProxySQL admin interface.",
+          "default": "127.0.0.1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_password": {
+          "aliases": [],
+          "description": "The password used to authenticate to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_port": {
+          "aliases": [],
+          "description": "The port used to connect to ProxySQL admin interface.",
+          "default": "6032",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_unix_socket": {
+          "aliases": [],
+          "description": "The socket used to connect to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "login_user": {
+          "aliases": [],
+          "description": "The username used to authenticate to ProxySQL admin interface.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "save_to_disk": {
+          "aliases": [],
+          "description": "Save config to sqlite db on disk to persist the configuration.",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "When C(present) - adds the schedule, when C(absent) - removes the schedule.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "PyMySQL",
+        "mysqlclient"
+      ],
+      "short_description": "Adds or removes schedules from proxysql admin interface"
+    },
+    "examples": "\n---\n# This example adds a schedule, it saves the scheduler config to disk, but\n# avoids loading the scheduler config to runtime (this might be because\n# several servers are being added and the user wants to push the config to\n# runtime in a single batch using the community.general.proxysql_manage_config\n# module).  It uses supplied credentials to connect to the proxysql admin\n# interface.\n\n- name: Add a schedule\n  community.proxysql.proxysql_scheduler:\n    login_user: 'admin'\n    login_password: 'admin'\n    interval_ms: 1000\n    filename: \"/opt/maintenance.py\"\n    state: present\n    load_to_runtime: False\n\n# This example removes a schedule, saves the scheduler config to disk, and\n# dynamically loads the scheduler config to runtime.  It uses credentials\n# in a supplied config file to connect to the proxysql admin interface.\n\n- name: Remove a schedule\n  community.proxysql.proxysql_scheduler:\n    config_file: '~/proxysql.cnf'\n    filename: \"/opt/old_script.py\"\n    state: absent\n"
+  }
+}

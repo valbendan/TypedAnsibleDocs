@@ -1,0 +1,843 @@
+{
+  "community.hrobot.boot": {
+    "doc": {
+      "description": "Set the boot configuration for a dedicated server.",
+      "has_action": false,
+      "options": {
+        "hetzner_password": {
+          "aliases": [],
+          "description": "The password for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "hetzner_user": {
+          "aliases": [],
+          "description": "The username for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "install_cpanel": {
+          "aliases": [],
+          "description": "If this option is provided, a cPanel installation will be activated for the next boot.\nPrecisely one of I(regular_boot), I(rescue), I(install_linux), I(install_vnc), I(install_windows), I(install_plesk), and I(install_cpanel) must be provided.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "arch": {
+              "aliases": [],
+              "description": "The architecture to use for the install.\nNot all architectures are available for all distributions.\nDefaults to C(64).",
+              "type": "int",
+              "required": false,
+              "choices": [
+                "32",
+                "64"
+              ],
+              "suboptions": {}
+            },
+            "dist": {
+              "aliases": [],
+              "description": "The distribution to install.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "hostname": {
+              "aliases": [],
+              "description": "The hostname.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "lang": {
+              "aliases": [],
+              "description": "The language to use for the operating system.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        },
+        "install_linux": {
+          "aliases": [],
+          "description": "If this option is provided, a Linux system install will be activated for the next boot.\nPrecisely one of I(regular_boot), I(rescue), I(install_linux), I(install_vnc), I(install_windows), I(install_plesk), and I(install_cpanel) must be provided.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "arch": {
+              "aliases": [],
+              "description": "The architecture to use for the install.\nNot all architectures are available for all distributions.\nDefaults to C(64).",
+              "type": "int",
+              "required": false,
+              "choices": [
+                "32",
+                "64"
+              ],
+              "suboptions": {}
+            },
+            "authorized_keys": {
+              "aliases": [],
+              "description": "One or more SSH key fingerprints to equip the rescue system with.\nOnly fingerprints for SSH keys deposited in the Robot API can be used.\nYou can use the M(community.hrobot.ssh_key_info) module to query the SSH keys you can use, and the M(community.hrobot.ssh_key) module to add or update SSH keys.",
+              "type": "list",
+              "required": false,
+              "elements": "str",
+              "suboptions": {}
+            },
+            "dist": {
+              "aliases": [],
+              "description": "The distribution to install.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "lang": {
+              "aliases": [],
+              "description": "The language to use for the operating system.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        },
+        "install_plesk": {
+          "aliases": [],
+          "description": "If this option is provided, a Plesk installation will be activated for the next boot.\nPrecisely one of I(regular_boot), I(rescue), I(install_linux), I(install_vnc), I(install_windows), I(install_plesk), and I(install_cpanel) must be provided.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "arch": {
+              "aliases": [],
+              "description": "The architecture to use for the install.\nNot all architectures are available for all distributions.\nDefaults to C(64).",
+              "type": "int",
+              "required": false,
+              "choices": [
+                "32",
+                "64"
+              ],
+              "suboptions": {}
+            },
+            "dist": {
+              "aliases": [],
+              "description": "The distribution to install.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "hostname": {
+              "aliases": [],
+              "description": "The hostname.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "lang": {
+              "aliases": [],
+              "description": "The language to use for the operating system.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        },
+        "install_vnc": {
+          "aliases": [],
+          "description": "If this option is provided, a VNC installation will be activated for the next boot.\nPrecisely one of I(regular_boot), I(rescue), I(install_linux), I(install_vnc), I(install_windows), I(install_plesk), and I(install_cpanel) must be provided.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "arch": {
+              "aliases": [],
+              "description": "The architecture to use for the install.\nNot all architectures are available for all distributions.\nDefaults to C(64).",
+              "type": "int",
+              "required": false,
+              "choices": [
+                "32",
+                "64"
+              ],
+              "suboptions": {}
+            },
+            "dist": {
+              "aliases": [],
+              "description": "The distribution to install.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            },
+            "lang": {
+              "aliases": [],
+              "description": "The language to use for the operating system.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        },
+        "install_windows": {
+          "aliases": [],
+          "description": "If this option is provided, a Windows installation will be activated for the next boot.\nPrecisely one of I(regular_boot), I(rescue), I(install_linux), I(install_vnc), I(install_windows), I(install_plesk), and I(install_cpanel) must be provided.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "lang": {
+              "aliases": [],
+              "description": "The language to use for Windows.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        },
+        "regular_boot": {
+          "aliases": [],
+          "description": "If this option is provided, all special boot configurations are removed and the installed operating system will be booted up next (assuming it is bootable).\nPrecisely one of I(regular_boot), I(rescue), I(install_linux), I(install_vnc), I(install_windows), I(install_plesk), and I(install_cpanel) must be provided.",
+          "type": "bool",
+          "required": false,
+          "choices": [
+            "True"
+          ],
+          "suboptions": {}
+        },
+        "rescue": {
+          "aliases": [],
+          "description": "If this option is provided, the rescue system will be activated for the next boot.\nPrecisely one of I(regular_boot), I(rescue), I(install_linux), I(install_vnc), I(install_windows), I(install_plesk), and I(install_cpanel) must be provided.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "arch": {
+              "aliases": [],
+              "description": "The architecture to use for the rescue system.\nNot all architectures are available for all operating systems.\nDefaults to C(64).",
+              "type": "int",
+              "required": false,
+              "choices": [
+                "32",
+                "64"
+              ],
+              "suboptions": {}
+            },
+            "authorized_keys": {
+              "aliases": [],
+              "description": "One or more SSH key fingerprints to equip the rescue system with.\nOnly fingerprints for SSH keys deposited in the Robot API can be used.\nYou can use the M(community.hrobot.ssh_key_info) module to query the SSH keys you can use, and the M(community.hrobot.ssh_key) module to add or update SSH keys.",
+              "type": "list",
+              "required": false,
+              "elements": "str",
+              "suboptions": {}
+            },
+            "os": {
+              "aliases": [],
+              "description": "The operating system to use for the rescue system. Possible choices can change over time.\nCurrently, C(linux), C(linuxold), C(freebsd), C(freebsdold), C(freebsdax), C(freebsdbetaax), C(vkvm), and C(vkvmold) seem to be available.",
+              "type": "str",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        },
+        "server_number": {
+          "aliases": [],
+          "description": "The server number of the server whose boot configuration to adjust.",
+          "type": "int",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Set boot configuration",
+      "version_added": "1.2.0"
+    },
+    "examples": "\n- name: Disable all special boot configurations\n  community.hrobot.boot:\n    hetzner_user: foo\n    hetzner_password: bar\n    regular_boot: true\n\n- name: Enable a rescue system (64bit Linux) for the next boot\n  community.hrobot.reset:\n    hetzner_user: foo\n    hetzner_password: bar\n    rescue:\n      os: linux\n\n- name: Enable a Linux install for the next boot\n  community.hrobot.reset:\n    hetzner_user: foo\n    hetzner_password: bar\n    install_linux:\n      dist: CentOS 5.5 minimal\n      lang: en\n      authorized_keys:\n        - 56:29:99:a4:5d:ed:ac:95:c1:f5:88:82:90:5d:dd:10\n        - 15:28:b0:03:95:f0:77:b3:10:56:15:6b:77:22:a5:bb\n"
+  },
+  "community.hrobot.failover_ip": {
+    "doc": {
+      "description": "Manage Hetzner's failover IPs.",
+      "has_action": false,
+      "options": {
+        "failover_ip": {
+          "aliases": [],
+          "description": "The failover IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "hetzner_password": {
+          "aliases": [],
+          "description": "The password for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "hetzner_user": {
+          "aliases": [],
+          "description": "The username for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Defines whether the IP will be routed or not.\nIf set to C(routed), I(value) must be specified.",
+          "default": "routed",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "routed",
+            "unrouted"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "Timeout to use when routing or unrouting the failover IP.\nNote that the API call returns when the failover IP has been successfully routed to the new address, respectively successfully unrouted.",
+          "default": "180",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "value": {
+          "aliases": [],
+          "description": "The new value for the failover IP address.\nRequired when setting I(state) to C(routed).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage Hetzner's failover IPs"
+    },
+    "examples": "\n- name: Set value of failover IP 1.2.3.4 to 5.6.7.8\n  community.hrobot.failover_ip:\n    hetzner_user: foo\n    hetzner_password: bar\n    failover_ip: 1.2.3.4\n    value: 5.6.7.8\n\n- name: Set value of failover IP 1.2.3.4 to unrouted\n  community.hrobot.failover_ip:\n    hetzner_user: foo\n    hetzner_password: bar\n    failover_ip: 1.2.3.4\n    state: unrouted\n"
+  },
+  "community.hrobot.failover_ip_info": {
+    "doc": {
+      "description": "Retrieve information on Hetzner's failover IPs.",
+      "has_action": false,
+      "options": {
+        "failover_ip": {
+          "aliases": [],
+          "description": "The failover IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "hetzner_password": {
+          "aliases": [],
+          "description": "The password for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "hetzner_user": {
+          "aliases": [],
+          "description": "The username for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Retrieve information on Hetzner's failover IPs"
+    },
+    "examples": "\n- name: Get value of failover IP 1.2.3.4\n  community.hrobot.failover_ip_info:\n    hetzner_user: foo\n    hetzner_password: bar\n    failover_ip: 1.2.3.4\n    value: 5.6.7.8\n  register: result\n\n- name: Print value of failover IP 1.2.3.4 in case it is routed\n  ansible.builtin.debug:\n    msg: \"1.2.3.4 routes to {{ result.value }}\"\n  when: result.state == 'routed'\n"
+  },
+  "community.hrobot.firewall": {
+    "doc": {
+      "description": "Manage Hetzner's dedicated server firewall.\nNote that idempotency check for TCP flags simply compares strings and doesn't try to interpret the rules. This might change in the future.",
+      "has_action": false,
+      "options": {
+        "allowlist_hos": {
+          "aliases": [
+            "whitelist_hos"
+          ],
+          "description": "Whether Hetzner services have access.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "hetzner_password": {
+          "aliases": [],
+          "description": "The password for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "hetzner_user": {
+          "aliases": [],
+          "description": "The username for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "port": {
+          "aliases": [],
+          "description": "Switch port of firewall.",
+          "default": "main",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "main",
+            "kvm"
+          ],
+          "suboptions": {}
+        },
+        "rules": {
+          "aliases": [],
+          "description": "Firewall rules.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "input": {
+              "aliases": [],
+              "description": "Input firewall rules.",
+              "type": "list",
+              "required": false,
+              "elements": "dict",
+              "suboptions": {
+                "action": {
+                  "aliases": [],
+                  "description": "Action if rule matches.",
+                  "type": "str",
+                  "required": true,
+                  "choices": [
+                    "accept",
+                    "discard"
+                  ],
+                  "suboptions": {}
+                },
+                "dst_ip": {
+                  "aliases": [],
+                  "description": "Destination IP address or subnet address.\nCIDR notation.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "dst_port": {
+                  "aliases": [],
+                  "description": "Destination port or port range.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "ip_version": {
+                  "aliases": [],
+                  "description": "Internet protocol version.\nNote that currently, only IPv4 is supported by Hetzner.",
+                  "type": "str",
+                  "required": true,
+                  "choices": [
+                    "ipv4",
+                    "ipv6"
+                  ],
+                  "suboptions": {}
+                },
+                "name": {
+                  "aliases": [],
+                  "description": "Name of the firewall rule.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "protocol": {
+                  "aliases": [],
+                  "description": "Protocol above IP layer",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "src_ip": {
+                  "aliases": [],
+                  "description": "Source IP address or subnet address.\nCIDR notation.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "src_port": {
+                  "aliases": [],
+                  "description": "Source port or port range.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "tcp_flags": {
+                  "aliases": [],
+                  "description": "TCP flags or logical combination of flags.\nFlags supported by Hetzner are C(syn), C(fin), C(rst), C(psh) and C(urg).\nThey can be combined with C(|) (logical or) and C(&) (logical and).\nSee L(the documentation,https://wiki.hetzner.de/index.php/Robot_Firewall/en#Parameter) for more information.",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                }
+              }
+            }
+          }
+        },
+        "server_ip": {
+          "aliases": [],
+          "description": "The server's main IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Status of the firewall.\nFirewall is active if state is C(present), and disabled if state is C(absent).",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "Timeout (in seconds) for waiting for firewall to be configured.",
+          "default": "180",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "update_timeout": {
+          "aliases": [],
+          "description": "Timeout to use when configuring the firewall.\nNote that the API call returns before the firewall has been successfully set up.",
+          "default": "30",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_delay": {
+          "aliases": [],
+          "description": "Delay to wait (in seconds) before checking again whether the firewall has been configured.",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_for_configured": {
+          "aliases": [],
+          "description": "Whether to wait until the firewall has been successfully configured before determining what to do, and before returning from the module.\nThe API returns status C(in progress) when the firewall is currently being configured. If this happens, the module will try again until the status changes to C(active) or C(disabled).\nPlease note that there is a request limit. If you have to do multiple updates, it can be better to disable waiting, and regularly use M(community.hrobot.firewall_info) to query status.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "ipaddress"
+      ],
+      "short_description": "Manage Hetzner's dedicated server firewall"
+    },
+    "examples": "\n- name: Configure firewall for server with main IP 1.2.3.4\n  community.hrobot.firewall:\n    hetzner_user: foo\n    hetzner_password: bar\n    server_ip: 1.2.3.4\n    state: present\n    allowlist_hos: yes\n    rules:\n      input:\n        - name: Allow everything to ports 20-23 from 4.3.2.1/24\n          ip_version: ipv4\n          src_ip: 4.3.2.1/24\n          dst_port: '20-23'\n          action: accept\n        - name: Allow everything to port 443\n          ip_version: ipv4\n          dst_port: '443'\n          action: accept\n        - name: Drop everything else\n          ip_version: ipv4\n          action: discard\n  register: result\n\n- ansible.builtin.debug:\n    msg: \"{{ result }}\"\n"
+  },
+  "community.hrobot.firewall_info": {
+    "doc": {
+      "description": "Manage Hetzner's dedicated server firewall.",
+      "has_action": false,
+      "options": {
+        "hetzner_password": {
+          "aliases": [],
+          "description": "The password for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "hetzner_user": {
+          "aliases": [],
+          "description": "The username for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "server_ip": {
+          "aliases": [],
+          "description": "The server's main IP address.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "Timeout (in seconds) for waiting for firewall to be configured.",
+          "default": "180",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_delay": {
+          "aliases": [],
+          "description": "Delay to wait (in seconds) before checking again whether the firewall has been configured.",
+          "default": "10",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "wait_for_configured": {
+          "aliases": [],
+          "description": "Whether to wait until the firewall has been successfully configured before returning from the module.\nThe API returns status C(in progress) when the firewall is currently being configured. If this happens, the module will try again until the status changes to C(active) or C(disabled).\nPlease note that there is a request limit. If you have to do multiple updates, it can be better to disable waiting, and regularly use M(community.hrobot.firewall_info) to query status.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage Hetzner's dedicated server firewall"
+    },
+    "examples": "\n- name: Get firewall configuration for server with main IP 1.2.3.4\n  community.hrobot.firewall_info:\n    hetzner_user: foo\n    hetzner_password: bar\n    server_ip: 1.2.3.4\n  register: result\n\n- ansible.builtin.debug:\n    msg: \"{{ result.firewall }}\"\n"
+  },
+  "community.hrobot.reset": {
+    "doc": {
+      "description": "Reset a dedicated server with a software or hardware reset, or by requesting a manual reset.",
+      "has_action": false,
+      "options": {
+        "hetzner_password": {
+          "aliases": [],
+          "description": "The password for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "hetzner_user": {
+          "aliases": [],
+          "description": "The username for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "reset_type": {
+          "aliases": [],
+          "description": "How to reset the server.\nC(software) is a software reset. This should be similar to pressing Ctrl+Alt+Del on the keyboard.\nC(power) is a hardware reset similar to pressing the Power button. An ACPI signal is sent, and if the server is configured correctly, this will trigger a regular shutdown.\nC(hardware) is a hardware reset similar to pressing the Restart button. The power is cycled for the server.\nC(manual) is a manual reset. This requests a technician to manually do the shutdown while looking at the screen output. B(Be careful) and only use this when really necessary!\nNote that not every server supports every reset method!",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "software",
+            "hardware",
+            "power",
+            "manual"
+          ],
+          "suboptions": {}
+        },
+        "server_number": {
+          "aliases": [],
+          "description": "The server number of the server to reset.",
+          "type": "int",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Reset a dedicated server",
+      "version_added": "1.2.0"
+    },
+    "examples": "\n- name: Send ACPI signal to server to request controlled shutdown\n  community.hrobot.reset:\n    hetzner_user: foo\n    hetzner_password: bar\n    failover_ip: 1.2.3.4\n    state: power\n\n- name: Make sure that the server supports manual reset\n  community.hrobot.reset:\n    hetzner_user: foo\n    hetzner_password: bar\n    server_number: 1234\n    reset_type: manual\n  check_mode: true\n\n- name: Request a manual reset (by a technican)\n  community.hrobot.reset:\n    hetzner_user: foo\n    hetzner_password: bar\n    server_number: 1234\n    reset_type: manual\n"
+  },
+  "community.hrobot.reverse_dns": {
+    "doc": {
+      "description": "Allows to set, update or remove a reverse DNS entry for an IP address.",
+      "has_action": false,
+      "notes": "For the main IPv4 address of a server, deleting it actually sets it to a default hostname like C(static.X.Y.Z.W.clients.your-server.de). This substitution (delete is replaced by changing to this value) is done automatically by the API and results in the module not being idempotent in this case.",
+      "options": {
+        "hetzner_password": {
+          "aliases": [],
+          "description": "The password for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "hetzner_user": {
+          "aliases": [],
+          "description": "The username for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "ip": {
+          "aliases": [],
+          "description": "The IP address to set or remove a reverse DNS entry for.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether to set or update (C(present)) or delete (C(absent)) the reverse DNS entry for I(ip).",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "value": {
+          "aliases": [],
+          "description": "The reverse DNS entry for I(ip).\nRequired if I(state=present).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Set or remove reverse DNS entry for IP",
+      "version_added": "1.2.0"
+    },
+    "examples": "\n- name: Set reverse DNS entry for 1.2.3.4\n  community.hrobot.reverse_dns:\n    hetzner_user: foo\n    hetzner_password: bar\n    ip: 1.2.3.4\n    value: foo.example.com\n\n- name: Remove reverse DNS entry for 2a01:f48:111:4221::1\n  community.hrobot.reverse_dns:\n    hetzner_user: foo\n    hetzner_password: bar\n    ip: 2a01:f48:111:4221::1\n    state: absent\n"
+  },
+  "community.hrobot.server": {
+    "doc": {
+      "description": "Allows to update server information.\nRight now the API only supports updating the server's name.",
+      "has_action": false,
+      "options": {
+        "hetzner_password": {
+          "aliases": [],
+          "description": "The password for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "hetzner_user": {
+          "aliases": [],
+          "description": "The username for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "server_name": {
+          "aliases": [],
+          "description": "The server's name.\nIf this option is not provided, it will not be adjusted.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_number": {
+          "aliases": [],
+          "description": "The server number of the server to update.",
+          "type": "int",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Update server information",
+      "version_added": "1.2.0"
+    },
+    "examples": "\n- name: Set server's name to foo.example.com\n  community.hrobot.server:\n    hetzner_user: foo\n    hetzner_password: bar\n    server_number: 123\n    server_name: foo.example.com\n"
+  },
+  "community.hrobot.server_info": {
+    "doc": {
+      "description": "Query information on one or more servers.",
+      "has_action": false,
+      "options": {
+        "full_info": {
+          "aliases": [],
+          "description": "Whether to provide full information for every server.\nSetting this to C(true) requires one REST call per server, which is slow and reduces your rate limit. Use with care.\nWhen I(server_number) is specified, this option is set to C(true).",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "hetzner_password": {
+          "aliases": [],
+          "description": "The password for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "hetzner_user": {
+          "aliases": [],
+          "description": "The username for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "server_name": {
+          "aliases": [],
+          "description": "Limit result list to servers of this name.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_number": {
+          "aliases": [],
+          "description": "Limit result list to server with this number.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Query information on one or more servers",
+      "version_added": "1.2.0"
+    },
+    "examples": "\n- name: Query a list of all servers\n  community.hrobot.server_info:\n    hetzner_user: foo\n    hetzner_password: bar\n  register: result\n\n- name: Query a specific server\n  community.hrobot.server_info:\n    hetzner_user: foo\n    hetzner_password: bar\n    server_number: 23\n  register: result\n\n- name: Output data on specific server\n  ansible.builtin.debug:\n    msg: \"Server name: {{ result.servers[0].server_name }}\"\n"
+  },
+  "community.hrobot.ssh_key": {
+    "doc": {
+      "description": "Add, remove or update an SSH key stored in Hetzner's Robot.",
+      "has_action": false,
+      "options": {
+        "fingerprint": {
+          "aliases": [],
+          "description": "The MD5 fingerprint of the public SSH key to remove.\nOne of I(public_key) and I(fingerprint) are required if I(state=absent).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hetzner_password": {
+          "aliases": [],
+          "description": "The password for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "hetzner_user": {
+          "aliases": [],
+          "description": "The username for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The public key's name.\nRequired if I(state=present), and ignored if I(state=absent).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "public_key": {
+          "aliases": [],
+          "description": "The public key data in OpenSSH format.\nExample: C(ssh-rsa AAAAB3NzaC1yc+...)\nOne of I(public_key) and I(fingerprint) are required if I(state=absent).\nRequired if I(state=present).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Whether to make sure a public SSH key is present or absent.\nC(present) makes sure that the SSH key is available, and potentially updates names for existing SHS public keys.\nC(absent) makes sure that the SSH key is not available. The fingerprint or public key data is used for matching the key.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Add, remove or update SSH key",
+      "version_added": "1.2.0"
+    },
+    "examples": "\n- name: Add an SSH key\n  community.hrobot.ssh_key:\n    hetzner_user: foo\n    hetzner_password: bar\n    state: present\n    name: newKey\n    public_key: ssh-rsa AAAAB3NzaC1yc+...\n\n- name: Remove a SSH key by fingerprint\n  community.hrobot.ssh_key:\n    hetzner_user: foo\n    hetzner_password: bar\n    state: absent\n    fingerprint: cb:8b:ef:a7:fe:04:87:3f:e5:55:cd:12:e3:e8:9f:99\n"
+  },
+  "community.hrobot.ssh_key_info": {
+    "doc": {
+      "description": "List information on all your SSH keys stored in Hetzner's Robot.",
+      "has_action": false,
+      "options": {
+        "hetzner_password": {
+          "aliases": [],
+          "description": "The password for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "hetzner_user": {
+          "aliases": [],
+          "description": "The username for the Robot webservice user.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Query information on SSH keys",
+      "version_added": "1.2.0"
+    },
+    "examples": "\n- name: List all SSH keys\n  community.hrobot.ssh_key_info:\n    hetzner_user: foo\n    hetzner_password: bar\n  register: ssh_keys\n\n- name: Show how many keys were found\n  ansible.builtin.debug:\n    msg: \"Found {{ ssh_keys.ssh_keys | length }} keys\"\n"
+  }
+}

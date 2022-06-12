@@ -1,0 +1,1117 @@
+{
+  "cisco.intersight.intersight_boot_order_policy": {
+    "doc": {
+      "description": "Boot Order policy configuration for Cisco Intersight.\nUsed to configure Boot Order servers and timezone settings on Cisco Intersight managed devices.\nFor more information see L(Cisco Intersight,https://intersight.com/apidocs).",
+      "has_action": false,
+      "options": {
+        "api_key_id": {
+          "aliases": [],
+          "description": "Public API Key ID associated with the private key.\nIf not set, the value of the INTERSIGHT_API_KEY_ID environment variable is used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_private_key": {
+          "aliases": [],
+          "description": "Filename (absolute path) or string of PEM formatted private key data to be used for Intersight API authentication.\nIf a string is used, Ansible vault should be used to encrypt string data.\nEx. ansible-vault encrypt_string --vault-id tme@/Users/dsoper/Documents/vault_password_file '-----BEGIN EC PRIVATE KEY-----\n    <your private key data>\n    -----END EC PRIVATE KEY-----'\nIf not set, the value of the INTERSIGHT_API_PRIVATE_KEY environment variable is used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_uri": {
+          "aliases": [],
+          "description": "URI used to access the Intersight API.\nIf not set, the value of the INTERSIGHT_API_URI environment variable is used.",
+          "default": "https://intersight.com/api/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "boot_devices": {
+          "aliases": [],
+          "description": "List of Boot Devices configured on the endpoint.",
+          "type": "list",
+          "required": false,
+          "suboptions": {
+            "bootloader_description": {
+              "aliases": [],
+              "description": "Details of the bootloader to be used during boot from local disk.\nOption is used when device_type is local_disk and configured_boot_mode is Uefi.",
+              "required": false,
+              "suboptions": {}
+            },
+            "bootloader_name": {
+              "aliases": [],
+              "description": "Details of the bootloader to be used during boot from local disk.\nOption is used when device_type is local_disk and configured_boot_mode is Uefi.",
+              "required": false,
+              "suboptions": {}
+            },
+            "bootloader_path": {
+              "aliases": [],
+              "description": "Details of the bootloader to be used during boot from local disk.\nOption is used when device_type is local_disk and configured_boot_mode is Uefi.",
+              "required": false,
+              "suboptions": {}
+            },
+            "controller_slot": {
+              "aliases": [],
+              "description": "The slot id of the controller for the local disk device.\nOption is used when device_type is local_disk.",
+              "required": false,
+              "choices": [
+                "1-255",
+                "M",
+                "HBA",
+                "SAS",
+                "RAID",
+                "MRAID",
+                "MSTOR-RAID"
+              ],
+              "suboptions": {}
+            },
+            "device_name": {
+              "aliases": [],
+              "description": "A name that helps identify a boot device.\nIt can be any string that adheres to the following constraints.\nIt should start and end with an alphanumeric character.\nIt can have underscores and hyphens.\nIt cannot be more than 30 characters.",
+              "required": true,
+              "suboptions": {}
+            },
+            "device_type": {
+              "aliases": [],
+              "description": "Device type used with this boot option.\nChoices are based on each device title in the API schema.",
+              "required": true,
+              "choices": [
+                "iSCSI",
+                "Local CDD",
+                "Local Disk",
+                "NVMe",
+                "PCH Storage",
+                "PXE",
+                "SAN",
+                "SD Card",
+                "UEFI Shell",
+                "USB",
+                "Virtual Media"
+              ],
+              "suboptions": {}
+            },
+            "enabled": {
+              "aliases": [],
+              "description": "Specifies if the boot device is enabled or disabled.",
+              "default": "True",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "intefrace_name": {
+              "aliases": [],
+              "description": "The name of the underlying virtual ethernet interface used by the PXE boot device.\nOption is used when device_type is pxe and interface_source is name.",
+              "required": false,
+              "suboptions": {}
+            },
+            "interface_source": {
+              "aliases": [],
+              "description": "Lists the supported Interface Source for PXE device.\nOption is used when device_type is pxe.",
+              "default": "name",
+              "required": false,
+              "choices": [
+                "name",
+                "mac",
+                "port"
+              ],
+              "suboptions": {}
+            },
+            "ip_type": {
+              "aliases": [],
+              "description": "The IP Address family type to use during the PXE Boot process.\nOption is used when device_type is pxe.",
+              "default": "None",
+              "required": false,
+              "suboptions": {}
+            },
+            "lun": {
+              "aliases": [],
+              "description": "The Logical Unit Number (LUN) of the device.\nOption is used when device_type is pch, san and sd_card.\nThe LUN need to be an integer from 0 to 255.",
+              "required": false,
+              "suboptions": {}
+            },
+            "mac_address": {
+              "aliases": [],
+              "description": "The MAC Address of the underlying virtual ethernet interface used by the PXE boot device.\nOption is used when device_type is pxe and interface_source is mac.",
+              "required": false,
+              "suboptions": {}
+            },
+            "network_slot": {
+              "aliases": [],
+              "description": "The slot id of the controller for the iscsi and pxe device.\nOption is used when device_type is iscsi and pxe.",
+              "required": false,
+              "choices": [
+                "1 - 255",
+                "MLOM",
+                "L",
+                "L1",
+                "L2",
+                "OCP"
+              ],
+              "suboptions": {}
+            },
+            "port": {
+              "aliases": [],
+              "description": "The port id of the controller for the iscsi and pxe device.\nOption is used when device_type is iscsi and pxe.\nThe port id need to be an integer from 0 to 255.",
+              "required": false,
+              "suboptions": {}
+            },
+            "sd_card_subtype": {
+              "aliases": [],
+              "description": "The subtype for the selected device type.\nOption is used when device_type is sd_card.",
+              "default": "None",
+              "required": false,
+              "choices": [
+                "None",
+                "flex-util",
+                "flex-flash",
+                "SDCARD"
+              ],
+              "suboptions": {}
+            },
+            "usb_subtype": {
+              "aliases": [],
+              "description": "The subtype for the selected device type.\nOption is used when device_type is usb.",
+              "default": "None",
+              "required": false,
+              "choices": [
+                "None",
+                "usb-cd",
+                "usb-fdd",
+                "usb-hdd"
+              ],
+              "suboptions": {}
+            },
+            "virtual_media_subtype": {
+              "aliases": [],
+              "description": "The subtype for the selected device type.\nOption is used when device_type is virtual_media.",
+              "default": "None",
+              "required": false,
+              "choices": [
+                "None",
+                "cimc-mapped-dvd",
+                "cimc-mapped-hdd",
+                "kvm-mapped-dvd",
+                "kvm-mapped-hdd",
+                "kvm-mapped-fdd"
+              ],
+              "suboptions": {}
+            }
+          }
+        },
+        "configured_boot_mode": {
+          "aliases": [],
+          "description": "Sets the BIOS boot mode.\nUEFI uses the GUID Partition Table (GPT) whereas Legacy mode uses the Master Boot Record (MBR) partitioning scheme.",
+          "default": "Legacy",
+          "required": false,
+          "choices": [
+            "Legacy",
+            "Uefi"
+          ],
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "The user-defined description of the Boot Order policy.\nDescription can contain letters(a-z, A-Z), numbers(0-9), hyphen(-), period(.), colon(:), or an underscore(_).",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name assigned to the Boot Order policy.\nThe name must be between 1 and 62 alphanumeric characters, allowing special characters :-_.",
+          "required": true,
+          "suboptions": {}
+        },
+        "organization": {
+          "aliases": [],
+          "description": "The name of the Organization this resource is assigned to.\nProfiles and Policies that are created within a Custom Organization are applicable only to devices in the same Organization.",
+          "default": "default",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify the resource is present and will create if needed.\nIf C(absent), will verify the resource is absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "List of tags in Key:<user-defined key> Value:<user-defined value> format.",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "uefi_enable_secure_boot": {
+          "aliases": [],
+          "description": "Secure boot enforces that device boots using only software that is trusted by the Original Equipment Manufacturer (OEM).\nOption is only used if configured_boot_mode is set to Uefi.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), it will not use a proxy, even if one is defined in an environment variable on the target hosts.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Boolean control for verifying the api_uri TLS certificate",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Boot Order policy configuration for Cisco Intersight",
+      "version_added": "2.10"
+    },
+    "examples": "\n- name: Configure Boot Order Policy\n  cisco.intersight.intersight_boot_order_policy:\n    api_private_key: \"{{ api_private_key }}\"\n    api_key_id: \"{{ api_key_id }}\"\n    organization: DevNet\n    name: COS-Boot\n    description: Boot Order policy for COS\n    tags:\n      - Key: Site\n        Value: RCDN\n    configured_boot_mode: legacy\n    boot_devices:\n      - device_type: Local Disk\n        device_name: Boot-Lun\n        controller_slot: MRAID\n\n- name: Delete Boot Order Policy\n  cisco.intersight.intersight_boot_policy:\n    api_private_key: \"{{ api_private_key }}\"\n    api_key_id: \"{{ api_key_id }}\"\n    organization: DevNet\n    name: COS-Boot\n    state: absent\n"
+  },
+  "cisco.intersight.intersight_imc_access_policy": {
+    "doc": {
+      "description": "IMC Access Policy configuration for Cisco Intersight.\nUsed to configure IP addresses and VLAN used for external connectivity to Cisco IMC.\nFor more information see L(Cisco Intersight,https://intersight.com/apidocs).",
+      "has_action": false,
+      "options": {
+        "api_key_id": {
+          "aliases": [],
+          "description": "Public API Key ID associated with the private key.\nIf not set, the value of the INTERSIGHT_API_KEY_ID environment variable is used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_private_key": {
+          "aliases": [],
+          "description": "Filename (absolute path) or string of PEM formatted private key data to be used for Intersight API authentication.\nIf a string is used, Ansible vault should be used to encrypt string data.\nEx. ansible-vault encrypt_string --vault-id tme@/Users/dsoper/Documents/vault_password_file '-----BEGIN EC PRIVATE KEY-----\n    <your private key data>\n    -----END EC PRIVATE KEY-----'\nIf not set, the value of the INTERSIGHT_API_PRIVATE_KEY environment variable is used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_uri": {
+          "aliases": [],
+          "description": "URI used to access the Intersight API.\nIf not set, the value of the INTERSIGHT_API_URI environment variable is used.",
+          "default": "https://intersight.com/api/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "descrption": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "The user-defined description of the IMC access policy.\nDescription can contain letters(a-z, A-Z), numbers(0-9), hyphen(-), period(.), colon(:), or an underscore(_).",
+          "required": false,
+          "suboptions": {}
+        },
+        "ip_pool": {
+          "aliases": [],
+          "description": "IP Pool used to assign IP address and other required network settings.",
+          "required": true,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name assigned to the IMC Access Policy.\nThe name must be between 1 and 62 alphanumeric characters, allowing special characters :-_.",
+          "required": true,
+          "suboptions": {}
+        },
+        "organization": {
+          "aliases": [],
+          "description": "The name of the Organization this resource is assigned to.\nProfiles and Policies that are created within a Custom Organization are applicable only to devices in the same Organization.",
+          "default": "default",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify the resource is present and will create if needed.\nIf C(absent), will verify the resource is absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "List of tags in Key:<user-defined key> Value:<user-defined value> format.",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), it will not use a proxy, even if one is defined in an environment variable on the target hosts.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Boolean control for verifying the api_uri TLS certificate",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "vlan_id": {
+          "aliases": [],
+          "description": "VLAN to be used for server access over Inband network.",
+          "type": "int",
+          "required": true,
+          "suboptions": {}
+        }
+      },
+      "short_description": "IMC Access Policy configuration for Cisco Intersight",
+      "version_added": "2.10"
+    },
+    "examples": "\n- name: Configure IMC Access policy\n  intersight_imc_access_policy:\n    api_private_key: \"{{ api_private_key }}\"\n    api_key_id: \"{{ api_key_id }}\"\n    name: sjc02-d23-access\n    description: IMC access for SJC02 rack D23\n    tags:\n      - Site: D23\n    vlan_id: 131\n    ip_pool: sjc02-d23-ext-mgmt\n\n- name: Delete IMC Access policy\n  intersight_imc_access_policy:\n    api_private_key: \"{{ api_private_key }}\"\n    api_key_id: \"{{ api_key_id }}\"\n    name: sjc02-d23-access\n    state: absent\n"
+  },
+  "cisco.intersight.intersight_info": {
+    "doc": {
+      "description": "Gathers information about servers in L(Cisco Intersight,https://intersight.com).\nThis module was called C(intersight_facts) before Ansible 2.9. The usage did not change.",
+      "has_action": false,
+      "options": {
+        "api_key_id": {
+          "aliases": [],
+          "description": "Public API Key ID associated with the private key.\nIf not set, the value of the INTERSIGHT_API_KEY_ID environment variable is used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_private_key": {
+          "aliases": [],
+          "description": "Filename (absolute path) or string of PEM formatted private key data to be used for Intersight API authentication.\nIf a string is used, Ansible vault should be used to encrypt string data.\nEx. ansible-vault encrypt_string --vault-id tme@/Users/dsoper/Documents/vault_password_file '-----BEGIN EC PRIVATE KEY-----\n    <your private key data>\n    -----END EC PRIVATE KEY-----'\nIf not set, the value of the INTERSIGHT_API_PRIVATE_KEY environment variable is used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_uri": {
+          "aliases": [],
+          "description": "URI used to access the Intersight API.\nIf not set, the value of the INTERSIGHT_API_URI environment variable is used.",
+          "default": "https://intersight.com/api/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_names": {
+          "aliases": [],
+          "description": "Server names to retrieve information from.\nAn empty list will return all servers.",
+          "type": "list",
+          "required": true,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), it will not use a proxy, even if one is defined in an environment variable on the target hosts.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Boolean control for verifying the api_uri TLS certificate",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Gather information about Intersight",
+      "version_added": "2.8"
+    },
+    "examples": "\n- name: Get info for all servers\n  intersight_info:\n    api_private_key: ~/Downloads/SecretKey.txt\n    api_key_id: 64612d300d0982/64612d300d0b00/64612d300d3650\n    server_names:\n- debug:\n    msg: \"server name {{ item.Name }}, moid {{ item.Moid }}\"\n  loop: \"{{ intersight_servers }}\"\n  when: intersight_servers is defined\n\n- name: Get info for servers by name\n  intersight_info:\n    api_private_key: ~/Downloads/SecretKey.txt\n    api_key_id: 64612d300d0982/64612d300d0b00/64612d300d3650\n    server_names:\n      - SJC18-L14-UCS1-1\n- debug:\n    msg: \"server moid {{ intersight_servers[0].Moid }}\"\n  when: intersight_servers[0] is defined\n"
+  },
+  "cisco.intersight.intersight_ntp_policy": {
+    "doc": {
+      "description": "NTP policy configuration for Cisco Intersight.\nUsed to configure NTP servers and timezone settings on Cisco Intersight managed devices.\nFor more information see L(Cisco Intersight,https://intersight.com/apidocs).",
+      "has_action": false,
+      "options": {
+        "api_key_id": {
+          "aliases": [],
+          "description": "Public API Key ID associated with the private key.\nIf not set, the value of the INTERSIGHT_API_KEY_ID environment variable is used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_private_key": {
+          "aliases": [],
+          "description": "Filename (absolute path) or string of PEM formatted private key data to be used for Intersight API authentication.\nIf a string is used, Ansible vault should be used to encrypt string data.\nEx. ansible-vault encrypt_string --vault-id tme@/Users/dsoper/Documents/vault_password_file '-----BEGIN EC PRIVATE KEY-----\n    <your private key data>\n    -----END EC PRIVATE KEY-----'\nIf not set, the value of the INTERSIGHT_API_PRIVATE_KEY environment variable is used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_uri": {
+          "aliases": [],
+          "description": "URI used to access the Intersight API.\nIf not set, the value of the INTERSIGHT_API_URI environment variable is used.",
+          "default": "https://intersight.com/api/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "The user-defined description of the NTP policy.\nDescription can contain letters(a-z, A-Z), numbers(0-9), hyphen(-), period(.), colon(:), or an underscore(_).",
+          "required": false,
+          "suboptions": {}
+        },
+        "enable": {
+          "aliases": [],
+          "description": "Enable or disable NTP.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name assigned to the NTP policy.\nThe name must be between 1 and 62 alphanumeric characters, allowing special characters :-_.",
+          "required": true,
+          "suboptions": {}
+        },
+        "ntp_servers": {
+          "aliases": [],
+          "description": "List of NTP servers configured on the endpoint.",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "organization": {
+          "aliases": [],
+          "description": "The name of the Organization this resource is assigned to.\nProfiles and Policies that are created within a Custom Organization are applicable only to devices in the same Organization.",
+          "default": "default",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify the resource is present and will create if needed.\nIf C(absent), will verify the resource is absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "List of tags in Key:<user-defined key> Value:<user-defined value> format.",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "timezone": {
+          "aliases": [],
+          "description": "Timezone of services on the endpoint.",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), it will not use a proxy, even if one is defined in an environment variable on the target hosts.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Boolean control for verifying the api_uri TLS certificate",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "NTP policy configuration for Cisco Intersight",
+      "version_added": "2.10"
+    },
+    "examples": "\n- name: Configure NTP Policy\n  cisco.intersight.intersight_ntp_policy:\n    api_private_key: \"{{ api_private_key }}\"\n    api_key_id: \"{{ api_key_id }}\"\n    organization: DevNet\n    name: lab-ntp\n    description: NTP policy for lab use\n    tags:\n      - Key: Site\n        Value: RCDN\n    ntp_servers:\n      - ntp.esl.cisco.com\n    timezone: America/Chicago\n\n- name: Delete NTP Policy\n  cisco.intersight.intersight_ntp_policy:\n    api_private_key: \"{{ api_private_key }}\"\n    api_key_id: \"{{ api_key_id }}\"\n    organization: DevNet\n    name: lab-ntp\n    state: absent\n"
+  },
+  "cisco.intersight.intersight_rest_api": {
+    "doc": {
+      "description": "Direct REST API configuration for Cisco Intersight.\nAll REST API resources and properties must be specified.\nFor more information see L(Cisco Intersight,https://intersight.com/apidocs).",
+      "has_action": false,
+      "options": {
+        "api_body": {
+          "aliases": [],
+          "description": "The paylod for API requests used to modify resources.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_key_id": {
+          "aliases": [],
+          "description": "Public API Key ID associated with the private key.\nIf not set, the value of the INTERSIGHT_API_KEY_ID environment variable is used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_private_key": {
+          "aliases": [],
+          "description": "Filename (absolute path) or string of PEM formatted private key data to be used for Intersight API authentication.\nIf a string is used, Ansible vault should be used to encrypt string data.\nEx. ansible-vault encrypt_string --vault-id tme@/Users/dsoper/Documents/vault_password_file '-----BEGIN EC PRIVATE KEY-----\n    <your private key data>\n    -----END EC PRIVATE KEY-----'\nIf not set, the value of the INTERSIGHT_API_PRIVATE_KEY environment variable is used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_uri": {
+          "aliases": [],
+          "description": "URI used to access the Intersight API.\nIf not set, the value of the INTERSIGHT_API_URI environment variable is used.",
+          "default": "https://intersight.com/api/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "query_params": {
+          "aliases": [],
+          "description": "Query parameters for the Intersight API query languange.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "resource_path": {
+          "aliases": [],
+          "description": "Resource URI being configured related to api_uri.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "return_list": {
+          "aliases": [],
+          "description": "If C(yes), will return a list of API results in the api_response.\nBy default only the 1st element of the API Results list is returned.\nCan only be used with GET operations.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify the resource is present and will create if needed.\nIf C(absent), will verify the resource is absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "update_method": {
+          "aliases": [],
+          "description": "The HTTP method used for update operations.\nSome Intersight resources require POST operations for modifications.",
+          "default": "patch",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "patch",
+            "post"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), it will not use a proxy, even if one is defined in an environment variable on the target hosts.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Boolean control for verifying the api_uri TLS certificate",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "REST API configuration for Cisco Intersight",
+      "version_added": "2.8"
+    },
+    "examples": "\n- name: Configure Boot Policy\n  intersight_rest_api:\n    api_private_key: \"{{ api_private_key }}\"\n    api_key_id: \"{{ api_key_id }}\"\n    api_key_uri: \"{{ api_key_uri }}\"\n    validate_certs: \"{{ validate_certs }}\"\n    resource_path: /boot/PrecisionPolicies\n    query_params:\n      $filter: \"Name eq 'vmedia-localdisk'\"\n    api_body: {\n      \"Name\": \"vmedia-localdisk\",\n      \"ConfiguredBootMode\": \"Legacy\",\n      \"BootDevices\": [\n        {\n          \"ObjectType\": \"boot.VirtualMedia\",\n          \"Enabled\": true,\n          \"Name\": \"remote-vmedia\",\n          \"Subtype\": \"cimc-mapped-dvd\"\n        },\n        {\n          \"ObjectType\": \"boot.LocalDisk\",\n          \"Enabled\": true,\n          \"Name\": \"localdisk\",\n          \"Slot\": \"MRAID\",\n          \"Bootloader\": null\n        }\n      ],\n    }\n    state: present\n\n- name: Delete Boot Policy\n  intersight_rest_api:\n    api_private_key: \"{{ api_private_key }}\"\n    api_key_id: \"{{ api_key_id }}\"\n    api_key_uri: \"{{ api_key_uri }}\"\n    validate_certs: \"{{ validate_certs }}\"\n    resource_path: /boot/PrecisionPolicies\n    query_params:\n      $filter: \"Name eq 'vmedia-localdisk'\"\n    state: absent\n"
+  },
+  "cisco.intersight.intersight_server_profile": {
+    "doc": {
+      "description": "Server Profile configuration for Cisco Intersight.\nUsed to configure Server Profiles with assigned servers and server policies.\nFor more information see L(Cisco Intersight,https://intersight.com/apidocs).",
+      "has_action": false,
+      "options": {
+        "api_key_id": {
+          "aliases": [],
+          "description": "Public API Key ID associated with the private key.\nIf not set, the value of the INTERSIGHT_API_KEY_ID environment variable is used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_private_key": {
+          "aliases": [],
+          "description": "Filename (absolute path) or string of PEM formatted private key data to be used for Intersight API authentication.\nIf a string is used, Ansible vault should be used to encrypt string data.\nEx. ansible-vault encrypt_string --vault-id tme@/Users/dsoper/Documents/vault_password_file '-----BEGIN EC PRIVATE KEY-----\n    <your private key data>\n    -----END EC PRIVATE KEY-----'\nIf not set, the value of the INTERSIGHT_API_PRIVATE_KEY environment variable is used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_uri": {
+          "aliases": [],
+          "description": "URI used to access the Intersight API.\nIf not set, the value of the INTERSIGHT_API_URI environment variable is used.",
+          "default": "https://intersight.com/api/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "assigned_server": {
+          "aliases": [],
+          "description": "Managed Obect ID (MOID) of assigned server.\nOption can be omitted if user wishes to assign server later.",
+          "required": false,
+          "suboptions": {}
+        },
+        "boot_order_policy": {
+          "aliases": [],
+          "description": "Name of Boot Order Policy to associate with this profile.",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "The user-defined description of the Server Profile.\nDescription can contain letters(a-z, A-Z), numbers(0-9), hyphen(-), period(.), colon(:), or an underscore(_).",
+          "required": false,
+          "suboptions": {}
+        },
+        "imc_access_policy": {
+          "aliases": [],
+          "description": "Name of IMC Access Policy to associate with this profile.",
+          "required": false,
+          "suboptions": {}
+        },
+        "lan_connectivity_policy": {
+          "aliases": [],
+          "description": "Name of LAN Connectivity Policy to associate with this profile.",
+          "required": false,
+          "suboptions": {}
+        },
+        "local_user_policy": {
+          "aliases": [],
+          "description": "Name of Local User Policy to associate with this profile.",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name assigned to the Server Profile.\nThe name must be between 1 and 62 alphanumeric characters, allowing special characters :-_.",
+          "required": true,
+          "suboptions": {}
+        },
+        "ntp_policy": {
+          "aliases": [],
+          "description": "Name of NTP Policy to associate with this profile.",
+          "required": false,
+          "suboptions": {}
+        },
+        "organization": {
+          "aliases": [],
+          "description": "The name of the Organization this resource is assigned to.\nProfiles and Policies that are created within a Custom Organization are applicable only to devices in the same Organization.",
+          "default": "default",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify the resource is present and will create if needed.\nIf C(absent), will verify the resource is absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "storage_policy": {
+          "aliases": [],
+          "description": "Name of Storage Policy to associate with this profile.",
+          "required": false,
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "List of tags in Key:<user-defined key> Value:<user-defined value> format.",
+          "required": false,
+          "suboptions": {}
+        },
+        "target_platform": {
+          "aliases": [],
+          "description": "The platform for which the server profile is applicable.\nCan either be a server that is operating in Standalone mode or which is attached to a Fabric Interconnect (FIAttached) managed by Intersight.",
+          "default": "Standalone",
+          "required": false,
+          "choices": [
+            "Standalone",
+            "FIAttached"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), it will not use a proxy, even if one is defined in an environment variable on the target hosts.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Boolean control for verifying the api_uri TLS certificate",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "virtual_media_policy": {
+          "aliases": [],
+          "description": "Name of Virtual Media Policy to associate with this profile.",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Server Profile configuration for Cisco Intersight",
+      "version_added": "2.10"
+    },
+    "examples": "\n- name: Configure Server Profile\n  cisco.intersight.intersight_server_profile:\n    api_private_key: \"{{ api_private_key }}\"\n    api_key_id: \"{{ api_key_id }}\"\n    name: SP-Server1\n    target_platform: FIAttached\n    tags:\n      - Key: Site\n        Value: SJC02\n    description: Profile for Server1\n    assigned_server: 5e3b517d6176752d319a9999\n    boot_order_policy: COS-Boot\n    imc_access_policy: sjc02-d23-access\n    lan_connectivity_policy: sjc02-d23-lan\n    local_user_policy: guest-admin\n    ntp_policy: lab-ntp\n    storage_policy: storage\n    virtual_media_policy: COS-VM\n\n- name: Delete Server Profile\n  cisco.intersight.intersight_server_profile:\n    api_private_key: \"{{ api_private_key }}\"\n    api_key_id: \"{{ api_key_id }}\"\n    name: SP-Server1\n    state: absent\n"
+  },
+  "cisco.intersight.intersight_target_claim": {
+    "doc": {
+      "description": "Target claim configuraiton for Cisco Intersight\nUsed to claim or unclaim a Target from Cisco Intersight\nFor more information see L(Cisco Intersight,https://intersight.com/apidocs).",
+      "has_action": false,
+      "options": {
+        "api_key_id": {
+          "aliases": [],
+          "description": "Public API Key ID associated with the private key.\nIf not set, the value of the INTERSIGHT_API_KEY_ID environment variable is used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_private_key": {
+          "aliases": [],
+          "description": "Filename (absolute path) or string of PEM formatted private key data to be used for Intersight API authentication.\nIf a string is used, Ansible vault should be used to encrypt string data.\nEx. ansible-vault encrypt_string --vault-id tme@/Users/dsoper/Documents/vault_password_file '-----BEGIN EC PRIVATE KEY-----\n    <your private key data>\n    -----END EC PRIVATE KEY-----'\nIf not set, the value of the INTERSIGHT_API_PRIVATE_KEY environment variable is used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_uri": {
+          "aliases": [],
+          "description": "URI used to access the Intersight API.\nIf not set, the value of the INTERSIGHT_API_URI environment variable is used.",
+          "default": "https://intersight.com/api/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "claim_code": {
+          "aliases": [],
+          "description": "Claim code required for registering a new Target\nRequired if I(state=present)",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "device_id": {
+          "aliases": [],
+          "description": "Device id (serial number) of target\nTargets containing multiple Target ids (e.g. IMM) can be formatted as <target1_id>&<target2_id>",
+          "type": "dict",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify the resource is present and will create if needed.\nIf C(absent), will verify the resource is absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), it will not use a proxy, even if one is defined in an environment variable on the target hosts.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Boolean control for verifying the api_uri TLS certificate",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Target claim configuraiton for Cisco Intersight",
+      "version_added": "2.8"
+    },
+    "examples": "\n- name: Claim new Target\n  cisco.intersight.intersight_target_claim:\n    device_id: \"{{ device_id }}\"\n    claim_code: \"{{ claim_code }}\"\n    state: present\n\n- name: Delete a Target (unclaim)\n  cisco.intersight.intersight_target_claim:\n    device_id: \"{{ device_id }}\"\n    state: absent\n"
+  },
+  "cisco.intersight.intersight_virtual_media_policy": {
+    "doc": {
+      "description": "Virtual Media policy configuration for Cisco Intersight.\nUsed to configure Virtual Media image mappings on Cisco Intersight managed devices.\nFor more information see L(Cisco Intersight,https://intersight.com/apidocs).",
+      "has_action": false,
+      "options": {
+        "api_key_id": {
+          "aliases": [],
+          "description": "Public API Key ID associated with the private key.\nIf not set, the value of the INTERSIGHT_API_KEY_ID environment variable is used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_private_key": {
+          "aliases": [],
+          "description": "Filename (absolute path) or string of PEM formatted private key data to be used for Intersight API authentication.\nIf a string is used, Ansible vault should be used to encrypt string data.\nEx. ansible-vault encrypt_string --vault-id tme@/Users/dsoper/Documents/vault_password_file '-----BEGIN EC PRIVATE KEY-----\n    <your private key data>\n    -----END EC PRIVATE KEY-----'\nIf not set, the value of the INTERSIGHT_API_PRIVATE_KEY environment variable is used.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "api_uri": {
+          "aliases": [],
+          "description": "URI used to access the Intersight API.\nIf not set, the value of the INTERSIGHT_API_URI environment variable is used.",
+          "default": "https://intersight.com/api/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cdd_virtual_media": {
+          "aliases": [],
+          "description": "CDD Virtual Media image mapping options.",
+          "required": false,
+          "suboptions": {
+            "enable": {
+              "aliases": [],
+              "description": "Enable or disable CDD image mapping.",
+              "default": "True",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "mount_type": {
+              "aliases": [],
+              "description": "Type (protocol) of network share used by the remote_hostname.\nEnsure that the remote_hostname's communication port for the mount type that you choose is accessible from the managed endpoint.\nFor CIFS as your mount type, ensure port 445 (which is its communication port) on the remote_hostname is accessible.\nFor HTTP, ensure port 80 is accessible.\nFor HTTPS, ensure port 443 is accessible.\nFor NFS, ensure port 2049 is accessible.",
+              "required": true,
+              "choices": [
+                "nfs",
+                "cifs",
+                "http",
+                "https"
+              ],
+              "suboptions": {}
+            },
+            "password": {
+              "aliases": [],
+              "description": "The password for the selected username, if required.",
+              "required": false,
+              "suboptions": {}
+            },
+            "remote_file": {
+              "aliases": [],
+              "description": "Filename of the remote image.\nEx. custom_image.iso",
+              "required": true,
+              "suboptions": {}
+            },
+            "remote_hostname": {
+              "aliases": [],
+              "description": "Hostname or IP address of the server hosting the virtual media image.",
+              "required": true,
+              "suboptions": {}
+            },
+            "remote_path": {
+              "aliases": [],
+              "description": "Filepath (not including the filename) of the remote image.\nEx. mnt/SHARE/ISOS",
+              "required": true,
+              "suboptions": {}
+            },
+            "username": {
+              "aliases": [],
+              "description": "The username for the specified Mount Type, if required.",
+              "required": false,
+              "suboptions": {}
+            },
+            "volume": {
+              "aliases": [],
+              "description": "A user defined name of the image mounted for mapping.",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        },
+        "descrption": {
+          "aliases": [
+            "descr"
+          ],
+          "description": "The user-defined description of the NTP policy.\nDescription can contain letters(a-z, A-Z), numbers(0-9), hyphen(-), period(.), colon(:), or an underscore(_).",
+          "required": false,
+          "suboptions": {}
+        },
+        "enable": {
+          "aliases": [],
+          "description": "Enable or disable virtual media.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "encryption": {
+          "aliases": [],
+          "description": "If enabled, allows encryption of all Virtual Media communications",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "hdd_virtual_media": {
+          "aliases": [],
+          "description": "HDD Virtual Media image mapping options.",
+          "required": false,
+          "suboptions": {
+            "authentication_protocol": {
+              "aliases": [],
+              "description": "Authentication Protocol for CIFS Mount Type",
+              "required": false,
+              "suboptions": {}
+            },
+            "enable": {
+              "aliases": [],
+              "description": "Enable or disable HDD image mapping.",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "mount_options": {
+              "aliases": [],
+              "description": "Mount options for the Virtual Media mapping.\nFor NFS, supported options are ro, rw, nolock, noexec, soft, port=VALUE, timeo=VALUE, retry=VALUE\nFor CIFS, supported options are soft, nounix, noserverino, guest",
+              "required": false,
+              "suboptions": {}
+            },
+            "mount_type": {
+              "aliases": [],
+              "description": "Type (protocol) of network share used by the remote_hostname.\nEnsure that the remote_hostname's communication port for the mount type that you choose is accessible from the managed endpoint.\nFor CIFS as your mount type, ensure port 445 (which is its communication port) on the remote_hostname is accessible.\nFor HTTP, ensure port 80 is accessible.\nFor HTTPS, ensure port 443 is accessible.\nFor NFS, ensure port 2049 is accessible.",
+              "required": true,
+              "choices": [
+                "nfs",
+                "cifs",
+                "http",
+                "https"
+              ],
+              "suboptions": {}
+            },
+            "password": {
+              "aliases": [],
+              "description": "The password for the selected username, if required.",
+              "required": false,
+              "suboptions": {}
+            },
+            "remote_file": {
+              "aliases": [],
+              "description": "Filename of the remote image.\nEx. custom_image.iso",
+              "required": true,
+              "suboptions": {}
+            },
+            "remote_hostname": {
+              "aliases": [],
+              "description": "Hostname or IP address of the server hosting the virtual media image.",
+              "required": true,
+              "suboptions": {}
+            },
+            "remote_path": {
+              "aliases": [],
+              "description": "Filepath (not including the filename) of the remote image.\nEx. mnt/SHARE/ISOS",
+              "required": true,
+              "suboptions": {}
+            },
+            "username": {
+              "aliases": [],
+              "description": "The username for the specified Mount Type, if required.",
+              "required": false,
+              "suboptions": {}
+            },
+            "volume": {
+              "aliases": [],
+              "description": "A user defined name of the image mounted for mapping.",
+              "required": true,
+              "suboptions": {}
+            }
+          }
+        },
+        "low_power_usb": {
+          "aliases": [],
+          "description": "If enabled, the virtual drives appear on the boot selection menu after mapping the image and rebooting the host.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name assigned to the NTP policy.\nThe name must be between 1 and 62 alphanumeric characters, allowing special characters :-_.",
+          "required": true,
+          "suboptions": {}
+        },
+        "organization": {
+          "aliases": [],
+          "description": "The name of the Organization this resource is assigned to.\nProfiles and Policies that are created within a Custom Organization are applicable only to devices in the same Organization.",
+          "default": "default",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "If C(present), will verify the resource is present and will create if needed.\nIf C(absent), will verify the resource is absent and will delete if needed.",
+          "default": "present",
+          "required": false,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        },
+        "tags": {
+          "aliases": [],
+          "description": "List of tags in Key:<user-defined key> Value:<user-defined value> format.",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_proxy": {
+          "aliases": [],
+          "description": "If C(no), it will not use a proxy, even if one is defined in an environment variable on the target hosts.",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "validate_certs": {
+          "aliases": [],
+          "description": "Boolean control for verifying the api_uri TLS certificate",
+          "default": "True",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Virtual Media policy configuration for Cisco Intersight",
+      "version_added": "2.10"
+    },
+    "examples": "\n- name: Configure Virtual Media Policy\n  cisco.intersight.intersight_virtual_media_policy:\n    api_private_key: \"{{ api_private_key }}\"\n    api_key_id: \"{{ api_key_id }}\"\n    organization: DevNet\n    name: lab-vmedia\n    description: Virutal Media policy for lab use\n    tags:\n      - Key: Site\n        Value: RCDN\n    cdd_virtual_media:\n      mount_type: nfs\n      volume: nfs-cdd\n      remote_hostname: 172.28.224.77\n      remote_path: mnt/SHARE/ISOS/CENTOS\n      remote_file: CentOS7.iso\n    hdd_virtual_media:\n      mount_type: nfs\n      volume: nfs-hdd\n      remote_hostname: 172.28.224.77\n      remote_path: mnt/SHARE/ISOS/CENTOS\n      remote_file: CentOS7.iso\n\n- name: Delete Virtual Media Policy\n  cisco.intersight.intersight_virtual_media_policy:\n    api_private_key: \"{{ api_private_key }}\"\n    api_key_id: \"{{ api_key_id }}\"\n    organization: DevNet\n    name: lab-vmedia\n    state: absent\n"
+  }
+}

@@ -1,0 +1,388 @@
+{
+  "community.sops.load_vars": {
+    "doc": {
+      "description": "Loads sops-encrypted YAML/JSON variables dynamically from a file during task runtime.\nTo assign included variables to a different host than C(inventory_hostname), use C(delegate_to) and set C(delegate_facts=yes).",
+      "has_action": true,
+      "options": {
+        "aws_access_key_id": {
+          "aliases": [],
+          "description": "The AWS access key ID to use for requests to AWS.\nSets the environment variable C(AWS_ACCESS_KEY_ID) for the sops call.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "aws_profile": {
+          "aliases": [],
+          "description": "The AWS profile to use for requests to AWS.\nThis corresponds to the sops C(--aws-profile) option.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "aws_secret_access_key": {
+          "aliases": [],
+          "description": "The AWS secret access key to use for requests to AWS.\nSets the environment variable C(AWS_SECRET_ACCESS_KEY) for the sops call.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "aws_session_token": {
+          "aliases": [],
+          "description": "The AWS session token to use for requests to AWS.\nSets the environment variable C(AWS_SESSION_TOKEN) for the sops call.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "config_path": {
+          "aliases": [],
+          "description": "Path to the sops configuration file.\nIf not set, sops will recursively search for the config file starting at the file that is encrypted or decrypted.\nThis corresponds to the sops C(--config) option.",
+          "type": "path",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "enable_local_keyservice": {
+          "aliases": [],
+          "description": "Tell sops to use local key service.\nThis corresponds to the sops C(--enable-local-keyservice) option.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "expressions": {
+          "aliases": [],
+          "description": "This option controls how Jinja2 expressions in values in the loaded file are handled.\nIf set to C(ignore), expressions will not be evaluated, but treated as regular strings.\nIf set to C(evaluate-on-load), expressions will be evaluated on execution of this module, in other words, when the file is loaded.\nUnfortunately, there is no way for non-core modules to handle expressions \"unsafe\", in other words, evaluate them only on use. This can only achieved by M(ansible.builtin.include_vars), which unfortunately cannot handle sops-encrypted files.",
+          "default": "ignore",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "ignore",
+            "evaluate-on-load"
+          ],
+          "suboptions": {}
+        },
+        "file": {
+          "aliases": [],
+          "description": "The file name from which variables should be loaded.\nIf the path is relative, it will look for the file in C(vars/) subdirectory of a role or relative to playbook.",
+          "type": "path",
+          "required": false,
+          "suboptions": {}
+        },
+        "keyservice": {
+          "aliases": [],
+          "description": "Specify key services to use next to the local one.\nA key service must be specified in the form C(protocol://address), for example C(tcp://myserver.com:5000).\nThis corresponds to the sops C(--keyservice) option.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of a variable into which assign the included vars.\nIf omitted (C(null)) they will be made top level vars.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sops_binary": {
+          "aliases": [],
+          "description": "Path to the sops binary.\nBy default uses C(sops).",
+          "type": "path",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        }
+      },
+      "short_description": "Load sops-encrypted variables from files, dynamically within a task",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Include variables of stuff.sops.yaml into the 'stuff' variable\n  community.sops.load_vars:\n    file: stuff.sops.yaml\n    name: stuff\n    expressions: evaluate-on-load  # interpret Jinja2 expressions in stuf.sops.yaml on load-time!\n\n- name: Conditionally decide to load in variables into 'plans' when x is 0, otherwise do not\n  community.sops.load_vars:\n    file: contingency_plan.sops.yaml\n    name: plans\n    expressions: ignore  # do not interpret possible Jinja2 expressions\n  when: x == 0\n\n- name: Load variables into the global namespace\n  community.sops.load_vars:\n    file: contingency_plan.sops.yaml\n"
+  },
+  "community.sops.sops_encrypt": {
+    "doc": {
+      "description": "Allows to encrypt binary data (Base64 encoded), text data, JSON or YAML data with sops.",
+      "has_action": false,
+      "notes": "Supports C(check_mode).",
+      "options": {
+        "attributes": {
+          "aliases": [
+            "attr"
+          ],
+          "description": "The attributes the resulting filesystem object should have.\nTo get supported flags look at the man page for I(chattr) on the target system.\nThis string should contain the attributes in the same order as the one displayed by I(lsattr).\nThe C(=) operator is assumed as default, otherwise C(+) or C(-) operators need to be included in the string.",
+          "type": "str",
+          "required": false,
+          "version_added": "2.3",
+          "suboptions": {}
+        },
+        "aws_access_key_id": {
+          "aliases": [],
+          "description": "The AWS access key ID to use for requests to AWS.\nSets the environment variable C(AWS_ACCESS_KEY_ID) for the sops call.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "aws_profile": {
+          "aliases": [],
+          "description": "The AWS profile to use for requests to AWS.\nThis corresponds to the sops C(--aws-profile) option.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "aws_secret_access_key": {
+          "aliases": [],
+          "description": "The AWS secret access key to use for requests to AWS.\nSets the environment variable C(AWS_SECRET_ACCESS_KEY) for the sops call.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "aws_session_token": {
+          "aliases": [],
+          "description": "The AWS session token to use for requests to AWS.\nSets the environment variable C(AWS_SESSION_TOKEN) for the sops call.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "azure_kv": {
+          "aliases": [],
+          "description": "Azure Key Vault URLs to use.\nThis corresponds to the sops C(--azure-kv) option.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "config_path": {
+          "aliases": [],
+          "description": "Path to the sops configuration file.\nIf not set, sops will recursively search for the config file starting at the file that is encrypted or decrypted.\nThis corresponds to the sops C(--config) option.",
+          "type": "path",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "content_binary": {
+          "aliases": [],
+          "description": "The data to encrypt. Must be L(Base64 encoded,https://en.wikipedia.org/wiki/Base64) binary data.\nPlease note that the module might not be idempotent if the data can be parsed as JSON or YAML.\nExactly one of I(content_text), I(content_binary), I(content_json) and I(content_yaml) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "content_json": {
+          "aliases": [],
+          "description": "The data to encrypt. Must be a JSON dictionary.\nExactly one of I(content_text), I(content_binary), I(content_json) and I(content_yaml) must be specified.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "content_text": {
+          "aliases": [],
+          "description": "The data to encrypt. Must be a Unicode text.\nPlease note that the module might not be idempotent if the text can be parsed as JSON or YAML.\nExactly one of I(content_text), I(content_binary), I(content_json) and I(content_yaml) must be specified.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "content_yaml": {
+          "aliases": [],
+          "description": "The data to encrypt. Must be a YAML dictionary.\nPlease note that Ansible only allows to pass data that can be represented as a JSON dictionary.\nExactly one of I(content_text), I(content_binary), I(content_json) and I(content_yaml) must be specified.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "enable_local_keyservice": {
+          "aliases": [],
+          "description": "Tell sops to use local key service.\nThis corresponds to the sops C(--enable-local-keyservice) option.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "encrypted_regex": {
+          "aliases": [],
+          "description": "Set the encrypted key suffix.\nWhen specified, only keys matching the regular expression will be encrypted.\nThis corresponds to the sops C(--encrypted-regex) option.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "encrypted_suffix": {
+          "aliases": [],
+          "description": "Override the encrypted key suffix.\nWhen set to an empty string, all keys will be encrypted that are not explicitly marked by I(unencrypted_suffix).\nThis corresponds to the sops C(--encrypted-suffix) option.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "encryption_context": {
+          "aliases": [],
+          "description": "List of KMS encryption context pairs of format C(key:value).\nThis corresponds to the sops C(--encryption-context) option.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Force rewriting the encrypted file.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "gcp_kms": {
+          "aliases": [],
+          "description": "GCP KMS resource IDs to use.\nThis corresponds to the sops C(--gcp-kms) option.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "group": {
+          "aliases": [],
+          "description": "Name of the group that should own the filesystem object, as would be fed to I(chown).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "hc_vault_transit": {
+          "aliases": [],
+          "description": "HashiCorp Vault key URIs to use.\nFor example, C(https://vault.example.org:8200/v1/transit/keys/dev).\nThis corresponds to the sops C(--hc-vault-transit) option.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "keyservice": {
+          "aliases": [],
+          "description": "Specify key services to use next to the local one.\nA key service must be specified in the form C(protocol://address), for example C(tcp://myserver.com:5000).\nThis corresponds to the sops C(--keyservice) option.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "kms": {
+          "aliases": [],
+          "description": "List of KMS ARNs to use.\nThis corresponds to the sops C(--kms) option.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "mode": {
+          "aliases": [],
+          "description": "The permissions the resulting filesystem object should have.\nFor those used to I(/usr/bin/chmod) remember that modes are actually octal numbers. You must either add a leading zero so that Ansible's YAML parser knows it is an octal number (like C(0644) or C(01777)) or quote it (like C('644') or C('1777')) so Ansible receives a string and can do its own conversion from string into number.\nGiving Ansible a number without following one of these rules will end up with a decimal number which will have unexpected results.\nAs of Ansible 1.8, the mode may be specified as a symbolic mode (for example, C(u+rwx) or C(u=rw,g=r,o=r)).\nIf C(mode) is not specified and the destination filesystem object B(does not) exist, the default C(umask) on the system will be used when setting the mode for the newly created filesystem object.\nIf C(mode) is not specified and the destination filesystem object B(does) exist, the mode of the existing filesystem object will be used.\nSpecifying C(mode) is the best way to ensure filesystem objects are created with the correct permissions. See CVE-2020-1736 for further details.",
+          "type": "raw",
+          "required": false,
+          "suboptions": {}
+        },
+        "owner": {
+          "aliases": [],
+          "description": "Name of the user that should own the filesystem object, as would be fed to I(chown).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "path": {
+          "aliases": [],
+          "description": "The sops encrypt file.",
+          "type": "path",
+          "required": true,
+          "suboptions": {}
+        },
+        "pgp": {
+          "aliases": [],
+          "description": "PGP fingerprints to use.\nThis corresponds to the sops C(--pgp) option.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "selevel": {
+          "aliases": [],
+          "description": "The level part of the SELinux filesystem object context.\nThis is the MLS/MCS attribute, sometimes known as the C(range).\nWhen set to C(_default), it will use the C(level) portion of the policy if available.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "serole": {
+          "aliases": [],
+          "description": "The role part of the SELinux filesystem object context.\nWhen set to C(_default), it will use the C(role) portion of the policy if available.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "setype": {
+          "aliases": [],
+          "description": "The type part of the SELinux filesystem object context.\nWhen set to C(_default), it will use the C(type) portion of the policy if available.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "seuser": {
+          "aliases": [],
+          "description": "The user part of the SELinux filesystem object context.\nBy default it uses the C(system) policy, where applicable.\nWhen set to C(_default), it will use the C(user) portion of the policy if available.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "shamir_secret_sharing_threshold": {
+          "aliases": [],
+          "description": "The number of distinct keys required to retrieve the data key with L(Shamir's Secret Sharing, https://en.wikipedia.org/wiki/Shamir%27s_Secret_Sharing).\nIf not set here and in the sops config file, will default to C(0).\nThis corresponds to the sops C(--shamir-secret-sharing-threshold) option.",
+          "type": "int",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "sops_binary": {
+          "aliases": [],
+          "description": "Path to the sops binary.\nBy default uses C(sops).",
+          "type": "path",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "unencrypted_regex": {
+          "aliases": [],
+          "description": "Set the unencrypted key suffix.\nWhen specified, only keys matching the regular expression will be left unencrypted.\nThis corresponds to the sops C(--unencrypted-regex) option.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "unencrypted_suffix": {
+          "aliases": [],
+          "description": "Override the unencrypted key suffix.\nThis corresponds to the sops C(--unencrypted-suffix) option.",
+          "type": "str",
+          "required": false,
+          "version_added": "1.0.0",
+          "suboptions": {}
+        },
+        "unsafe_writes": {
+          "aliases": [],
+          "description": "Influence when to use atomic operation to prevent data corruption or inconsistent reads from the target filesystem object.\nBy default this module uses atomic operations to prevent data corruption or inconsistent reads from the target filesystem objecs, but sometimes systems are configured or just broken in ways that prevent this. One example is docker mounted filesystem objects, which cannot be updated atomically from inside the container and can only be written in an unsafe manner.\nThis option allows Ansible to fall back to unsafe methods of updating filesystem objects when atomic operations fail (however, it doesn't force Ansible to perform unsafe writes).\nIMPORTANT! Unsafe writes are subject to race conditions and can lead to data corruption.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "version_added": "2.2",
+          "suboptions": {}
+        }
+      },
+      "short_description": "Encrypt data with sops",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Encrypt a secret text\n  community.sops.sops_encrypt:\n    path: text-data.sops\n    content_text: This is a secret text.\n\n- name: Encrypt the contents of a file\n  community.sops.sops_encrypt:\n    path: binary-data.sops\n    content_binary: \"{{ lookup('ansible.builtin.file', '/path/to/file', rstrip=false) | b64encode }}\"\n\n- name: Encrypt some datastructure as YAML\n  community.sops.sops_encrypt:\n    path: stuff.sops.yaml\n    content_yaml: \"{{ result }}\"\n"
+  }
+}

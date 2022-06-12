@@ -1,0 +1,2569 @@
+{
+  "hetzner.hcloud.hcloud_certificate": {
+    "doc": {
+      "description": "Create, update and manage certificates on the Hetzner Cloud.",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "certificate": {
+          "aliases": [],
+          "description": "Certificate and chain in PEM format, in order so that each record directly certifies the one preceding.\nRequired if certificate does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "domain_names": {
+          "aliases": [],
+          "description": "Certificate key in PEM format.\nRequired if certificate does not exists.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the Hetzner Cloud certificate to manage.\nOnly required if no certificate I(name) is given",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "labels": {
+          "aliases": [],
+          "description": "User-defined labels (key-value pairs)",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The Name of the Hetzner Cloud certificate to manage.\nOnly required if no certificate I(id) is given or a certificate does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "private_key": {
+          "aliases": [],
+          "description": "Certificate key in PEM format.\nRequired if certificate does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the certificate.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "Choose between uploading a Certificate in PEM format or requesting a managed Let's Encrypt Certificate.",
+          "default": "uploaded",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "uploaded",
+            "managed"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Create and manage certificates on the Hetzner Cloud."
+    },
+    "examples": "\n- name: Create a basic certificate\n  hcloud_certificate:\n    name: my-certificate\n    certificate: \"ssh-rsa AAAjjk76kgf...Xt\"\n    private_key: \"ssh-rsa AAAjjk76kgf...Xt\"\n    state: present\n\n- name: Create a certificate with labels\n  hcloud_certificate:\n    name: my-certificate\n    certificate: \"ssh-rsa AAAjjk76kgf...Xt\"\n    private_key: \"ssh-rsa AAAjjk76kgf...Xt\"\n    labels:\n        key: value\n        mylabel: 123\n    state: present\n\n- name: Ensure the certificate is absent (remove if needed)\n  hcloud_certificate:\n    name: my-certificate\n    state: absent\n"
+  },
+  "hetzner.hcloud.hcloud_certificate_info": {
+    "doc": {
+      "description": "Gather facts about your Hetzner Cloud certificates.",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the certificate you want to get.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "label_selector": {
+          "aliases": [],
+          "description": "The label selector for the certificate you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the certificate you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Gather infos about your Hetzner Cloud certificates."
+    },
+    "examples": "\n- name: Gather hcloud certificate infos\n  hcloud_certificate_info:\n  register: output\n- name: Print the gathered infos\n  debug:\n    var: output.hcloud_certificate_info\n"
+  },
+  "hetzner.hcloud.hcloud_datacenter_facts": {
+    "doc": {
+      "description": "Gather info about your Hetzner Cloud datacenters.\nThis module was called C(hcloud_datacenter_facts) before Ansible 2.9, returning C(ansible_facts) and C(hcloud_datacenter_facts). Note that the M(hetzner.hcloud.hcloud_datacenter_info) module no longer returns C(ansible_facts) and the value was renamed to C(hcloud_datacenter_info)!",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the datacenter you want to get.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the datacenter you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Gather info about the Hetzner Cloud datacenters."
+    },
+    "examples": "\n- name: Gather hcloud datacenter info\n  hcloud_datacenter_info:\n  register: output\n- name: Print the gathered info\n  debug:\n    var: output\n"
+  },
+  "hetzner.hcloud.hcloud_datacenter_info": {
+    "doc": {
+      "description": "Gather info about your Hetzner Cloud datacenters.\nThis module was called C(hcloud_datacenter_facts) before Ansible 2.9, returning C(ansible_facts) and C(hcloud_datacenter_facts). Note that the M(hetzner.hcloud.hcloud_datacenter_info) module no longer returns C(ansible_facts) and the value was renamed to C(hcloud_datacenter_info)!",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the datacenter you want to get.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the datacenter you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Gather info about the Hetzner Cloud datacenters."
+    },
+    "examples": "\n- name: Gather hcloud datacenter info\n  hcloud_datacenter_info:\n  register: output\n- name: Print the gathered info\n  debug:\n    var: output\n"
+  },
+  "hetzner.hcloud.hcloud_firewall": {
+    "doc": {
+      "description": "Create, update and manage firewalls on the Hetzner Cloud.",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the Hetzner Cloud firewall to manage.\nOnly required if no firewall I(name) is given",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "labels": {
+          "aliases": [],
+          "description": "User-defined labels (key-value pairs)",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The Name of the Hetzner Cloud firewall to manage.\nOnly required if no firewall I(id) is given, or a firewall does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "rules": {
+          "aliases": [],
+          "description": "List of rules the firewall should contain.",
+          "type": "list",
+          "required": false,
+          "elements": "dict",
+          "suboptions": {
+            "description": {
+              "aliases": [],
+              "description": "User defined description of this rule.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "destination_ips": {
+              "aliases": [],
+              "description": "List of CIDRs that are allowed within this rule",
+              "type": "list",
+              "required": false,
+              "elements": "str",
+              "suboptions": {}
+            },
+            "direction": {
+              "aliases": [],
+              "description": "The direction of the firewall rule.",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "in",
+                "out"
+              ],
+              "suboptions": {}
+            },
+            "port": {
+              "aliases": [],
+              "description": "The port of the firewall rule.",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "protocol": {
+              "aliases": [],
+              "description": "The protocol of the firewall rule.",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "icmp",
+                "tcp",
+                "udp"
+              ],
+              "suboptions": {}
+            },
+            "source_ips": {
+              "aliases": [],
+              "description": "List of CIDRs that are allowed within this rule",
+              "type": "list",
+              "required": false,
+              "elements": "str",
+              "suboptions": {}
+            }
+          }
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the firewall.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Create and manage firewalls on the Hetzner Cloud."
+    },
+    "examples": "\n- name: Create a basic firewall\n  hcloud_firewall:\n    name: my-firewall\n    state: present\n\n- name: Create a firewall with rules\n  hcloud_firewall:\n    name: my-firewall\n    rules:\n       - direction: in\n         protocol: icmp\n         source_ips:\n           - 0.0.0.0/0\n           - ::/0\n         description: allow icmp in\n    state: present\n\n- name: Create a firewall with labels\n  hcloud_firewall:\n    name: my-firewall\n    labels:\n        key: value\n        mylabel: 123\n    state: present\n\n- name: Ensure the firewall is absent (remove if needed)\n  hcloud_firewall:\n    name: my-firewall\n    state: absent\n"
+  },
+  "hetzner.hcloud.hcloud_floating_ip": {
+    "doc": {
+      "description": "Create, update and manage cloud Floating IPs on the Hetzner Cloud.",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "delete_protection": {
+          "aliases": [],
+          "description": "Protect the Floating IP for deletion.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "description": {
+          "aliases": [],
+          "description": "The Description of the Hetzner Cloud Floating IPs.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Force the assignment or deletion of the Floating IP.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "home_location": {
+          "aliases": [],
+          "description": "Home Location of the Hetzner Cloud Floating IP.\nRequired if no I(server) is given and Floating IP does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the Hetzner Cloud Floating IPs to manage.\nOnly required if no Floating IP I(name) is given.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "labels": {
+          "aliases": [],
+          "description": "User-defined labels (key-value pairs).",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The Name of the Hetzner Cloud Floating IPs to manage.\nOnly required if no Floating IP I(id) is given or a Floating IP does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "server": {
+          "aliases": [],
+          "description": "Server Name the Floating IP should be assigned to.\nRequired if no I(home_location) is given and Floating IP does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the Floating IP.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "Type of the Floating IP.\nRequired if Floating IP does not exists",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "ipv4",
+            "ipv6"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0",
+        "hcloud-python >= 1.6.0"
+      ],
+      "short_description": "Create and manage cloud Floating IPs on the Hetzner Cloud.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Create a basic IPv4 Floating IP\n  hcloud_floating_ip:\n    name: my-floating-ip\n    home_location: fsn1\n    type: ipv4\n    state: present\n- name: Create a basic IPv6 Floating IP\n  hcloud_floating_ip:\n    name: my-floating-ip\n    home_location: fsn1\n    type: ipv6\n    state: present\n- name: Assign a Floating IP to a server\n  hcloud_floating_ip:\n    name: my-floating-ip\n    server: 1234\n    state: present\n- name: Assign a Floating IP to another server\n  hcloud_floating_ip:\n    name: my-floating-ip\n    server: 1234\n    force: yes\n    state: present\n- name: Floating IP should be absent\n  hcloud_floating_ip:\n    name: my-floating-ip\n    state: absent\n"
+  },
+  "hetzner.hcloud.hcloud_floating_ip_facts": {
+    "doc": {
+      "description": "Gather facts about your Hetzner Cloud Floating IPs.\nThis module was called C(hcloud_floating_ip_facts) before Ansible 2.9, returning C(ansible_facts) and C(hcloud_floating_ip_facts). Note that the M(hetzner.hcloud.hcloud_floating_ip_info) module no longer returns C(ansible_facts) and the value was renamed to C(hcloud_floating_ip_info)!",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the Floating IP you want to get.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "label_selector": {
+          "aliases": [],
+          "description": "The label selector for the Floating IP you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Gather infos about the Hetzner Cloud Floating IPs."
+    },
+    "examples": "\n- name: Gather hcloud Floating ip infos\n  hcloud_floating_ip_info:\n  register: output\n- name: Print the gathered infos\n  debug:\n    var: output\n"
+  },
+  "hetzner.hcloud.hcloud_floating_ip_info": {
+    "doc": {
+      "description": "Gather facts about your Hetzner Cloud Floating IPs.\nThis module was called C(hcloud_floating_ip_facts) before Ansible 2.9, returning C(ansible_facts) and C(hcloud_floating_ip_facts). Note that the M(hetzner.hcloud.hcloud_floating_ip_info) module no longer returns C(ansible_facts) and the value was renamed to C(hcloud_floating_ip_info)!",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the Floating IP you want to get.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "label_selector": {
+          "aliases": [],
+          "description": "The label selector for the Floating IP you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Gather infos about the Hetzner Cloud Floating IPs."
+    },
+    "examples": "\n- name: Gather hcloud Floating ip infos\n  hcloud_floating_ip_info:\n  register: output\n- name: Print the gathered infos\n  debug:\n    var: output\n"
+  },
+  "hetzner.hcloud.hcloud_image_facts": {
+    "doc": {
+      "description": "Gather infos about your Hetzner Cloud images.\nThis module was called C(hcloud_location_facts) before Ansible 2.9, returning C(ansible_facts) and C(hcloud_location_facts). Note that the M(hetzner.hcloud.hcloud_image_info) module no longer returns C(ansible_facts) and the value was renamed to C(hcloud_image_info)!",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the image you want to get.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "label_selector": {
+          "aliases": [],
+          "description": "The label selector for the images you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the image you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "The label selector for the images you want to get.",
+          "default": "system",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "system",
+            "snapshot",
+            "backup"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Gather infos about your Hetzner Cloud images."
+    },
+    "examples": "\n- name: Gather hcloud image infos\n  hcloud_image_info:\n  register: output\n\n- name: Print the gathered infos\n  debug:\n    var: output\n"
+  },
+  "hetzner.hcloud.hcloud_image_info": {
+    "doc": {
+      "description": "Gather infos about your Hetzner Cloud images.\nThis module was called C(hcloud_location_facts) before Ansible 2.9, returning C(ansible_facts) and C(hcloud_location_facts). Note that the M(hetzner.hcloud.hcloud_image_info) module no longer returns C(ansible_facts) and the value was renamed to C(hcloud_image_info)!",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the image you want to get.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "label_selector": {
+          "aliases": [],
+          "description": "The label selector for the images you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the image you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "The label selector for the images you want to get.",
+          "default": "system",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "system",
+            "snapshot",
+            "backup"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Gather infos about your Hetzner Cloud images."
+    },
+    "examples": "\n- name: Gather hcloud image infos\n  hcloud_image_info:\n  register: output\n\n- name: Print the gathered infos\n  debug:\n    var: output\n"
+  },
+  "hetzner.hcloud.hcloud_load_balancer": {
+    "doc": {
+      "description": "Create, update and manage cloud Load Balancers on the Hetzner Cloud.",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "delete_protection": {
+          "aliases": [],
+          "description": "Protect the Load Balancer for deletion.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "disable_public_interface": {
+          "aliases": [],
+          "description": "Disables the public interface.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the Hetzner Cloud Load Balancer to manage.\nOnly required if no Load Balancer I(name) is given",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "labels": {
+          "aliases": [],
+          "description": "User-defined labels (key-value pairs).",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "load_balancer_type": {
+          "aliases": [],
+          "description": "The Load Balancer Type of the Hetzner Cloud Load Balancer to manage.\nRequired if Load Balancer does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "location": {
+          "aliases": [],
+          "description": "Location of Load Balancer.\nRequired if no I(network_zone) is given and Load Balancer does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The Name of the Hetzner Cloud Load Balancer to manage.\nOnly required if no Load Balancer I(id) is given or a Load Balancer does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "network_zone": {
+          "aliases": [],
+          "description": "Network Zone of Load Balancer.\nRequired of no I(location) is given and Load Balancer does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the Load Balancer.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0",
+        "hcloud-python >= 1.8.0"
+      ],
+      "short_description": "Create and manage cloud Load Balancers on the Hetzner Cloud.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Create a basic Load Balancer\n  hcloud_load_balancer:\n    name: my-Load Balancer\n    load_balancer_type: lb11\n    location: fsn1\n    state: present\n\n- name: Ensure the Load Balancer is absent (remove if needed)\n  hcloud_load_balancer:\n    name: my-Load Balancer\n    state: absent\n\n"
+  },
+  "hetzner.hcloud.hcloud_load_balancer_info": {
+    "doc": {
+      "description": "Gather infos about your Hetzner Cloud Load Balancers..",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the Load Balancers you want to get.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "label_selector": {
+          "aliases": [],
+          "description": "The label selector for the Load Balancers you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the Load Balancers you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Gather infos about your Hetzner Cloud Load Balancers."
+    },
+    "examples": "\n- name: Gather hcloud load_balancer infos\n  hcloud_load_balancer_info:\n  register: output\n\n- name: Print the gathered infos\n  debug:\n    var: output\n"
+  },
+  "hetzner.hcloud.hcloud_load_balancer_network": {
+    "doc": {
+      "description": "Create and delete the relationship Hetzner Cloud Networks and Load Balancers",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ip": {
+          "aliases": [],
+          "description": "The IP the Load Balancer should have.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "load_balancer": {
+          "aliases": [],
+          "description": "The name of the Hetzner Cloud Load Balancer.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "network": {
+          "aliases": [],
+          "description": "The name of the Hetzner Cloud Networks.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the load_balancer_network.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0",
+        "hcloud-python >= 1.8.1"
+      ],
+      "short_description": "Manage the relationship between Hetzner Cloud Networks and Load Balancers",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Create a basic Load Balancer network\n  hcloud_load_balancer_network:\n    network: my-network\n    load_balancer: my-LoadBalancer\n    state: present\n\n- name: Create a Load Balancer network and specify the ip address\n  hcloud_load_balancer_network:\n    network: my-network\n    load_balancer: my-LoadBalancer\n    ip: 10.0.0.1\n    state: present\n\n- name: Ensure the Load Balancer network is absent (remove if needed)\n  hcloud_load_balancer_network:\n    network: my-network\n    load_balancer: my-LoadBalancer\n    state: absent\n"
+  },
+  "hetzner.hcloud.hcloud_load_balancer_service": {
+    "doc": {
+      "description": "Create, update and manage the services of cloud Load Balancers on the Hetzner Cloud.",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "destination_port": {
+          "aliases": [],
+          "description": "The port traffic is forwarded to, i.e. the port the targets are listening and accepting connections on.\nRequired if services does not exists and protocol is tcp.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "health_check": {
+          "aliases": [],
+          "description": "Configuration for health checks",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "http": {
+              "aliases": [],
+              "description": "Additional Configuration of health checks with protocol http/https",
+              "type": "dict",
+              "required": false,
+              "suboptions": {
+                "domain": {
+                  "aliases": [],
+                  "description": "Domain we will set within the HTTP HOST header",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "path": {
+                  "aliases": [],
+                  "description": "Path we will try to access",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "response": {
+                  "aliases": [],
+                  "description": "Response we expect, if response is not within the health check response the target is unhealthy",
+                  "type": "str",
+                  "required": false,
+                  "suboptions": {}
+                },
+                "status_codes": {
+                  "aliases": [],
+                  "description": "List of HTTP status codes we expect to get when we perform the health check.",
+                  "type": "list",
+                  "required": false,
+                  "elements": "str",
+                  "suboptions": {}
+                },
+                "tls": {
+                  "aliases": [],
+                  "description": "Verify the TLS certificate, only available if health check protocol is https",
+                  "default": "False",
+                  "type": "bool",
+                  "required": false,
+                  "suboptions": {}
+                }
+              }
+            },
+            "interval": {
+              "aliases": [],
+              "description": "Interval of health checks, in seconds",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "port": {
+              "aliases": [],
+              "description": "Port the health check will be performed on",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "protocol": {
+              "aliases": [],
+              "description": "Protocol the health checks will be performed over",
+              "type": "str",
+              "required": false,
+              "choices": [
+                "http",
+                "https",
+                "tcp"
+              ],
+              "suboptions": {}
+            },
+            "retries": {
+              "aliases": [],
+              "description": "Number of retries until a target is marked as unhealthy",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "timeout": {
+              "aliases": [],
+              "description": "Timeout of health checks, in seconds",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "http": {
+          "aliases": [],
+          "description": "Configuration for HTTP and HTTPS services",
+          "type": "dict",
+          "required": false,
+          "suboptions": {
+            "certificates": {
+              "aliases": [],
+              "description": "List of Names or IDs of certificates",
+              "type": "list",
+              "required": false,
+              "elements": "str",
+              "suboptions": {}
+            },
+            "cookie_lifetime": {
+              "aliases": [],
+              "description": "Lifetime of the cookie which will be set when you enable sticky sessions, in seconds",
+              "type": "int",
+              "required": false,
+              "suboptions": {}
+            },
+            "cookie_name": {
+              "aliases": [],
+              "description": "Name of the cookie which will be set when you enable sticky sessions",
+              "type": "str",
+              "required": false,
+              "suboptions": {}
+            },
+            "redirect_http": {
+              "aliases": [],
+              "description": "Redirect Traffic from Port 80 to Port 443, only available if protocol is https",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            },
+            "sticky_sessions": {
+              "aliases": [],
+              "description": "Enable or disable sticky_sessions",
+              "default": "False",
+              "type": "bool",
+              "required": false,
+              "suboptions": {}
+            }
+          }
+        },
+        "listen_port": {
+          "aliases": [],
+          "description": "The port the service listens on, i.e. the port users can connect to.",
+          "type": "int",
+          "required": true,
+          "suboptions": {}
+        },
+        "load_balancer": {
+          "aliases": [],
+          "description": "The Name of the Hetzner Cloud Load Balancer the service belongs to",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "protocol": {
+          "aliases": [],
+          "description": "Protocol of the service.\nRequired if Load Balancer does not exists.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "http",
+            "https",
+            "tcp"
+          ],
+          "suboptions": {}
+        },
+        "proxyprotocol": {
+          "aliases": [],
+          "description": "Enable the PROXY protocol.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the Load Balancer.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0",
+        "hcloud-python >= 1.8.1"
+      ],
+      "short_description": "Create and manage the services of cloud Load Balancers on the Hetzner Cloud.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Create a basic Load Balancer service with Port 80\n  hcloud_load_balancer_service:\n    load_balancer: my-load-balancer\n    protocol: http\n    listen_port: 80\n    state: present\n\n- name: Ensure the Load Balancer is absent (remove if needed)\n  hcloud_load_balancer_service:\n    load_balancer: my-Load Balancer\n    protocol: http\n    listen_port: 80\n    state: absent\n"
+  },
+  "hetzner.hcloud.hcloud_load_balancer_target": {
+    "doc": {
+      "description": "Create and delete Hetzner Cloud Load Balancer targets",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ip": {
+          "aliases": [],
+          "description": "An IP from a Hetzner Dedicated Server, needs to belongs to the same user as the project.\nRequired if I(type) is ip",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "label_selector": {
+          "aliases": [],
+          "description": "A Label Selector that will be used to determine the targets dynamically\nRequired if I(type) is label_selector",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "load_balancer": {
+          "aliases": [],
+          "description": "The name of the Hetzner Cloud Load Balancer.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "server": {
+          "aliases": [],
+          "description": "The name of the Hetzner Cloud Server.\nRequired if I(type) is server",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the load_balancer_network.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "The type of the target.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "server",
+            "label_selector",
+            "ip"
+          ],
+          "suboptions": {}
+        },
+        "use_private_ip": {
+          "aliases": [],
+          "description": "Route the traffic over the private IP of the Load Balancer through a Hetzner Cloud Network.\nLoad Balancer needs to be attached to a network. See M(hetzner.hcloud.hcloud.hcloud_load_balancer_network)",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0",
+        "hcloud-python >= 1.8.1"
+      ],
+      "short_description": "Manage Hetzner Cloud Load Balancer targets",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Create a server Load Balancer target\n  hcloud_load_balancer_target:\n    type: server\n    load_balancer: my-LoadBalancer\n    server: my-server\n    state: present\n\n- name: Create a label_selector Load Balancer target\n  hcloud_load_balancer_target:\n    type: server\n    load_balancer: my-LoadBalancer\n    label_selector: application=backend\n    state: present\n\n- name: Create an IP Load Balancer target\n  hcloud_load_balancer_target:\n    type: server\n    load_balancer: my-LoadBalancer\n    ip: 127.0.0.1\n    state: present\n\n- name: Ensure the Load Balancer target is absent (remove if needed)\n  hcloud_load_balancer_target:\n    type: server\n    load_balancer: my-LoadBalancer\n    server: my-server\n    state: absent\n"
+  },
+  "hetzner.hcloud.hcloud_load_balancer_type_info": {
+    "doc": {
+      "description": "Gather infos about your Hetzner Cloud Load Balancer types.",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the Load Balancer type you want to get.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the Load Balancer type you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Gather infos about the Hetzner Cloud Load Balancer types.",
+      "version_added": "0.1.0"
+    },
+    "examples": "\n- name: Gather hcloud Load Balancer type infos\n  hcloud_load_balancer_type_info:\n  register: output\n\n- name: Print the gathered infos\n  debug:\n    var: output.hcloud_load_balancer_type_info\n"
+  },
+  "hetzner.hcloud.hcloud_location_facts": {
+    "doc": {
+      "description": "Gather infos about your Hetzner Cloud locations.\nThis module was called C(hcloud_location_facts) before Ansible 2.9, returning C(ansible_facts) and C(hcloud_location_facts). Note that the M(hetzner.hcloud.hcloud_location_info) module no longer returns C(ansible_facts) and the value was renamed to C(hcloud_location_info)!",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the location you want to get.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the location you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Gather infos about your Hetzner Cloud locations."
+    },
+    "examples": "\n- name: Gather hcloud location infos\n  hcloud_location_info:\n  register: output\n\n- name: Print the gathered infos\n  debug:\n    var: output\n"
+  },
+  "hetzner.hcloud.hcloud_location_info": {
+    "doc": {
+      "description": "Gather infos about your Hetzner Cloud locations.\nThis module was called C(hcloud_location_facts) before Ansible 2.9, returning C(ansible_facts) and C(hcloud_location_facts). Note that the M(hetzner.hcloud.hcloud_location_info) module no longer returns C(ansible_facts) and the value was renamed to C(hcloud_location_info)!",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the location you want to get.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the location you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Gather infos about your Hetzner Cloud locations."
+    },
+    "examples": "\n- name: Gather hcloud location infos\n  hcloud_location_info:\n  register: output\n\n- name: Print the gathered infos\n  debug:\n    var: output\n"
+  },
+  "hetzner.hcloud.hcloud_network": {
+    "doc": {
+      "description": "Create, update and manage cloud Networks on the Hetzner Cloud.\nYou need at least hcloud-python 1.3.0.",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "delete_protection": {
+          "aliases": [],
+          "description": "Protect the Network for deletion.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the Hetzner Cloud Networks to manage.\nOnly required if no Network I(name) is given.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "ip_range": {
+          "aliases": [],
+          "description": "IP range of the Network.\nRequired if Network does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "labels": {
+          "aliases": [],
+          "description": "User-defined labels (key-value pairs).",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The Name of the Hetzner Cloud Network to manage.\nOnly required if no Network I(id) is given or a Network does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the Network.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0",
+        "hcloud-python >= 1.3.0"
+      ],
+      "short_description": "Create and manage cloud Networks on the Hetzner Cloud."
+    },
+    "examples": "\n- name: Create a basic network\n  hcloud_network:\n    name: my-network\n    ip_range: 10.0.0.0/8\n    state: present\n\n- name: Ensure the Network is absent (remove if needed)\n  hcloud_network:\n    name: my-network\n    state: absent\n"
+  },
+  "hetzner.hcloud.hcloud_network_info": {
+    "doc": {
+      "description": "Gather info about your Hetzner Cloud networks.",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the network you want to get.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "label_selector": {
+          "aliases": [],
+          "description": "The label selector for the network you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the network you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Gather info about your Hetzner Cloud networks."
+    },
+    "examples": "\n- name: Gather hcloud network info\n  local_action:\n    module: hcloud_network_info\n\n- name: Print the gathered info\n  debug:\n    var: hcloud_network_info\n"
+  },
+  "hetzner.hcloud.hcloud_placement_group": {
+    "doc": {
+      "description": "Create, update and manage placement groups on the Hetzner Cloud.",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the Hetzner Cloud placement group to manage.\nOnly required if no placement group I(name) is given",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "labels": {
+          "aliases": [],
+          "description": "User-defined labels (key-value pairs)",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The Name of the Hetzner Cloud placement group to manage.\nOnly required if no placement group I(id) is given, or a placement group does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the placement group.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "The Type of the Hetzner Cloud placement group.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0",
+        "hcloud-python >= 1.15.0"
+      ],
+      "short_description": "Create and manage placement groups on the Hetzner Cloud."
+    },
+    "examples": "\n- name: Create a basic placement group\n  hcloud_placement_group:\n    name: my-placement-group\n    state: present\n    type: spread\n\n- name: Create a placement group with labels\n  hcloud_placement_group:\n    name: my-placement-group\n    type: spread\n    labels:\n        key: value\n        mylabel: 123\n    state: present\n\n- name: Ensure the placement group is absent (remove if needed)\n  hcloud_placement_group:\n    name: my-placement-group\n    state: absent\n"
+  },
+  "hetzner.hcloud.hcloud_rdns": {
+    "doc": {
+      "description": "Create, update and delete reverse DNS entries on the Hetzner Cloud.",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "dns_ptr": {
+          "aliases": [],
+          "description": "The DNS address the I(ip_address) should resolve to.\nOmit the param to reset the reverse DNS entry to the default value.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "floating_ip": {
+          "aliases": [],
+          "description": "The name of the Hetzner Cloud Floating IP you want to add the reverse DNS entry to.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ip_address": {
+          "aliases": [],
+          "description": "The IP address that should point to I(dns_ptr).",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "load_balancer": {
+          "aliases": [],
+          "description": "The name of the Hetzner Cloud Load Balancer you want to add the reverse DNS entry to.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "server": {
+          "aliases": [],
+          "description": "The name of the Hetzner Cloud server you want to add the reverse DNS entry to.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the reverse DNS entry.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0",
+        "hcloud-python >= 1.3.0"
+      ],
+      "short_description": "Create and manage reverse DNS entries on the Hetzner Cloud."
+    },
+    "examples": "\n- name: Create a reverse DNS entry for a server\n  hcloud_rdns:\n    server: my-server\n    ip_address: 123.123.123.123\n    dns_ptr: example.com\n    state: present\n\n- name: Create a reverse DNS entry for a Floating IP\n  hcloud_rdns:\n    floating_ip: my-floating-ip\n    ip_address: 123.123.123.123\n    dns_ptr: example.com\n    state: present\n\n- name: Create a reverse DNS entry for a Load Balancer\n  hcloud_rdns:\n    load_balancer: my-load-balancer\n    ip_address: 123.123.123.123\n    dns_ptr: example.com\n    state: present\n\n- name: Ensure the reverse DNS entry is absent (remove if needed)\n  hcloud_rdns:\n    server: my-server\n    ip_address: 123.123.123.123\n    dns_ptr: example.com\n    state: absent\n"
+  },
+  "hetzner.hcloud.hcloud_route": {
+    "doc": {
+      "description": "Create, update and delete cloud routes on the Hetzner Cloud.",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "destination": {
+          "aliases": [],
+          "description": "Destination network or host of this route.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "gateway": {
+          "aliases": [],
+          "description": "Gateway for the route.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "network": {
+          "aliases": [],
+          "description": "The name of the Hetzner Cloud Network.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the route.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0",
+        "hcloud-python >= 1.3.0"
+      ],
+      "short_description": "Create and delete cloud routes on the Hetzner Cloud."
+    },
+    "examples": "\n- name: Create a basic route\n  hcloud_route:\n    network: my-network\n    destination: 10.100.1.0/24\n    gateway: 10.0.1.1\n    state: present\n\n- name: Ensure the route is absent\n  hcloud_route:\n    network: my-network\n    destination: 10.100.1.0/24\n    gateway: 10.0.1.1\n    state: absent\n"
+  },
+  "hetzner.hcloud.hcloud_server": {
+    "doc": {
+      "description": "Create, update and manage cloud servers on the Hetzner Cloud.",
+      "has_action": false,
+      "options": {
+        "allow_deprecated_image": {
+          "aliases": [],
+          "description": "Allows the creation of servers with deprecated images.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "backups": {
+          "aliases": [],
+          "description": "Enable or disable Backups for the given Server.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "datacenter": {
+          "aliases": [],
+          "description": "Datacenter of Server.\nRequired of no I(location) is given and server does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "delete_protection": {
+          "aliases": [],
+          "description": "Protect the Server for deletion.\nNeeds to be the same as I(rebuild_protection).",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "firewalls": {
+          "aliases": [],
+          "description": "List of Firewall IDs that should be attached to the server on server creation.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "Force the update of the server.\nMay power off the server if update.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "force_upgrade": {
+          "aliases": [],
+          "description": "Deprecated\nForce the upgrade of the server.\nPower off the server if it is running on upgrade.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the Hetzner Cloud server to manage.\nOnly required if no server I(name) is given",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "image": {
+          "aliases": [],
+          "description": "Image the server should be created from.\nRequired if server does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "labels": {
+          "aliases": [],
+          "description": "User-defined labels (key-value pairs).",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "location": {
+          "aliases": [],
+          "description": "Location of Server.\nRequired if no I(datacenter) is given and server does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The Name of the Hetzner Cloud server to manage.\nOnly required if no server I(id) is given or a server does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "placement_group": {
+          "aliases": [],
+          "description": "Placement Group of the server.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "rebuild_protection": {
+          "aliases": [],
+          "description": "Protect the Server for rebuild.\nNeeds to be the same as I(delete_protection).",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "rescue_mode": {
+          "aliases": [],
+          "description": "Add the Hetzner rescue system type you want the server to be booted into.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "server_type": {
+          "aliases": [],
+          "description": "The Server Type of the Hetzner Cloud server to manage.\nRequired if server does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ssh_keys": {
+          "aliases": [],
+          "description": "List of SSH key names\nThe key names correspond to the SSH keys configured for your Hetzner Cloud account access.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the server.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present",
+            "restarted",
+            "started",
+            "stopped",
+            "rebuild"
+          ],
+          "suboptions": {}
+        },
+        "upgrade_disk": {
+          "aliases": [],
+          "description": "Resize the disk size, when resizing a server.\nIf you want to downgrade the server later, this value should be False.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "user_data": {
+          "aliases": [],
+          "description": "User Data to be passed to the server on creation.\nOnly used if server does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "volumes": {
+          "aliases": [],
+          "description": "List of Volumes IDs that should be attached to the server on server creation.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Create and manage cloud servers on the Hetzner Cloud."
+    },
+    "examples": "\n- name: Create a basic server\n  hcloud_server:\n    name: my-server\n    server_type: cx11\n    image: ubuntu-18.04\n    state: present\n\n- name: Create a basic server with ssh key\n  hcloud_server:\n    name: my-server\n    server_type: cx11\n    image: ubuntu-18.04\n    location: fsn1\n    ssh_keys:\n      - me@myorganisation\n    state: present\n\n- name: Resize an existing server\n  hcloud_server:\n    name: my-server\n    server_type: cx21\n    upgrade_disk: yes\n    state: present\n\n- name: Ensure the server is absent (remove if needed)\n  hcloud_server:\n    name: my-server\n    state: absent\n\n- name: Ensure the server is started\n  hcloud_server:\n    name: my-server\n    state: started\n\n- name: Ensure the server is stopped\n  hcloud_server:\n    name: my-server\n    state: stopped\n\n- name: Ensure the server is restarted\n  hcloud_server:\n    name: my-server\n    state: restarted\n\n- name: Ensure the server is will be booted in rescue mode and therefore restarted\n  hcloud_server:\n    name: my-server\n    rescue_mode: linux64\n    state: restarted\n\n- name: Ensure the server is rebuild\n  hcloud_server:\n    name: my-server\n    image: ubuntu-18.04\n    state: rebuild\n\n- name: Add server to placement group\n  hcloud_server:\n    name: my-server\n    placement_group: my-placement-group\n    force: True\n    state: present\n\n- name: Remove server from placement group\n  hcloud_server:\n    name: my-server\n    placement_group: null\n    state: present\n"
+  },
+  "hetzner.hcloud.hcloud_server_facts": {
+    "doc": {
+      "description": "Gather infos about your Hetzner Cloud servers.\nThis module was called C(hcloud_server_facts) before Ansible 2.9, returning C(ansible_facts) and C(hcloud_server_facts). Note that the M(hetzner.hcloud.hcloud_server_info) module no longer returns C(ansible_facts) and the value was renamed to C(hcloud_server_info)!",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the server you want to get.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "label_selector": {
+          "aliases": [],
+          "description": "The label selector for the server you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the server you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Gather infos about your Hetzner Cloud servers."
+    },
+    "examples": "\n- name: Gather hcloud server infos\n  hcloud_server_info:\n  register: output\n\n- name: Print the gathered infos\n  debug:\n    var: output.hcloud_server_info\n"
+  },
+  "hetzner.hcloud.hcloud_server_info": {
+    "doc": {
+      "description": "Gather infos about your Hetzner Cloud servers.\nThis module was called C(hcloud_server_facts) before Ansible 2.9, returning C(ansible_facts) and C(hcloud_server_facts). Note that the M(hetzner.hcloud.hcloud_server_info) module no longer returns C(ansible_facts) and the value was renamed to C(hcloud_server_info)!",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the server you want to get.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "label_selector": {
+          "aliases": [],
+          "description": "The label selector for the server you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the server you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Gather infos about your Hetzner Cloud servers."
+    },
+    "examples": "\n- name: Gather hcloud server infos\n  hcloud_server_info:\n  register: output\n\n- name: Print the gathered infos\n  debug:\n    var: output.hcloud_server_info\n"
+  },
+  "hetzner.hcloud.hcloud_server_network": {
+    "doc": {
+      "description": "Create and delete the relationship Hetzner Cloud Networks and servers",
+      "has_action": false,
+      "options": {
+        "alias_ips": {
+          "aliases": [],
+          "description": "Alias IPs the server has.",
+          "type": "list",
+          "required": false,
+          "elements": "str",
+          "suboptions": {}
+        },
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ip": {
+          "aliases": [],
+          "description": "The IP the server should have.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "network": {
+          "aliases": [],
+          "description": "The name of the Hetzner Cloud Networks.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "server": {
+          "aliases": [],
+          "description": "The name of the Hetzner Cloud server.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the server_network.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0",
+        "hcloud-python >= 1.3.0"
+      ],
+      "short_description": "Manage the relationship between Hetzner Cloud Networks and servers"
+    },
+    "examples": "\n- name: Create a basic server network\n  hcloud_server_network:\n    network: my-network\n    server: my-server\n    state: present\n\n- name: Create a server network and specify the ip address\n  hcloud_server_network:\n    network: my-network\n    server: my-server\n    ip: 10.0.0.1\n    state: present\n\n- name: Create a server network and add alias ips\n  hcloud_server_network:\n    network: my-network\n    server: my-server\n    ip: 10.0.0.1\n    alias_ips:\n       - 10.1.0.1\n       - 10.2.0.1\n    state: present\n\n- name: Ensure the server network is absent (remove if needed)\n  hcloud_server_network:\n    network: my-network\n    server: my-server\n    state: absent\n"
+  },
+  "hetzner.hcloud.hcloud_server_type_facts": {
+    "doc": {
+      "description": "Gather infos about your Hetzner Cloud server types.\nThis module was called C(hcloud_server_type_facts) before Ansible 2.9, returning C(ansible_facts) and C(hcloud_server_type_facts). Note that the M(hetzner.hcloud.hcloud_server_type_info) module no longer returns C(ansible_facts) and the value was renamed to C(hcloud_server_type_info)!",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the server type you want to get.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the server type you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Gather infos about the Hetzner Cloud server types."
+    },
+    "examples": "\n- name: Gather hcloud server type infos\n  hcloud_server_type_info:\n  register: output\n\n- name: Print the gathered infos\n  debug:\n    var: output.hcloud_server_type_info\n"
+  },
+  "hetzner.hcloud.hcloud_server_type_info": {
+    "doc": {
+      "description": "Gather infos about your Hetzner Cloud server types.\nThis module was called C(hcloud_server_type_facts) before Ansible 2.9, returning C(ansible_facts) and C(hcloud_server_type_facts). Note that the M(hetzner.hcloud.hcloud_server_type_info) module no longer returns C(ansible_facts) and the value was renamed to C(hcloud_server_type_info)!",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the server type you want to get.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the server type you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Gather infos about the Hetzner Cloud server types."
+    },
+    "examples": "\n- name: Gather hcloud server type infos\n  hcloud_server_type_info:\n  register: output\n\n- name: Print the gathered infos\n  debug:\n    var: output.hcloud_server_type_info\n"
+  },
+  "hetzner.hcloud.hcloud_ssh_key": {
+    "doc": {
+      "description": "Create, update and manage ssh keys on the Hetzner Cloud.",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fingerprint": {
+          "aliases": [],
+          "description": "The Fingerprint of the Hetzner Cloud ssh_key to manage.\nOnly required if no ssh_key I(id) or I(name) is given.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the Hetzner Cloud ssh_key to manage.\nOnly required if no ssh_key I(name) is given",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "labels": {
+          "aliases": [],
+          "description": "User-defined labels (key-value pairs)",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The Name of the Hetzner Cloud ssh_key to manage.\nOnly required if no ssh_key I(id) is given or a ssh_key does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "public_key": {
+          "aliases": [],
+          "description": "The Public Key to add.\nRequired if ssh_key does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the ssh_key.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Create and manage ssh keys on the Hetzner Cloud."
+    },
+    "examples": "\n- name: Create a basic ssh_key\n  hcloud_ssh_key:\n    name: my-ssh_key\n    public_key: \"ssh-rsa AAAjjk76kgf...Xt\"\n    state: present\n\n- name: Create a ssh_key with labels\n  hcloud_ssh_key:\n    name: my-ssh_key\n    public_key: \"ssh-rsa AAAjjk76kgf...Xt\"\n    labels:\n        key: value\n        mylabel: 123\n    state: present\n\n- name: Ensure the ssh_key is absent (remove if needed)\n  hcloud_ssh_key:\n    name: my-ssh_key\n    state: absent\n"
+  },
+  "hetzner.hcloud.hcloud_ssh_key_facts": {
+    "doc": {
+      "description": "Gather facts about your Hetzner Cloud ssh_keys.\nThis module was called C(hcloud_ssh_key_facts) before Ansible 2.9, returning C(ansible_facts) and C(hcloud_ssh_key_facts). Note that the M(hetzner.hcloud.hcloud_ssh_key_info) module no longer returns C(ansible_facts) and the value was renamed to C(hcloud_ssh_key_info)!",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fingerprint": {
+          "aliases": [],
+          "description": "The fingerprint of the ssh key you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the ssh key you want to get.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "label_selector": {
+          "aliases": [],
+          "description": "The label selector for the ssh key you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the ssh key you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Gather infos about your Hetzner Cloud ssh_keys."
+    },
+    "examples": "\n- name: Gather hcloud sshkey infos\n  hcloud_ssh_key_info:\n  register: output\n- name: Print the gathered infos\n  debug:\n    var: output.hcloud_ssh_key_info\n"
+  },
+  "hetzner.hcloud.hcloud_ssh_key_info": {
+    "doc": {
+      "description": "Gather facts about your Hetzner Cloud ssh_keys.\nThis module was called C(hcloud_ssh_key_facts) before Ansible 2.9, returning C(ansible_facts) and C(hcloud_ssh_key_facts). Note that the M(hetzner.hcloud.hcloud_ssh_key_info) module no longer returns C(ansible_facts) and the value was renamed to C(hcloud_ssh_key_info)!",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "fingerprint": {
+          "aliases": [],
+          "description": "The fingerprint of the ssh key you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the ssh key you want to get.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "label_selector": {
+          "aliases": [],
+          "description": "The label selector for the ssh key you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the ssh key you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Gather infos about your Hetzner Cloud ssh_keys."
+    },
+    "examples": "\n- name: Gather hcloud sshkey infos\n  hcloud_ssh_key_info:\n  register: output\n- name: Print the gathered infos\n  debug:\n    var: output.hcloud_ssh_key_info\n"
+  },
+  "hetzner.hcloud.hcloud_subnetwork": {
+    "doc": {
+      "description": "Create, update and delete cloud subnetworks on the Hetzner Cloud.",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ip_range": {
+          "aliases": [],
+          "description": "IP range of the subnetwork.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "network": {
+          "aliases": [],
+          "description": "The ID or Name  of the Hetzner Cloud Networks.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "network_zone": {
+          "aliases": [],
+          "description": "Name of network zone.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the subnetwork.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        },
+        "type": {
+          "aliases": [],
+          "description": "Type of subnetwork.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "server",
+            "cloud",
+            "vswitch"
+          ],
+          "suboptions": {}
+        },
+        "vswitch_id": {
+          "aliases": [],
+          "description": "ID of the vSwitch you want to couple with your Network.\nRequired if type == vswitch",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0",
+        "hcloud-python >= 1.10.0"
+      ],
+      "short_description": "Manage cloud subnetworks on the Hetzner Cloud."
+    },
+    "examples": "\n- name: Create a basic subnetwork\n  hcloud_subnetwork:\n    network: my-network\n    ip_range: 10.0.0.0/16\n    network_zone: eu-central\n    type: cloud\n    state: present\n\n- name: Create a basic subnetwork\n  hcloud_subnetwork:\n    network: my-vswitch-network\n    ip_range: 10.0.0.0/24\n    network_zone: eu-central\n    type: vswitch\n    vswitch_id: 123\n    state: present\n\n- name: Ensure the subnetwork is absent (remove if needed)\n  hcloud_subnetwork:\n    network: my-network\n    ip_range: 10.0.0.0/8\n    network_zone: eu-central\n    type: cloud\n    state: absent\n"
+  },
+  "hetzner.hcloud.hcloud_volume": {
+    "doc": {
+      "description": "Create, update and attach/detach block Volume on the Hetzner Cloud.",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "automount": {
+          "aliases": [],
+          "description": "Automatically mount the Volume.",
+          "default": "False",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "delete_protection": {
+          "aliases": [],
+          "description": "Protect the Volume for deletion.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "format": {
+          "aliases": [],
+          "description": "Automatically Format the volume on creation\nCan only be used in case the Volume does not exists.",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "xfs",
+            "ext4"
+          ],
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the Hetzner Cloud Block Volume to manage.\nOnly required if no volume I(name) is given",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "labels": {
+          "aliases": [],
+          "description": "User-defined key-value pairs.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "location": {
+          "aliases": [],
+          "description": "Location of the Hetzner Cloud Volume.\nRequired if no I(server) is given and Volume does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The Name of the Hetzner Cloud Block Volume to manage.\nOnly required if no volume I(id) is given or a volume does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "server": {
+          "aliases": [],
+          "description": "Server Name the Volume should be assigned to.\nRequired if no I(location) is given and Volume does not exists.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "size": {
+          "aliases": [],
+          "description": "The size of the Block Volume in GB.\nRequired if volume does not yet exists.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "State of the Volume.",
+          "default": "present",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "absent",
+            "present"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Create and manage block Volume on the Hetzner Cloud."
+    },
+    "examples": "\n- name: Create a Volume\n  hcloud_volume:\n    name: my-volume\n    location: fsn1\n    size: 100\n    state: present\n- name: Create a Volume and format it with ext4\n  hcloud_volume:\n    name: my-volume\n    location: fsn\n    format: ext4\n    size: 100\n    state: present\n- name: Mount a existing Volume and automount\n  hcloud_volume:\n    name: my-volume\n    server: my-server\n    automount: yes\n    state: present\n- name: Mount a existing Volume and automount\n  hcloud_volume:\n    name: my-volume\n    server: my-server\n    automount: yes\n    state: present\n- name: Ensure the Volume is absent (remove if needed)\n  hcloud_volume:\n    name: my-volume\n    state: absent\n"
+  },
+  "hetzner.hcloud.hcloud_volume_facts": {
+    "doc": {
+      "description": "Gather infos about your Hetzner Cloud Volumes.",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the Volume you want to get.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "label_selector": {
+          "aliases": [],
+          "description": "The label selector for the Volume you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the Volume you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Gather infos about your Hetzner Cloud Volumes."
+    },
+    "examples": "\n- name: Gather hcloud Volume infos\n  hcloud_volume_info:\n  register: output\n- name: Print the gathered infos\n  debug:\n    var: output.hcloud_volume_info\n"
+  },
+  "hetzner.hcloud.hcloud_volume_info": {
+    "doc": {
+      "description": "Gather infos about your Hetzner Cloud Volumes.",
+      "has_action": false,
+      "options": {
+        "api_token": {
+          "aliases": [],
+          "description": "This is the API Token for the Hetzner Cloud.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "endpoint": {
+          "aliases": [],
+          "description": "This is the API Endpoint for the Hetzner Cloud.",
+          "default": "https://api.hetzner.cloud/v1",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "id": {
+          "aliases": [],
+          "description": "The ID of the Volume you want to get.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "label_selector": {
+          "aliases": [],
+          "description": "The label selector for the Volume you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [],
+          "description": "The name of the Volume you want to get.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "hcloud-python >= 1.0.0"
+      ],
+      "short_description": "Gather infos about your Hetzner Cloud Volumes."
+    },
+    "examples": "\n- name: Gather hcloud Volume infos\n  hcloud_volume_info:\n  register: output\n- name: Print the gathered infos\n  debug:\n    var: output.hcloud_volume_info\n"
+  }
+}
