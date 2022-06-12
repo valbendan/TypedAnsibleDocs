@@ -35,6 +35,7 @@ gen-all-ansible-full:
 	poetry run python rst.py gen-ansible-full v5.1
 	poetry run python rst.py gen-ansible-full v5.2
 	poetry run python rst.py gen-ansible-full v5.3
+	poetry run python rst.py gen-ansible-full v5.4
 
 
 gen-all-ansible-collections:
