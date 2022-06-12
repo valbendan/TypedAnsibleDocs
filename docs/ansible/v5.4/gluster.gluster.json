@@ -1,0 +1,412 @@
+{
+  "gluster.gluster.geo_rep": {
+    "doc": {
+      "description": "Create, stop, delete and configure geo-replication session",
+      "has_action": false,
+      "options": {
+        "action": {
+          "aliases": [],
+          "description": "Action to be performed on geo-replication session.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "create",
+            "start",
+            "stop",
+            "delete",
+            "pause",
+            "resume",
+            "config"
+          ],
+          "suboptions": {}
+        },
+        "changelog_log_level": {
+          "aliases": [],
+          "description": "The log level for the changelog.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "checkpoint": {
+          "aliases": [],
+          "description": "Sets a checkpoint with the given option.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "force the system to perform the action.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "georepuser": {
+          "aliases": [],
+          "description": "Username to be used for the action being performed.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "gluster_log_file": {
+          "aliases": [],
+          "description": "The path to the geo-replication glusterfs log file.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "gluster_log_level": {
+          "aliases": [],
+          "description": "The log level for glusterfs processes.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ignore_deletes": {
+          "aliases": [],
+          "description": "file deletion on the master will not trigger a delete operation on the slave.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "log_file": {
+          "aliases": [],
+          "description": "The path to the geo-replication log file.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "log_level": {
+          "aliases": [],
+          "description": "The log level for geo-replication.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "log_rsync_performance": {
+          "aliases": [],
+          "description": "for recording the rsync performance in log files.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "mastervol": {
+          "aliases": [],
+          "description": "Master volume name.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "meta_volume_mnt": {
+          "aliases": [],
+          "description": "The path of the meta volume mount point.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "rsync_command": {
+          "aliases": [],
+          "description": "The command to use for setting synchronizing method for the files.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "rsync_options": {
+          "aliases": [],
+          "description": "Additional options to rsync.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "slavevol": {
+          "aliases": [],
+          "description": "Slave volume name.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "ssh_command": {
+          "aliases": [],
+          "description": "The SSH command to connect to the remote machine.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sync_acls": {
+          "aliases": [],
+          "description": "Syncs acls to the Slave cluster.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sync_jobs": {
+          "aliases": [],
+          "description": "number of sync-jobs .",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "sync_xattrs": {
+          "aliases": [],
+          "description": "Syncs extended attributes to the Slave cluster.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "timeout": {
+          "aliases": [],
+          "description": "timeout period.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_meta_volume": {
+          "aliases": [],
+          "description": "to use meta volume in Geo-replication.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "use_tarssh": {
+          "aliases": [],
+          "description": "To use tar over ssh.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "volume_id": {
+          "aliases": [],
+          "description": "deletes the existing master UID for the intermediate/slave node.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage geo-replication sessions"
+    },
+    "examples": "\n- name: Create the geo-rep session\n  gluster.gluster.geo_rep:\n    action: create\n    mastervol: 10.70.42.122:mastervolume\n    slavevol: 10.70.43.48:slavevolume\n    force: true\n    georepuser: staff\n- name: Starts the geo-rep session\n  gluster.gluster.geo_rep:\n    action: start\n    mastervol: 10.70.42.122:mastervolume\n    slavevol: 10.70.43.48:slavevolume\n    force: true\n    georepuser: staff\n- name: Pause the geo-rep session\n  gluster.gluster.geo_rep:\n    action: pause\n    mastervol: 10.70.42.122:mastervolume\n    slavevol: 10.70.43.48:slavevolume\n    force: true\n    georepuser: staff\n- name: Resume the geo-rep session\n  gluster.gluster.geo_rep:\n    action: resume\n    mastervol: 10.70.42.122:mastervolume\n    slavevol: 10.70.43.48:slavevolume\n    force: true\n    georepuser: staff\n- name: Stop the geo-rep session\n  gluster.gluster.geo_rep:\n    action: stop\n    mastervol: 10.70.42.122:mastervolume\n    slavevol: 10.70.43.48:slavevolume\n    force: true\n    georepuser: staff\n- name: Configures the geo-rep session\n  gluster.gluster.geo_rep:\n    action: config\n    mastervol: 10.70.42.122:mastervolume\n    slavevol: 10.70.43.48:slavevolume\n    gluster_log_file: /var/log/glusterfs/geo-replication/gluster.log\n    gluster_log_level: INFO\n    log_file: /var/log/glusterfs/geo-replication/file.log\n    log_level: INFO\n    changelog_log_level: INFO\n    ssh_command: SSH\n    rsync_command: rsync\n    use_tarssh: true\n    volume_id: 6a071cfa-b150-4f0b-b1ed-96ab5d4bd671\n    timeout: 60\n    sync_jobs: 3\n    ignore_deletes: 1\n    checkpoint: now\n    sync_acls: true\n    sync_xattr: true\n    log_rsync_performance: true\n    rsync_options: --compress-level=0\n    use_meta_volume: true\n    meta_volume_mnt: /var/run/gluster/shared_storage/\n- name: Delete the geo-rep session\n  gluster.gluster.geo_rep:\n    action: delete\n    mastervol: 10.70.42.122:mastervolume\n    slavevol: 10.70.43.48:slavevolume\n    georepuser: staff\n"
+  },
+  "gluster.gluster.gluster_heal_info": {
+    "doc": {
+      "description": "Gather facts about either self-heal or rebalance status.\nThis module was called C(gluster_heal_facts) before Ansible 2.9, returning C(ansible_facts). Note that the M(gluster.gluster.gluster_heal_info) module no longer returns C(ansible_facts)!",
+      "has_action": false,
+      "options": {
+        "name": {
+          "aliases": [
+            "volume"
+          ],
+          "description": "The volume name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "status_filter": {
+          "aliases": [],
+          "description": "Determines which facts are to be returned.\nIf the C(status_filter) is C(self-heal), status of self-heal, along with the number of files still in process are returned.\nIf the C(status_filter) is C(rebalance), rebalance status is returned.",
+          "default": "self-heal",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "self-heal",
+            "rebalance"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "GlusterFS > 3.2"
+      ],
+      "short_description": "Gather information on self-heal or rebalance status"
+    },
+    "examples": "\n- name: Gather self-heal facts about all gluster hosts in the cluster\n  gluster.gluster.gluster_heal_info:\n    name: test_volume\n    status_filter: self-heal\n  register: self_heal_status\n- debug:\n    var: self_heal_status\n\n- name: Gather rebalance facts about all gluster hosts in the cluster\n  gluster.gluster.gluster_heal_info:\n    name: test_volume\n    status_filter: rebalance\n  register: rebalance_status\n- debug:\n    var: rebalance_status\n"
+  },
+  "gluster.gluster.gluster_peer": {
+    "doc": {
+      "description": "Create or diminish a GlusterFS trusted storage pool. A set of nodes can be added into an existing trusted storage pool or a new storage pool can be formed. Or, nodes can be removed from an existing trusted storage pool.",
+      "has_action": false,
+      "notes": "This module does not support check mode.",
+      "options": {
+        "force": {
+          "aliases": [],
+          "description": "Applicable only while removing the nodes from the pool. gluster will refuse to detach a node from the pool if any one of the node is down, in such cases force can be used.",
+          "default": "false",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "nodes": {
+          "aliases": [],
+          "description": "List of nodes that have to be probed into the pool.",
+          "type": "list",
+          "required": true,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Determines whether the nodes should be attached to the pool or removed from the pool. If the state is present, nodes will be attached to the pool. If state is absent, nodes will be detached from the pool.",
+          "default": "present",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "present",
+            "absent"
+          ],
+          "suboptions": {}
+        }
+      },
+      "requirements": [
+        "GlusterFS > 3.2"
+      ],
+      "short_description": "Attach/Detach peers to/from the cluster"
+    },
+    "examples": "\n- name: Create a trusted storage pool\n  gluster.gluster.gluster_peer:\n        state: present\n        nodes:\n             - 10.0.1.5\n             - 10.0.1.10\n\n- name: Delete a node from the trusted storage pool\n  gluster.gluster.gluster_peer:\n         state: absent\n         nodes:\n              - 10.0.1.10\n\n- name: Delete a node from the trusted storage pool by force\n  gluster.gluster.gluster_peer:\n         state: absent\n         nodes:\n              - 10.0.0.1\n         force: true\n"
+  },
+  "gluster.gluster.gluster_volume": {
+    "doc": {
+      "description": "Create, remove, start, stop and tune GlusterFS volumes",
+      "has_action": false,
+      "notes": "Requires cli tools for GlusterFS on servers.\nWill add new bricks, but not remove them.",
+      "options": {
+        "arbiters": {
+          "aliases": [],
+          "description": "Arbiter count for volume.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "bricks": {
+          "aliases": [
+            "brick"
+          ],
+          "description": "Brick paths on servers. Multiple brick paths can be separated by commas.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "cluster": {
+          "aliases": [],
+          "description": "List of hosts to use for probing and brick setup.",
+          "type": "list",
+          "required": false,
+          "suboptions": {}
+        },
+        "directory": {
+          "aliases": [],
+          "description": "Directory for limit-usage.",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "disperses": {
+          "aliases": [],
+          "description": "Disperse count for volume.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "force": {
+          "aliases": [],
+          "description": "If brick is being created in the root partition, module will fail. Set force to true to override this behaviour.",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "host": {
+          "aliases": [],
+          "description": "Override local hostname (for peer probing purposes).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "name": {
+          "aliases": [
+            "volume"
+          ],
+          "description": "The volume name.",
+          "type": "str",
+          "required": true,
+          "suboptions": {}
+        },
+        "options": {
+          "aliases": [],
+          "description": "A dictionary/hash with options/settings for the volume.",
+          "type": "dict",
+          "required": false,
+          "suboptions": {}
+        },
+        "quota": {
+          "aliases": [],
+          "description": "Quota value for limit-usage (be sure to use 10.0MB instead of 10MB, see quota list).",
+          "type": "str",
+          "required": false,
+          "suboptions": {}
+        },
+        "rebalance": {
+          "aliases": [],
+          "description": "Controls whether the cluster is rebalanced after changes.",
+          "default": "no",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "redundancies": {
+          "aliases": [],
+          "description": "Redundancy count for volume.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "replicas": {
+          "aliases": [],
+          "description": "Replica count for volume.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "start_on_create": {
+          "aliases": [],
+          "description": "Controls whether the volume is started after creation or not.",
+          "default": "yes",
+          "type": "bool",
+          "required": false,
+          "suboptions": {}
+        },
+        "state": {
+          "aliases": [],
+          "description": "Use present/absent ensure if a volume exists or not. Use started/stopped to control its availability.",
+          "type": "str",
+          "required": true,
+          "choices": [
+            "absent",
+            "present",
+            "started",
+            "stopped"
+          ],
+          "suboptions": {}
+        },
+        "stripes": {
+          "aliases": [],
+          "description": "Stripe count for volume.",
+          "type": "int",
+          "required": false,
+          "suboptions": {}
+        },
+        "transport": {
+          "aliases": [],
+          "description": "Transport type for volume.",
+          "default": "tcp",
+          "type": "str",
+          "required": false,
+          "choices": [
+            "tcp",
+            "rdma",
+            "tcp,rdma"
+          ],
+          "suboptions": {}
+        }
+      },
+      "short_description": "Manage GlusterFS volumes"
+    },
+    "examples": "\n- name: create gluster volume\n  gluster.gluster.gluster_volume:\n    state: present\n    name: test1\n    bricks: /bricks/brick1/g1\n    rebalance: yes\n    cluster:\n      - 192.0.2.10\n      - 192.0.2.11\n  run_once: true\n\n- name: tune\n  gluster.gluster.gluster_volume:\n    state: present\n    name: test1\n    options:\n      performance.cache-size: 256MB\n\n- name: Set multiple options on GlusterFS volume\n  gluster.gluster.gluster_volume:\n    state: present\n    name: test1\n    options:\n      { performance.cache-size: 128MB,\n        write-behind: 'off',\n        quick-read: 'on'\n      }\n\n- name: start gluster volume\n  gluster.gluster.gluster_volume:\n    state: started\n    name: test1\n\n- name: limit usage\n  gluster.gluster.gluster_volume:\n    state: present\n    name: test1\n    directory: /foo\n    quota: 20.0MB\n\n- name: stop gluster volume\n  gluster.gluster.gluster_volume:\n    state: stopped\n    name: test1\n\n- name: remove gluster volume\n  gluster.gluster.gluster_volume:\n    state: absent\n    name: test1\n\n- name: create gluster volume with multiple bricks\n  gluster.gluster.gluster_volume:\n    state: present\n    name: test2\n    bricks: /bricks/brick1/g2,/bricks/brick2/g2\n    cluster:\n      - 192.0.2.10\n      - 192.0.2.11\n  run_once: true\n\n- name: Remove the bricks from gluster volume\n  gluster.gluster.gluster_volume:\n    state: present\n    name: testvol\n    bricks: /bricks/brick1/b1,/bricks/brick2/b2\n    cluster:\n      - 10.70.42.85\n    force: true\n  run_once: true\n\n- name: Reduce cluster configuration\n  gluster.gluster.gluster_volume:\n    state: present\n    name: testvol\n    bricks: /bricks/brick3/b1,/bricks/brick4/b2\n    replicas: 2\n    cluster:\n      - 10.70.42.85\n    force: true\n  run_once: true\n"
+  }
+}
